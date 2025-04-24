@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "moduleResolution": "nodenext",
+        "module": "NodeNext",
+        "target": "ES2022",
+        "lib": ["ES2022", "DOM"],
+        "noImplicitAny": false,
+        "removeComments": true,
+        "sourceMap": true,
+        "jsx": "react-jsx",
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "strictNullChecks": true,
+        "resolveJsonModule": true,
+        "checkJs": true
+    },
+    "suppressImplicitAnyIndexErrors": true,
+    "lib": ["dom", "esnext"],
+    "exclude": ["dist"]
+}

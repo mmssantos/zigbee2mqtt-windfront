@@ -1,0 +1,156 @@
+import type { DeviceState, Message } from "../src/types.js";
+
+export const DEVICE_STATES: Message<DeviceState>[] = [
+    {
+        payload: {
+            action: "",
+            last_seen: "2022-04-15T16:33:53+08:00",
+            update: {
+                installed_version: 192,
+                latest_version: 192,
+                state: "idle",
+            },
+        },
+        topic: "0xbc33acfffe17628b",
+    },
+    {
+        payload: {
+            color_mode: "color_temp",
+            color_temp: 200,
+            last_seen: "2021-10-22T08:38:44+08:00",
+            update: {
+                installed_version: 268776729,
+                latest_version: 269498113,
+                state: "updating",
+                progress: 35,
+                remaining: 1150,
+            },
+        },
+        topic: "hue1",
+    },
+    {
+        payload: {
+            brightness: 99,
+            color: {
+                h: 27,
+                hue: 27,
+                s: 92,
+                saturation: 92,
+                x: 0.5056,
+                y: 0.4152,
+            },
+            color_mode: "color_temp",
+            color_temp: 454,
+            color_temp_startup: 500,
+            last_seen: "2022-04-15T17:48:28+08:00",
+            state: "ON",
+            update: {
+                installed_version: 268776729,
+                latest_version: 269497625,
+                state: "available",
+            },
+        },
+        topic: "hue_back_tv",
+    },
+    {
+        payload: {
+            battery: 100,
+            last_seen: "2022-05-16T20:46:44+08:00",
+            linkquality: 66,
+            voltage: 3042,
+        },
+        topic: "0x00158d000224154d",
+    },
+    {
+        payload: {
+            last_seen: "2022-05-16T21:08:31+08:00",
+            linkquality: 18,
+            state: "ON",
+        },
+        topic: "0x00124b001e73227f1",
+    },
+    {
+        payload: {
+            angle: 9,
+            angle_x: -6,
+            angle_x_absolute: 96,
+            angle_y: 81,
+            angle_y_absolute: 9,
+            angle_z: 7,
+            battery: 100,
+            last_seen: "2022-05-16T21:08:37+08:00",
+            linkquality: 12,
+            strength: 30,
+            temperature: 68,
+            temperature_scale: "°F",
+            vibration: true,
+            voltage: 3015,
+        },
+        topic: "work/nur/jopa",
+    },
+    {
+        payload: {
+            battery: 100,
+            humidity: 65.59,
+            last_seen: "2022-05-16T20:37:54+08:00",
+            linkquality: 90,
+            temperature: 25.84,
+            voltage: 3035,
+        },
+        topic: "livingroom/temp_humidity",
+    },
+    {
+        payload: {
+            battery: 100,
+            contact: true,
+            last_seen: "2022-05-16T20:50:02+08:00",
+            linkquality: 152,
+            voltage: 3045,
+        },
+        topic: "livingroom/window",
+    },
+    {
+        payload: {
+            battery: 10,
+            contact: false,
+            last_seen: "2022-05-16T21:05:21+08:00",
+            linkquality: 203,
+            voltage: 3035,
+        },
+        topic: "livingroom/ac power",
+    },
+    {
+        payload: {
+            battery: 0,
+            humidity: 59.96,
+            last_seen: "2022-05-16T21:06:04+08:00",
+            linkquality: 12,
+            pressure: 1009.8,
+            temperature: 32.9,
+            voltage: 2815,
+        },
+        topic: "0x00158d0004866f11",
+    },
+    {
+        payload: {
+            battery: 100,
+            contact: true,
+            last_seen: "2022-05-16T20:14:38+08:00",
+            linkquality: 12,
+            voltage: 3025,
+        },
+        topic: "dining room/ac power",
+    },
+    {
+        payload: {
+            brightness: 110,
+            color_mode: "xy",
+            last_seen: "2022-04-15T17:48:30+08:00",
+            state: "ON",
+            update: {
+                state: "scheduled",
+            },
+        },
+        topic: "0x0017880103d55d65",
+    },
+];

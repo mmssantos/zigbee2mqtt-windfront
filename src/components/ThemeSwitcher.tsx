@@ -1,0 +1,79 @@
+import { faPaintBrush } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { type JSX, useEffect, useState } from "react";
+import store2 from "store2";
+import { THEME_KEY } from "../localStoreConsts.js";
+import { PopoverDropdown } from "./dropdown/PopoverDropdown.js";
+
+const ALL_THEMES = [
+    "", // "Default"
+    "Light",
+    "Dark",
+    "Abyss",
+    "Acid",
+    "Aqua",
+    "Autumn",
+    "Black",
+    "Bumblebee",
+    "Business",
+    "Caramellatte",
+    "Cmyk",
+    "Coffee",
+    "Corporate",
+    "Cupcake",
+    "Cyberpunk",
+    "Dim",
+    "Dracula",
+    "Emerald",
+    "Fantasy",
+    "Forest",
+    "Garden",
+    "Halloween",
+    "Lemonade",
+    "Lofi",
+    "Luxury",
+    "Night",
+    "Nord",
+    "Pastel",
+    "Retro",
+    "Silk",
+    "Sunset",
+    "Synthwave",
+    "Valentine",
+    "Winter",
+    "Wireframe",
+];
+
+// XXX: workaround typing
+const local = store2 as unknown as typeof store2.default;
+
+export const ThemeSwitcher = (): JSX.Element => {
+    const [currentTheme, setCurrentTheme] = useState<string>(local.get(THEME_KEY) || "");
+
+    useEffect(() => {
+        local.set(THEME_KEY, currentTheme);
+        document.documentElement.setAttribute("data-theme", currentTheme);
+    }, [currentTheme]);
+
+    return (
+        <PopoverDropdown
+            name="theme-switcher"
+            buttonChildren={<FontAwesomeIcon icon={faPaintBrush} />}
+            buttonStyle="mx-1"
+            dropdownStyle="dropdown-end"
+        >
+            {ALL_THEMES.map((theme) => (
+                <li key={theme || "default"}>
+                    <input
+                        type="radio"
+                        name="theme-dropdown"
+                        className="theme-controller w-full btn btn-block btn-ghost"
+                        aria-label={theme || "Default"}
+                        value={theme.toLowerCase()}
+                        onChange={() => setCurrentTheme(theme.toLowerCase())}
+                    />
+                </li>
+            ))}
+        </PopoverDropdown>
+    );
+};

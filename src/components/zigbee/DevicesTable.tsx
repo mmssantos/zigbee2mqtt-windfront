@@ -1,0 +1,193 @@
+import { type JSX, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { genDeviceDetailsLink, lastSeen, toHex } from "../../utils.js";
+
+import type { ColumnDef } from "@tanstack/react-table";
+import isString from "lodash/isString.js";
+import { Link } from "react-router";
+import { DEVICE_TABLE_PAGE_SIZE_KEY } from "../../localStoreConsts.js";
+import type { AvailabilityState } from "../../store.js";
+import type { Device, DeviceState, LastSeenType } from "../../types.js";
+import { LastSeen } from "../LastSeen.js";
+import DeviceControlGroup from "../device-control/DeviceControlGroup.js";
+import { DeviceImage } from "../device-image/DeviceImage.js";
+import { Table } from "../grid/Table.js";
+import ModelLink from "../links/ModelLink.js";
+import VendorLink from "../links/VendorLink.js";
+import { Lqi } from "../lqi/Lqi.js";
+import PowerSource from "../power-source/PowerSource.js";
+import { Availability } from "./Availability.js";
+import { DEVICES_GLOBAL_NAME } from "./index.js";
+
+export type DevicesTableProps = {
+    devices: DeviceTableData[];
+    lastSeenType: LastSeenType;
+    availabilityFeatureEnabled: boolean;
+    homeassistantEnabled: boolean;
+    renameDevice(from: string, to: string, homeassistantRename: boolean): Promise<void>;
+    configureDevice(name: string): Promise<void>;
+    removeDevice(dev: string, force: boolean, block: boolean): Promise<void>;
+    interviewDevice(name: string): Promise<void>;
+};
+export type DeviceTableData = {
+    device: Device;
+    state: DeviceState;
+    availabilityState: AvailabilityState;
+    availabilityEnabledForDevice: boolean | undefined;
+};
+
+export function DevicesTable(props: DevicesTableProps): JSX.Element {
+    const { devices, lastSeenType, availabilityFeatureEnabled, homeassistantEnabled, renameDevice, removeDevice, configureDevice, interviewDevice } =
+        props;
+    const { t } = useTranslation(["zigbee", "common", "availability"]);
+
+    // biome-ignore lint/suspicious/noExplicitAny: tmp
+    const lastSeenCol: ColumnDef<DeviceTableData, any>[] =
+        lastSeenType !== "disable"
+            ? [
+                  {
+                      id: "last_seen",
+                      header: t("last_seen"),
+                      accessorFn: ({ state }) => lastSeen(state, lastSeenType)?.getTime(),
+                      cell: ({
+                          row: {
+                              original: { state },
+                          },
+                      }) => <LastSeen state={state} lastSeenType={lastSeenType} />,
+                      enableColumnFilter: false,
+                  },
+              ]
+            : [];
+    const showAvailabilityColumn = availabilityFeatureEnabled || devices.some((device) => device.availabilityEnabledForDevice);
+    // biome-ignore lint/suspicious/noExplicitAny: tmp
+    const availabilityCol: ColumnDef<DeviceTableData, any>[] = showAvailabilityColumn
+        ? [
+              {
+                  id: "availability",
+                  header: t("availability:availability"),
+                  accessorFn: ({ availabilityState }) => (isString(availabilityState) ? availabilityState : availabilityState.state),
+                  cell: ({
+                      row: {
+                          original: { device, availabilityState, availabilityEnabledForDevice },
+                      },
+                  }) => {
+                      return (
+                          <Availability
+                              disabled={device.disabled}
+                              availability={availabilityState}
+                              availabilityEnabledForDevice={availabilityEnabledForDevice}
+                              availabilityFeatureEnabled={availabilityFeatureEnabled}
+                          />
+                      );
+                  },
+                  enableColumnFilter: false,
+              },
+          ]
+        : [];
+    // biome-ignore lint/suspicious/noExplicitAny: tmp
+    const columns = useMemo<ColumnDef<DeviceTableData, any>[]>(
+        () => [
+            {
+                id: "friendly_name",
+                header: t("friendly_name"),
+                accessorFn: ({ device }) => [device.friendly_name, device.description].join(" "),
+                cell: ({
+                    row: {
+                        original: { device, state },
+                    },
+                }) => (
+                    <div className="flex items-center gap-3">
+                        <div className="avatar">
+                            <div className="h-12 w-12" style={{ overflow: "visible" }}>
+                                <DeviceImage device={device} deviceState={state} disabled={device.disabled} />
+                            </div>
+                        </div>
+                        <div className="flex flex-col">
+                            <Link to={genDeviceDetailsLink(device.ieee_address)} className="link link-hover">
+                                {device.friendly_name}
+                            </Link>
+                            {device.description && <div className="text-xs opacity-50">{device.description}</div>}
+                            <div className="flex flex-row gap-1 mt-2">
+                                <span className="badge badge-soft badge-ghost cursor-default" title={t("power")}>
+                                    <PowerSource device={device} deviceState={state} />
+                                </span>
+                                <span className="badge badge-soft badge-ghost cursor-default" title={t("lqi")}>
+                                    <Lqi value={state.linkquality as number | undefined} />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                id: "ieee_address",
+                header: t("ieee_address"),
+                accessorFn: ({ device }) => [device.ieee_address, toHex(device.network_address, 4), device.network_address].join(" "),
+                cell: ({
+                    row: {
+                        original: { device },
+                    },
+                }) => (
+                    <>
+                        <div>{device.ieee_address}</div>
+                        <div className="flex flex-row gap-1 mt-2">
+                            <span className="badge badge-ghost badge-sm cursor-default" title={t("network_address_hex")}>
+                                {toHex(device.network_address, 4)}
+                            </span>
+                            <span className="badge badge-ghost badge-sm cursor-default" title={t("network_address_dec")}>
+                                {device.network_address}
+                            </span>
+                        </div>
+                    </>
+                ),
+            },
+            {
+                id: "model",
+                header: t("model"),
+                accessorFn: ({ device }) => [device.definition?.model, device.model_id, device.definition?.vendor, device.manufacturer].join(" "),
+                cell: ({
+                    row: {
+                        original: { device },
+                    },
+                }) => (
+                    <>
+                        <ModelLink device={device} />
+                        <div className="flex flex-row gap-1 mt-2">
+                            <span className="badge badge-ghost" title={t("manufacturer")}>
+                                <VendorLink device={device} />
+                            </span>
+                        </div>
+                    </>
+                ),
+            },
+            ...lastSeenCol,
+            ...availabilityCol,
+            {
+                id: "controls",
+                header: "",
+                cell: ({
+                    row: {
+                        original: { device, state },
+                    },
+                }) => {
+                    return (
+                        <DeviceControlGroup
+                            device={device}
+                            state={state}
+                            homeassistantEnabled={homeassistantEnabled}
+                            renameDevice={renameDevice}
+                            removeDevice={removeDevice}
+                            configureDevice={configureDevice}
+                            interviewDevice={interviewDevice}
+                        />
+                    );
+                },
+                enableSorting: false,
+                enableColumnFilter: false,
+            },
+        ],
+        [lastSeenCol, availabilityCol, t, homeassistantEnabled, renameDevice, removeDevice, configureDevice, interviewDevice],
+    );
+
+    return <Table id={DEVICES_GLOBAL_NAME} columns={columns} data={devices} pageSizeStoreKey={DEVICE_TABLE_PAGE_SIZE_KEY} />;
+}

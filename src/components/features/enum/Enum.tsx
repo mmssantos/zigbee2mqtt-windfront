@@ -1,0 +1,36 @@
+import { type Endpoint, type EnumFeature, FeatureAccessMode } from "../../../types.js";
+import EnumEditor, { type ValueWithLabelOrPrimitive } from "../../enum-editor/EnumEditor.js";
+import BaseViewer from "../BaseViewer.js";
+import NoAccessError from "../NoAccessError.js";
+import type { BaseFeatureProps } from "../index.js";
+
+type EnumProps = BaseFeatureProps<EnumFeature>;
+const VERY_BIG_ENUM_SIZE = 4;
+
+export default function Enum(props: EnumProps) {
+    const {
+        onChange,
+        feature: { access = FeatureAccessMode.ACCESS_WRITE, values, endpoint, property },
+        deviceState,
+        minimal,
+    } = props;
+
+    const thisIsVeryBigEnumeration = values.length > VERY_BIG_ENUM_SIZE;
+
+    if (access & FeatureAccessMode.ACCESS_WRITE) {
+        return (
+            <EnumEditor
+                onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
+                values={values as unknown as ValueWithLabelOrPrimitive[]}
+                value={deviceState[property] as ValueWithLabelOrPrimitive}
+                minimal={minimal || thisIsVeryBigEnumeration}
+            />
+        );
+    }
+
+    if (access & FeatureAccessMode.ACCESS_STATE) {
+        return <BaseViewer {...props} />;
+    }
+
+    return <NoAccessError {...props} />;
+}
