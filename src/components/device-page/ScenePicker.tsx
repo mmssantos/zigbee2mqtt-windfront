@@ -1,8 +1,8 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { Scene } from "../../types.js";
-import { InputField } from "../form-fields/InputField.js";
-import { SelectField } from "../form-fields/SelectField.js";
+import InputField from "../form-fields/InputField.js";
+import SelectField from "../form-fields/SelectField.js";
 
 type ScenePickerProps = {
     value?: Scene;
@@ -17,10 +17,10 @@ export function ScenePicker(props: ScenePickerProps): JSX.Element {
         <SelectField
             name="scene_picker"
             label={t("scene_name")}
-            defaultValue={value?.id}
+            value={value?.id}
             onChange={(e) => onSceneSelected(Number.parseInt(e.target.value, 10))}
         >
-            <option key="hidden" hidden>
+            <option value="" disabled>
                 {t("select_scene")}
             </option>
             {scenes.map((scene) => (
@@ -34,7 +34,7 @@ export function ScenePicker(props: ScenePickerProps): JSX.Element {
             name="scene_picker"
             label={t("scene_id")}
             type="number"
-            defaultValue={value?.id}
+            value={value?.id}
             onChange={(e) => onSceneSelected(e.target.valueAsNumber)}
             min={0}
             max={255}

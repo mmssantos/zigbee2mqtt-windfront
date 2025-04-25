@@ -9,7 +9,7 @@ import type { AvailabilityState } from "../../store.js";
 import type { Device, DeviceState, LastSeenType } from "../../types.js";
 import DeviceControlGroup from "../device-control/DeviceControlGroup.js";
 import { DeviceImage } from "../device-image/DeviceImage.js";
-import { Table } from "../grid/Table.js";
+import Table from "../grid/Table.js";
 import { Availability } from "../value-decorators/Availability.js";
 import { LastSeen } from "../value-decorators/LastSeen.js";
 import { Lqi } from "../value-decorators/Lqi.js";
@@ -40,50 +40,7 @@ export function DevicesTable(props: DevicesTableProps): JSX.Element {
         props;
     const { t } = useTranslation(["zigbee", "common", "availability"]);
 
-    // biome-ignore lint/suspicious/noExplicitAny: tmp
-    const lastSeenCol: ColumnDef<DeviceTableData, any>[] =
-        lastSeenType !== "disable"
-            ? [
-                  {
-                      id: "last_seen",
-                      header: t("last_seen"),
-                      accessorFn: ({ state }) => lastSeen(state, lastSeenType)?.getTime(),
-                      cell: ({
-                          row: {
-                              original: { state },
-                          },
-                      }) => <LastSeen state={state} lastSeenType={lastSeenType} />,
-                      enableColumnFilter: false,
-                  },
-              ]
-            : [];
-    const showAvailabilityColumn = availabilityFeatureEnabled || devices.some((device) => device.availabilityEnabledForDevice);
-    // biome-ignore lint/suspicious/noExplicitAny: tmp
-    const availabilityCol: ColumnDef<DeviceTableData, any>[] = showAvailabilityColumn
-        ? [
-              {
-                  id: "availability",
-                  header: t("availability:availability"),
-                  accessorFn: ({ availabilityState }) => availabilityState.state,
-                  cell: ({
-                      row: {
-                          original: { device, availabilityState, availabilityEnabledForDevice },
-                      },
-                  }) => {
-                      return (
-                          <Availability
-                              disabled={device.disabled}
-                              availability={availabilityState}
-                              availabilityEnabledForDevice={availabilityEnabledForDevice}
-                              availabilityFeatureEnabled={availabilityFeatureEnabled}
-                          />
-                      );
-                  },
-                  enableColumnFilter: false,
-              },
-          ]
-        : [];
-    // biome-ignore lint/suspicious/noExplicitAny: tmp
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const columns = useMemo<ColumnDef<DeviceTableData, any>[]>(
         () => [
             {
@@ -159,8 +116,37 @@ export function DevicesTable(props: DevicesTableProps): JSX.Element {
                     </>
                 ),
             },
-            ...lastSeenCol,
-            ...availabilityCol,
+            {
+                id: "last_seen",
+                header: t("last_seen"),
+                accessorFn: ({ state }) => lastSeen(state, lastSeenType)?.getTime(),
+                cell: ({
+                    row: {
+                        original: { state },
+                    },
+                }) => <LastSeen state={state} lastSeenType={lastSeenType} />,
+                enableColumnFilter: false,
+            },
+            {
+                id: "availability",
+                header: t("availability:availability"),
+                accessorFn: ({ availabilityState }) => availabilityState.state,
+                cell: ({
+                    row: {
+                        original: { device, availabilityState, availabilityEnabledForDevice },
+                    },
+                }) => {
+                    return (
+                        <Availability
+                            disabled={device.disabled}
+                            availability={availabilityState}
+                            availabilityEnabledForDevice={availabilityEnabledForDevice}
+                            availabilityFeatureEnabled={availabilityFeatureEnabled}
+                        />
+                    );
+                },
+                enableColumnFilter: false,
+            },
             {
                 id: "controls",
                 header: "",
@@ -185,8 +171,27 @@ export function DevicesTable(props: DevicesTableProps): JSX.Element {
                 enableColumnFilter: false,
             },
         ],
-        [lastSeenCol, availabilityCol, t, homeassistantEnabled, renameDevice, removeDevice, configureDevice, interviewDevice],
+        [lastSeenType, availabilityFeatureEnabled, t, homeassistantEnabled, renameDevice, removeDevice, configureDevice, interviewDevice],
+    );
+    const visibleColumns = useMemo(
+        () => ({
+            friendly_name: true,
+            ieee_address: true,
+            model: true,
+            last_seen: lastSeenType !== "disable",
+            availability: availabilityFeatureEnabled || devices.some((device) => device.availabilityEnabledForDevice),
+            controls: true,
+        }),
+        [lastSeenType, availabilityFeatureEnabled, devices],
     );
 
-    return <Table id={DEVICES_GLOBAL_NAME} columns={columns} data={devices} pageSizeStoreKey={DEVICE_TABLE_PAGE_SIZE_KEY} />;
+    return (
+        <Table
+            id={DEVICES_GLOBAL_NAME}
+            columns={columns}
+            data={devices}
+            pageSizeStoreKey={DEVICE_TABLE_PAGE_SIZE_KEY}
+            visibleColumns={visibleColumns}
+        />
+    );
 }

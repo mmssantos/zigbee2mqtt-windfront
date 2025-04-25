@@ -1,7 +1,7 @@
 import { type InputHTMLAttributes, useEffect, useState } from "react";
 
 /** A typical debounced input react component */
-export function DebouncedInput({
+export default function DebouncedInput({
     value: initialValue,
     onChange,
     debounce = 500,

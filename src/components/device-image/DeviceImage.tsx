@@ -20,7 +20,6 @@ type DeviceImageProps = {
 
 export function DeviceImage(props: Readonly<DeviceImageProps>) {
     const { t } = useTranslation("zigbee");
-
     const { device = {} as Device, disabled, deviceState, type = "img", className, noIndicator, ...rest } = props;
 
     if (type === "svg") {

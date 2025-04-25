@@ -1,23 +1,21 @@
-import { debounce, keyBy } from "lodash";
+import { keyBy } from "lodash";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import type { Zigbee2MQTTAPI, Zigbee2MQTTResponse } from "zigbee2mqtt/dist/types/api.js";
 import { WebSocketApiRouterContext } from "./WebSocketApiRouterContext.js";
+import { useAppDispatch } from "./hooks/store.js";
 import { resolvePendingRequests, useApiWebSocket } from "./hooks/useApiWebSocket.js";
 import * as store from "./store.js";
 import type { Message, ResponseMessage } from "./types.js";
 
-const API_DEBOUNCE_DELAY = 250;
+const processDeviceStateMessage = (message: Message, dispatch: ReturnType<typeof useAppDispatch>): void => {
+    dispatch(store.updateDeviceStateMessage(message));
+};
 
-const processDeviceStateMessage = debounce(
-    (message: Message, dispatch: ReturnType<typeof useDispatch>): void => {
-        dispatch(store.updateDeviceStateMessage(message));
-    },
-    undefined,
-    { trailing: true, maxWait: API_DEBOUNCE_DELAY },
-);
+const processDeviceAvailabilityMessage = (message: Message, dispatch: ReturnType<typeof useAppDispatch>): void => {
+    dispatch(store.updateAvailability(message));
+};
 
-const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useDispatch>): void => {
+const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useAppDispatch>): void => {
     switch (data.topic) {
         case "bridge/info": {
             dispatch(store.setBridgeInfo(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
@@ -96,23 +94,15 @@ const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useDisp
     }
 };
 
-const processAvailabilityMessage = debounce(
-    (message: Message, dispatch: ReturnType<typeof useDispatch>): void => {
-        dispatch(store.updateAvailability(message));
-    },
-    undefined,
-    { trailing: true, maxWait: API_DEBOUNCE_DELAY },
-);
-
 export function WebSocketApiRouter({ children }) {
     const webSocket = useApiWebSocket();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (webSocket.lastJsonMessage != null) {
             try {
                 if (webSocket.lastJsonMessage.topic.endsWith(store.AVAILABILITY_FEATURE_TOPIC_ENDING)) {
-                    processAvailabilityMessage(webSocket.lastJsonMessage, dispatch);
+                    processDeviceAvailabilityMessage(webSocket.lastJsonMessage, dispatch);
                 } else if (webSocket.lastJsonMessage.topic.startsWith("bridge/")) {
                     processBridgeMessage(webSocket.lastJsonMessage, dispatch);
                 } else {

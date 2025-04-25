@@ -4,9 +4,15 @@ import type { Message } from "../src/types.js";
 export const DEVICE_AVAILABILITY: Message<AvailabilityState>[] = [
     {
         payload: {
-            state: "offline",
+            state: "online",
         },
         topic: "0xbc33acfffe17628b/availability",
+    },
+    {
+        payload: {
+            state: "online",
+        },
+        topic: "0xbc33acfffe17628a/availability",
     },
     {
         payload: {

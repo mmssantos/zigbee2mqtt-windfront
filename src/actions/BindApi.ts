@@ -9,16 +9,10 @@ export type BindParams = {
     clusters: Cluster[];
 };
 
-type BindOperation = "bind" | "unbind";
-
-const bindOp = async (sendMessage: ApiSendMessage, operation: BindOperation, params: Record<string, unknown>) => {
-    await sendMessage(`bridge/request/device/${operation}`, params);
-};
-
-export async function addBind(sendMessage: ApiSendMessage, params: BindParams): Promise<void> {
-    await bindOp(sendMessage, "bind", params);
+export async function bind(sendMessage: ApiSendMessage, params: BindParams): Promise<void> {
+    await sendMessage("bridge/request/device/bind", params);
 }
 
-export async function removeBind(sendMessage: ApiSendMessage, params: BindParams): Promise<void> {
-    await bindOp(sendMessage, "unbind", params);
+export async function unbind(sendMessage: ApiSendMessage, params: BindParams): Promise<void> {
+    await sendMessage("bridge/request/device/unbind", params);
 }

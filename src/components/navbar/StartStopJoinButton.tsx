@@ -42,7 +42,7 @@ export function StartStopJoinButton({ popoverId }: { popoverId: string }) {
     }
 
     const onBtnClick = useCallback(async () => {
-        await BridgeApi.setPermitJoin(sendMessage, bridgeInfo.permit_join ? 0 : 254, selectedRouter);
+        await BridgeApi.permitJoin(sendMessage, bridgeInfo.permit_join ? 0 : 254, selectedRouter);
     }, [sendMessage, bridgeInfo.permit_join, selectedRouter]);
 
     const updatePermitJoinTimeout = () => {

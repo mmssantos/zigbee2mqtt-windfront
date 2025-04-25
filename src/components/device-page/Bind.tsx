@@ -18,7 +18,7 @@ type BindSource = {
 };
 export interface NiceBindingRule {
     id?: number;
-    isNew?: number;
+    isNew?: true;
     source: BindSource;
     target: BindTarget;
     clusters: Cluster[];
@@ -60,7 +60,7 @@ export function Bind(props: BindProps): JSX.Element {
     const devices = useAppSelector((state) => state.devices);
     const groups = useAppSelector((state) => state.groups);
     const [newBindingRule] = useState<NiceBindingRule>({
-        isNew: Date.now(),
+        isNew: true,
         target: {} as BindTarget,
         source: { ieee_address: device.ieee_address, endpoint: "" },
         clusters: [],
@@ -68,7 +68,7 @@ export function Bind(props: BindProps): JSX.Element {
 
     const bidingRules = useMemo(() => convertBindingsIntoNiceStructure(device), [device]);
     return (
-        <div className="container-fluid">
+        <div className="flex flex-col gap-2">
             {[...bidingRules, newBindingRule].map((rule, idx) => (
                 <BindRow key={rule2key(rule)} rule={rule} groups={groups} device={device} idx={idx} devices={devices} />
             ))}

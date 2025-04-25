@@ -10,5 +10,5 @@ export function States(props: StatesProps) {
     const jsonState = JSON.stringify(deviceState, null, 4);
     const lines = Math.max(10, (jsonState.match(/\n/g) || "").length + 1);
 
-    return <textarea className="textarea w-full" rows={lines} readOnly defaultValue={jsonState} />;
+    return <textarea className="textarea w-full" rows={lines} readOnly value={jsonState} />;
 }

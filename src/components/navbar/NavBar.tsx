@@ -100,12 +100,7 @@ export const NavBar = () => {
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1">
                     {bridgeInfo.restart_required ? (
-                        <Button
-                            key="restart-bridge"
-                            onClick={async () => await BridgeApi.restartBridge(sendMessage)}
-                            prompt
-                            className="btn btn-error mr-1"
-                        >
+                        <Button key="restart-bridge" onClick={async () => await BridgeApi.restart(sendMessage)} prompt className="btn btn-error mr-1">
                             {t("restart")}
                         </Button>
                     ) : null}

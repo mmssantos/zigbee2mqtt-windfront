@@ -21,7 +21,8 @@ interface PowerSourceProps {
     showLevel?: boolean;
 }
 
-export default function PowerSource({ device, deviceState, showLevel, ...rest }: PowerSourceProps) {
+export default function PowerSource(props: PowerSourceProps) {
+    const { device, deviceState, showLevel, ...rest } = props;
     const { t } = useTranslation("zigbee");
     let source: TPowerSource | undefined = undefined;
 
@@ -127,7 +128,7 @@ export default function PowerSource({ device, deviceState, showLevel, ...rest }:
                 return <FontAwesomeIcon icon={faLeaf} title={"Green"} {...rest} />;
             }
 
-            return <FontAwesomeIcon icon={faQuestion} title={t(snakeCase(source))} {...rest} />;
+            return <FontAwesomeIcon icon={faQuestion} title={source ? t(snakeCase(source)) : undefined} {...rest} />;
         }
     }
 }

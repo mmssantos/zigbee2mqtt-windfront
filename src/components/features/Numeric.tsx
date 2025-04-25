@@ -1,4 +1,4 @@
-import { type Endpoint, FeatureAccessMode, type NumericFeature } from "../../types.js";
+import { FeatureAccessMode, type NumericFeature } from "../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import RangeEditor from "../editors/RangeEditor.js";
 import BaseViewer from "./BaseViewer.js";
@@ -30,7 +30,7 @@ export default function Numeric(props: NumericProps) {
     if (access & FeatureAccessMode.SET) {
         return (
             <RangeEditor
-                onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
+                onChange={(value) => onChange(endpoint, { [property]: value })}
                 value={(deviceState[property] ?? "") as number}
                 min={valueMin}
                 max={valueMax}

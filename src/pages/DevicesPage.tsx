@@ -1,4 +1,4 @@
-import React, { type JSX, useCallback, useContext } from "react";
+import { type JSX, useCallback, useContext, useMemo } from "react";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import * as DeviceApi from "../actions/DeviceApi.js";
 import { type DeviceTableData, DevicesTable } from "../components/zigbee/DevicesTable.js";
@@ -13,7 +13,7 @@ export default function DevicesPage(): JSX.Element {
     const availabilityFeatureEnabled = !!bridgeInfo.config.availability?.enabled;
     const homeassistantEnabled = !!bridgeInfo.config?.homeassistant?.enabled;
 
-    const data = React.useMemo((): DeviceTableData[] => {
+    const data = useMemo((): DeviceTableData[] => {
         const renderDevices: DeviceTableData[] = [];
 
         for (const key in devices) {

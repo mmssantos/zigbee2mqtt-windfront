@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { type CompositeFeature, type Endpoint, FeatureAccessMode, type GenericFeature, type ListFeature } from "../../types.js";
+import { type CompositeFeature, FeatureAccessMode, type GenericFeature, type ListFeature } from "../../types.js";
 import Button from "../button/Button.js";
 import RangeListEditor from "../editors/RangeListEditor.js";
 import BaseViewer from "./BaseViewer.js";
@@ -32,14 +32,14 @@ export default function List(props: Props) {
 
         setState({ value });
         if (!isListRoot()) {
-            props.onChange(endpoint as Endpoint, property ? { [property]: value } : value);
+            props.onChange(endpoint, property ? { [property]: value } : value);
         }
     };
 
     const onApply = () => {
         const { value } = state;
         const { endpoint, property } = props.feature;
-        props.onChange(endpoint as Endpoint, property ? { [property]: value } : value);
+        props.onChange(endpoint, property ? { [property]: value } : value);
     };
 
     const isListRoot = (): boolean => {

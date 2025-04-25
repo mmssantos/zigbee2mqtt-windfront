@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { SUPPORT_NEW_DEVICES_URL } from "../../utils.js";
+import { Link } from "react-router";
+import { SUPPORT_NEW_DEVICES_URL } from "../../consts.js";
 import type { VendorProps } from "./VendorLink.js";
 
 const normalizeModel = (model: string): string => {
@@ -26,8 +27,8 @@ export default function ModelLink(props: VendorProps) {
     }
 
     return (
-        <a target="_blank" rel="noopener noreferrer" href={url} className="link link-hover">
+        <Link target="_blank" rel="noopener noreferrer" to={url} className="link link-hover">
             {title}
-        </a>
+        </Link>
     );
 }

@@ -1,7 +1,7 @@
 import convertColors from "color-convert";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { Endpoint, GradientFeature, RGBColor } from "../../types.js";
+import type { GradientFeature, RGBColor } from "../../types.js";
 import Button from "../button/Button.js";
 import ColorEditor from "../editors/ColorEditor.js";
 import type { BaseFeatureProps } from "./index.js";
@@ -93,7 +93,7 @@ export function Gradient(props: GradientProps) {
             <div>
                 <Button
                     className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`}
-                    onClick={() => onChange(endpoint as Endpoint, { gradient: colors.map(rgbToHex) })}
+                    onClick={() => onChange(endpoint, { gradient: colors.map(rgbToHex) })}
                 >
                     {t("common:apply")}
                 </Button>

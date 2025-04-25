@@ -1,8 +1,6 @@
 import { diff } from "deep-object-diff";
 import { saveAs } from "file-saver";
-import type { Device, DeviceState, Endpoint, Group, LastSeenType } from "./types.js";
-
-export const SUPPORT_NEW_DEVICES_URL = "https://www.zigbee2mqtt.io/advanced/support-new-devices/01_support_new_devices.html";
+import type { Device, DeviceState, Group, LastSeenType } from "./types.js";
 
 // #region Compute
 
@@ -46,6 +44,12 @@ export const computeSettingsDiff = (before: object, after: object) => {
     }
 
     return diffObj;
+};
+
+export const getObjectFirstKey = <T>(object: T): string | undefined => {
+    for (const key in object) {
+        return key;
+    }
 };
 
 // #endregion
@@ -125,26 +129,32 @@ export function isGroup(entity: Device | Group): entity is Group {
     return "members" in entity;
 }
 
-export const getEndpoints = (entity?: Device | Group): Endpoint[] => {
-    let eps: Endpoint[] = [];
+export const getEndpoints = (entity?: Device | Group): Set<string> => {
+    const endpoints = new Set<string>();
 
     if (!entity) {
-        return eps;
+        return endpoints;
     }
 
     if (isDevice(entity)) {
-        eps = eps.concat(Object.keys(entity.endpoints) as Endpoint[]);
+        for (const key in entity.endpoints) {
+            endpoints.add(key);
+        }
 
         if (entity.definition?.exposes) {
-            eps = eps.concat(entity.definition?.exposes?.map((e) => e.endpoint).filter(Boolean) as Endpoint[]);
+            for (const expose of entity.definition.exposes) {
+                if (expose.endpoint) {
+                    endpoints.add(expose.endpoint);
+                }
+            }
         }
     } else if (entity.members) {
         for (const member of entity.members) {
-            eps.push(member.endpoint);
+            endpoints.add(member.endpoint.toString());
         }
     }
 
-    return eps;
+    return endpoints;
 };
 
 // #endregion

@@ -8,7 +8,7 @@ import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import * as GroupsApi from "../actions/GroupsApi.js";
 import Button from "../components/button/Button.js";
-import { Table } from "../components/grid/Table.js";
+import Table from "../components/grid/Table.js";
 import { RenameGroupForm } from "../components/modal/components/RenameGroupModal.js";
 import { useAppSelector } from "../hooks/store.js";
 import type { ApiSendMessage } from "../hooks/useApiWebSocket.js";

@@ -60,3 +60,19 @@ export const BRIDGE_LOGGING: Message<Omit<LogMessage, "timestamp">>[] = [
         topic: "bridge/logging",
     },
 ];
+
+export const BRIDGE_LOGGING_READ_ATTR: Message<Omit<LogMessage, "timestamp">> = {
+    payload: {
+        level: "info",
+        message: `zhc:tz: Read result of 'genBasic': {"modelId": "abcd"}`,
+    },
+    topic: "bridge/logging",
+};
+
+export const BRIDGE_LOGGING_EXECUTE_COMMAND: Message<Omit<LogMessage, "timestamp">> = {
+    payload: {
+        level: "info",
+        message: `zhc:tz: Invoked 'genBasic.1' with payload '{"a": 1}'`,
+    },
+    topic: "bridge/logging",
+}

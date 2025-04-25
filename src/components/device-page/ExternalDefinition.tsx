@@ -1,43 +1,53 @@
-import { useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as DeviceApi from "../../actions/DeviceApi.js";
+import { SUPPORT_NEW_DEVICES_URL } from "../../consts.js";
 import { useAppSelector } from "../../hooks/store.js";
 import type { Device } from "../../types.js";
-import { SUPPORT_NEW_DEVICES_URL } from "../../utils.js";
 import Button from "../button/Button.js";
+import TextareaField from "../form-fields/TextareaField.js";
 
 export interface ExternalDefinitionProps {
     device: Device;
 }
 
 export function ExternalDefinition(props: ExternalDefinitionProps) {
-    const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const onGenerateExternalDefinitionClick = async (): Promise<void> => {
-        const { device } = props;
-        await DeviceApi.generateExternalDefinition(sendMessage, device.ieee_address);
-    };
-    const { t } = useTranslation(["devConsole", "common"]);
-
     const { device } = props;
-    const generatedExternalDefinitions = useAppSelector((state) => state.generatedExternalDefinitions);
-    const externalDefinition = generatedExternalDefinitions[device.ieee_address];
+    const [loading, setLoading] = useState<boolean>(false);
+    const { sendMessage } = useContext(WebSocketApiRouterContext);
+    const { t } = useTranslation(["devConsole", "common"]);
+    const externalDefinition = useAppSelector((state) => state.generatedExternalDefinitions[device.ieee_address]);
 
-    if (externalDefinition) {
-        return (
-            <>
-                {t("generated_external_definition")} (
-                <a href={SUPPORT_NEW_DEVICES_URL} target="_blank" rel="noreferrer" className="link link-hover">
-                    {t("documentation")}
-                </a>
-                )
-                <textarea defaultValue={externalDefinition} />
-            </>
-        );
-    }
-    return (
-        <Button<void> className="btn btn-primary" onClick={onGenerateExternalDefinitionClick}>
-            {t("generate_external_definition")}
-        </Button>
+    const onGenerateExternalDefinitionClick = useCallback(async (): Promise<void> => {
+        setLoading(true);
+        await DeviceApi.generateExternalDefinition(sendMessage, device.ieee_address);
+    }, [sendMessage, device.ieee_address]);
+
+    return externalDefinition ? (
+        <>
+            <TextareaField
+                name="generated_external_definition"
+                label={t("generated_external_definition")}
+                value={externalDefinition}
+                className="textarea w-full"
+                rows={8}
+                readOnly
+            />
+            <Link to={SUPPORT_NEW_DEVICES_URL} target="_blank" rel="noreferrer" className="link link-primary self-end">
+                {t("common:documentation")}
+            </Link>
+        </>
+    ) : (
+        <div className="flex flex-row justify-center items-center gap-2">
+            {loading ? (
+                <span className="loading loading-infinity loading-xl" />
+            ) : (
+                <Button<void> className="btn btn-primary" onClick={onGenerateExternalDefinitionClick}>
+                    {t("generate_external_definition")}
+                </Button>
+            )}
+        </div>
     );
 }

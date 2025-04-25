@@ -17,11 +17,9 @@ export function Availability(props: AvailabilityStateProps): JSX.Element {
         return <span>{t("disabled")}</span>;
     }
 
-    if (availabilityEnabledForDevice ?? availabilityFeatureEnabled) {
-        return <span className={availability.state === "online" ? "text-success" : "text-error animate-ping"}>{t(availability.state)}</span>;
-    }
-
-    return (
+    return (availabilityEnabledForDevice ?? availabilityFeatureEnabled) ? (
+        <span className={availability.state === "online" ? "text-success" : "text-error animate-ping"}>{t(availability.state)}</span>
+    ) : (
         <a
             className="link link-hover"
             target="_blank"

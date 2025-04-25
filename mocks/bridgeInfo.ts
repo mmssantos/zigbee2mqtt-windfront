@@ -109,6 +109,9 @@ export const BRIDGE_INFO: Message<BridgeInfo> = {
                 "0xbc33acfffe17628b": {
                     friendly_name: "0xbc33acfffe17628b",
                 },
+                "0xbc33acfffe17628a": {
+                    friendly_name: "0xbc33acfffe17628a",
+                },
             },
             frontend: {
                 base_url: "/",

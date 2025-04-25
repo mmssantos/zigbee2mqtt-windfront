@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import type { Device } from "../../types.js";
 
 export type VendorProps = {
@@ -9,13 +10,16 @@ export type VendorProps = {
 export default function VendorLink(props: VendorProps) {
     const { t } = useTranslation("zigbee");
     const { device } = props;
+
     if (device.supported && device.definition) {
         const url = `https://www.zigbee2mqtt.io/supported-devices/#v=${encodeURIComponent(device.definition.vendor)}`;
+
         return (
-            <a target="_blank" rel="noopener noreferrer" href={url} className="link link-hover">
+            <Link target="_blank" rel="noopener noreferrer" to={url} className="link link-hover">
                 {device.definition.vendor}
-            </a>
+            </Link>
         );
     }
+
     return <>{t("unsupported")}</>;
 }

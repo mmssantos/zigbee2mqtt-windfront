@@ -1,4 +1,4 @@
-import type { AnyColor, ColorFeature, Endpoint } from "../../types.js";
+import type { AnyColor, ColorFeature } from "../../types.js";
 import ColorEditor from "../editors/ColorEditor.js";
 import type { BaseFeatureProps } from "./index.js";
 
@@ -13,11 +13,6 @@ export default function Color(props: ColorProps) {
     }
 
     return (
-        <ColorEditor
-            onChange={(color) => onChange(feature.endpoint as Endpoint, { color })}
-            value={value as AnyColor}
-            format={feature.name}
-            minimal={minimal}
-        />
+        <ColorEditor onChange={(color) => onChange(feature.endpoint, { color })} value={value as AnyColor} format={feature.name} minimal={minimal} />
     );
 }

@@ -14,9 +14,5 @@ export function LastSeen(props: LastSeenProps): JSX.Element {
     const { state, lastSeenType } = props;
     const lastSeenDate = lastSeen(state, lastSeenType);
 
-    if (lastSeenDate) {
-        return <span title={formatDate(lastSeenDate)}>{format(lastSeenDate, i18n.language)}</span>;
-    }
-
-    return <>N/A</>;
+    return lastSeenDate ? <span title={formatDate(lastSeenDate)}>{format(lastSeenDate, i18n.language)}</span> : <>N/A</>;
 }

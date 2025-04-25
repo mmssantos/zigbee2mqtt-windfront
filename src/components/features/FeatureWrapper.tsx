@@ -35,7 +35,7 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
                         <Button<CompositeFeature | GenericFeature>
                             item={feature}
                             onClick={(item) => {
-                                onRead(feature.endpoint as Endpoint, { [item.property as string]: "" });
+                                onRead(feature.endpoint, { [item.property as string]: "" });
                             }}
                             className="btn btn-sm btn-primary"
                         >

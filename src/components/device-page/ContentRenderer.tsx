@@ -14,12 +14,8 @@ import type { DevicePageUrlParams } from "./index.js";
 import { States } from "./states.js";
 
 export function ContentRenderer(): JSX.Element {
-    const devices = useAppSelector((state) => state.devices);
-    const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
-    const logs = useAppSelector((state) => state.logs);
-    const deviceStates = useAppSelector((state) => state.deviceStates);
     const params = useParams<DevicePageUrlParams>();
-    const device = devices[params.dev!]; // TODO: always valid?
+    const device = useAppSelector((state) => state.devices[params.dev!]);
 
     switch (params.tab) {
         case "info":
@@ -35,15 +31,13 @@ export function ContentRenderer(): JSX.Element {
         case "reporting":
             return <Reporting device={device} />;
         case "settings":
-            return <DeviceSettings device={device} bridgeInfo={bridgeInfo} />;
+            return <DeviceSettings device={device} />;
         case "settings-specific":
-            return <DeviceSpecificSettings device={device} bridgeInfo={bridgeInfo} />;
+            return <DeviceSpecificSettings device={device} />;
         case "dev-console":
-            return <DevConsole device={device} logs={logs} />;
-        case "scene": {
-            const deviceState = deviceStates[device.friendly_name] ?? {};
-            return <ScenePage device={device} deviceState={deviceState} />;
-        }
+            return <DevConsole device={device} />;
+        case "scene":
+            return <ScenePage device={device} />;
         default:
             return <Navigate to={`/device/${params.dev}/info`} />;
     }

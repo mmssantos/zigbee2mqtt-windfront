@@ -1,19 +1,28 @@
-import type { ChangeEvent, DetailedHTMLProps, InputHTMLAttributes } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, useCallback } from "react";
 
-type CheckboxFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
+export type CheckboxFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     name: string;
     label?: string;
     desc: string;
     onChange(event: ChangeEvent<HTMLInputElement>): void;
 };
 
-export function CheckboxField(props: CheckboxFieldProps) {
+export default function CheckboxField(props: CheckboxFieldProps) {
     const { type, label, desc, onChange, ...rest } = props;
+
+    const onValidChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            if (!e.target.validationMessage) {
+                onChange(e);
+            }
+        },
+        [onChange],
+    );
 
     return (
         <fieldset className="fieldset">
             {label && <legend className="fieldset-legend">{label}</legend>}
-            <input className="checkbox" type="checkbox" onChange={onChange} {...rest} />
+            <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onValidChange} {...rest} />
             {desc}
         </fieldset>
     );

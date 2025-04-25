@@ -1,6 +1,6 @@
 import { faLink, faUnlink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as BindApi from "../../actions/BindApi.js";
@@ -8,10 +8,9 @@ import type { Devices, WithDevices } from "../../store.js";
 import type { Cluster, Device, Endpoint, EntityType, Group } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import Button from "../button/Button.js";
-import ClusterPicker from "../pickers/ClusterPicker.js";
+import ClusterMultiPicker from "../pickers/ClusterMultiPicker.js";
 import DevicePicker from "../pickers/DevicePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
-import { ClusterPickerType } from "../pickers/index.js";
 import type { NiceBindingRule } from "./Bind.js";
 
 interface BindRowProps extends WithDevices {
@@ -25,27 +24,29 @@ interface BindRowState {
     stateRule: NiceBindingRule;
 }
 
-const getTarget = (rule: NiceBindingRule, devices: Devices, groups: Group[]): Device | Group => {
+const getTarget = (rule: NiceBindingRule, devices: Devices, groups: Group[]): Device | Group | undefined => {
     if (rule.target.type === "group") {
-        return groups.find((g) => g.id === rule.target.id) as Group;
+        return groups.find((g) => g.id === rule.target.id);
     }
-    return devices[rule.target?.ieee_address as string];
+
+    return rule.target?.ieee_address ? devices[rule.target.ieee_address] : undefined;
 };
 
 type Action = "Bind" | "Unbind";
 
 export function BindRow(props: BindRowProps) {
-    const [state, setState] = useState<BindRowState>({ stateRule: props.rule });
+    const { devices, groups, device, rule } = props;
+    const [state, setState] = useState<BindRowState>({ stateRule: rule });
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["common", "zigbee"]);
+    const { stateRule } = state;
 
     const setSourceEp = (sourceEp: Endpoint): void => {
-        const { stateRule } = state;
         stateRule.source.endpoint = sourceEp;
+
         setState({ stateRule });
     };
     const setDestination = (destination: Device | Group, type: EntityType): void => {
-        const { stateRule } = state;
         if (type === "device") {
             const endpoints = getEndpoints(destination);
             stateRule.target.ieee_address = (destination as Device).ieee_address;
@@ -57,23 +58,20 @@ export function BindRow(props: BindRowProps) {
             stateRule.target.type = "group";
             stateRule.target.ieee_address = undefined; // XXX: biome: changed from delete
         }
+
         stateRule.clusters = [];
         setState({ stateRule });
     };
     const setDestinationEp = (destinationEp: Endpoint): void => {
-        const { stateRule } = state;
         stateRule.target.endpoint = destinationEp;
         stateRule.clusters = [];
         setState({ stateRule });
     };
     const setClusters = (clusters: Cluster[]): void => {
-        const { stateRule } = state;
         stateRule.clusters = clusters;
         setState({ stateRule });
     };
-    const getBidingParams = (): BindApi.BindParams => {
-        const { device, groups, devices } = props;
-        const { stateRule } = state;
+    const onBindOrUnBindClick = async (action: Action): Promise<void> => {
         let to = "";
         let toEndpoint: Endpoint | undefined;
 
@@ -89,25 +87,21 @@ export function BindRow(props: BindRowProps) {
             }
         }
 
-        return {
+        const bindParams = {
             from: device.friendly_name,
             from_endpoint: stateRule.source.endpoint,
             to,
             to_endpoint: toEndpoint,
             clusters: stateRule.clusters,
         };
-    };
-    const onBindOrUnBindClick = async (action: Action): Promise<void> => {
-        const params = getBidingParams();
 
         if (action === "Bind") {
-            await BindApi.addBind(sendMessage, params);
+            await BindApi.bind(sendMessage, bindParams);
         } else {
-            await BindApi.removeBind(sendMessage, params);
+            await BindApi.unbind(sendMessage, bindParams);
         }
     };
     const isValidRule = (): boolean => {
-        const { stateRule } = state;
         let valid = false;
 
         if (stateRule.target.type === "endpoint") {
@@ -119,23 +113,29 @@ export function BindRow(props: BindRowProps) {
         return valid;
     };
 
-    const { devices, groups, device } = props;
-    const { stateRule } = state;
-    const sourceEndpoints = getEndpoints(device);
+    const sourceEndpoints = useMemo(() => getEndpoints(device), [device]);
     const target = getTarget(stateRule, devices, groups);
-    const destinationEndpoints = getEndpoints(target);
+    const destinationEndpoints = useMemo(() => getEndpoints(target), [target]);
 
     const possibleClusters: Set<Cluster> = new Set(stateRule.clusters);
     const srcEndpoint = device.endpoints[stateRule.source.endpoint];
     const dstEndpoint =
-        stateRule.target.type === "endpoint" && stateRule.target.endpoint ? (target as Device)?.endpoints[stateRule.target.endpoint] : undefined;
-    const allClustersValid = stateRule.target.type === "group" || (target as Device)?.type === "Coordinator";
+        stateRule.target.type === "endpoint" && stateRule.target.endpoint
+            ? (target as Device | undefined)?.endpoints[stateRule.target.endpoint]
+            : undefined;
+    const allClustersValid = stateRule.target.type === "group" || (target as Device | undefined)?.type === "Coordinator";
+
     if (srcEndpoint && (dstEndpoint || allClustersValid)) {
         for (const cluster of [...srcEndpoint.clusters.input, ...srcEndpoint.clusters.output]) {
-            const supportedInputOutput = srcEndpoint.clusters.input.includes(cluster) && dstEndpoint?.clusters.output.includes(cluster);
-            const supportedOutputInput = srcEndpoint.clusters.output.includes(cluster) && dstEndpoint?.clusters.input.includes(cluster);
-            if (supportedInputOutput || supportedOutputInput || allClustersValid) {
+            if (allClustersValid) {
                 possibleClusters.add(cluster);
+            } else {
+                const supportedInputOutput = srcEndpoint.clusters.input.includes(cluster) && dstEndpoint?.clusters.output.includes(cluster);
+                const supportedOutputInput = srcEndpoint.clusters.output.includes(cluster) && dstEndpoint?.clusters.input.includes(cluster);
+
+                if (supportedInputOutput || supportedOutputInput || allClustersValid) {
+                    possibleClusters.add(cluster);
+                }
             }
         }
     }
@@ -167,19 +167,13 @@ export function BindRow(props: BindRowProps) {
                         label={t("destination_endpoint")}
                         disabled={!stateRule.isNew}
                         values={destinationEndpoints}
-                        value={stateRule.target.endpoint as Endpoint}
+                        value={stateRule.target.endpoint}
                         onChange={setDestinationEp}
                     />
                 ) : null}
             </div>
             <div className="col-md-4">
-                <ClusterPicker
-                    label={t("clusters")}
-                    pickerType={ClusterPickerType.MULTIPLE}
-                    clusters={Array.from(possibleClusters)}
-                    value={stateRule.clusters}
-                    onChange={setClusters}
-                />
+                <ClusterMultiPicker label={t("clusters")} clusters={possibleClusters} value={stateRule.clusters} onChange={setClusters} />
             </div>
             <div className="col-md-2">
                 <div className="form-group">

@@ -49,7 +49,7 @@ export function Composite(props: CompositeProps) {
 
     const onCompositeFeatureApply = (): void => {
         const newState = { ...props.deviceState, ...state };
-        props.onChange(props.feature.endpoint as Endpoint, props.feature.property ? { [props.feature.property]: newState } : newState);
+        props.onChange(props.feature.endpoint, props.feature.property ? { [props.feature.property]: newState } : newState);
     };
 
     const onRead = (endpoint: Endpoint, property: Record<string, unknown>): void => {

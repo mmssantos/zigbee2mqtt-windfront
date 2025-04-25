@@ -4,18 +4,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { groupBy } from "lodash";
 import { type JSX, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import * as MapApi from "../actions/MapApi.js";
 import Button from "../components/button/Button.js";
 import { DeviceImage } from "../components/device-image/DeviceImage.js";
-import { DebouncedInput } from "../components/form-fields/DebouncedInput.js";
+import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { type GraphRaw, ZigbeeRelationship } from "../components/map/types.js";
 import { MapHelpModal } from "../components/modal/components/MapHelpModal.js";
 import { Lqi } from "../components/value-decorators/Lqi.js";
 import PowerSource from "../components/value-decorators/PowerSource.js";
-import { useAppSelector } from "../hooks/store.js";
+import { useAppDispatch, useAppSelector } from "../hooks/store.js";
 import { getDeviceDetailsLink, toHex } from "../utils.js";
 
 const RELATION_TMAP = {
@@ -31,7 +30,7 @@ export default function MapHierarchy() {
     const isLoading = useAppSelector((state) => state.networkGraphIsLoading);
     const graph = useAppSelector((state) => state.networkGraph);
     const devices = useAppSelector((state) => state.devices);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("map");
     const [filterValue, setFilterValue] = useState<string>("");

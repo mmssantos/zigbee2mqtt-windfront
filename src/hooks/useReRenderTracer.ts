@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
-export default function useReRenderTracer(props: Record<string, unknown>) {
+// biome-ignore lint/suspicious/noExplicitAny: debug
+export default function useReRenderTracer(props: any) {
     const prev = useRef(props);
 
     useEffect(() => {

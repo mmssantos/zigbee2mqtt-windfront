@@ -22,25 +22,9 @@ import type {
     TextFeature,
 } from "../../types.js";
 
-import type { WithBridgeInfo } from "../../store.js";
 import { isDevice } from "../../utils.js";
 
 export type TabName = "info" | "bind" | "state" | "exposes" | "clusters" | "reporting" | "settings" | "settings-specific" | "dev-console" | "scene";
-
-export interface DeviceSettingsProps extends WithBridgeInfo {
-    device: Device;
-}
-
-export type ParamValue = {
-    key: string;
-    value: unknown;
-    type: unknown;
-};
-
-export type DeviceSettingsState = {
-    newSetting: ParamValue;
-    updatedDeviceConfig: Record<string, unknown> | Record<string, unknown>[];
-};
 
 export type DevicePageUrlParams = {
     dev: string;

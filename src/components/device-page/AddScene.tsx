@@ -8,7 +8,7 @@ import { isDevice } from "../../utils.js";
 import Button from "../button/Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { Composite } from "../features/Composite.js";
-import { InputField } from "../form-fields/InputField.js";
+import InputField from "../form-fields/InputField.js";
 import { getScenes, isValidSceneId, onlyValidFeaturesForScenes } from "./index.js";
 
 type AddSceneProps = {
@@ -45,7 +45,7 @@ export function AddScene(props: AddSceneProps): JSX.Element {
                     name="scene_id"
                     label={t("scene_id")}
                     type="number"
-                    defaultValue={sceneId}
+                    value={sceneId}
                     onChange={(e) => setSceneId(e.target.valueAsNumber)}
                     min={0}
                     max={255}
@@ -54,7 +54,7 @@ export function AddScene(props: AddSceneProps): JSX.Element {
                     name="scene_name"
                     label={t("scene_name")}
                     type="string"
-                    defaultValue={sceneName}
+                    value={sceneName}
                     placeholder={defaultSceneName}
                     onChange={(e) => setSceneName(e.target.value)}
                 />

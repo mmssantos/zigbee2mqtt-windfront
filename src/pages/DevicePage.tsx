@@ -25,11 +25,11 @@ export default function DevicePage(): JSX.Element {
     const params = useParams<DevicePageUrlParams>();
     const device = params.dev ? devices[params.dev] : undefined;
 
+    const isActive = useCallback(({ isActive }) => (isActive ? " menu-active" : ""), []);
+
     if (!device) {
         return <div className="flex-auto justify-center items-center">{t("unknown_device")}</div>;
     }
-
-    const isActive = useCallback(({ isActive }) => (isActive ? " menu-active" : ""), []);
 
     return (
         <>

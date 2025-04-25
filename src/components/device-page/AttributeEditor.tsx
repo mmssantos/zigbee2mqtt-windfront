@@ -1,22 +1,21 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useState } from "react";
+import { type JSX, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { DataType } from "../../ZCLenums.js";
 import type { LogMessage } from "../../store.js";
-import type { Attribute, Cluster, Device, Endpoint } from "../../types.js";
-import { getEndpoints } from "../../utils.js";
+import type { Cluster, Device, Endpoint } from "../../types.js";
+import { getEndpoints, getObjectFirstKey } from "../../utils.js";
 import Button from "../button/Button.js";
 import AttributePicker, { type AttributeDefinition } from "../pickers/AttributePicker.js";
-import ClusterPicker from "../pickers/ClusterPicker.js";
+import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
-import { ClusterPickerType } from "../pickers/index.js";
-import { AttributeValueInput } from "./AttributeValueInput.js";
 import { LastLogResult } from "./LastLogResult.js";
 
 export interface AttributeEditorProps {
     device: Device;
-    logs: LogMessage[];
-    readDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: Attribute[], options: Record<string, unknown>): Promise<void>;
+    lastLog?: LogMessage;
+    readDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], options: Record<string, unknown>): Promise<void>;
     writeDeviceAttributes(
         id: string,
         endpoint: Endpoint,
@@ -26,184 +25,185 @@ export interface AttributeEditorProps {
     ): Promise<void>;
 }
 export type AttributeInfo = {
-    attribute: Attribute;
+    attribute: string;
     definition: AttributeDefinition;
     value?: unknown;
-};
-
-export type AttributeEditorState = {
-    cluster: Cluster;
-    endpoint: Endpoint;
-    attributes: AttributeInfo[];
 };
 
 export type AttributeValueInputProps = {
-    onChange(attribute: Attribute, value: unknown): void;
-    attribute: Attribute;
+    onChange(attribute: string, value: unknown): void;
+    attribute: string;
     definition: AttributeDefinition;
     value?: unknown;
 };
 
-const LOG_STARTING_STRINGS = ["Read result of", "Publish 'set' 'read' to", "Publish 'set' 'write' to", "Wrote "];
+const TYPES_MAP = {
+    [DataType.CHAR_STR]: "string",
+    [DataType.LONG_CHAR_STR]: "string",
+    [DataType.OCTET_STR]: "string",
+    [DataType.LONG_OCTET_STR]: "string",
+};
+
+function AttributeValueInput(props: Readonly<AttributeValueInputProps>): JSX.Element {
+    const { value, onChange, attribute, definition, ...rest } = props;
+    const type = TYPES_MAP[definition.type] ?? "number";
+
+    return (
+        <input
+            type={type}
+            value={value as string | number}
+            onChange={(e): void => {
+                const val = type === "number" ? e.target.valueAsNumber : e.target.value;
+
+                onChange(attribute, val);
+            }}
+            {...rest}
+        />
+    );
+}
 
 export function AttributeEditor(props: AttributeEditorProps) {
-    const { device, readDeviceAttributes, writeDeviceAttributes } = props;
-    const defaultEndpoint = Object.keys(device.endpoints)[0];
-    const [state, setState] = useState<AttributeEditorState>({
-        endpoint: defaultEndpoint,
-        cluster: "",
-        attributes: [],
-    });
+    const { device, readDeviceAttributes, writeDeviceAttributes, lastLog } = props;
+    const [endpoint, setEndpoint] = useState(getObjectFirstKey(device.endpoints));
+    const [cluster, setCluster] = useState("");
+    const [attributes, setAttributes] = useState<AttributeInfo[]>([]);
     const { t } = useTranslation(["common", "zigbee"]);
 
-    const onEndpointChange = (endpoint: Endpoint): void => {
-        setState({ ...state, attributes: [], cluster: "", endpoint });
-    };
+    const selectedAttributes = useMemo(
+        () =>
+            attributes.length > 0 && (
+                <fieldset className="fieldset flex flex-row flex-wrap gap-2 p-3 rounded-box shadow-md" data-testid="selected-attribute">
+                    {attributes.map(({ attribute, value = "", definition }) => (
+                        <div key={attribute} className="join">
+                            {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
+                            <label className="input join-item">
+                                {attribute}
+                                <AttributeValueInput
+                                    value={value as string | number}
+                                    attribute={attribute}
+                                    definition={definition}
+                                    onChange={(attribute, value): void => {
+                                        const newAttributes = [...attributes];
+                                        const attr = newAttributes.find((info) => info.attribute === attribute);
 
-    const onClusterChange = (cluster: Cluster): void => {
-        setState({ ...state, attributes: [], cluster });
-    };
+                                        if (attr) {
+                                            attr.value = value;
+                                        }
 
-    const onAttributeSelect = (attribute: Attribute, definition: AttributeDefinition): void => {
-        const { attributes } = state;
-        if (!attributes.find((info) => info.attribute === attribute)) {
-            const newAttributes = attributes.concat([{ attribute, definition }]);
-            setState({ ...state, attributes: newAttributes });
-        }
-    };
-
-    const onAttributeDelete = (attribute: Attribute): void => {
-        const { attributes } = state;
-        const newAttributes = attributes.filter((info) => info.attribute !== attribute);
-        setState({ ...state, attributes: newAttributes });
-    };
-
-    const onReadClick = async (): Promise<void> => {
-        const { cluster, attributes, endpoint } = state;
-        await readDeviceAttributes(
-            device.friendly_name,
-            endpoint,
-            cluster,
-            attributes.map((info) => info.attribute),
-            {},
-        );
-    };
-
-    const onWriteClick = async (): Promise<void> => {
-        const { device } = props;
-        const { cluster, attributes, endpoint } = state;
-        await writeDeviceAttributes(device.friendly_name, endpoint, cluster, attributes, {});
-    };
-
-    const onAttributeValueChange = (attribute: Attribute, value: unknown): void => {
-        const { attributes } = state;
-        const newAttributes = [...attributes];
-        const attr = newAttributes.find((info) => info.attribute === attribute);
-        if (attr) {
-            attr.value = value;
-        }
-        setState({ ...state, attributes: newAttributes });
-    };
-
-    const renderSelectedAttribute = (): JSX.Element[] => {
-        const { attributes } = state;
-        return attributes.map(({ attribute, value = "", definition }) => (
-            <div key={attribute} className="row mb-1">
-                <div className="col-3">
-                    <div className="row">
-                        <div className="col-6">{attribute}</div>
-                        <div className="col-3">
-                            <AttributeValueInput
-                                value={value as string | number}
-                                attribute={attribute}
-                                definition={definition}
-                                onChange={onAttributeValueChange}
-                                data-testid="attribute-value-input"
-                            />
-                        </div>
-                        <div className="col-2">
-                            <Button<Attribute>
-                                className="btn btn-error btn-sm"
+                                        setAttributes(newAttributes);
+                                    }}
+                                    data-testid="attribute-value-input"
+                                />
+                            </label>
+                            <Button<string>
+                                className="btn btn-error btn-outline join-item"
                                 item={attribute}
                                 data-testid="remove-attribute"
-                                onClick={onAttributeDelete}
+                                onClick={(attribute): void => {
+                                    const newAttributes = attributes.filter((info) => info.attribute !== attribute);
+
+                                    setAttributes(newAttributes);
+                                }}
                             >
                                 <FontAwesomeIcon icon={faTrash} />
                             </Button>
                         </div>
-                    </div>
-                </div>
-            </div>
-        ));
-    };
+                    ))}
+                </fieldset>
+            ),
+        [attributes],
+    );
+    const availableClusters = useMemo(() => {
+        const clusters = new Set<string>();
 
-    const { cluster, attributes, endpoint } = state;
-    const noAttributesSelected = attributes.length === 0;
-    const noSelectedCluster = cluster === "";
+        if (endpoint) {
+            const deviceEndpoint = device.endpoints[Number.parseInt(endpoint, 10)];
+
+            for (const inCluster of deviceEndpoint.clusters.input) {
+                clusters.add(inCluster);
+            }
+        }
+
+        return clusters;
+    }, [device.endpoints, endpoint]);
+
+    const disableButtons = attributes.length === 0 || cluster === "";
     const endpoints = getEndpoints(device);
-    const logsFilterFn = (l: LogMessage) => LOG_STARTING_STRINGS.some((startString) => l.message.startsWith(startString));
 
-    if (!endpoint) {
-        return <>No endpoints</>;
-    }
-    return (
-        <>
-            <div className="mb-3 row">
-                <div className="col-6 col-sm-3">
-                    <EndpointPicker
-                        data-testid="endpoint-picker"
-                        label={t("zigbee:endpoint")}
-                        values={endpoints}
-                        value={endpoint as Endpoint}
-                        onChange={onEndpointChange}
-                    />
-                </div>
-                <div className="col-6 col-sm-3">
-                    <ClusterPicker
-                        data-testid="cluster-picker"
-                        label={t("cluster")}
-                        pickerType={ClusterPickerType.SINGLE}
-                        clusters={device.endpoints[endpoint].clusters.input}
-                        value={cluster}
-                        onChange={onClusterChange}
-                    />
-                </div>
+    return endpoint ? (
+        <div className="flex flex-col gap-3">
+            <h2 className="text-lg">{t("zigbee:read_write_attributes")}</h2>
+            <div className="flex flex-row flex-wrap gap-2">
+                <EndpointPicker
+                    data-testid="endpoint-picker"
+                    label={t("zigbee:endpoint")}
+                    values={endpoints}
+                    value={endpoint}
+                    onChange={(endpoint) => {
+                        setCluster("");
+                        setAttributes([]);
+                        setEndpoint(endpoint.toString());
+                    }}
+                    required
+                />
+                <ClusterSinglePicker
+                    data-testid="cluster-picker"
+                    label={t("cluster")}
+                    clusters={availableClusters}
+                    value={cluster}
+                    onChange={(cluster) => {
+                        setAttributes([]);
+                        setCluster(cluster);
+                    }}
+                    required
+                />
+                <AttributePicker
+                    data-testid="attribute-picker"
+                    label={t("attribute")}
+                    value={""}
+                    cluster={cluster}
+                    device={device}
+                    onChange={(attribute, definition): void => {
+                        if (!attributes.find((info) => info.attribute === attribute)) {
+                            const newAttributes = attributes.concat([{ attribute, definition }]);
 
-                <div className="col-6 col-sm-3">
-                    <AttributePicker
-                        data-testid="attribute-picker"
-                        label={t("attribute")}
-                        value={""}
-                        cluster={cluster}
-                        device={device}
-                        onChange={onAttributeSelect}
-                    />
-                </div>
+                            setAttributes(newAttributes);
+                        }
+                    }}
+                />
             </div>
-            <div className="mb-3 row" data-testid="selected-attribute">
-                {renderSelectedAttribute()}
+            {selectedAttributes}
+            <div className="flex flex-row flex-wrap join">
+                <Button<void>
+                    disabled={disableButtons}
+                    className="btn btn-success join-item"
+                    data-testid="read-attribute"
+                    onClick={async () => {
+                        await readDeviceAttributes(
+                            device.ieee_address,
+                            endpoint,
+                            cluster,
+                            attributes.map((info) => info.attribute),
+                            {},
+                        );
+                    }}
+                >
+                    {t("read")}
+                </Button>
+                <Button<void>
+                    disabled={disableButtons}
+                    className="btn btn-error join-item"
+                    data-testid="write-attribute"
+                    onClick={async () => {
+                        await writeDeviceAttributes(device.ieee_address, endpoint, cluster, attributes, {});
+                    }}
+                >
+                    {t("write")}
+                </Button>
             </div>
-            <div className="mb-3 row">
-                <div className="join col col-3">
-                    <Button<void>
-                        disabled={noAttributesSelected || noSelectedCluster}
-                        className="btn btn-success join-item me-2"
-                        data-testid="read-attribute"
-                        onClick={onReadClick}
-                    >
-                        {t("read")}
-                    </Button>
-                    <Button<void>
-                        disabled={noAttributesSelected || noSelectedCluster}
-                        className="btn btn-error join-item"
-                        data-testid="write-attribute"
-                        onClick={onWriteClick}
-                    >
-                        {t("write")}
-                    </Button>
-                </div>
-            </div>
-            <LastLogResult logs={props.logs} filterFn={logsFilterFn} />
-        </>
+            {lastLog && <LastLogResult message={lastLog} />}
+        </div>
+    ) : (
+        <>No endpoints</>
     );
 }

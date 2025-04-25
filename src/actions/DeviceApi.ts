@@ -1,13 +1,6 @@
 import type { AttributeInfo } from "../components/device-page/AttributeEditor.js";
 import type { ApiSendMessage } from "../hooks/useApiWebSocket.js";
-import type { Attribute, Cluster, Endpoint } from "../types.js";
-
-const toDeviceId = (friendlyNameOrIEEEAddress: string, endpoint: Endpoint): string => {
-    if (endpoint) {
-        return `${friendlyNameOrIEEEAddress}/${endpoint}`;
-    }
-    return friendlyNameOrIEEEAddress;
-};
+import type { Cluster, Endpoint } from "../types.js";
 
 export async function renameDevice(sendMessage: ApiSendMessage, from: string, to: string, homeassistantRename: boolean): Promise<void> {
     await sendMessage("bridge/request/device/rename", { from, to, homeassistant_rename: homeassistantRename });
@@ -35,13 +28,13 @@ export async function setDeviceDescription(sendMessage: ApiSendMessage, id: stri
 
 export async function readDeviceAttributes(
     sendMessage: ApiSendMessage,
-    id: string,
+    ieee: string,
     endpoint: Endpoint,
     cluster: Cluster,
-    attributes: Attribute[],
+    attributes: string[],
     options: Record<string, unknown>,
 ): Promise<void> {
-    await sendMessage(`${toDeviceId(id, endpoint)}/set`, { read: { cluster, attributes, options } });
+    await sendMessage(`${ieee}/${endpoint}/set`, { read: { cluster, attributes, options } });
 }
 
 export async function generateExternalDefinition(sendMessage: ApiSendMessage, id: string): Promise<void> {
@@ -50,7 +43,7 @@ export async function generateExternalDefinition(sendMessage: ApiSendMessage, id
 
 export async function writeDeviceAttributes(
     sendMessage: ApiSendMessage,
-    id: string,
+    ieee: string,
     endpoint: Endpoint,
     cluster: Cluster,
     attributes: AttributeInfo[],
@@ -62,18 +55,18 @@ export async function writeDeviceAttributes(
         payload[attrInfo.attribute] = attrInfo.value;
     }
 
-    await sendMessage(`${toDeviceId(id, endpoint)}/set`, { write: { cluster, payload, options } });
+    await sendMessage(`${ieee}/${endpoint}/set`, { write: { cluster, payload, options } });
 }
 
 export async function executeCommand(
     sendMessage: ApiSendMessage,
-    friendlyNameOrIEEEAddress: string,
+    ieee: string,
     endpoint: Endpoint,
     cluster: Cluster,
     command: unknown,
     payload: Record<string, unknown>,
 ): Promise<void> {
-    await sendMessage(`${toDeviceId(friendlyNameOrIEEEAddress, endpoint)}/set`, {
+    await sendMessage(`${ieee}/${endpoint}/set`, {
         command: { cluster, command, payload },
     });
 }

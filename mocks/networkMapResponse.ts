@@ -1,11 +1,6 @@
-import type { GraphRaw } from "../src/components/map/types.js";
-import type { Message } from "../src/types.js";
+import type { ResponseMessage } from "../src/types.js";
 
-export const NETWORK_MAP_REQUEST: Message<{
-    data: { routes: boolean; type: "raw"; value: GraphRaw };
-    status: "ok";
-    transaction: string;
-}> = {
+export const NETWORK_MAP_RESPONSE: ResponseMessage<"bridge/response/networkmap"> = {
     payload: {
         data: {
             routes: false,

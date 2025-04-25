@@ -1,6 +1,6 @@
-import type { Message } from "../src/types.js";
+import type { ResponseMessage } from "../src/types.js";
 
-export const TOUCHLINK_REQUEST: Message = {
+export const TOUCHLINK_RESPONSE: ResponseMessage<"bridge/response/touchlink/scan"> = {
     payload: {
         status: "ok",
         data: {

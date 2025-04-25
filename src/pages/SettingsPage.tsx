@@ -7,17 +7,16 @@ import { saveAs } from "file-saver";
 import cloneDeep from "lodash/cloneDeep.js";
 import { type JSX, useCallback, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { Link, NavLink, Navigate, useParams } from "react-router";
 import frontendPackageJson from "../../package.json" with { type: "json" };
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import * as BridgeApi from "../actions/BridgeApi.js";
-import * as UtilsApi from "../actions/UtilsApi.js";
+import * as Utils from "../actions/Utils.js";
 import Button from "../components/button/Button.js";
 import { ImageLocaliser } from "../components/settings-page/ImageLocaliser.js";
 import { Stats } from "../components/settings-page/Stats.js";
 import uiSchemas from "../components/settings-page/uiSchema.json" with { type: "json" };
-import { useAppSelector } from "../hooks/store.js";
+import { useAppDispatch, useAppSelector } from "../hooks/store.js";
 import { DescriptionField, TitleField } from "../i18n/rjsf-translation-fields.js";
 import { computeSettingsDiff, formatDate } from "../utils.js";
 
@@ -100,7 +99,7 @@ export default function SettingsPage() {
     const params = useParams<UrlParams>();
     const settingsFormData: { [s: string]: Record<string, unknown> } = {};
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const backup = useAppSelector((state) => state.backup);
     const preparingBackup = useAppSelector((state) => state.preparingBackup);
@@ -257,10 +256,11 @@ export default function SettingsPage() {
                                 const { formData } = e;
                                 const { keyName } = state;
                                 const diff = computeSettingsDiff(getSettingsInfo().currentConfig, formData);
+
                                 if (keyName === ROOT_KEY_NAME) {
-                                    await BridgeApi.updateBridgeConfig(sendMessage, diff);
+                                    await BridgeApi.setOptions(sendMessage, diff);
                                 } else {
-                                    await BridgeApi.updateBridgeConfig(sendMessage, { [keyName]: diff });
+                                    await BridgeApi.setOptions(sendMessage, { [keyName]: diff });
                                 }
                             }}
                             uiSchema={uiSchemas[keyName]}
@@ -274,10 +274,10 @@ export default function SettingsPage() {
     const renderTools = (): JSX.Element => {
         return (
             <div className="join join-vertical">
-                <Button className="btn btn-error join-item mb-2" onClick={async () => await BridgeApi.restartBridge(sendMessage)} prompt>
+                <Button className="btn btn-error join-item mb-2" onClick={async () => await BridgeApi.restart(sendMessage)} prompt>
                     {t("restart_zigbee2mqtt")}
                 </Button>
-                <Button className="btn btn-primary join-item" onClick={UtilsApi.exportState}>
+                <Button className="btn btn-primary join-item" onClick={Utils.exportState}>
                     {t("download_state")}
                 </Button>
                 {preparingBackup ? (
@@ -289,7 +289,7 @@ export default function SettingsPage() {
                         {t("download_z2m_backup")}
                     </Button>
                 ) : (
-                    <Button className="btn btn-primary join-item" onClick={async () => await BridgeApi.requestBackup(sendMessage, dispatch)}>
+                    <Button className="btn btn-primary join-item" onClick={async () => await BridgeApi.backup(sendMessage, dispatch)}>
                         {t("request_z2m_backup")}
                     </Button>
                 )}

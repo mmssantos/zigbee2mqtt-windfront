@@ -1,18 +1,27 @@
-import type { ChangeEvent, DetailedHTMLProps, SelectHTMLAttributes } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type SelectHTMLAttributes, useCallback } from "react";
 
-type SelectFieldProps = DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> & {
+export type SelectFieldProps = DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> & {
     name: string;
     label?: string;
     onChange(event: ChangeEvent<HTMLSelectElement>): void;
 };
 
-export function SelectField(props: SelectFieldProps) {
+export default function SelectField(props: SelectFieldProps) {
     const { label, onChange, children, ...rest } = props;
+
+    const onValidChange = useCallback(
+        (e: ChangeEvent<HTMLSelectElement>) => {
+            if (!e.target.validationMessage) {
+                onChange(e);
+            }
+        },
+        [onChange],
+    );
 
     return (
         <fieldset className="fieldset">
             {label && <legend className="fieldset-legend">{label}</legend>}
-            <select className="select" onChange={onChange} {...rest}>
+            <select className={`select${props.required ? " validator" : ""}`} onChange={onValidChange} {...rest}>
                 {children}
             </select>
         </fieldset>

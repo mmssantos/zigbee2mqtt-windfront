@@ -3,19 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ColumnDef } from "@tanstack/react-table";
 import { type JSX, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import * as TouchlinkApi from "../actions/TouchlinkApi.js";
 import Button from "../components/button/Button.js";
-import { Table } from "../components/grid/Table.js";
-import { useAppSelector } from "../hooks/store.js";
-import type { TouchLinkDevice } from "../types.js";
+import Table from "../components/grid/Table.js";
+import { useAppDispatch, useAppSelector } from "../hooks/store.js";
+import type { TouchlinkDevice } from "../types.js";
 import { getDeviceDetailsLink } from "../utils.js";
 
 export default function TouchlinkPage() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const touchlinkDevices = useAppSelector((state) => state.touchlinkDevices);
     const devices = useAppSelector((state) => state.devices);
     const touchlinkIdentifyInProgress = useAppSelector((state) => state.touchlinkIdentifyInProgress);
@@ -24,15 +23,15 @@ export default function TouchlinkPage() {
     const touchlinkInProgress = touchlinkIdentifyInProgress || touchlinkResetInProgress;
     const { t } = useTranslation("touchlink");
 
-    const onIdentifyClick = async (device: TouchLinkDevice): Promise<void> => {
+    const onIdentifyClick = async (device: TouchlinkDevice): Promise<void> => {
         await TouchlinkApi.touchlinkIdentify(sendMessage, dispatch, device as unknown as Record<string, unknown>);
     };
-    const onResetClick = async (device: TouchLinkDevice): Promise<void> => {
+    const onResetClick = async (device: TouchlinkDevice): Promise<void> => {
         await TouchlinkApi.touchlinkReset(sendMessage, dispatch, device as unknown as Record<string, unknown>);
     };
     const renderTouchlinkDevices = (): JSX.Element => {
         // biome-ignore lint/suspicious/noExplicitAny: tmp
-        const columns = useMemo<ColumnDef<TouchLinkDevice, any>[]>(
+        const columns = useMemo<ColumnDef<TouchlinkDevice, any>[]>(
             () => [
                 {
                     header: t("zigbee:ieee_address") as string,
@@ -62,7 +61,7 @@ export default function TouchlinkPage() {
                     cell: ({ row: { original: touchlinkDevice } }) => {
                         return (
                             <div className="join float-right">
-                                <Button<TouchLinkDevice>
+                                <Button<TouchlinkDevice>
                                     disabled={touchlinkInProgress}
                                     item={touchlinkDevice}
                                     title={t("identify")}
@@ -74,7 +73,7 @@ export default function TouchlinkPage() {
                                         spin={touchlinkIdentifyInProgress}
                                     />
                                 </Button>
-                                <Button<TouchLinkDevice>
+                                <Button<TouchlinkDevice>
                                     disabled={touchlinkInProgress}
                                     item={touchlinkDevice}
                                     title={t("factory_reset")}

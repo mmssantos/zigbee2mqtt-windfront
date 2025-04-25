@@ -40,7 +40,7 @@ export const UpdateDeviceDescModal = NiceModal.create((props: RenameActionProps)
         <Modal isOpen={modal.visible} title={`${t("update_description")} ${device.friendly_name}`} footer={renderFooter()}>
             <fieldset className="fieldset">
                 <legend className="fieldset-legend">{t("description")}</legend>
-                <textarea className="textarea h-24" rows={3} defaultValue={description} onChange={(e) => setDescription(e.target.value)} />
+                <textarea className="textarea h-24" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
             </fieldset>
         </Modal>
     );

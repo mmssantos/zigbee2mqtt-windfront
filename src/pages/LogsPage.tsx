@@ -2,16 +2,16 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Form from "@rjsf/core";
 import Validator from "@rjsf/validator-ajv8";
-import { type JSX, useContext, useState } from "react";
+import { type JSX, useCallback, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import * as BridgeApi from "../actions/BridgeApi.js";
-import * as UtilsApi from "../actions/UtilsApi.js";
+import * as Utils from "../actions/Utils.js";
 import Button from "../components/button/Button.js";
-import { DebouncedInput } from "../components/form-fields/DebouncedInput.js";
-import { SelectField } from "../components/form-fields/SelectField.js";
-import { useAppSelector } from "../hooks/store.js";
+import DebouncedInput from "../components/form-fields/DebouncedInput.js";
+import SelectField from "../components/form-fields/SelectField.js";
+import { LEVEL_CMAP, LOG_LEVELS, LOG_LIMITS } from "../consts.js";
+import { useAppDispatch, useAppSelector } from "../hooks/store.js";
 import { setLogsLimit } from "../store.js";
 import { formatDate } from "../utils.js";
 
@@ -19,20 +19,11 @@ import { formatDate } from "../utils.js";
 const FormTyped = Form as unknown as typeof Form.default;
 const ValidatorTyped = Validator as unknown as typeof Validator.default;
 
-const LOG_LEVELS = ["all", "debug", "info", "warning", "error"];
-const LOG_LIMITS = [100, 200, 500, 1000];
-const LEVEL_CMAP = {
-    error: "text-error",
-    warning: "text-warning",
-    info: "text-info",
-    debug: "opacity-50",
-};
-
 export default function LogsPage() {
     const [filterValue, setFilterValue] = useState<string>("");
     const [logLevel, setLogLevel] = useState<string>("all");
     const [highlightOnly, setHighlightOnly] = useState<boolean>(false);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const logsLimit = useAppSelector((state) => state.logsLimit);
@@ -48,7 +39,7 @@ export default function LogsPage() {
 
     const renderSearch = (): JSX.Element => (
         <div className="flex flex-row flex-wrap gap-3 items-top">
-            <SelectField name="log_level" label={t("show_only")} defaultValue={logLevel} onChange={(e) => setLogLevel(e.target.value)}>
+            <SelectField name="log_level" label={t("show_only")} value={logLevel} onChange={(e) => setLogLevel(e.target.value)}>
                 {LOG_LEVELS.map((level) => (
                     <option key={level} value={level}>
                         {level}
@@ -92,7 +83,7 @@ export default function LogsPage() {
                 onChange={(e) => {
                     dispatch(setLogsLimit(Number.parseInt(e.target.value)));
                 }}
-                defaultValue={logsLimit}
+                value={logsLimit}
             >
                 {LOG_LIMITS.map((limit) => (
                     <option key={limit} value={limit}>
@@ -101,7 +92,7 @@ export default function LogsPage() {
                 ))}
             </SelectField>
             <Button
-                onClick={async () => await UtilsApi.clearLogs(dispatch)}
+                onClick={async () => await Utils.clearLogs(dispatch)}
                 className="btn btn-primary self-center"
                 disabled={filteredLogs.length === 0}
             >
@@ -113,16 +104,19 @@ export default function LogsPage() {
                 onChange={async (params) => {
                     const payload = { advanced: { log_level: params.formData } };
 
-                    await BridgeApi.updateBridgeConfig(sendMessage, payload);
+                    await BridgeApi.setOptions(sendMessage, payload);
                 }}
                 validator={ValidatorTyped}
             />
         </div>
     );
 
-    const highlighted = (message: string) => {
-        return filterValue && message.toLowerCase().includes(filterValue.toLowerCase()) ? "bg-accent text-accent-content" : "";
-    };
+    const highlighted = useCallback(
+        (message: string) => {
+            return filterValue && message.toLowerCase().includes(filterValue.toLowerCase()) ? "bg-accent text-accent-content" : "";
+        },
+        [filterValue],
+    );
 
     return (
         <>

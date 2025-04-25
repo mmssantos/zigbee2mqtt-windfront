@@ -2,7 +2,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Column } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
-import { DebouncedInput } from "../form-fields/DebouncedInput.js";
+import DebouncedInput from "../form-fields/DebouncedInput.js";
 
 // biome-ignore lint/suspicious/noExplicitAny: tmp
 export function Filter({ column }: { column: Column<any, unknown> }) {

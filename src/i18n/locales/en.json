@@ -38,7 +38,8 @@
         "max": "Max",
         "done": "Done",
         "enter_auth_token": "Enter auth token",
-        "token": "Token"
+        "token": "Token",
+        "documentation": "Documentation"
     },
     "devicePage": {
         "about": "About",
@@ -2720,7 +2721,9 @@
         "payload": "Payload",
         "edit_description": "Edit description",
         "save_description": "Save description",
-        "update_description": "Update description"
+        "update_description": "Update description",
+        "read_write_attributes": "Read / Write attributes from endpoint cluster",
+        "execute_command": "Execute command"
     },
     "scene": {
         "manage_scenes_header": "Manage scenes",

@@ -11,7 +11,6 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import type React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import store2 from "store2";
@@ -35,13 +34,16 @@ interface Props {
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     data: any[];
     pageSizeStoreKey?: string;
+    visibleColumns?: Record<string, boolean>;
 }
 
 // XXX: workaround typing
 const local = store2 as unknown as typeof store2.default;
 
-export const Table: React.FC<Props> = ({ id, columns, data, pageSizeStoreKey }) => {
+export default function Table(props: Props) {
+    const { id, columns, data, pageSizeStoreKey, visibleColumns } = props;
     const { t } = useTranslation("common");
+    const [columnVisibility] = useState<Record<string, boolean>>(visibleColumns ?? {});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const table = useReactTable({
         data,
@@ -49,6 +51,7 @@ export const Table: React.FC<Props> = ({ id, columns, data, pageSizeStoreKey }) 
         filterFns: {},
         state: {
             columnFilters,
+            columnVisibility,
         },
         initialState: {
             pagination: {
@@ -159,4 +162,4 @@ export const Table: React.FC<Props> = ({ id, columns, data, pageSizeStoreKey }) 
             </div>
         </div>
     );
-};
+}

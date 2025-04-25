@@ -3,6 +3,8 @@ import type {
     Zigbee2MQTTDevice,
     Zigbee2MQTTFeatures,
     Zigbee2MQTTGroup,
+    Zigbee2MQTTRequest,
+    Zigbee2MQTTRequestEndpoints,
     Zigbee2MQTTResponse,
     Zigbee2MQTTResponseEndpoints,
     Zigbee2MQTTScene,
@@ -13,7 +15,6 @@ export type OmitFunctions<T> = { [K in keyof T as T[K] extends Function ? never 
 
 // TODO remove
 export type Cluster = string | number;
-export type Attribute = string; // TODO wrong
 export type Endpoint = string | number;
 
 export type DeviceType = "Coordinator" | "Router" | "EndDevice" | "Unknown" | "GreenPower";
@@ -48,6 +49,11 @@ export type LastSeenType = "disable" | "ISO_8601" | "ISO_8601_local" | "epoch";
 export interface Message<T = string | Record<string, unknown> | Record<string, unknown>[] | string[]> {
     topic: string;
     payload: T;
+}
+
+export interface RequestMessage<T extends Zigbee2MQTTRequestEndpoints> {
+    topic: string;
+    payload: Zigbee2MQTTRequest<T>;
 }
 
 export interface ResponseMessage<T extends Zigbee2MQTTResponseEndpoints> extends Message {

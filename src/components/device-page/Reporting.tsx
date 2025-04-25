@@ -1,6 +1,7 @@
-import { type JSX, useContext, useMemo, useState } from "react";
+import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import type { Device, Endpoint } from "../../types.js";
 
+import type { Zigbee2MQTTDevice } from "zigbee2mqtt/dist/types/api.js";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as ReportingApi from "../../actions/ReportingApi.js";
 import { ReportingRow } from "./ReportingRow.js";
@@ -9,17 +10,12 @@ interface ReportingProps {
     device: Device;
 }
 
-export interface NiceReportingRule {
+export type NiceReportingRule = {
     id?: number;
     isNew?: number;
     endpoint: Endpoint;
+} & Zigbee2MQTTDevice["endpoints"][number]["configured_reportings"][number];
 
-    cluster: string;
-    attribute: string | number;
-    minimum_report_interval: number;
-    maximum_report_interval: number;
-    reportable_change: number;
-}
 const convertBindingsIntoNiceStructure = (device: Device): NiceReportingRule[] => {
     const niceReportingRules: NiceReportingRule[] = [];
 
@@ -41,6 +37,7 @@ const rule2key = (rule: NiceReportingRule): string => `${rule.isNew}${rule.endpo
 
 export function Reporting(props: ReportingProps): JSX.Element {
     const { device } = props;
+    const { sendMessage } = useContext(WebSocketApiRouterContext);
     const [newReportingRule] = useState<NiceReportingRule>({
         isNew: Date.now(),
         reportable_change: 0,
@@ -50,19 +47,22 @@ export function Reporting(props: ReportingProps): JSX.Element {
         cluster: "",
         attribute: "",
     });
-    const { sendMessage } = useContext(WebSocketApiRouterContext);
-
-    const onApply = async (rule: NiceReportingRule): Promise<void> => {
-        const { cluster, endpoint, attribute, minimum_report_interval, maximum_report_interval, reportable_change } = rule;
-        await ReportingApi.configureReport(sendMessage, device.friendly_name, endpoint, {
-            cluster,
-            attribute,
-            minimum_report_interval,
-            maximum_report_interval,
-            reportable_change,
-        });
-    };
     const reportingRules = useMemo(() => convertBindingsIntoNiceStructure(device), [device]);
+
+    const onApply = useCallback(
+        async (rule: NiceReportingRule): Promise<void> => {
+            const { cluster, endpoint, attribute, minimum_report_interval, maximum_report_interval, reportable_change } = rule;
+            await ReportingApi.configureReport(sendMessage, device.friendly_name, endpoint, {
+                cluster,
+                attribute,
+                minimum_report_interval,
+                maximum_report_interval,
+                reportable_change,
+            });
+        },
+        [sendMessage, device.friendly_name],
+    );
+
     return (
         <div className="overflow-x-auto">
             <table className="table">

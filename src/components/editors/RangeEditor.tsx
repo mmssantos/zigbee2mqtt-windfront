@@ -20,7 +20,7 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
 
     const showRange = min != null && max != null;
     return (
-        <div className="input-group align-items-center">
+        <div className="flex flex-row flex-wrap gap-2 items-center">
             {!minimal && steps ? <EnumEditor values={steps} onChange={onChange} value={currentValue} /> : null}
             {showRange ? (
                 <input
@@ -28,7 +28,7 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
                     max={max}
                     step={valueStep}
                     type="range"
-                    className="form-range form-control border-0"
+                    className="range range-primary"
                     value={currentValue}
                     onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
                     onTouchEnd={() => onChange(currentValue)}
@@ -39,7 +39,7 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
             {(!minimal || !showRange) && (
                 <input
                     type="number"
-                    className={`form-control${showRange ? " ms-1" : ""}`}
+                    className={`input${showRange ? " ms-1" : ""}`}
                     value={currentValue}
                     step={valueStep}
                     onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
@@ -52,7 +52,7 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
                 />
             )}
             {!minimal && unit ? (
-                <span className="input-group-text" style={{ minWidth: "66px" }}>
+                <span className="input" style={{ minWidth: "66px" }}>
                     {unit}
                 </span>
             ) : null}

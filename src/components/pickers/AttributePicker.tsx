@@ -1,9 +1,9 @@
-import type { ChangeEvent, InputHTMLAttributes, JSX } from "react";
+import { type ChangeEvent, type InputHTMLAttributes, type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { DataType } from "../../ZCLenums.js";
 import { useAppSelector } from "../../hooks/store.js";
-import type { Attribute, Cluster, Device } from "../../types.js";
-import { SelectField } from "../form-fields/SelectField.js";
+import type { Cluster, Device } from "../../types.js";
+import SelectField from "../form-fields/SelectField.js";
 
 export interface AttributeDefinition {
     ID: number;
@@ -11,72 +11,64 @@ export interface AttributeDefinition {
     manufacturerCode?: number;
 }
 
-interface AttributePickerProps {
+interface AttributePickerProps extends Omit<InputHTMLAttributes<HTMLSelectElement>, "onChange"> {
     cluster: Cluster;
     device: Device;
-    value: Attribute;
     label?: string;
-    onChange: (attr: Attribute, definition: AttributeDefinition) => void;
+    onChange: (attr: string, definition: AttributeDefinition) => void;
 }
 
-export default function AttributePicker(props: AttributePickerProps & Omit<InputHTMLAttributes<HTMLSelectElement>, "onChange">): JSX.Element {
-    const { cluster, device, onChange, label, value, ...rest } = props;
+export default function AttributePicker(props: AttributePickerProps): JSX.Element {
+    const { cluster, device, onChange, label, ...rest } = props;
     const bridgeDefinition = useAppSelector((state) => state.bridgeDefinition);
     const { t } = useTranslation("zigbee");
-    const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>): void => {
-        const { value: inputValue } = e.target;
-        const attrs = getClusterAttributes(cluster);
-        const attributeInfo = attrs[inputValue];
 
-        // inputValue could be "Select attribute" which isn't a proper cluster attribute
-        if (attributeInfo) {
-            onChange(inputValue, attributeInfo);
+    // retrieve cluster attributes, priority to ZH, then device custom if any
+    const clusterAttributes = useMemo(() => {
+        const stdCluster = bridgeDefinition.clusters[cluster];
+
+        if (stdCluster) {
+            return stdCluster.attributes;
         }
-    };
-    // Retrieve Cluster attributes: from ZH first, then from device definition
-    const getClusterAttributes = (clusterKey: Cluster): string[] | Readonly<Record<string, Readonly<AttributeDefinition>>> => {
-        // If the clusters definition have been passed as attribute (for example for testing), we use it
-        // Otherwise we retrieve from the store state
 
-        // Cluster name is part of the default definition
-        if (clusterKey in bridgeDefinition.clusters) {
-            const cluster = bridgeDefinition.clusters[clusterKey];
+        const deviceCustomClusters = bridgeDefinition.custom_clusters[device.ieee_address];
 
-            if (cluster && Object.keys(cluster).length !== 0) {
-                return cluster.attributes;
-            }
-        } // Or the cluster name is part the clustom cluster of the device
-        else if (
-            device.ieee_address in bridgeDefinition.custom_clusters &&
-            Object.hasOwn(bridgeDefinition.custom_clusters[device.ieee_address], clusterKey)
-        ) {
-            const CustomClusters = bridgeDefinition.custom_clusters[device.ieee_address][clusterKey];
+        if (deviceCustomClusters) {
+            const customClusters = deviceCustomClusters[cluster];
 
-            if (CustomClusters && Object.keys(CustomClusters).length !== 0) {
-                return CustomClusters.attributes;
+            if (customClusters) {
+                return customClusters.attributes;
             }
         }
 
-        // Return empty if no matches found
         return [];
-    };
-    const attrs = Object.keys(getClusterAttributes(cluster));
+    }, [bridgeDefinition, device.ieee_address, cluster]);
 
-    if (value != null && !attrs.includes(value)) {
-        attrs.push(value);
-    }
-    const options = attrs.map((attr) => (
-        <option key={attr} value={attr}>
-            {attr}
-        </option>
-    ));
-    options.unshift(
-        <option key="none" hidden>
-            {t("select_attribute")}
-        </option>,
-    );
+    const options = useMemo(() => {
+        const attrs: JSX.Element[] = [];
+
+        for (const key in clusterAttributes) {
+            attrs.push(
+                <option key={key} value={key}>
+                    {key}
+                </option>,
+            );
+        }
+
+        return attrs;
+    }, [clusterAttributes]);
+
     return (
-        <SelectField name="attribute_picker" label={label} defaultValue={value} onChange={onChangeHandler} disabled={attrs.length === 0} {...rest}>
+        <SelectField
+            name="attribute_picker"
+            label={label}
+            onChange={(e: ChangeEvent<HTMLSelectElement>): void => onChange(e.target.value, clusterAttributes[e.target.value])}
+            disabled={options.length === 0}
+            {...rest}
+        >
+            <option value="" disabled>
+                {t("select_attribute")}
+            </option>
             {options}
         </SelectField>
     );

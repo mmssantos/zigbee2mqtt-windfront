@@ -1,4 +1,4 @@
-import { type BinaryFeature, type Endpoint, FeatureAccessMode } from "../../types.js";
+import { type BinaryFeature, FeatureAccessMode } from "../../types.js";
 import Toggle from "../toggle/Toggle.js";
 import BaseViewer from "./BaseViewer.js";
 import NoAccessError from "./NoAccessError.js";
@@ -17,7 +17,7 @@ export default function Binary(props: BinaryProps) {
     if (access & FeatureAccessMode.SET) {
         return (
             <Toggle
-                onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
+                onChange={(value) => onChange(endpoint, { [property]: value })}
                 value={deviceState[property]}
                 valueOn={valueOn}
                 valueOff={valueOff}

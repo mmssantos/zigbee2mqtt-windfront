@@ -1,4 +1,4 @@
-import { type Endpoint, type EnumFeature, FeatureAccessMode } from "../../types.js";
+import { type EnumFeature, FeatureAccessMode } from "../../types.js";
 import EnumEditor, { type ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import BaseViewer from "./BaseViewer.js";
 import NoAccessError from "./NoAccessError.js";
@@ -20,7 +20,7 @@ export default function Enum(props: EnumProps) {
     if (access & FeatureAccessMode.SET) {
         return (
             <EnumEditor
-                onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
+                onChange={(value) => onChange(endpoint, { [property]: value })}
                 values={values as unknown as ValueWithLabelOrPrimitive[]}
                 value={deviceState[property] as ValueWithLabelOrPrimitive}
                 minimal={minimal || thisIsVeryBigEnumeration}
