@@ -1,5 +1,5 @@
 import cx from "classnames";
-import * as convertColors from "color-convert";
+import convertColors from "color-convert";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Endpoint, GradientFeature, RGBColor } from "../../../types.js";

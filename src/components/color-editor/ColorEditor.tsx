@@ -1,14 +1,16 @@
 import { type InputHTMLAttributes, useEffect, useState } from "react";
 import type { AnyColor } from "../../types.js";
 import Button from "../button/Button.js";
-import { type ColorProps, pridePallet, toRGB, whitePallet } from "./index.js";
+import { type ColorProps, PRIDE_PALLET, WHITE_PALLET, toRGB } from "./index.js";
 
 export default function ColorEditor(props: ColorProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
-    const { onChange, value = {} as AnyColor, format, steps = [pridePallet, whitePallet], minimal, ...rest } = props;
+    const { onChange, value = {} as AnyColor, format, steps = [PRIDE_PALLET, WHITE_PALLET], minimal, ...rest } = props;
     const [currentColor, setCurrentColor] = useState<string>(toRGB(value, format));
+
     useEffect(() => {
         setCurrentColor(toRGB(value, format));
     }, [value, format]);
+
     return (
         <>
             {!minimal &&

@@ -1,4 +1,4 @@
-import * as convertColors from "color-convert";
+import convertColors from "color-convert";
 import type { AnyColor, HueSaturationColor, RGBColor, XYColor } from "../../types.js";
 
 type Payload = AnyColor;
@@ -39,5 +39,5 @@ export const toRGB = (source: AnyColor, sourceFormat: ColorFormat): string => {
     }
 };
 
-export const whitePallet = ["#FFFFFF", "#FDF4DC", "#F4FDFF"];
-export const pridePallet = ["#FF0018", "#FFA52C", "#FFFF41", "#008018", "#0000F9", "#86007D"];
+export const WHITE_PALLET = ["#FFFFFF", "#FDF4DC", "#F4FDFF"];
+export const PRIDE_PALLET = ["#FF0018", "#FFA52C", "#FFFF41", "#008018", "#0000F9", "#86007D"];
