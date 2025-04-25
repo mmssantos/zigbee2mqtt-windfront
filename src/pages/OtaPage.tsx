@@ -15,8 +15,8 @@ import VendorLink from "../components/links/VendorLink.js";
 import { useAppSelector } from "../hooks/store.js";
 import type { ApiSendMessage } from "../hooks/useApiWebSocket.js";
 import { OTA_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
-import type { Device, DeviceState, OTAState } from "../types.js";
-import { genDeviceDetailsLink, toHHMMSS } from "../utils.js";
+import type { Device, DeviceState } from "../types.js";
+import { getDeviceDetailsLink, toHHMMSS } from "../utils.js";
 
 type OtaRowProps = {
     device: Device;
@@ -27,14 +27,18 @@ type OtaRowProps = {
 function StateCell(props: OtaRowProps) {
     const { t } = useTranslation("ota");
     const { device, state, sendMessage } = props;
-    const otaState = (state?.update ?? {}) as OTAState;
+    const otaState = state?.update;
+
+    if (otaState == null) {
+        return <>HANDLED STATE</>;
+    }
 
     switch (otaState.state) {
         case "updating":
             return (
                 <>
                     <progress className="progress w-48" value={otaState.progress} max="100" />
-                    <div>{t("remaining_time", { remaining: toHHMMSS(otaState.remaining) })}</div>
+                    <div>{t("remaining_time", { remaining: toHHMMSS(otaState.remaining ?? 0) })}</div>
                 </>
             );
         case "available":
@@ -182,7 +186,7 @@ export default function OtaPage() {
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <Link to={genDeviceDetailsLink(device.ieee_address)} className="link link-hover">
+                            <Link to={getDeviceDetailsLink(device.ieee_address)} className="link link-hover">
                                 {device.friendly_name}
                             </Link>
                             {device.description && <div className="text-xs opacity-50">{device.description}</div>}
@@ -245,9 +249,7 @@ export default function OtaPage() {
                         {t("ota:check_all")}
                     </Button>
                 ),
-                accessorFn: ({ state }) => {
-                    return `${((state?.update ?? {}) as OTAState).state}`;
-                },
+                accessorFn: ({ state }) => state?.update?.state,
                 id: "check_all",
                 cell: ({
                     row: {

@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import { BRIDGE_DEFINITIONS } from "./bridgeDefinitions.js";
+import { BRIDGE_DEFINITION } from "./bridgeDefinitions.js";
 import { BRIDGE_DEVICES } from "./bridgeDevices.js";
 import { BRIDGE_EXTENSIONS } from "./bridgeExtensions.js";
 import { BRIDGE_GROUPS } from "./bridgeGroups.js";
@@ -21,7 +21,7 @@ export function startServer() {
         ws.send(JSON.stringify(BRIDGE_INFO));
         ws.send(JSON.stringify(BRIDGE_DEVICES));
         ws.send(JSON.stringify(BRIDGE_GROUPS));
-        ws.send(JSON.stringify(BRIDGE_DEFINITIONS));
+        ws.send(JSON.stringify(BRIDGE_DEFINITION));
         ws.send(JSON.stringify(BRIDGE_EXTENSIONS));
 
         for (const message of DEVICE_AVAILABILITY) {

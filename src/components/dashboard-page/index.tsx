@@ -1,4 +1,4 @@
-import { type CompositeFeature, type DeviceState, FeatureAccessMode, type GenericExposedFeature } from "../../types.js";
+import { type CompositeFeature, type DeviceState, FeatureAccessMode, type GenericFeature } from "../../types.js";
 
 import groupBy from "lodash/groupBy.js";
 import { isClimateFeature, isLightFeature } from "../device-page/index.js";
@@ -33,16 +33,16 @@ const WHITELIST_FEATURE_NAMES = ["state", "brightness", "color_temp", "mode", "s
 const WHITELIST_FEATURE_TYPES = ["light"];
 
 export const onlyValidFeaturesForDashboard = (
-    feature: GenericExposedFeature | CompositeFeature,
+    feature: GenericFeature | CompositeFeature,
     deviceState: DeviceState = {} as DeviceState,
-): GenericExposedFeature | CompositeFeature | false => {
+): GenericFeature | CompositeFeature | false => {
     const { access, property, name, type } = feature;
-    let features: CompositeFeature["features"] = "features" in feature ? feature.features : [];
+    let features: CompositeFeature["features"] = feature.features ?? [];
 
     if (isLightFeature(feature) || isClimateFeature(feature)) {
         const state = (property ? deviceState[property] : deviceState) as DeviceState;
         features = [];
-        const validFeatures: GenericExposedFeature[] = [];
+        const validFeatures: GenericFeature[] = [];
 
         for (const subFeature of feature.features) {
             const validFeature = onlyValidFeaturesForDashboard(subFeature, state);
@@ -71,7 +71,7 @@ export const onlyValidFeaturesForDashboard = (
 
     const stateProperty = deviceState[property];
 
-    if (access && !(access & FeatureAccessMode.ACCESS_STATE && stateProperty != null && stateProperty !== "")) {
+    if (access && !(access & FeatureAccessMode.STATE && stateProperty != null && stateProperty !== "")) {
         return false;
     }
 
@@ -83,7 +83,7 @@ export const onlyValidFeaturesForDashboard = (
         return false;
     }
 
-    if (access === FeatureAccessMode.ACCESS_STATE || access === FeatureAccessMode.ACCESS_STATE + FeatureAccessMode.ACCESS_READ) {
+    if (access === FeatureAccessMode.STATE || access === FeatureAccessMode.STATE + FeatureAccessMode.GET) {
         return filteredOutFeature;
     }
 

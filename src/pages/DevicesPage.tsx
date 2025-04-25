@@ -1,4 +1,4 @@
-import React, { type JSX, useContext } from "react";
+import React, { type JSX, useCallback, useContext } from "react";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import * as DeviceApi from "../actions/DeviceApi.js";
 import { type DeviceTableData, DevicesTable } from "../components/zigbee/DevicesTable.js";
@@ -26,7 +26,7 @@ export default function DevicesPage(): JSX.Element {
                 renderDevices.push({
                     device,
                     state,
-                    availabilityState: availability[device.friendly_name] ?? "offline",
+                    availabilityState: availability[device.friendly_name] ?? { state: "offline" },
                     availabilityEnabledForDevice: deviceAvailability != null ? !!deviceAvailability : undefined,
                 });
             }
@@ -37,18 +37,30 @@ export default function DevicesPage(): JSX.Element {
 
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
-    const renameDevice = async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
-        await DeviceApi.renameDevice(sendMessage, from, to, homeassistantRename);
-    };
-    const configureDevice = async (name: string): Promise<void> => {
-        await DeviceApi.configureDevice(sendMessage, name);
-    };
-    const removeDevice = async (dev: string, force: boolean, block: boolean): Promise<void> => {
-        await DeviceApi.removeDevice(sendMessage, dev, force, block);
-    };
-    const interviewDevice = async (name: string): Promise<void> => {
-        await DeviceApi.interviewDevice(sendMessage, name);
-    };
+    const renameDevice = useCallback(
+        async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
+            await DeviceApi.renameDevice(sendMessage, from, to, homeassistantRename);
+        },
+        [sendMessage],
+    );
+    const configureDevice = useCallback(
+        async (name: string): Promise<void> => {
+            await DeviceApi.configureDevice(sendMessage, name);
+        },
+        [sendMessage],
+    );
+    const removeDevice = useCallback(
+        async (dev: string, force: boolean, block: boolean): Promise<void> => {
+            await DeviceApi.removeDevice(sendMessage, dev, force, block);
+        },
+        [sendMessage],
+    );
+    const interviewDevice = useCallback(
+        async (name: string): Promise<void> => {
+            await DeviceApi.interviewDevice(sendMessage, name);
+        },
+        [sendMessage],
+    );
 
     return (
         <DevicesTable

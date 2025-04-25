@@ -14,14 +14,14 @@ import { DeviceControlEditName } from "../components/device-control/DeviceContro
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
 import { useAppSelector } from "../hooks/store.js";
 import type { Devices } from "../store.js";
-import type { CompositeFeature, Device, DeviceState, FriendlyName, GenericExposedFeature } from "../types.js";
+import type { CompositeFeature, Device, DeviceState, GenericFeature } from "../types.js";
 
 type DeviceStateAndFilteredFeatures = {
     device: Device;
     deviceState: DeviceState;
-    filteredFeatures: GenericExposedFeature[];
+    filteredFeatures: GenericFeature[];
 };
-function filterDeviceByFeatures(devices: Devices, deviceStates: Record<FriendlyName, DeviceState>): DeviceStateAndFilteredFeatures[] {
+function filterDeviceByFeatures(devices: Devices, deviceStates: Record<string, DeviceState>): DeviceStateAndFilteredFeatures[] {
     const filteredDevices: DeviceStateAndFilteredFeatures[] = [];
 
     for (const key in devices) {

@@ -4,7 +4,7 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as DeviceApi from "../../actions/DeviceApi.js";
 import { useAppSelector } from "../../hooks/store.js";
 import type { Device } from "../../types.js";
-import { supportNewDevicesUrl } from "../../utils.js";
+import { SUPPORT_NEW_DEVICES_URL } from "../../utils.js";
 import Button from "../button/Button.js";
 
 export interface ExternalDefinitionProps {
@@ -27,7 +27,7 @@ export function ExternalDefinition(props: ExternalDefinitionProps) {
         return (
             <>
                 {t("generated_external_definition")} (
-                <a href={supportNewDevicesUrl} target="_blank" rel="noreferrer" className="link link-hover">
+                <a href={SUPPORT_NEW_DEVICES_URL} target="_blank" rel="noreferrer" className="link link-hover">
                     {t("documentation")}
                 </a>
                 )

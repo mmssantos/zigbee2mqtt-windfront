@@ -1,17 +1,7 @@
 import { type PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
+import type { Zigbee2MQTTAPI } from "zigbee2mqtt/dist/types/api.js";
 import type { GraphRaw } from "./components/map/types.js";
-import type {
-    BridgeDefinitions,
-    BridgeInfo,
-    BridgeState,
-    Device,
-    DeviceState,
-    FriendlyName,
-    Group,
-    IEEEEAddress,
-    Message,
-    TouchLinkDevice,
-} from "./types.js";
+import type { BridgeDefinition, BridgeInfo, Device, DeviceState, Group, Message, TouchlinkDevice } from "./types.js";
 import { formatDate } from "./utils.js";
 
 export interface LogMessage {
@@ -25,16 +15,16 @@ export type Extension = {
     code: string;
 };
 
-export type Devices = Record<IEEEEAddress, Device>;
+export type Devices = Record<string, Device>;
 
 // Zigbee2MQTTAPI['bridge/devices']
 export type WithDevices = {
-    devices: Devices;
+    devices: Devices; // TODO change to Device[]
 };
 
 // Zigbee2MQTTAPI['{friendlyName}'];
 export type WithDeviceStates = {
-    deviceStates: Record<FriendlyName, DeviceState>;
+    deviceStates: Record<string, DeviceState>;
 };
 
 // Zigbee2MQTTAPI['bridge/groups']
@@ -47,34 +37,35 @@ export type WithBridgeInfo = {
     bridgeInfo: BridgeInfo;
 };
 
-export type OnlineOrOffline = "online" | "offline";
+export type WithBridgeState = {
+    bridgeState: {
+        state: "online" | "offline";
+    };
+};
 
-export type AvailabilityState =
-    | OnlineOrOffline
-    | {
-          state: OnlineOrOffline;
-      };
+// Zigbee2MQTTAPI["{friendlyName}/availability"]
+export type AvailabilityState = {
+    state: "online" | "offline";
+};
 
 // Zigbee2MQTTAPI['{friendlyName}/availability']
 export type WithAvailability = {
-    availability: Record<FriendlyName, AvailabilityState>;
+    availability: Record<string, AvailabilityState>;
 };
 
 export type Base64String = string;
 
-export interface GlobalState extends WithDevices, WithDeviceStates, WithGroups, WithBridgeInfo, WithAvailability {
-    touchlinkDevices: TouchLinkDevice[];
+export interface GlobalState extends WithDevices, WithDeviceStates, WithGroups, WithBridgeInfo, WithBridgeState, WithAvailability {
+    touchlinkDevices: TouchlinkDevice[];
     touchlinkScanInProgress: boolean;
     touchlinkIdentifyInProgress: boolean;
     touchlinkResetInProgress: boolean;
     networkGraph: GraphRaw;
     networkGraphIsLoading: boolean;
-    bridgeState: BridgeState;
-    bridgeDefinitions: BridgeDefinitions;
+    bridgeDefinition: BridgeDefinition;
     logs: LogMessage[];
     logsLimit: number;
     extensions: Extension[];
-    editingExtension?: string;
     missingTranslations: Record<string, unknown>;
     preparingBackup: boolean;
     backup: Base64String;
@@ -96,13 +87,15 @@ const initialState: GlobalState = {
     },
     networkGraphIsLoading: false,
     groups: [],
-    bridgeState: "online",
-    bridgeDefinitions: {
+    bridgeState: { state: "offline" },
+    bridgeDefinition: {
+        // @ts-expect-error unloaded
         clusters: {},
         custom_clusters: {},
     },
     bridgeInfo: {
         config_schema: {
+            // @ts-expect-error unloaded
             properties: {},
             required: [],
         },
@@ -111,10 +104,77 @@ const initialState: GlobalState = {
                 elapsed: false,
                 last_seen: "disable",
                 log_level: "info",
+                log_rotation: false,
+                log_console_json: false,
+                log_symlink_current: false,
+                log_output: [],
+                log_directory: "",
+                log_file: "",
+                log_namespaced_levels: {},
+                log_syslog: {},
+                log_debug_to_mqtt_frontend: false,
+                log_debug_namespace_ignore: "",
+                log_directories_to_keep: 0,
+                pan_id: 0,
+                ext_pan_id: [],
+                channel: 0,
+                cache_state: false,
+                cache_state_persistent: false,
+                cache_state_send_on_startup: false,
+                network_key: [],
+                timestamp_format: "",
+                output: "json",
             },
             devices: {},
             device_options: {},
-            frontend: {},
+            frontend: {
+                enabled: true,
+                port: 8080,
+                base_url: "/",
+            },
+            homeassistant: {
+                enabled: false,
+                discovery_topic: "",
+                status_topic: "",
+                experimental_event_entities: false,
+                legacy_action_sensor: false,
+            },
+            availability: {
+                enabled: false,
+                active: {
+                    timeout: 0,
+                    max_jitter: 0,
+                    backoff: false,
+                    pause_on_backoff_gt: 0,
+                },
+                passive: {
+                    timeout: 0,
+                },
+            },
+            mqtt: {
+                base_topic: "",
+                include_device_information: false,
+                force_disable_retain: false,
+                server: "",
+                maximum_packet_size: 0,
+            },
+            serial: {
+                disable_led: false,
+            },
+            passlist: [],
+            blocklist: [],
+            map_options: {
+                // @ts-expect-error not needed
+                graphviz: {},
+            },
+            ota: {
+                update_check_interval: 0,
+                disable_automatic_update_check: false,
+                zigbee_ota_override_index_location: undefined,
+                image_block_response_delay: undefined,
+                default_maximum_data_size: undefined,
+            },
+            groups: {},
         },
         permit_join: false,
         permit_join_end: undefined,
@@ -136,7 +196,6 @@ const initialState: GlobalState = {
     logs: [],
     logsLimit: 100,
     extensions: [],
-    editingExtension: undefined,
     missingTranslations: {},
     generatedExternalDefinitions: {},
     availability: {},
@@ -148,13 +207,13 @@ export const storeSlice = createSlice({
     name: "store",
     initialState,
     reducers: {
-        setExtensions: (state, action: PayloadAction<GlobalState["extensions"]>) => {
+        setExtensions: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/extensions"]>) => {
             state.extensions = action.payload;
         },
-        setEditingExtension: (state, action: PayloadAction<string | undefined>) => {
-            state.editingExtension = action.payload;
-        },
-        setTouchlinkScan: (state, action: PayloadAction<{ inProgress: boolean; devices: TouchLinkDevice[] }>) => {
+        setTouchlinkScan: (
+            state,
+            action: PayloadAction<{ inProgress: boolean; devices: Zigbee2MQTTAPI["bridge/response/touchlink/scan"]["found"] }>,
+        ) => {
             state.touchlinkScanInProgress = action.payload.inProgress;
             state.touchlinkDevices = action.payload.devices;
         },
@@ -178,32 +237,37 @@ export const storeSlice = createSlice({
 
             state.logs.push({ ...action.payload, timestamp: formatDate(new Date()) });
         },
-        updateDeviceStateMessage: (state, action: PayloadAction<Message>) => {
+        updateDeviceStateMessage: (state, action: PayloadAction<Message<Zigbee2MQTTAPI["{friendlyName}"]>>) => {
             state.deviceStates[action.payload.topic] = Object.assign(state.deviceStates[action.payload.topic] ?? {}, action.payload.payload);
         },
-        updateAvailability: (state, action: PayloadAction<Message>) => {
+        updateAvailability: (state, action: PayloadAction<Message<Zigbee2MQTTAPI["{friendlyName}/availability"]>>) => {
             const friendlyName = action.payload.topic.split(AVAILABILITY_FEATURE_TOPIC_ENDING, 1)[0];
-            state.availability[friendlyName] = action.payload.payload as OnlineOrOffline;
+            state.availability[friendlyName] = action.payload.payload;
         },
-        setBridgeInfo: (state, action: PayloadAction<GlobalState["bridgeInfo"]>) => {
+        setBridgeInfo: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/info"]>) => {
             state.bridgeInfo = action.payload;
         },
-        setBridgeState: (state, action: PayloadAction<GlobalState["bridgeState"]>) => {
+        setBridgeState: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/state"]>) => {
             state.bridgeState = action.payload;
         },
-        setBridgeDefinitions: (state, action: PayloadAction<GlobalState["bridgeDefinitions"]>) => {
-            state.bridgeDefinitions = action.payload;
+        setBridgeDefinitions: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/definition"]>) => {
+            state.bridgeDefinition = action.payload;
         },
-        setDevices: (state, action: PayloadAction<GlobalState["devices"]>) => {
+        setDevices: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/devices"]>) => {
             state.devices = action.payload;
         },
-        setGroups: (state, action: PayloadAction<GlobalState["groups"]>) => {
+        setGroups: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/groups"]>) => {
             state.groups = action.payload;
         },
-        setNetworkGraph: (state, action: PayloadAction<GlobalState["networkGraph"] | undefined>) => {
+        setNetworkGraph: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/response/networkmap"]["value"] | null>) => {
             state.networkGraphIsLoading = false;
 
-            if (action.payload) {
+            if (action.payload == null) {
+                state.networkGraph = {
+                    links: [],
+                    nodes: [],
+                };
+            } else if (typeof action.payload !== "string") {
                 state.networkGraph = action.payload;
             }
         },
@@ -211,15 +275,15 @@ export const storeSlice = createSlice({
             state.networkGraphIsLoading = true;
             state.networkGraph = { nodes: [], links: [] };
         },
-        setBackup: (state, action: PayloadAction<GlobalState["backup"]>) => {
+        setBackup: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/response/backup"]["zip"]>) => {
             state.preparingBackup = false;
             state.backup = action.payload;
         },
         setBackupPreparing: (state) => {
             state.preparingBackup = true;
         },
-        addGeneratedExternalDefinition: (state, action: PayloadAction<[id: string, source: string]>) => {
-            state.generatedExternalDefinitions[action.payload[0]] = action.payload[1];
+        addGeneratedExternalDefinition: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/response/device/generate_external_definition"]>) => {
+            state.generatedExternalDefinitions[action.payload.id] = action.payload.source;
         },
     },
 });
@@ -230,7 +294,6 @@ const store = configureStore<GlobalState>({
 
 export const {
     setExtensions,
-    setEditingExtension,
     setTouchlinkScan,
     setTouchlinkIdentifyInProgress,
     setTouchlinkResetInProgress,

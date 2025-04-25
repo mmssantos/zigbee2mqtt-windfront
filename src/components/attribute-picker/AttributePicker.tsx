@@ -21,7 +21,7 @@ interface AttributePickerProps {
 
 export default function AttributePicker(props: AttributePickerProps & Omit<InputHTMLAttributes<HTMLSelectElement>, "onChange">): JSX.Element {
     const { cluster, device, onChange, label, value, ...rest } = props;
-    const bridgeDefinitions = useAppSelector((state) => state.bridgeDefinitions);
+    const bridgeDefinition = useAppSelector((state) => state.bridgeDefinition);
     const { t } = useTranslation("zigbee");
     const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>): void => {
         const { value: inputValue } = e.target;
@@ -39,18 +39,18 @@ export default function AttributePicker(props: AttributePickerProps & Omit<Input
         // Otherwise we retrieve from the store state
 
         // Cluster name is part of the default definition
-        if (clusterKey in bridgeDefinitions.clusters) {
-            const cluster = bridgeDefinitions.clusters[clusterKey];
+        if (clusterKey in bridgeDefinition.clusters) {
+            const cluster = bridgeDefinition.clusters[clusterKey];
 
             if (cluster && Object.keys(cluster).length !== 0) {
                 return cluster.attributes;
             }
         } // Or the cluster name is part the clustom cluster of the device
         else if (
-            device.ieee_address in bridgeDefinitions.custom_clusters &&
-            Object.hasOwn(bridgeDefinitions.custom_clusters[device.ieee_address], clusterKey)
+            device.ieee_address in bridgeDefinition.custom_clusters &&
+            Object.hasOwn(bridgeDefinition.custom_clusters[device.ieee_address], clusterKey)
         ) {
-            const CustomClusters = bridgeDefinitions.custom_clusters[device.ieee_address][clusterKey];
+            const CustomClusters = bridgeDefinition.custom_clusters[device.ieee_address][clusterKey];
 
             if (CustomClusters && Object.keys(CustomClusters).length !== 0) {
                 return CustomClusters.attributes;

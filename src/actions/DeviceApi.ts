@@ -1,8 +1,8 @@
 import type { AttributeInfo } from "../components/device-page/AttributeEditor.js";
 import type { ApiSendMessage } from "../hooks/useApiWebSocket.js";
-import type { Attribute, Cluster, Endpoint, FriendlyName, IEEEEAddress } from "../types.js";
+import type { Attribute, Cluster, Endpoint } from "../types.js";
 
-const toDeviceId = (friendlyNameOrIEEEAddress: FriendlyName | IEEEEAddress, endpoint: Endpoint): string => {
+const toDeviceId = (friendlyNameOrIEEEAddress: string, endpoint: Endpoint): string => {
     if (endpoint) {
         return `${friendlyNameOrIEEEAddress}/${endpoint}`;
     }
@@ -35,7 +35,7 @@ export async function setDeviceDescription(sendMessage: ApiSendMessage, id: stri
 
 export async function readDeviceAttributes(
     sendMessage: ApiSendMessage,
-    id: FriendlyName | IEEEEAddress,
+    id: string,
     endpoint: Endpoint,
     cluster: Cluster,
     attributes: Attribute[],
@@ -44,13 +44,13 @@ export async function readDeviceAttributes(
     await sendMessage(`${toDeviceId(id, endpoint)}/set`, { read: { cluster, attributes, options } });
 }
 
-export async function generateExternalDefinition(sendMessage: ApiSendMessage, id: FriendlyName | IEEEEAddress): Promise<void> {
+export async function generateExternalDefinition(sendMessage: ApiSendMessage, id: string): Promise<void> {
     await sendMessage("bridge/request/device/generate_external_definition", { id });
 }
 
 export async function writeDeviceAttributes(
     sendMessage: ApiSendMessage,
-    id: FriendlyName | IEEEEAddress,
+    id: string,
     endpoint: Endpoint,
     cluster: Cluster,
     attributes: AttributeInfo[],
@@ -67,7 +67,7 @@ export async function writeDeviceAttributes(
 
 export async function executeCommand(
     sendMessage: ApiSendMessage,
-    friendlyNameOrIEEEAddress: FriendlyName | IEEEEAddress,
+    friendlyNameOrIEEEAddress: string,
     endpoint: Endpoint,
     cluster: Cluster,
     command: unknown,

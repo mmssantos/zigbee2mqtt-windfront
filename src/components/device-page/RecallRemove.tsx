@@ -2,7 +2,7 @@ import { type JSX, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as StateApi from "../../actions/SceneApi.js";
-import type { Device, DeviceState, Group, Scene, WithFriendlyName } from "../../types.js";
+import type { Device, DeviceState, Group, Scene } from "../../types.js";
 import Button from "../button/Button.js";
 import { ScenePicker } from "./ScenePicker.js";
 import { getScenes } from "./index.js";
@@ -18,7 +18,7 @@ export function RecallRemove(props: RecallRemoveAndMayBeStoreSceneProps): JSX.El
     const [scene, setScene] = useState<Scene>({ id: 0, name: "Scene 0" });
     const [sceneIsNotSelected, setsceneIsNotSelected] = useState<boolean>(true);
     const scenes = getScenes(target);
-    const { friendly_name } = target as WithFriendlyName;
+    const { friendly_name } = target;
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
     return (

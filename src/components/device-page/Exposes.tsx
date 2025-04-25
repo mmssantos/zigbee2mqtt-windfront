@@ -15,10 +15,10 @@ type ExposesProps = {
 export function Exposes(props: ExposesProps) {
     const { device } = props;
     const { t } = useTranslation(["exposes"]);
+    const { sendMessage } = useContext(WebSocketApiRouterContext);
+    const deviceStates = useAppSelector((state) => state.deviceStates);
 
     if (device.definition?.exposes?.length) {
-        const { sendMessage } = useContext(WebSocketApiRouterContext);
-        const deviceStates = useAppSelector((state) => state.deviceStates);
         const deviceState = deviceStates[device.friendly_name] ?? ({} as DeviceState);
 
         return (
@@ -38,5 +38,6 @@ export function Exposes(props: ExposesProps) {
             />
         );
     }
+
     return t("empty_exposes_definition");
 }

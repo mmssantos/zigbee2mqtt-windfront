@@ -1,8 +1,5 @@
-import cx from "classnames";
 import Button from "../button/Button.js";
 import { DisplayValue } from "../display-value/DisplayValue.js";
-
-type Primitive = number | string;
 
 export type ValueWithLabel = {
     value: number;
@@ -10,7 +7,7 @@ export type ValueWithLabel = {
     description?: string;
 };
 
-export type ValueWithLabelOrPrimitive = ValueWithLabel | Primitive;
+export type ValueWithLabelOrPrimitive = ValueWithLabel | number | string;
 
 type EnumProps = {
     value?: ValueWithLabelOrPrimitive;
@@ -19,8 +16,8 @@ type EnumProps = {
     minimal?: boolean;
 };
 
-function isPrimitive(step: ValueWithLabelOrPrimitive): step is Primitive {
-    return step === null || ["number", "string", "undefined"].includes(typeof step);
+function isPrimitive(step?: ValueWithLabelOrPrimitive | null): step is number | string {
+    return step != null || typeof step === "number" || typeof step === "string";
 }
 
 export default function EnumEditor(props: EnumProps) {
@@ -31,13 +28,10 @@ export default function EnumEditor(props: EnumProps) {
             const selectedValue = values.find((v) => (isPrimitive(v) ? v === e.target.value : v.value === e.target.value));
             onChange(selectedValue);
         };
+
         return (
-            <select
-                className="form-control"
-                onChange={onSelectChange}
-                value={isPrimitive(value as ValueWithLabelOrPrimitive) ? (value as string) : (value as ValueWithLabel).value}
-            >
-                <option key="hided" hidden>
+            <select className="form-control" onChange={onSelectChange} value={isPrimitive(value) ? value : value?.value}>
+                <option key="hidden" hidden>
                     ----
                 </option>
                 {values.map((v) => (
@@ -48,15 +42,12 @@ export default function EnumEditor(props: EnumProps) {
             </select>
         );
     }
+
     return (
         <div className="join me-2">
             {values.map((v) => (
                 <Button<ValueWithLabelOrPrimitive>
-                    className={cx("btn btn-outline-secondary join-item", {
-                        active: isPrimitive(v)
-                            ? v === value
-                            : v.value === (isPrimitive(value as ValueWithLabelOrPrimitive) ? value : (value as ValueWithLabel).value),
-                    })}
+                    className={`btn btn-secondary btn-outline join-item${(isPrimitive(v) ? v === value : v.value === (isPrimitive(value) ? value : value?.value)) ? " btn-active" : ""}`}
                     onClick={(item) => onChange(item)}
                     key={isPrimitive(v) ? v : v.name}
                     item={isPrimitive(v) ? v : v.value}

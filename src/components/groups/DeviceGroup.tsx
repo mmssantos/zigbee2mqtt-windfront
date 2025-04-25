@@ -3,7 +3,7 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as GroupsApi from "../../actions/GroupsApi.js";
 import * as StateApi from "../../actions/StateApi.js";
 import { useAppSelector } from "../../hooks/store.js";
-import type { Endpoint, FriendlyName, Group } from "../../types.js";
+import type { Endpoint, Group } from "../../types.js";
 import { DeviceGroupRow } from "./DeviceGroupRow.js";
 
 export interface DeviceGroupProps {
@@ -18,10 +18,10 @@ export function DeviceGroup(props: DeviceGroupProps): JSX.Element {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const removeMember = async (device: string, endpoint: Endpoint): Promise<void> =>
         await GroupsApi.removeDeviceFromGroup(sendMessage, device, endpoint, group.friendly_name);
-    const setDeviceState = async (friendlyName: FriendlyName, value: Record<string, unknown>): Promise<void> => {
+    const setDeviceState = async (friendlyName: string, value: Record<string, unknown>): Promise<void> => {
         await StateApi.setDeviceState(sendMessage, friendlyName, value);
     };
-    const getDeviceState = async (friendlyName: FriendlyName, value: Record<string, unknown>): Promise<void> => {
+    const getDeviceState = async (friendlyName: string, value: Record<string, unknown>): Promise<void> => {
         await StateApi.getDeviceState(sendMessage, friendlyName, value);
     };
 

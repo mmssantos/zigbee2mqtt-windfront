@@ -13,30 +13,26 @@ type DeviceSpecificSettingsProps = {
 } & WithBridgeInfo;
 
 export function DeviceSpecificSettings(props: DeviceSpecificSettingsProps) {
-    const {
-        device,
-        bridgeInfo: { config },
-    } = props;
+    const { t } = useTranslation(["exposes"]);
 
-    if (device.definition?.options?.length) {
+    if (props.device.definition?.options?.length) {
         const { sendMessage } = useContext(WebSocketApiRouterContext);
-        const deviceState = config.devices[device.ieee_address] ?? {};
+        const deviceState = props.bridgeInfo.config.devices[props.device.ieee_address] ?? {};
 
         return (
             <Composite
                 showEndpointLabels={true}
-                feature={{ features: device.definition.options } as CompositeFeature}
+                feature={{ features: props.device.definition.options } as CompositeFeature}
                 type="composite"
-                device={device}
+                device={props.device}
                 deviceState={deviceState}
                 onChange={async (_endpoint, value) => {
-                    await DeviceApi.setDeviceOptions(sendMessage, device.ieee_address, value as Record<string, unknown>);
+                    await DeviceApi.setDeviceOptions(sendMessage, props.device.ieee_address, value as Record<string, unknown>);
                 }}
                 featureWrapperClass={FeatureWrapper}
             />
         );
     }
-    const { t } = useTranslation(["exposes"]);
 
     return t("empty_exposes_definition");
 }

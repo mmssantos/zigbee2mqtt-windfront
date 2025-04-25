@@ -1,20 +1,16 @@
-import type { GenericExposedFeature } from "../../types.js";
+import type { GenericFeature } from "../../types.js";
 import { DisplayValue } from "../display-value/DisplayValue.js";
 import type { BaseFeatureProps } from "./index.js";
 
-export default function BaseViewer(props: BaseFeatureProps<GenericExposedFeature>) {
-    const {
-        feature: { property, unit, name },
-        deviceState,
-    } = props;
+export default function BaseViewer(props: BaseFeatureProps<GenericFeature>) {
     return (
         <div>
-            {property && (
+            {props.feature.property && (
                 <strong>
-                    <DisplayValue value={deviceState[property]} name={name} />
+                    <DisplayValue value={props.deviceState[props.feature.property]} name={props.feature.name} />
                 </strong>
             )}
-            {unit ? <small className="text-muted ms-1">{unit}</small> : null}
+            {"unit" in props.feature && <small className="text-muted ms-1">{props.feature.unit}</small>}
         </div>
     );
 }

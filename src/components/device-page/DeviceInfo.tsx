@@ -1,16 +1,13 @@
-import cx from "classnames";
-import type { TFunction } from "i18next";
 import capitalize from "lodash/capitalize.js";
-import get from "lodash/get.js";
 import lowerCase from "lodash/lowerCase.js";
-import { Fragment, useContext } from "react";
+import { type JSX, useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as DeviceApi from "../../actions/DeviceApi.js";
 import { useAppSelector } from "../../hooks/store.js";
-import type { AvailabilityState } from "../../store.js";
-import type { BridgeInfo, Device, DeviceState } from "../../types.js";
-import { supportNewDevicesUrl, toHex } from "../../utils.js";
+import type { Device, DeviceState } from "../../types.js";
+import { SUPPORT_NEW_DEVICES_URL, toHex } from "../../utils.js";
 import { LastSeen } from "../LastSeen.js";
 import { DeviceControlEditName } from "../device-control/DeviceControlEditName.js";
 import DeviceControlGroup from "../device-control/DeviceControlGroup.js";
@@ -26,8 +23,7 @@ type DeviceInfoProps = {
     device: Device;
 };
 
-// [Flower sensor](https://modkam.ru/?p=1700)
-const markdownLinkRegex = /\[(.*?)]\((.*?)\)/;
+const MARKDOWN_LINK_REGEX = /\[(.*?)]\((.*?)\)/;
 
 export function DeviceInfo(props: DeviceInfoProps) {
     const { device } = props;
@@ -39,27 +35,64 @@ export function DeviceInfo(props: DeviceInfoProps) {
     const deviceState: DeviceState = deviceStates[device.friendly_name] ?? ({} as DeviceState);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
-    const renameDevice = async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
-        await DeviceApi.renameDevice(sendMessage, from, to, homeassistantRename);
-    };
-    const setDeviceDescription = async (old: string, newDesc: string): Promise<void> => {
-        await DeviceApi.setDeviceDescription(sendMessage, old, newDesc);
-    };
-    const configureDevice = async (name: string): Promise<void> => {
-        await DeviceApi.configureDevice(sendMessage, name);
-    };
-    const removeDevice = async (dev: string, force: boolean, block: boolean): Promise<void> => {
-        await DeviceApi.removeDevice(sendMessage, dev, force, block);
-    };
-    const interviewDevice = async (name: string): Promise<void> => {
-        await DeviceApi.interviewDevice(sendMessage, name);
-    };
+    const renameDevice = useCallback(
+        async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
+            await DeviceApi.renameDevice(sendMessage, from, to, homeassistantRename);
+        },
+        [sendMessage],
+    );
+    const setDeviceDescription = useCallback(
+        async (old: string, newDesc: string): Promise<void> => {
+            await DeviceApi.setDeviceDescription(sendMessage, old, newDesc);
+        },
+        [sendMessage],
+    );
+    const configureDevice = useCallback(
+        async (name: string): Promise<void> => {
+            await DeviceApi.configureDevice(sendMessage, name);
+        },
+        [sendMessage],
+    );
+    const removeDevice = useCallback(
+        async (dev: string, force: boolean, block: boolean): Promise<void> => {
+            await DeviceApi.removeDevice(sendMessage, dev, force, block);
+        },
+        [sendMessage],
+    );
+    const interviewDevice = useCallback(
+        async (name: string): Promise<void> => {
+            await DeviceApi.interviewDevice(sendMessage, name);
+        },
+        [sendMessage],
+    );
 
-    const displayProps = [
-        {
-            translationKey: "friendly_name",
-            render: (device: Device) => (
-                <dd className="col-12 col-md-7">
+    const deviceAvailability = bridgeInfo.config.devices[device.ieee_address]?.availability;
+    const deviceDescription = useMemo(() => {
+        const result = MARKDOWN_LINK_REGEX.exec(device.definition?.description as string);
+        let content: JSX.Element;
+
+        if (result) {
+            const [, title, link] = result;
+
+            content = (
+                <Link target="_blank" rel="noopener noreferrer" to={link} className="link link-hover">
+                    {title}
+                </Link>
+            );
+        } else {
+            content = <span>{device.definition?.description}</span>;
+        }
+
+        return <div className="">{content}</div>;
+    }, [device.definition]);
+
+    return (
+        <>
+            <div className="flex flex-col justify-content-center">
+                <DeviceImage device={device} deviceState={deviceState} disabled={device.disabled} />
+            </div>
+            <div className="flex flex-col">
+                <div className="">
                     <strong>{device.friendly_name}</strong>
                     <DeviceControlEditName
                         device={device}
@@ -67,187 +100,61 @@ export function DeviceInfo(props: DeviceInfoProps) {
                         homeassistantEnabled={homeassistantEnabled}
                         style="btn-link btn-sm btn-square"
                     />
-                </dd>
-            ),
-        },
-        {
-            translationKey: "zigbee:description",
-            render: (device: Device) => (
-                <dd className="col-12 col-md-7">
+                </div>
+                <div className="">
                     <pre style={{ display: "inline" }}>{device.description || ""}</pre>
                     <DeviceControlUpdateDesc device={device} setDeviceDescription={setDeviceDescription} />
-                </dd>
-            ),
-        },
-        {
-            translationKey: "last_seen",
-            render: (_device: Device, state: DeviceState, bridgeInfo: BridgeInfo) => (
-                <dd className="col-12 col-md-7">
-                    <LastSeen lastSeenType={bridgeInfo.config.advanced.last_seen} state={state} />
-                </dd>
-            ),
-        },
-        {
-            translationKey: "availability:availability",
-            render: (device: Device, _state: DeviceState, bridgeInfo: BridgeInfo, availability: AvailabilityState) => {
-                const availabilityFeatureEnabled = !!bridgeInfo.config.availability?.enabled;
-                const deviceAvailability = bridgeInfo.config.devices[device.ieee_address]?.availability;
-                const availabilityEnabledForDevice = deviceAvailability != null ? !!deviceAvailability : undefined;
-
-                return (
-                    <dd className="col-12 col-md-7">
-                        <Availability
-                            availability={availability}
-                            disabled={device.disabled}
-                            availabilityFeatureEnabled={availabilityFeatureEnabled}
-                            availabilityEnabledForDevice={availabilityEnabledForDevice}
-                        />
-                    </dd>
-                );
-            },
-        },
-        {
-            key: "type",
-            translationKey: "device_type",
-        },
-        {
-            key: "model_id",
-            translationKey: "zigbee_model",
-        },
-        {
-            key: "manufacturer",
-            translationKey: "zigbee_manufacturer",
-        },
-        {
-            key: "definition.description",
-            translationKey: "description",
-            if: "supported",
-            render: (device: Device) => {
-                const result = markdownLinkRegex.exec(device.definition?.description as string);
-                let content = <span>{device.definition?.description}</span>;
-                if (result) {
-                    const [, title, link] = result;
-                    content = (
-                        <a target="_blank" rel="noopener noreferrer" href={link} className="link link-hover">
-                            {title}
-                        </a>
-                    );
-                }
-                return <dd className="col-12 col-md-7">{content}</dd>;
-            },
-        },
-        {
-            render: (device: Device, _state: DeviceState, _bridgeInfo: BridgeInfo, _availability: AvailabilityState, t: TFunction) => (
-                <dd className="col-12 col-md-7">
-                    <p
-                        className={cx("mb-0", "font-weight-bold", {
-                            "text-error": !device.supported,
-                            "text-success": device.supported,
-                        })}
-                    >
+                </div>
+                <div className="">
+                    <LastSeen lastSeenType={bridgeInfo.config.advanced.last_seen} state={deviceState} />
+                </div>
+                <div className="">
+                    <Availability
+                        availability={availability[device.friendly_name] ?? { state: "offline" }}
+                        disabled={device.disabled}
+                        availabilityFeatureEnabled={!!bridgeInfo.config.availability?.enabled}
+                        availabilityEnabledForDevice={deviceAvailability != null ? !!deviceAvailability : undefined}
+                    />
+                </div>
+                <div className="">{device.type}</div>
+                <div className="">{device.model_id}</div>
+                <div className="">{device.manufacturer}</div>
+                <div className="">{deviceDescription}</div>
+                <div className="">
+                    <p className={`mb-0 font-bold${device.supported ? " text-success" : " text-error"}`}>
                         <DisplayValue name="supported" value={device.supported} />
                         {!device.supported && (
                             <>
                                 {" "}
-                                <a target="_blank" rel="noopener noreferrer" href={supportNewDevicesUrl} className="link link-hover">
+                                <Link target="_blank" rel="noopener noreferrer" to={SUPPORT_NEW_DEVICES_URL} className="link link-hover">
                                     ({t("how_to_add_support")})
-                                </a>
+                                </Link>
                             </>
                         )}
                     </p>
-                </dd>
-            ),
-            translationKey: "support_status",
-        },
-        {
-            key: "ieee_address",
-            translationKey: "ieee_address",
-        },
-        {
-            key: "network_address",
-            translationKey: "network_address",
-            render: (device: Device) => (
-                <dd className="col-12 col-md-7">
+                </div>
+                <div className="">
                     <abbr title={t("network_address_hex")}>{toHex(device.network_address)}</abbr>
                     {" / "}
                     <abbr title={t("network_address_dec")}>{device.network_address}</abbr>
-                </dd>
-            ),
-        },
-        {
-            key: "date_code",
-            translationKey: "firmware_build_date",
-            if: "date_code",
-        },
-        {
-            key: "software_build_id",
-            translationKey: "firmware_id",
-            if: "software_build_id",
-        },
-
-        {
-            key: "definition.vendor",
-            translationKey: "manufacturer",
-            if: "supported",
-            render: (device: Device) => (
-                <dd className="col-12 col-md-7">
+                </div>
+                <div className="">{device.ieee_address}</div>
+                <div className="">{device.network_address}</div>
+                <div className="">{device.date_code}</div>
+                <div className="">{device.software_build_id}</div>
+                <div className="">
                     <VendorLink device={device} />
-                </dd>
-            ),
-        },
-        {
-            key: "definition.model",
-            translationKey: "model",
-            if: "supported",
-            render: (device: Device) => (
-                <dd className="col-12 col-md-7">
+                </div>
+                <div className="">
                     <ModelLink device={device} />
-                </dd>
-            ),
-        },
-
-        {
-            translationKey: "power",
-            render: (device: Device, deviceState: DeviceState) => (
-                <dd className="col-12 col-md-7">
+                </div>
+                <div className="">
                     <PowerSource showLevel={true} device={device} deviceState={deviceState} />
-                </dd>
-            ),
-        },
-        {
-            translationKey: "interview_state",
-            render: (device: Device) => (
-                <dd className="col-12 col-md-7">
+                </div>
+                <div className="">
                     <DisplayValue name="interview_state" value={capitalize(lowerCase(device.interview_state))} />
-                </dd>
-            ),
-        },
-    ];
-
-    return (
-        <Fragment>
-            <div className="d-flex justify-content-center">
-                <DeviceImage
-                    // className={`card-img-top w-auto ${style['device-pic']}`}
-                    device={device}
-                    deviceState={deviceState}
-                    disabled={device.disabled}
-                />
+                </div>
             </div>
-            <dl className="row">
-                {displayProps
-                    .filter((prop) => prop.if === undefined || get(device, prop.if, false))
-                    .map((prop) => (
-                        <Fragment key={prop.translationKey}>
-                            <dt className="col-12 col-md-5">{t(prop.translationKey)}</dt>
-                            {prop.render ? (
-                                prop.render(device, deviceState, bridgeInfo, availability[device.friendly_name] ?? "offline", t)
-                            ) : (
-                                <dd className="col-12 col-md-7">{get(device, prop.key)}</dd>
-                            )}
-                        </Fragment>
-                    ))}
-            </dl>
             <DeviceControlGroup
                 device={device}
                 state={deviceState}
@@ -257,6 +164,6 @@ export function DeviceInfo(props: DeviceInfoProps) {
                 removeDevice={removeDevice}
                 interviewDevice={interviewDevice}
             />
-        </Fragment>
+        </>
     );
 }

@@ -1,18 +1,18 @@
-import { type Endpoint, FeatureAccessMode, type TextualFeature } from "../../../types.js";
+import { type Endpoint, FeatureAccessMode, type TextFeature } from "../../../types.js";
 import TextualEditor from "../../textual-editor/TextualEditor.js";
 import BaseViewer from "../BaseViewer.js";
 import NoAccessError from "../NoAccessError.js";
 import type { BaseFeatureProps } from "../index.js";
 
-type TextualProps = BaseFeatureProps<TextualFeature>;
+type TextProps = BaseFeatureProps<TextFeature>;
 
-export default function Textual(props: TextualProps) {
+export default function Text(props: TextProps) {
     const {
-        feature: { access = FeatureAccessMode.ACCESS_WRITE, endpoint, property },
+        feature: { access = FeatureAccessMode.SET, endpoint, property },
         deviceState,
         onChange,
     } = props;
-    if (access & FeatureAccessMode.ACCESS_WRITE) {
+    if (access & FeatureAccessMode.SET) {
         return (
             <TextualEditor
                 onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
@@ -20,7 +20,7 @@ export default function Textual(props: TextualProps) {
             />
         );
     }
-    if (access & FeatureAccessMode.ACCESS_STATE) {
+    if (access & FeatureAccessMode.STATE) {
         return <BaseViewer {...props} />;
     }
     return <NoAccessError {...props} />;

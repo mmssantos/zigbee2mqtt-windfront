@@ -13,7 +13,7 @@ export default function Numeric(props: NumericProps) {
     const {
         feature: {
             presets,
-            access = FeatureAccessMode.ACCESS_WRITE,
+            access = FeatureAccessMode.SET,
             endpoint,
             property,
             unit,
@@ -27,7 +27,7 @@ export default function Numeric(props: NumericProps) {
         minimal,
     } = props;
 
-    if (access & FeatureAccessMode.ACCESS_WRITE) {
+    if (access & FeatureAccessMode.SET) {
         return (
             <RangeEditor
                 onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
@@ -42,7 +42,7 @@ export default function Numeric(props: NumericProps) {
         );
     }
 
-    if (access & FeatureAccessMode.ACCESS_STATE) {
+    if (access & FeatureAccessMode.STATE) {
         return <BaseViewer {...props} />;
     }
 

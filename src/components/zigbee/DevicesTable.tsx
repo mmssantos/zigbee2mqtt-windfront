@@ -1,9 +1,8 @@
 import { type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { genDeviceDetailsLink, lastSeen, toHex } from "../../utils.js";
+import { getDeviceDetailsLink, lastSeen, toHex } from "../../utils.js";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import isString from "lodash/isString.js";
 import { Link } from "react-router";
 import { DEVICE_TABLE_PAGE_SIZE_KEY } from "../../localStoreConsts.js";
 import type { AvailabilityState } from "../../store.js";
@@ -65,7 +64,7 @@ export function DevicesTable(props: DevicesTableProps): JSX.Element {
               {
                   id: "availability",
                   header: t("availability:availability"),
-                  accessorFn: ({ availabilityState }) => (isString(availabilityState) ? availabilityState : availabilityState.state),
+                  accessorFn: ({ availabilityState }) => availabilityState.state,
                   cell: ({
                       row: {
                           original: { device, availabilityState, availabilityEnabledForDevice },
@@ -103,7 +102,7 @@ export function DevicesTable(props: DevicesTableProps): JSX.Element {
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <Link to={genDeviceDetailsLink(device.ieee_address)} className="link link-hover">
+                            <Link to={getDeviceDetailsLink(device.ieee_address)} className="link link-hover">
                                 {device.friendly_name}
                             </Link>
                             {device.description && <div className="text-xs opacity-50">{device.description}</div>}

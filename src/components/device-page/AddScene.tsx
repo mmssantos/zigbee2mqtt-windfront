@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as SceneApi from "../../actions/SceneApi.js";
 import * as StateApi from "../../actions/StateApi.js";
-import type { CompositeFeature, Device, DeviceState, GenericExposedFeature, Group } from "../../types.js";
+import type { CompositeFeature, Device, DeviceState, GenericFeature, Group } from "../../types.js";
+import { isDevice } from "../../utils.js";
 import Button from "../button/Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { Composite } from "../features/composite/Composite.js";
@@ -24,13 +25,15 @@ export function AddScene(props: AddSceneProps): JSX.Element {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
     const defaultSceneName = `Scene ${sceneId}`;
-    const filteredFeatures: (GenericExposedFeature | CompositeFeature)[] = [];
+    const filteredFeatures: (GenericFeature | CompositeFeature)[] = [];
 
-    for (const feature of (target as Device).definition?.exposes ?? []) {
-        const validFeature = onlyValidFeaturesForScenes(feature, deviceState);
+    if (isDevice(target)) {
+        for (const feature of target.definition?.exposes ?? []) {
+            const validFeature = onlyValidFeaturesForScenes(feature, deviceState);
 
-        if (validFeature) {
-            filteredFeatures.push(validFeature);
+            if (validFeature) {
+                filteredFeatures.push(validFeature);
+            }
         }
     }
 

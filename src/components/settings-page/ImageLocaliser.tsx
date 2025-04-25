@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as DeviceApi from "../../actions/DeviceApi.js";
 import type { WithDevices } from "../../store.js";
-import type { Device, IEEEEAddress } from "../../types.js";
+import type { Device } from "../../types.js";
 import Button from "../button/Button.js";
 import { getZ2mDeviceImage } from "../device-image/index.js";
 
@@ -48,7 +48,7 @@ async function asyncSome<X>(arr: Iterable<X>, predicate: (x: X) => Promise<boole
 export function ImageLocaliser(props: Props): JSX.Element {
     const [currentState, setCurrentState] = useState<LocaliserState>("none");
     const { devices } = props;
-    const [localisationStatus, setLocalisationStatus] = useState<Record<IEEEEAddress, LStatus>>({});
+    const [localisationStatus, setLocalisationStatus] = useState<Record<string, LStatus>>({});
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("settings");
 

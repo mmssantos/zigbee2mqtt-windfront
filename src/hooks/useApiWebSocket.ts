@@ -100,7 +100,7 @@ export function useApiWebSocket() {
     // wrap raw sendMessage
     const sendMessage: ApiSendMessage = useCallback(
         async (topic: string, payload: Record<string, unknown> = {}): Promise<void> => {
-            console.debug("Calling API: ", topic, payload);
+            console.debug("Calling API:", topic, payload);
 
             if (topic.startsWith("bridge/request/")) {
                 const transaction = `${transactionRndPrefix}-${transactionNumber++}`;

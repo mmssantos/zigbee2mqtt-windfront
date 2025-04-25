@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Form from "@rjsf/core";
 import type { RJSFSchema } from "@rjsf/utils";
 import Validator from "@rjsf/validator-ajv8";
-import cx from "classnames";
 import { saveAs } from "file-saver";
 import cloneDeep from "lodash/cloneDeep.js";
 import { type JSX, useCallback, useContext, useState } from "react";
@@ -219,7 +218,7 @@ export default function SettingsPage() {
                 {tabs.map((tab) => (
                     <li key={tab.name} className="nav-item">
                         <Link
-                            className={cx("nav-link", { "bg-primary active": keyName === tab.name })}
+                            className={`nav-link${keyName === tab.name ? "bg-primary active" : ""}`}
                             aria-current="page"
                             to="#"
                             onClick={(e) => {

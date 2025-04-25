@@ -10,14 +10,14 @@ const VERY_BIG_ENUM_SIZE = 4;
 export default function Enum(props: EnumProps) {
     const {
         onChange,
-        feature: { access = FeatureAccessMode.ACCESS_WRITE, values, endpoint, property },
+        feature: { access = FeatureAccessMode.SET, values, endpoint, property },
         deviceState,
         minimal,
     } = props;
 
     const thisIsVeryBigEnumeration = values.length > VERY_BIG_ENUM_SIZE;
 
-    if (access & FeatureAccessMode.ACCESS_WRITE) {
+    if (access & FeatureAccessMode.SET) {
         return (
             <EnumEditor
                 onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
@@ -28,7 +28,7 @@ export default function Enum(props: EnumProps) {
         );
     }
 
-    if (access & FeatureAccessMode.ACCESS_STATE) {
+    if (access & FeatureAccessMode.STATE) {
         return <BaseViewer {...props} />;
     }
 

@@ -1,5 +1,5 @@
 import { type JSX, useContext, useMemo, useState } from "react";
-import type { Attribute, Cluster, Device, Endpoint } from "../../types.js";
+import type { Device, Endpoint } from "../../types.js";
 
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as ReportingApi from "../../actions/ReportingApi.js";
@@ -14,8 +14,8 @@ export interface NiceReportingRule {
     isNew?: number;
     endpoint: Endpoint;
 
-    cluster: Cluster;
-    attribute: Attribute;
+    cluster: string;
+    attribute: string | number;
     minimum_report_interval: number;
     maximum_report_interval: number;
     reportable_change: number;

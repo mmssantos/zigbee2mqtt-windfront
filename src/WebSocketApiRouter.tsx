@@ -1,11 +1,11 @@
 import { debounce, keyBy } from "lodash";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import type { Zigbee2MQTTResponse } from "zigbee2mqtt/dist/types/api.js";
+import type { Zigbee2MQTTAPI, Zigbee2MQTTResponse } from "zigbee2mqtt/dist/types/api.js";
 import { WebSocketApiRouterContext } from "./WebSocketApiRouterContext.js";
 import { resolvePendingRequests, useApiWebSocket } from "./hooks/useApiWebSocket.js";
 import * as store from "./store.js";
-import type { BridgeDefinitions, BridgeInfo, BridgeState, Device, Group, Message, ResponseMessage } from "./types.js";
+import type { Message, ResponseMessage } from "./types.js";
 
 const API_DEBOUNCE_DELAY = 250;
 
@@ -20,31 +20,31 @@ const processDeviceStateMessage = debounce(
 const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useDispatch>): void => {
     switch (data.topic) {
         case "bridge/info": {
-            dispatch(store.setBridgeInfo(data.payload as unknown as BridgeInfo));
+            dispatch(store.setBridgeInfo(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
             break;
         }
         case "bridge/state": {
-            dispatch(store.setBridgeState(data.payload as BridgeState));
+            dispatch(store.setBridgeState(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
             break;
         }
         case "bridge/definitions": {
-            dispatch(store.setBridgeDefinitions(data.payload as unknown as BridgeDefinitions));
+            dispatch(store.setBridgeDefinitions(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
             break;
         }
         case "bridge/devices": {
-            dispatch(store.setDevices(keyBy(data.payload as unknown as Device[], "ieee_address")));
+            dispatch(store.setDevices(keyBy(data.payload as Zigbee2MQTTAPI[typeof data.topic], "ieee_address")));
             break;
         }
         case "bridge/groups": {
-            dispatch(store.setGroups(data.payload as unknown as Group[]));
+            dispatch(store.setGroups(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
             break;
         }
         case "bridge/extensions": {
-            dispatch(store.setExtensions(data.payload as store.Extension[]));
+            dispatch(store.setExtensions(data.payload as Zigbee2MQTTAPI[typeof data.topic])); // TODO: missing in Z2M
             break;
         }
         case "bridge/logging": {
-            const log = data.payload as unknown as store.LogMessage;
+            const log = data.payload as Zigbee2MQTTAPI[typeof data.topic];
 
             dispatch(store.addLog(log));
 
@@ -53,12 +53,12 @@ const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useDisp
         case "bridge/response/networkmap": {
             const response = data.payload as Zigbee2MQTTResponse<typeof data.topic>;
 
-            dispatch(store.setNetworkGraph(response.status === "ok" && typeof response.data.value !== "string" ? response.data.value : undefined));
+            dispatch(store.setNetworkGraph(response.status === "ok" ? response.data.value : null));
 
             break;
         }
         case "bridge/response/touchlink/scan": {
-            const { status, data: payloadData } = data.payload as unknown as Zigbee2MQTTResponse<typeof data.topic>;
+            const { status, data: payloadData } = data.payload as Zigbee2MQTTResponse<typeof data.topic>;
 
             dispatch(
                 store.setTouchlinkScan(status === "ok" ? { inProgress: false, devices: payloadData.found } : { inProgress: false, devices: [] }),
@@ -75,17 +75,17 @@ const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useDisp
             break;
         }
         case "bridge/response/backup": {
-            const backupData = data.payload as { data: { zip: store.Base64String } };
+            const backupData = data.payload as Zigbee2MQTTResponse<typeof data.topic>;
 
             dispatch(store.setBackup(backupData.data.zip));
             break;
         }
         case "bridge/response/device/generate_external_definition": {
-            const {
-                data: { source, id },
-            } = data.payload as { data: { source: store.Base64String; id: string } };
+            const extDef = data.payload as Zigbee2MQTTResponse<typeof data.topic>;
 
-            dispatch(store.addGeneratedExternalDefinition([id, source]));
+            if (extDef.status === "ok") {
+                dispatch(store.addGeneratedExternalDefinition(extDef.data));
+            }
             break;
         }
     }

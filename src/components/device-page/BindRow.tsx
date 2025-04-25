@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import * as BindApi from "../../actions/BindApi.js";
 import type { Devices, WithDevices } from "../../store.js";
-import type { Cluster, Device, Endpoint, Group, ObjectType } from "../../types.js";
+import type { Cluster, Device, Endpoint, EntityType, Group } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import Button from "../button/Button.js";
 import ClusterPicker from "../cluster-picker/ClusterPicker.js";
@@ -44,7 +44,7 @@ export function BindRow(props: BindRowProps) {
         stateRule.source.endpoint = sourceEp;
         setState({ stateRule });
     };
-    const setDestination = (destination: Device | Group, type: ObjectType): void => {
+    const setDestination = (destination: Device | Group, type: EntityType): void => {
         const { stateRule } = state;
         if (type === "device") {
             const endpoints = getEndpoints(destination);

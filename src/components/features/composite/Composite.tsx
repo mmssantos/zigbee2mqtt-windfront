@@ -1,8 +1,7 @@
-import cx from "classnames";
 import groupBy from "lodash/groupBy.js";
 import { type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { CompositeFeature, Endpoint, GenericExposedFeature } from "../../../types.js";
+import type { CompositeFeature, Endpoint, GenericFeature } from "../../../types.js";
 import Button from "../../button/Button.js";
 import { isCompositeFeature } from "../../device-page/index.js";
 import type { BaseFeatureProps } from "../index.js";
@@ -12,7 +11,7 @@ type CompositeType = "composite" | "light" | "switch" | "cover" | "lock" | "fan"
 
 interface CompositeProps extends BaseFeatureProps<CompositeFeature> {
     type: CompositeType;
-    parentFeatures?: (CompositeFeature | GenericExposedFeature)[];
+    parentFeatures?: (CompositeFeature | GenericFeature)[];
     stepsConfiguration?: Record<string, unknown>;
     minimal?: boolean;
     showEndpointLabels?: boolean;
@@ -27,44 +26,37 @@ export function Composite(props: CompositeProps) {
     const { t } = useTranslation(["composite", "common"]);
 
     const onChange = (endpoint: Endpoint, value: Record<string, unknown>): void => {
-        const { onChange, feature } = props;
         setState({ ...state, ...value });
+
         if (!isCompositeRoot()) {
-            if (isCompositeFeature(feature)) {
-                onChange(endpoint, feature.property ? { [feature.property]: { ...state, ...value } } : value);
+            if (isCompositeFeature(props.feature)) {
+                props.onChange(endpoint, props.feature.property ? { [props.feature.property]: { ...state, ...value } } : value);
             } else {
-                onChange(endpoint, value);
+                props.onChange(endpoint, value);
             }
         }
     };
 
     const isCompositeRoot = (): boolean => {
-        const { parentFeatures } = props;
         return (
             isCompositeFeature(props.feature) &&
-            parentFeatures !== undefined &&
-            (parentFeatures.length === 1 ||
+            props.parentFeatures !== undefined &&
+            (props.parentFeatures.length === 1 ||
                 // When parent is e.g. climate
-                (parentFeatures.length === 2 && ![null, undefined, "composite", "list"].includes(parentFeatures[1].type)))
+                (props.parentFeatures.length === 2 && ![null, undefined, "composite", "list"].includes(props.parentFeatures[1].type)))
         );
     };
 
     const onCompositeFeatureApply = (): void => {
-        const {
-            deviceState,
-            onChange,
-            feature: { endpoint, property },
-        } = props;
-        const newState = { ...deviceState, ...state };
-        onChange(endpoint as Endpoint, property ? { [property]: newState } : newState);
+        const newState = { ...props.deviceState, ...state };
+        props.onChange(props.feature.endpoint as Endpoint, props.feature.property ? { [props.feature.property]: newState } : newState);
     };
 
     const onRead = (endpoint: Endpoint, property: Record<string, unknown>): void => {
-        const { onRead, feature } = props;
-        if (isCompositeFeature(feature)) {
-            onRead?.(endpoint, feature.property ? { [feature.property]: property } : property);
+        if (isCompositeFeature(props.feature)) {
+            props.onRead?.(endpoint, props.feature.property ? { [props.feature.property]: property } : property);
         } else {
-            onRead?.(endpoint, property);
+            props.onRead?.(endpoint, property);
         }
     };
 
@@ -144,7 +136,7 @@ export function Composite(props: CompositeProps) {
     if (isCompositeRoot()) {
         result.push(
             <div key={`${feature.name}apply`}>
-                <Button className={cx("btn btn-primary float-end", { "btn-sm": minimal })} onClick={onCompositeFeatureApply}>
+                <Button className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`} onClick={onCompositeFeatureApply}>
                     {t("common:apply")}
                 </Button>
             </div>,

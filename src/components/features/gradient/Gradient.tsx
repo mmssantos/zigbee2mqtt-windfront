@@ -1,4 +1,3 @@
-import cx from "classnames";
 import convertColors from "color-convert";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -93,7 +92,7 @@ export function Gradient(props: GradientProps) {
             )}
             <div>
                 <Button
-                    className={cx("btn btn-primary float-end", { "btn-sm": minimal })}
+                    className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`}
                     onClick={() => onChange(endpoint as Endpoint, { gradient: colors.map(rgbToHex) })}
                 >
                     {t("common:apply")}

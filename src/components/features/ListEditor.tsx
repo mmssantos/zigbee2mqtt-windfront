@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { CompositeFeature, Device, DeviceState, GenericExposedFeature, GenericOrCompositeFeature } from "../../types.js";
+import type { CompositeFeature, Device, DeviceState, GenericFeature, GenericOrCompositeFeature } from "../../types.js";
 import Button from "../button/Button.js";
 import { Feature } from "./composite/Feature.js";
 import FeatureWrapper from "./composite/FeatureWrapper.js";
@@ -10,7 +10,7 @@ type ListEditorProps = {
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     onChange(value: any[]): void;
     feature: GenericOrCompositeFeature;
-    parentFeatures: (CompositeFeature | GenericExposedFeature)[];
+    parentFeatures: (CompositeFeature | GenericFeature)[];
 };
 
 export default function ListEditor(props: ListEditorProps) {

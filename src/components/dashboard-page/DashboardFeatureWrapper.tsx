@@ -49,7 +49,6 @@ import {
     faZ,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import cx from "classnames";
 import camelCase from "lodash/camelCase.js";
 import startCase from "lodash/startCase.js";
 import type { PropsWithChildren } from "react";
@@ -183,7 +182,7 @@ const getGenericFeatureIcon = (name: string, value: unknown, unit?: unknown): [I
     }
 
     if (icon) {
-        return [icon, cx(classes), spec];
+        return [icon, classes.join(" "), spec];
     }
 
     const mappedType = TYPE_TO_CLASS_MAP[name] ?? [undefined, {}];
@@ -198,12 +197,12 @@ const getGenericFeatureIcon = (name: string, value: unknown, unit?: unknown): [I
         classes.push("invisible");
     }
 
-    return icon ? [icon, cx(classes), { flip: mappedSpec.flip, rotate: mappedSpec.rotate, ...spec }] : undefined;
+    return icon ? [icon, classes.join(" "), { flip: mappedSpec.flip, rotate: mappedSpec.rotate, ...spec }] : undefined;
 };
 
 export default function DashboardFeatureWrapper(props: PropsWithChildren<FeatureWrapperProps>) {
     const { children, feature, deviceState = {} } = props;
-    const fi = getGenericFeatureIcon(feature.name, deviceState[feature.property!], feature.unit);
+    const fi = getGenericFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined);
     const { t } = useTranslation(["featureNames"]);
     const featureName = feature.name === "state" ? feature.property : feature.name;
     const fallbackFeatureName = startCase(camelCase(featureName));

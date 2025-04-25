@@ -262,6 +262,61 @@ export const BRIDGE_DEVICES: Message<Device[]> = {
             type: "EndDevice",
         },
         {
+            date_code: "20190722",
+            definition: {
+                description: "Automatically generated definition",
+                exposes: [],
+                model: "E1743",
+                options: [],
+                vendor: "IKEA",
+                supports_ota: false,
+                icon: '',
+            },
+            endpoints: {
+                "1": {
+                    bindings: [
+                        {
+                            cluster: "genPollCtrl",
+                            target: {
+                                endpoint: 1,
+                                ieee_address: "0x00124b0022813501",
+                                type: "endpoint",
+                            },
+                        },
+                        {
+                            cluster: "genOnOff",
+                            target: {
+                                id: 901,
+                                type: "group",
+                            },
+                        },
+                        {
+                            cluster: "genPowerCfg",
+                            target: {
+                                endpoint: 1,
+                                ieee_address: "0x00124b0022813501",
+                                type: "endpoint",
+                            },
+                        },
+                    ],
+                    clusters: {
+                        input: ["genBasic", "genPowerCfg", "genIdentify", "genAlarms", "genPollCtrl", "touchlink", "64636"],
+                        output: ["genIdentify", "genGroups", "genOnOff", "genLevelCtrl", "genOta", "closuresWindowCovering", "touchlink"],
+                    },
+                    configured_reportings: [],
+                    scenes: [],
+                },
+            },
+            friendly_name: "0xbc33acfffe17628a",
+            ieee_address: "0xbc33acfffe17628a",
+            interview_state: "SUCCESSFUL",
+            manufacturer: "IKEA",
+            model_id: "E1743",
+            network_address: 25248,
+            supported: false,
+            type: "EndDevice",
+        },
+        {
             date_code: "20191218",
             definition: {
                 description: "Hue white and color ambiance E26/E27/E14",

@@ -1,4 +1,3 @@
-import isString from "lodash/isString.js";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { AvailabilityState } from "../../store.js";
@@ -14,14 +13,14 @@ export function Availability(props: AvailabilityStateProps): JSX.Element {
     const { t } = useTranslation(["availability"]);
     const { availability, availabilityFeatureEnabled, availabilityEnabledForDevice, disabled } = props;
 
-    const availabilityState = isString(availability) ? availability : availability.state;
-
     if (disabled) {
         return <span>{t("disabled")}</span>;
     }
+
     if (availabilityEnabledForDevice ?? availabilityFeatureEnabled) {
-        return <span className={availability === "online" ? "text-success" : "text-error animate-ping"}>{t(availabilityState)}</span>;
+        return <span className={availability.state === "online" ? "text-success" : "text-error animate-ping"}>{t(availability.state)}</span>;
     }
+
     return (
         <a
             className="link link-hover"

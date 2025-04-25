@@ -3,17 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import type { WithBridgeInfo, WithDeviceStates, WithDevices } from "../../store.js";
-import type { CompositeFeature, DeviceState, Endpoint, FriendlyName, GenericExposedFeature, GroupMember } from "../../types.js";
+import type { CompositeFeature, DeviceState, Endpoint, GenericFeature, Group } from "../../types.js";
 import Button from "../button/Button.js";
 import DashboardDevice from "../dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { onlyValidFeaturesForScenes } from "../device-page/index.js";
 
 interface DeviceGroupRowProps extends WithDevices, WithDeviceStates, WithBridgeInfo {
-    groupMember: GroupMember;
+    groupMember: Group["members"][number];
     removeDeviceFromGroup(deviceFriendlyName: string, endpoint: Endpoint): Promise<void>;
-    setDeviceState(friendlyName: FriendlyName, value: Record<string, unknown>): Promise<void>;
-    getDeviceState(friendlyName: FriendlyName, value: Record<string, unknown>): Promise<void>;
+    setDeviceState(friendlyName: string, value: Record<string, unknown>): Promise<void>;
+    getDeviceState(friendlyName: string, value: Record<string, unknown>): Promise<void>;
 }
 
 export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
@@ -22,7 +22,7 @@ export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
     const { endpoint, ieee_address } = groupMember;
     const device = devices[ieee_address] ?? { ieee_address, friendly_name: t("unknown_device") };
     const deviceState = deviceStates[device.friendly_name] ?? ({} as DeviceState);
-    const filteredFeatures: (GenericExposedFeature | CompositeFeature)[] = [];
+    const filteredFeatures: (GenericFeature | CompositeFeature)[] = [];
 
     for (const feature of device.definition?.exposes ?? []) {
         const validFeature = onlyValidFeaturesForScenes(feature, deviceState);

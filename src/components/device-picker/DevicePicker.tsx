@@ -1,7 +1,7 @@
 import type { ChangeEvent, SelectHTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
 import type { WithDevices } from "../../store.js";
-import type { Device, Group, ObjectType } from "../../types.js";
+import type { Device, EntityType, Group } from "../../types.js";
 import { getDeviceDisplayName } from "../../utils.js";
 import { SelectField } from "../form-fields/SelectField.js";
 
@@ -9,7 +9,7 @@ interface DevicePickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>
     value: string | number;
     label?: string;
     groups?: Group[];
-    onChange(device: Device | Group, type: ObjectType): void;
+    onChange(device: Device | Group, type: EntityType): void;
 }
 
 export default function DevicePicker(props: DevicePickerProps) {

@@ -1,7 +1,6 @@
-import cx from "classnames";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { type CompositeFeature, type Endpoint, FeatureAccessMode, type GenericExposedFeature, type ListFeature } from "../../../types.js";
+import { type CompositeFeature, type Endpoint, FeatureAccessMode, type GenericFeature, type ListFeature } from "../../../types.js";
 import Button from "../../button/Button.js";
 import RangeListEditor from "../../range-list-editor/RangeListEditor.js";
 import BaseViewer from "../BaseViewer.js";
@@ -15,7 +14,7 @@ interface State {
 }
 
 type Props = BaseFeatureProps<ListFeature> & {
-    parentFeatures: (CompositeFeature | GenericExposedFeature)[];
+    parentFeatures: (CompositeFeature | GenericFeature)[];
 };
 
 export function List(props: Props) {
@@ -30,6 +29,7 @@ export function List(props: Props) {
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const onChange = (value: any[]): void => {
         const { endpoint, property } = props.feature;
+
         setState({ value });
         if (!isListRoot()) {
             props.onChange(endpoint as Endpoint, property ? { [property]: value } : value);
@@ -53,11 +53,14 @@ export function List(props: Props) {
     };
 
     const { feature, minimal, parentFeatures } = props;
-    const { access = FeatureAccessMode.ACCESS_WRITE, item_type: itemType } = feature;
-    if (access & FeatureAccessMode.ACCESS_WRITE) {
+    const { access = FeatureAccessMode.SET, item_type: itemType } = feature;
+
+    if (access & FeatureAccessMode.SET) {
+        // TODO ???
         if (itemType === "number") {
             return <RangeListEditor onChange={onChange} value={state.value} minimal={minimal} />;
         }
+
         const result = [
             <ListEditor key="1" feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onChange} value={state.value} />,
         ];
@@ -65,7 +68,7 @@ export function List(props: Props) {
         if (isListRoot()) {
             result.push(
                 <div key="2">
-                    <Button className={cx("btn btn-primary float-end", { "btn-sm": minimal })} onClick={onApply}>
+                    <Button className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`} onClick={onApply}>
                         {t("common:apply")}
                     </Button>
                 </div>,
@@ -74,8 +77,10 @@ export function List(props: Props) {
 
         return result;
     }
-    if (access & FeatureAccessMode.ACCESS_STATE) {
+
+    if (access & FeatureAccessMode.STATE) {
         return <BaseViewer {...props} />;
     }
+
     return <NoAccessError {...props} />;
 }

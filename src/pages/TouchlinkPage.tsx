@@ -11,7 +11,7 @@ import Button from "../components/button/Button.js";
 import { Table } from "../components/grid/Table.js";
 import { useAppSelector } from "../hooks/store.js";
 import type { TouchLinkDevice } from "../types.js";
-import { genDeviceDetailsLink } from "../utils.js";
+import { getDeviceDetailsLink } from "../utils.js";
 
 export default function TouchlinkPage() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
@@ -39,7 +39,7 @@ export default function TouchlinkPage() {
                     accessorFn: (touchlinkDevice) => touchlinkDevice.ieee_address,
                     cell: ({ row: { original: touchlinkDevice } }) =>
                         devices[touchlinkDevice.ieee_address] ? (
-                            <Link to={genDeviceDetailsLink(touchlinkDevice.ieee_address)} className="link link-hover">
+                            <Link to={getDeviceDetailsLink(touchlinkDevice.ieee_address)} className="link link-hover">
                                 {touchlinkDevice.ieee_address}
                             </Link>
                         ) : (

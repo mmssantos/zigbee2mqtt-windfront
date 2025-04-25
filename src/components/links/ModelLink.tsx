@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { supportNewDevicesUrl } from "../../utils.js";
+import { SUPPORT_NEW_DEVICES_URL } from "../../utils.js";
 import type { VendorProps } from "./index.js";
 
 const normalizeModel = (model: string): string => {
@@ -12,7 +12,7 @@ export default function ModelLink(props: VendorProps) {
     const { device, anchor } = props;
     const { t } = useTranslation("zigbee");
     let title = device.model_id || t("unknown");
-    let url = supportNewDevicesUrl;
+    let url = SUPPORT_NEW_DEVICES_URL;
     if (device.supported && device.definition) {
         const detailsAnchor = [
             encodeURIComponent(device.definition?.vendor?.toLowerCase()),

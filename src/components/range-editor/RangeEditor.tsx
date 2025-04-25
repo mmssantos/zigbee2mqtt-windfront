@@ -1,4 +1,3 @@
-import cx from "classnames";
 import { type InputHTMLAttributes, useEffect, useState } from "react";
 import EnumEditor, { type ValueWithLabelOrPrimitive } from "../enum-editor/EnumEditor.js";
 
@@ -40,7 +39,7 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
             {(!minimal || !showRange) && (
                 <input
                     type="number"
-                    className={cx("form-control", { "ms-1": showRange })}
+                    className={`form-control${showRange ? " ms-1" : ""}`}
                     value={currentValue}
                     step={valueStep}
                     onChange={(e) => setCurrentValue(e.target.valueAsNumber)}

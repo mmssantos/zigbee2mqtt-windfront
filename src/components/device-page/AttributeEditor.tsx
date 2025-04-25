@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { LogMessage } from "../../store.js";
-import type { Attribute, Cluster, Device, Endpoint, FriendlyName, IEEEEAddress } from "../../types.js";
+import type { Attribute, Cluster, Device, Endpoint } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import AttributePicker, { type AttributeDefinition } from "../attribute-picker/AttributePicker.js";
 import Button from "../button/Button.js";
@@ -16,15 +16,9 @@ import { LastLogResult } from "./LastLogResult.js";
 export interface AttributeEditorProps {
     device: Device;
     logs: LogMessage[];
-    readDeviceAttributes(
-        id: FriendlyName | IEEEEAddress,
-        endpoint: Endpoint,
-        cluster: Cluster,
-        attributes: Attribute[],
-        options: Record<string, unknown>,
-    ): Promise<void>;
+    readDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: Attribute[], options: Record<string, unknown>): Promise<void>;
     writeDeviceAttributes(
-        id: FriendlyName | IEEEEAddress,
+        id: string,
         endpoint: Endpoint,
         cluster: Cluster,
         attributes: AttributeInfo[],

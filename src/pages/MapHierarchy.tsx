@@ -16,7 +16,7 @@ import { type GraphRaw, ZigbeeRelationship } from "../components/map/types.js";
 import { MapHelpModal } from "../components/modal/components/MapHelpModal.js";
 import PowerSource from "../components/power-source/PowerSource.js";
 import { useAppSelector } from "../hooks/store.js";
-import { genDeviceDetailsLink, toHex } from "../utils.js";
+import { getDeviceDetailsLink, toHex } from "../utils.js";
 
 const RELATION_TMAP = {
     [ZigbeeRelationship.NeighborIsParent]: "parents",
@@ -106,7 +106,7 @@ export default function MapHierarchy() {
                                     {node.friendlyName}
                                 </Link>
                             ) : (
-                                <Link to={genDeviceDetailsLink(node.ieeeAddr)} className="link link-hover link-primary">
+                                <Link to={getDeviceDetailsLink(node.ieeeAddr)} className="link link-hover link-primary">
                                     <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
                                     {node.friendlyName}
                                     <span className="badge badge-ghost">

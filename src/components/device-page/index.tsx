@@ -10,7 +10,7 @@ import type {
     DeviceState,
     EnumFeature,
     FanFeature,
-    GenericExposedFeature,
+    GenericFeature,
     GradientFeature,
     Group,
     LightFeature,
@@ -19,10 +19,11 @@ import type {
     NumericFeature,
     Scene,
     SwitchFeature,
-    TextualFeature,
+    TextFeature,
 } from "../../types.js";
 
 import type { WithBridgeInfo } from "../../store.js";
+import { isDevice } from "../../utils.js";
 
 export type TabName = "info" | "bind" | "state" | "exposes" | "clusters" | "reporting" | "settings" | "settings-specific" | "dev-console" | "scene";
 
@@ -51,11 +52,11 @@ export const isValidSceneId = (id: SceneId, existingScenes: Scene[] = []): boole
 };
 
 export function getScenes(target: Group | Device): Scene[] {
-    if ((target as Device).endpoints) {
+    if (isDevice(target)) {
         const scenes: Scene[] = [];
 
-        for (const key in (target as Device).endpoints) {
-            const ep = (target as Device).endpoints[key];
+        for (const key in target.endpoints) {
+            const ep = target.endpoints[key];
 
             for (const scene of ep.scenes) {
                 scenes.push({ ...scene });
@@ -71,17 +72,17 @@ export function getScenes(target: Group | Device): Scene[] {
 const WHITELIST_FEATURE_NAMES = ["state", "color_temp", "color", "transition", "brightness"];
 
 export function onlyValidFeaturesForScenes(
-    feature: GenericExposedFeature | CompositeFeature,
+    feature: GenericFeature | CompositeFeature,
     deviceState: DeviceState = {} as DeviceState,
-): GenericExposedFeature | CompositeFeature | undefined {
+): GenericFeature | CompositeFeature | undefined {
     // eslint-disable-next-line prefer-const
     const { property, name } = feature as CompositeFeature;
-    let features: CompositeFeature["features"] = "features" in feature ? feature.features : [];
+    let features: CompositeFeature["features"] = feature.features ?? [];
 
     if (isLightFeature(feature)) {
         const state = (property ? deviceState[property] : deviceState) as DeviceState;
         features = [];
-        const validFeatures: GenericExposedFeature[] = [];
+        const validFeatures: GenericFeature[] = [];
 
         for (const subFeature of feature.features) {
             const validFeature = onlyValidFeaturesForScenes(subFeature, state);
@@ -99,66 +100,66 @@ export function onlyValidFeaturesForScenes(
     }
 
     if (WHITELIST_FEATURE_NAMES.includes(name) || features.length > 0) {
-        return { ...feature, features } as GenericExposedFeature | CompositeFeature;
+        return { ...feature, features } as GenericFeature | CompositeFeature;
     }
 }
 
-export function isGenericExposedFeature(feature: GenericExposedFeature | CompositeFeature): feature is GenericExposedFeature {
+export function isGenericExposedFeature(feature: GenericFeature | CompositeFeature): feature is GenericFeature {
     return !("features" in feature);
 }
 
-export function isBinaryFeature(feature: GenericExposedFeature | CompositeFeature): feature is BinaryFeature {
+export function isCompositeFeature(feature: GenericFeature | CompositeFeature): feature is CompositeFeature {
+    return feature.type === "composite";
+}
+
+export function isBinaryFeature(feature: GenericFeature | CompositeFeature): feature is BinaryFeature {
     return feature.type === "binary";
 }
 
-export function isListFeature(feature: GenericExposedFeature | CompositeFeature): feature is ListFeature {
+export function isListFeature(feature: GenericFeature | CompositeFeature): feature is ListFeature {
     return feature.type === "list";
 }
 
-export function isNumericFeature(feature: GenericExposedFeature | CompositeFeature): feature is NumericFeature {
+export function isNumericFeature(feature: GenericFeature | CompositeFeature): feature is NumericFeature {
     return feature.type === "numeric";
 }
 
-export function isTextualFeature(feature: GenericExposedFeature | CompositeFeature): feature is TextualFeature {
+export function isTextFeature(feature: GenericFeature | CompositeFeature): feature is TextFeature {
     return feature.type === "text";
 }
 
-export function isEnumFeature(feature: GenericExposedFeature | CompositeFeature): feature is EnumFeature {
+export function isEnumFeature(feature: GenericFeature | CompositeFeature): feature is EnumFeature {
     return feature.type === "enum";
 }
 
-export function isLightFeature(feature: GenericExposedFeature | CompositeFeature): feature is LightFeature {
+export function isLightFeature(feature: GenericFeature | CompositeFeature): feature is LightFeature {
     return feature.type === "light";
 }
 
-export function isSwitchFeature(feature: GenericExposedFeature | CompositeFeature): feature is SwitchFeature {
+export function isSwitchFeature(feature: GenericFeature | CompositeFeature): feature is SwitchFeature {
     return feature.type === "switch";
 }
 
-export function isCoverFeature(feature: GenericExposedFeature | CompositeFeature): feature is CoverFeature {
+export function isCoverFeature(feature: GenericFeature | CompositeFeature): feature is CoverFeature {
     return feature.type === "cover";
 }
 
-export function isLockFeature(feature: GenericExposedFeature | CompositeFeature): feature is LockFeature {
+export function isLockFeature(feature: GenericFeature | CompositeFeature): feature is LockFeature {
     return feature.type === "lock";
 }
 
-export function isFanFeature(feature: GenericExposedFeature | CompositeFeature): feature is FanFeature {
+export function isFanFeature(feature: GenericFeature | CompositeFeature): feature is FanFeature {
     return feature.type === "fan";
 }
 
-export function isCompositeFeature(feature: GenericExposedFeature | CompositeFeature): feature is CompositeFeature {
-    return feature.type === "composite" && feature.name !== "color_xy" && feature.name !== "color_hs";
-}
-
-export function isColorFeature(feature: GenericExposedFeature | CompositeFeature): feature is ColorFeature {
-    return feature.type === "composite" && (feature.name === "color_xy" || feature.name === "color_hs");
-}
-
-export function isClimateFeature(feature: GenericExposedFeature | CompositeFeature): feature is ClimateFeature {
+export function isClimateFeature(feature: GenericFeature | CompositeFeature): feature is ClimateFeature {
     return feature.type === "climate";
 }
 
-export function isGradientFeature(feature: GenericExposedFeature | CompositeFeature): feature is GradientFeature {
-    return isListFeature(feature) && feature.name === "gradient" && feature.length_min !== null && feature.length_max !== null;
+export function isColorFeature(feature: GenericFeature | CompositeFeature): feature is ColorFeature {
+    return feature.type === "composite" && (feature.name === "color_xy" || feature.name === "color_hs");
+}
+
+export function isGradientFeature(feature: GenericFeature | CompositeFeature): feature is GradientFeature {
+    return isListFeature(feature) && feature.name === "gradient" && feature.length_min != null && feature.length_max != null;
 }

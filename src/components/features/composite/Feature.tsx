@@ -1,23 +1,7 @@
 import type React from "react";
 import type { FunctionComponent, JSX, PropsWithChildren } from "react";
 
-import type { CompositeFeature, Device, DeviceState, Endpoint, GenericExposedFeature } from "../../../types.js";
-import {
-    isBinaryFeature,
-    isClimateFeature,
-    isColorFeature,
-    isCompositeFeature,
-    isCoverFeature,
-    isEnumFeature,
-    isFanFeature,
-    isGradientFeature,
-    isLightFeature,
-    isListFeature,
-    isLockFeature,
-    isNumericFeature,
-    isSwitchFeature,
-    isTextualFeature,
-} from "../../device-page/index.js";
+import type { CompositeFeature, Device, DeviceState, Endpoint, GenericFeature } from "../../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../../enum-editor/EnumEditor.js";
 import Binary from "../binary/Binary.js";
 import Climate from "../climate/Climate.js";
@@ -30,17 +14,17 @@ import { List } from "../list/List.js";
 import Lock from "../lock/Lock.js";
 import Numeric from "../numeric/Numeric.js";
 import Switch from "../switch/Switch.js";
-import Textual from "../textual/Textual.js";
+import Text from "../text/Text.js";
 import { Composite } from "./Composite.js";
 import type { FeatureWrapperProps } from "./FeatureWrapper.js";
 import Color from "./color/Color.js";
 
 interface FeatureProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
-    feature: CompositeFeature | GenericExposedFeature;
-    parentFeatures: (CompositeFeature | GenericExposedFeature)[];
+    feature: CompositeFeature | GenericFeature;
+    parentFeatures: (CompositeFeature | GenericFeature)[];
     deviceState: DeviceState;
     device: Device;
-    stepsConfiguration?: Record<string, unknown>;
+    steps?: ValueWithLabelOrPrimitive[];
     onChange(endpoint: Endpoint, value: Record<string, unknown>): void;
     onRead(endpoint: Endpoint, value: Record<string, unknown>): void;
     featureWrapperClass: FunctionComponent<PropsWithChildren<FeatureWrapperProps>>;
@@ -48,18 +32,7 @@ interface FeatureProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onCha
 }
 
 export const Feature = (props: FeatureProps): JSX.Element => {
-    const {
-        feature,
-        device,
-        deviceState,
-        stepsConfiguration,
-        onRead,
-        onChange,
-        featureWrapperClass: FeatureWrapper,
-        minimal,
-        parentFeatures,
-    } = props;
-
+    const { feature, device, deviceState, steps, onRead, onChange, featureWrapperClass: FeatureWrapper, minimal, parentFeatures } = props;
     const key = JSON.stringify(feature);
     const genericParams = {
         device,
@@ -72,86 +45,95 @@ export const Feature = (props: FeatureProps): JSX.Element => {
     };
     const wrapperParams = { feature, onRead, deviceState, parentFeatures };
 
-    if (isBinaryFeature(feature)) {
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <Binary feature={feature} key={key} {...genericParams} />
-            </FeatureWrapper>
-        );
+    switch (feature.type) {
+        case "binary": {
+            return (
+                <FeatureWrapper key={key} {...wrapperParams}>
+                    <Binary feature={feature} key={key} {...genericParams} />
+                </FeatureWrapper>
+            );
+        }
+        case "numeric": {
+            return (
+                <FeatureWrapper key={key} {...wrapperParams}>
+                    <Numeric feature={feature} key={key} {...genericParams} steps={steps} />
+                </FeatureWrapper>
+            );
+        }
+        case "list": {
+            if (feature.name === "gradient" && feature.length_min != null && feature.length_max != null) {
+                return (
+                    <FeatureWrapper key={key} {...wrapperParams}>
+                        <Gradient feature={feature} key={key} {...genericParams} />
+                    </FeatureWrapper>
+                );
+            }
+
+            return (
+                <FeatureWrapper key={key} {...wrapperParams}>
+                    <List feature={feature} key={key} {...genericParams} />
+                </FeatureWrapper>
+            );
+        }
+        case "text": {
+            return (
+                <FeatureWrapper key={key} {...wrapperParams}>
+                    <Text feature={feature} key={key} {...genericParams} />
+                </FeatureWrapper>
+            );
+        }
+        case "enum": {
+            return (
+                <FeatureWrapper key={key} {...wrapperParams}>
+                    <Enum feature={feature} key={key} {...genericParams} />
+                </FeatureWrapper>
+            );
+        }
+        case "light": {
+            return <Light feature={feature} key={key} {...genericParams} />;
+        }
+        case "switch": {
+            return <Switch feature={feature} key={key} {...genericParams} />;
+        }
+        case "cover": {
+            return <Cover feature={feature} key={key} {...genericParams} />;
+        }
+        case "lock": {
+            return <Lock feature={feature} key={key} {...genericParams} />;
+        }
+        case "climate": {
+            return <Climate feature={feature} key={key} {...genericParams} />;
+        }
+        case "fan": {
+            return <Fan feature={feature} key={key} {...genericParams} />;
+        }
+        case "composite": {
+            if (feature.name === "color_xy" || feature.name === "color_hs") {
+                return (
+                    <FeatureWrapper key={key} {...wrapperParams}>
+                        <Color feature={feature} key={key} {...genericParams} />
+                    </FeatureWrapper>
+                );
+            }
+
+            // When parent is a list (this is when parentFeatures is not set), we don't
+            // need to take the key of the deviceState (deviceState[feature.property])
+            const specificDeviceState = parentFeatures ? (feature.property ? deviceState[feature.property] : deviceState) : deviceState;
+
+            return (
+                <FeatureWrapper key={key} {...wrapperParams}>
+                    <Composite type="composite" feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
+                </FeatureWrapper>
+            );
+        }
+        default: {
+            console.error("Unsupported feature", feature);
+
+            return (
+                <FeatureWrapper key={key} {...wrapperParams}>
+                    <pre>{JSON.stringify(feature, null, 4)}</pre>
+                </FeatureWrapper>
+            );
+        }
     }
-    if (isNumericFeature(feature)) {
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <Numeric feature={feature} key={key} {...genericParams} steps={stepsConfiguration?.[feature.name] as ValueWithLabelOrPrimitive[]} />
-            </FeatureWrapper>
-        );
-    }
-    if (isGradientFeature(feature)) {
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <Gradient feature={feature} key={key} {...genericParams} />
-            </FeatureWrapper>
-        );
-    }
-    if (isListFeature(feature)) {
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <List feature={feature} key={key} {...genericParams} />
-            </FeatureWrapper>
-        );
-    }
-    if (isTextualFeature(feature)) {
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <Textual feature={feature} key={key} {...genericParams} />
-            </FeatureWrapper>
-        );
-    }
-    if (isEnumFeature(feature)) {
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <Enum feature={feature} key={key} {...genericParams} />
-            </FeatureWrapper>
-        );
-    }
-    if (isLightFeature(feature)) {
-        return <Light feature={feature} key={key} {...genericParams} />;
-    }
-    if (isSwitchFeature(feature)) {
-        return <Switch feature={feature} key={key} {...genericParams} />;
-    }
-    if (isCoverFeature(feature)) {
-        return <Cover feature={feature} key={key} {...genericParams} />;
-    }
-    if (isLockFeature(feature)) {
-        return <Lock feature={feature} key={key} {...genericParams} />;
-    }
-    if (isColorFeature(feature)) {
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <Color feature={feature} key={key} {...genericParams} />
-            </FeatureWrapper>
-        );
-    }
-    if (isClimateFeature(feature)) {
-        return <Climate feature={feature} key={key} {...genericParams} />;
-    }
-    if (isFanFeature(feature)) {
-        return <Fan feature={feature} key={key} {...genericParams} />;
-    }
-    if (isCompositeFeature(feature)) {
-        // When parent is a list (this is when parentFeatures is not set), we don't
-        // need to take the key of the deviceState (deviceState[feature.property])
-        const specificDeviceState = parentFeatures ? (feature.property ? deviceState[feature.property] : deviceState) : deviceState;
-        return (
-            <FeatureWrapper key={key} {...wrapperParams}>
-                <Composite type="composite" feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
-            </FeatureWrapper>
-        );
-    }
-    return (
-        <FeatureWrapper key={key} {...wrapperParams}>
-            <pre>{JSON.stringify(feature, null, 4)}</pre>
-        </FeatureWrapper>
-    );
 };

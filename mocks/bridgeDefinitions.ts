@@ -1,6 +1,6 @@
-import type { BridgeDefinitions, Message } from "../src/types.js";
+import type { BridgeDefinition, Message } from "../src/types.js";
 
-export const BRIDGE_DEFINITIONS: Message<BridgeDefinitions> = {
+export const BRIDGE_DEFINITION: Message<BridgeDefinition> = {
     payload: {
         clusters: {
             barrierControl: {
