@@ -8,10 +8,10 @@ import type { Devices, WithDevices } from "../../store.js";
 import type { Cluster, Device, Endpoint, EntityType, Group } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import Button from "../button/Button.js";
-import ClusterPicker from "../cluster-picker/ClusterPicker.js";
-import { PickerType } from "../cluster-picker/index.js";
-import DevicePicker from "../device-picker/DevicePicker.js";
-import EndpointPicker from "../endpoint-picker/EndpointPicker.js";
+import ClusterPicker from "../pickers/ClusterPicker.js";
+import DevicePicker from "../pickers/DevicePicker.js";
+import EndpointPicker from "../pickers/EndpointPicker.js";
+import { ClusterPickerType } from "../pickers/index.js";
 import type { NiceBindingRule } from "./Bind.js";
 
 interface BindRowProps extends WithDevices {
@@ -175,7 +175,7 @@ export function BindRow(props: BindRowProps) {
             <div className="col-md-4">
                 <ClusterPicker
                     label={t("clusters")}
-                    pickerType={PickerType.MULTIPLE}
+                    pickerType={ClusterPickerType.MULTIPLE}
                     clusters={Array.from(possibleClusters)}
                     value={stateRule.clusters}
                     onChange={setClusters}

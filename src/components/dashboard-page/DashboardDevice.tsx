@@ -6,11 +6,11 @@ import { Link } from "react-router";
 import { getDeviceDetailsLink } from "../../utils.js";
 
 import { useTranslation } from "react-i18next";
-import { LastSeen } from "../LastSeen.js";
 import { DeviceImage } from "../device-image/DeviceImage.js";
-import { Composite } from "../features/composite/Composite.js";
-import { Lqi } from "../lqi/Lqi.js";
-import PowerSource from "../power-source/PowerSource.js";
+import { Composite } from "../features/Composite.js";
+import { LastSeen } from "../value-decorators/LastSeen.js";
+import { Lqi } from "../value-decorators/Lqi.js";
+import PowerSource from "../value-decorators/PowerSource.js";
 
 type Props = BaseFeatureProps<CompositeFeature> & {
     lastSeenType: LastSeenType;

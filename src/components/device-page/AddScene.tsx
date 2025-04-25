@@ -7,7 +7,7 @@ import type { CompositeFeature, Device, DeviceState, GenericFeature, Group } fro
 import { isDevice } from "../../utils.js";
 import Button from "../button/Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
-import { Composite } from "../features/composite/Composite.js";
+import { Composite } from "../features/Composite.js";
 import { InputField } from "../form-fields/InputField.js";
 import { getScenes, isValidSceneId, onlyValidFeaturesForScenes } from "./index.js";
 

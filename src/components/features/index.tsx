@@ -1,6 +1,6 @@
 import type { FunctionComponent, HTMLAttributes, PropsWithChildren } from "react";
 import type { Device, DeviceState, Endpoint } from "../../types.js";
-import type { FeatureWrapperProps } from "./composite/FeatureWrapper.js";
+import type { FeatureWrapperProps } from "./FeatureWrapper.js";
 
 export interface BaseFeatureProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
     feature: T;

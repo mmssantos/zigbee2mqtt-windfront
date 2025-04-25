@@ -5,8 +5,8 @@ import type { CompositeFeature, Device, DeviceState } from "../../types.js";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/store.js";
-import { Feature } from "../features/composite/Feature.js";
-import FeatureWrapper from "../features/composite/FeatureWrapper.js";
+import { Feature } from "../features/Feature.js";
+import FeatureWrapper from "../features/FeatureWrapper.js";
 
 type ExposesProps = {
     device: Device;

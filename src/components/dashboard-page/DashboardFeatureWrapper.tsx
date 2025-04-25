@@ -53,7 +53,7 @@ import camelCase from "lodash/camelCase.js";
 import startCase from "lodash/startCase.js";
 import type { PropsWithChildren } from "react";
 import { useTranslation } from "react-i18next";
-import type { FeatureWrapperProps } from "../features/composite/FeatureWrapper.js";
+import type { FeatureWrapperProps } from "../features/FeatureWrapper.js";
 
 type FaIconFlip = "horizontal" | "vertical" | "both";
 type TemperatureUnit = "°C" | "°F";

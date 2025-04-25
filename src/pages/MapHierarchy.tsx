@@ -11,10 +11,10 @@ import * as MapApi from "../actions/MapApi.js";
 import Button from "../components/button/Button.js";
 import { DeviceImage } from "../components/device-image/DeviceImage.js";
 import { DebouncedInput } from "../components/form-fields/DebouncedInput.js";
-import { Lqi } from "../components/lqi/Lqi.js";
 import { type GraphRaw, ZigbeeRelationship } from "../components/map/types.js";
 import { MapHelpModal } from "../components/modal/components/MapHelpModal.js";
-import PowerSource from "../components/power-source/PowerSource.js";
+import { Lqi } from "../components/value-decorators/Lqi.js";
+import PowerSource from "../components/value-decorators/PowerSource.js";
 import { useAppSelector } from "../hooks/store.js";
 import { getDeviceDetailsLink, toHex } from "../utils.js";
 

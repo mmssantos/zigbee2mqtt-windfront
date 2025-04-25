@@ -5,11 +5,11 @@ import { useTranslation } from "react-i18next";
 import type { LogMessage } from "../../store.js";
 import type { Attribute, Cluster, Device, Endpoint } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
-import AttributePicker, { type AttributeDefinition } from "../attribute-picker/AttributePicker.js";
 import Button from "../button/Button.js";
-import ClusterPicker from "../cluster-picker/ClusterPicker.js";
-import { PickerType } from "../cluster-picker/index.js";
-import EndpointPicker from "../endpoint-picker/EndpointPicker.js";
+import AttributePicker, { type AttributeDefinition } from "../pickers/AttributePicker.js";
+import ClusterPicker from "../pickers/ClusterPicker.js";
+import EndpointPicker from "../pickers/EndpointPicker.js";
+import { ClusterPickerType } from "../pickers/index.js";
 import { AttributeValueInput } from "./AttributeValueInput.js";
 import { LastLogResult } from "./LastLogResult.js";
 
@@ -162,7 +162,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
                     <ClusterPicker
                         data-testid="cluster-picker"
                         label={t("cluster")}
-                        pickerType={PickerType.SINGLE}
+                        pickerType={ClusterPickerType.SINGLE}
                         clusters={device.endpoints[endpoint].clusters.input}
                         value={cluster}
                         onChange={onClusterChange}

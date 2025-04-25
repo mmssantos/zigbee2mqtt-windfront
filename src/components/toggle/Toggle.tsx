@@ -3,7 +3,7 @@ import type { ChangeEvent } from "react";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../button/Button.js";
-import { DisplayValue } from "../display-value/DisplayValue.js";
+import { DisplayValue } from "../value-decorators/DisplayValue.js";
 
 type ToggleProps = {
     onChange(value: unknown): void;

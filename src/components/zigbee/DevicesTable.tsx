@@ -7,15 +7,15 @@ import { Link } from "react-router";
 import { DEVICE_TABLE_PAGE_SIZE_KEY } from "../../localStoreConsts.js";
 import type { AvailabilityState } from "../../store.js";
 import type { Device, DeviceState, LastSeenType } from "../../types.js";
-import { LastSeen } from "../LastSeen.js";
 import DeviceControlGroup from "../device-control/DeviceControlGroup.js";
 import { DeviceImage } from "../device-image/DeviceImage.js";
 import { Table } from "../grid/Table.js";
-import ModelLink from "../links/ModelLink.js";
-import VendorLink from "../links/VendorLink.js";
-import { Lqi } from "../lqi/Lqi.js";
-import PowerSource from "../power-source/PowerSource.js";
-import { Availability } from "./Availability.js";
+import { Availability } from "../value-decorators/Availability.js";
+import { LastSeen } from "../value-decorators/LastSeen.js";
+import { Lqi } from "../value-decorators/Lqi.js";
+import ModelLink from "../value-decorators/ModelLink.js";
+import PowerSource from "../value-decorators/PowerSource.js";
+import VendorLink from "../value-decorators/VendorLink.js";
 import { DEVICES_GLOBAL_NAME } from "./index.js";
 
 export type DevicesTableProps = {

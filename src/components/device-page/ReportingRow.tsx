@@ -2,15 +2,15 @@ import merge from "lodash/merge.js";
 import { type ChangeEvent, useEffect, useState } from "react";
 import type { Attribute, Cluster, Device, Endpoint } from "../../types.js";
 
-import ClusterPicker from "../cluster-picker/ClusterPicker.js";
-import { type ClusterGroup, PickerType } from "../cluster-picker/index.js";
-import EndpointPicker from "../endpoint-picker/EndpointPicker.js";
+import ClusterPicker from "../pickers/ClusterPicker.js";
+import EndpointPicker from "../pickers/EndpointPicker.js";
+import { type ClusterGroup, ClusterPickerType } from "../pickers/index.js";
 
 import { useTranslation } from "react-i18next";
 import { getEndpoints } from "../../utils.js";
-import AttributePicker from "../attribute-picker/AttributePicker.js";
 import Button from "../button/Button.js";
 import { InputField } from "../form-fields/InputField.js";
+import AttributePicker from "../pickers/AttributePicker.js";
 import type { NiceReportingRule } from "./Reporting.js";
 
 interface ReportingRowProps {
@@ -131,7 +131,7 @@ export function ReportingRow(props: ReportingRowProps) {
                 <ClusterPicker
                     label={t("cluster")}
                     disabled={!stateRule.endpoint}
-                    pickerType={PickerType.SINGLE}
+                    pickerType={ClusterPickerType.SINGLE}
                     clusters={getClusters(device, stateRule.endpoint, stateRule.cluster)}
                     value={stateRule.cluster}
                     onChange={setCluster}

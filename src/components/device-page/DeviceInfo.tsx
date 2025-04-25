@@ -8,16 +8,16 @@ import * as DeviceApi from "../../actions/DeviceApi.js";
 import { useAppSelector } from "../../hooks/store.js";
 import type { Device, DeviceState } from "../../types.js";
 import { SUPPORT_NEW_DEVICES_URL, toHex } from "../../utils.js";
-import { LastSeen } from "../LastSeen.js";
 import { DeviceControlEditName } from "../device-control/DeviceControlEditName.js";
 import DeviceControlGroup from "../device-control/DeviceControlGroup.js";
 import { DeviceControlUpdateDesc } from "../device-control/DeviceControlUpdateDesc.js";
 import { DeviceImage } from "../device-image/DeviceImage.js";
-import { DisplayValue } from "../display-value/DisplayValue.js";
-import ModelLink from "../links/ModelLink.js";
-import VendorLink from "../links/VendorLink.js";
-import PowerSource from "../power-source/PowerSource.js";
-import { Availability } from "../zigbee/Availability.js";
+import { Availability } from "../value-decorators/Availability.js";
+import { DisplayValue } from "../value-decorators/DisplayValue.js";
+import { LastSeen } from "../value-decorators/LastSeen.js";
+import ModelLink from "../value-decorators/ModelLink.js";
+import PowerSource from "../value-decorators/PowerSource.js";
+import VendorLink from "../value-decorators/VendorLink.js";
 
 type DeviceInfoProps = {
     device: Device;

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { CompositeFeature, Device, DeviceState, GenericFeature, GenericOrCompositeFeature } from "../../types.js";
 import Button from "../button/Button.js";
-import { Feature } from "./composite/Feature.js";
-import FeatureWrapper from "./composite/FeatureWrapper.js";
+import { Feature } from "./Feature.js";
+import FeatureWrapper from "./FeatureWrapper.js";
 
 type ListEditorProps = {
     // biome-ignore lint/suspicious/noExplicitAny: tmp

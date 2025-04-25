@@ -6,8 +6,8 @@ import { useAppSelector } from "../../hooks/store.js";
 import type { Device, Endpoint, Group } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import Button from "../button/Button.js";
-import DevicePicker from "../device-picker/DevicePicker.js";
-import EndpointPicker from "../endpoint-picker/EndpointPicker.js";
+import DevicePicker from "../pickers/DevicePicker.js";
+import EndpointPicker from "../pickers/EndpointPicker.js";
 
 interface AddDeviceToGroupProps {
     group: Group;
