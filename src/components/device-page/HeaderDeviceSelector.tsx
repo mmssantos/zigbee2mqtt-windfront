@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
-import type { Devices } from "../../store.js";
+import type { WithDevices } from "../../store.js";
 import type { Device } from "../../types.js";
 import { PopoverDropdown } from "../dropdown/PopoverDropdown.js";
 import type { TabName } from "./index.js";
 
 interface HeaderDeviceSelectorProps {
-    allDevices: Devices;
+    allDevices: WithDevices["devices"];
     currentDevice: Device;
     tab?: TabName;
 }

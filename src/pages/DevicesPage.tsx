@@ -1,8 +1,7 @@
 import { type JSX, useCallback, useContext, useMemo } from "react";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../actions/DeviceApi.js";
 import { type DeviceTableData, DevicesTable } from "../components/zigbee/DevicesTable.js";
-import { useAppSelector } from "../hooks/store.js";
+import { useAppSelector } from "../hooks/useApp.js";
 import type { DeviceState } from "../types.js";
 
 export default function DevicesPage(): JSX.Element {
@@ -39,25 +38,30 @@ export default function DevicesPage(): JSX.Element {
 
     const renameDevice = useCallback(
         async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
-            await DeviceApi.renameDevice(sendMessage, from, to, homeassistantRename);
+            await sendMessage("bridge/request/device/rename", {
+                from,
+                to,
+                homeassistant_rename: homeassistantRename,
+                last: undefined,
+            });
         },
         [sendMessage],
     );
     const configureDevice = useCallback(
-        async (name: string): Promise<void> => {
-            await DeviceApi.configureDevice(sendMessage, name);
+        async (id: string): Promise<void> => {
+            await sendMessage("bridge/request/device/configure", { id });
         },
         [sendMessage],
     );
     const removeDevice = useCallback(
-        async (dev: string, force: boolean, block: boolean): Promise<void> => {
-            await DeviceApi.removeDevice(sendMessage, dev, force, block);
+        async (id: string, force: boolean, block: boolean): Promise<void> => {
+            await sendMessage("bridge/request/device/remove", { id, force, block });
         },
         [sendMessage],
     );
     const interviewDevice = useCallback(
-        async (name: string): Promise<void> => {
-            await DeviceApi.interviewDevice(sendMessage, name);
+        async (id: string): Promise<void> => {
+            await sendMessage("bridge/request/device/interview", { id });
         },
         [sendMessage],
     );

@@ -5,20 +5,19 @@ import type { RJSFSchema } from "@rjsf/utils";
 import Validator from "@rjsf/validator-ajv8";
 import { saveAs } from "file-saver";
 import cloneDeep from "lodash/cloneDeep.js";
-import { type JSX, useCallback, useContext, useState } from "react";
+import { type JSX, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Navigate, useParams } from "react-router";
 import frontendPackageJson from "../../package.json" with { type: "json" };
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as BridgeApi from "../actions/BridgeApi.js";
-import * as Utils from "../actions/Utils.js";
 import Button from "../components/button/Button.js";
 import { ImageLocaliser } from "../components/settings-page/ImageLocaliser.js";
 import { Stats } from "../components/settings-page/Stats.js";
 import uiSchemas from "../components/settings-page/uiSchema.json" with { type: "json" };
-import { useAppDispatch, useAppSelector } from "../hooks/store.js";
+import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { DescriptionField, TitleField } from "../i18n/rjsf-translation-fields.js";
-import { computeSettingsDiff, formatDate } from "../utils.js";
+import store, { setBackupPreparing } from "../store.js";
+import { computeSettingsDiff, download, formatDate } from "../utils.js";
 
 // XXX: workaround typing
 const FormTyped = Form as unknown as typeof Form.default;
@@ -114,7 +113,7 @@ export default function SettingsPage() {
     const addInstallCode = async () => {
         const code = prompt(t("enter_install_code"));
         if (code) {
-            await BridgeApi.addInstallCode(sendMessage, code);
+            await sendMessage("bridge/request/install_code/add", { value: code });
         }
     };
     const getSettingsTabs = (): { name: string; title: string }[] => {
@@ -155,7 +154,7 @@ export default function SettingsPage() {
         }
         return { currentSchema, currentConfig };
     };
-    const isActive = useCallback(({ isActive }) => (isActive ? " menu-active" : ""), []);
+    const isActive = ({ isActive }) => (isActive ? " menu-active" : "");
 
     const renderCategoriesTabs = (): JSX.Element => {
         return (
@@ -258,9 +257,9 @@ export default function SettingsPage() {
                                 const diff = computeSettingsDiff(getSettingsInfo().currentConfig, formData);
 
                                 if (keyName === ROOT_KEY_NAME) {
-                                    await BridgeApi.setOptions(sendMessage, diff);
+                                    await sendMessage("bridge/request/options", { options: diff });
                                 } else {
-                                    await BridgeApi.setOptions(sendMessage, { [keyName]: diff });
+                                    await sendMessage("bridge/request/options", { options: { [keyName]: diff } });
                                 }
                             }}
                             uiSchema={uiSchemas[keyName]}
@@ -274,10 +273,13 @@ export default function SettingsPage() {
     const renderTools = (): JSX.Element => {
         return (
             <div className="join join-vertical">
-                <Button className="btn btn-error join-item mb-2" onClick={async () => await BridgeApi.restart(sendMessage)} prompt>
+                <Button className="btn btn-error join-item mb-2" onClick={async () => await sendMessage("bridge/request/restart", "")} prompt>
                     {t("restart_zigbee2mqtt")}
                 </Button>
-                <Button className="btn btn-primary join-item" onClick={Utils.exportState}>
+                <Button
+                    className="btn btn-primary join-item"
+                    onClick={async () => await download(store.getState() as unknown as Record<string, unknown>, "state.json")}
+                >
                     {t("download_state")}
                 </Button>
                 {preparingBackup ? (
@@ -289,7 +291,13 @@ export default function SettingsPage() {
                         {t("download_z2m_backup")}
                     </Button>
                 ) : (
-                    <Button className="btn btn-primary join-item" onClick={async () => await BridgeApi.backup(sendMessage, dispatch)}>
+                    <Button
+                        className="btn btn-primary join-item"
+                        onClick={async () => {
+                            dispatch(setBackupPreparing());
+                            await sendMessage("bridge/request/backup", "");
+                        }}
+                    >
                         {t("request_z2m_backup")}
                     </Button>
                 )}

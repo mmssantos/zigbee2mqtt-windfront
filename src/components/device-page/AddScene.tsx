@@ -1,8 +1,7 @@
 import { type JSX, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as SceneApi from "../../actions/SceneApi.js";
-import * as StateApi from "../../actions/StateApi.js";
 import type { CompositeFeature, Device, DeviceState, GenericFeature, Group } from "../../types.js";
 import { isDevice } from "../../utils.js";
 import Button from "../button/Button.js";
@@ -20,7 +19,7 @@ export function AddScene(props: AddSceneProps): JSX.Element {
     const { target, deviceState } = props;
     const scenes = getScenes(target);
     const { t } = useTranslation("scene");
-    const [sceneId, setSceneId] = useState<SceneApi.SceneId>(0);
+    const [sceneId, setSceneId] = useState<number>(0);
     const [sceneName, setSceneName] = useState<string>("");
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
@@ -66,7 +65,11 @@ export function AddScene(props: AddSceneProps): JSX.Element {
                     device={target as Device}
                     deviceState={deviceState}
                     onChange={async (_endpoint, value) => {
-                        await StateApi.setDeviceState(sendMessage, target.friendly_name, value);
+                        await sendMessage<"{friendlyNameOrId}/set">(
+                            // @ts-expect-error templated API endpoint
+                            `${target.friendly_name}/set`, // TODO: swap to ID/ieee_address
+                            value,
+                        );
                     }}
                     featureWrapperClass={DashboardFeatureWrapper}
                     minimal={true}
@@ -74,12 +77,15 @@ export function AddScene(props: AddSceneProps): JSX.Element {
             </div>
             <Button
                 disabled={!isValidSceneId(sceneId, scenes)}
-                onClick={async () =>
-                    await SceneApi.sceneStore(sendMessage, target.friendly_name, {
-                        id: sceneId,
-                        name: sceneName || defaultSceneName,
-                    })
-                }
+                onClick={async () => {
+                    const payload: Zigbee2MQTTAPI["{friendlyNameOrId}/set"][string] = { ID: sceneId, name: sceneName || defaultSceneName };
+
+                    await sendMessage<"{friendlyNameOrId}/set">(
+                        // @ts-expect-error templated API endpoint
+                        `${target.friendly_name}/set`, // TODO: swap to ID/ieee_address
+                        { scene_store: payload },
+                    );
+                }}
                 className="btn btn-primary"
             >
                 {t("store")}

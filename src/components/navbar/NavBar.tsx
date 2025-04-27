@@ -6,13 +6,12 @@ import { useTranslation } from "react-i18next";
 import { Link, NavLink } from "react-router";
 import { ReadyState } from "react-use-websocket";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as BridgeApi from "../../actions/BridgeApi.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import LocalePicker from "../../i18n/LocalePicker.js";
 import { isIframe } from "../../utils.js";
 import { ThemeSwitcher } from "../ThemeSwitcher.js";
 import Button from "../button/Button.js";
-import { StartStopJoinButton } from "./StartStopJoinButton.js";
+import PermitJoinButton from "./PermitJoinButton.js";
 
 const URLS = [
     {
@@ -76,7 +75,7 @@ export const NavBar = () => {
                     &nbsp;
                 </NavLink>
             </li>
-            <StartStopJoinButton key="permit-join" popoverId={id} />
+            <PermitJoinButton key="permit-join" popoverId={id} />
         </>
     );
 
@@ -100,7 +99,12 @@ export const NavBar = () => {
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1">
                     {bridgeInfo.restart_required ? (
-                        <Button key="restart-bridge" onClick={async () => await BridgeApi.restart(sendMessage)} prompt className="btn btn-error mr-1">
+                        <Button
+                            key="restart-bridge"
+                            onClick={async () => await sendMessage("bridge/request/restart", "")}
+                            prompt
+                            className="btn btn-error mr-1"
+                        >
                             {t("restart")}
                         </Button>
                     ) : null}

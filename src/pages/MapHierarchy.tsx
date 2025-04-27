@@ -5,17 +5,25 @@ import { groupBy } from "lodash";
 import { type JSX, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
+import type { Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as MapApi from "../actions/MapApi.js";
 import Button from "../components/button/Button.js";
 import { DeviceImage } from "../components/device-image/DeviceImage.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
-import { type GraphRaw, ZigbeeRelationship } from "../components/map/types.js";
 import { MapHelpModal } from "../components/modal/components/MapHelpModal.js";
 import { Lqi } from "../components/value-decorators/Lqi.js";
 import PowerSource from "../components/value-decorators/PowerSource.js";
-import { useAppDispatch, useAppSelector } from "../hooks/store.js";
+import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
+import { setNetworkGraphIsLoading } from "../store.js";
 import { getDeviceDetailsLink, toHex } from "../utils.js";
+
+const enum ZigbeeRelationship {
+    NeighborIsParent = 0x00,
+    NeighborIsAChild = 0x01,
+    NeighborIsASibling = 0x02,
+    NoneOfTheAbove = 0x03,
+    NeighborIsPreviousChild = 0x04,
+}
 
 const RELATION_TMAP = {
     [ZigbeeRelationship.NeighborIsParent]: "parents",
@@ -35,7 +43,7 @@ export default function MapHierarchy() {
     const { t } = useTranslation("map");
     const [filterValue, setFilterValue] = useState<string>("");
 
-    const listRelations = (relations: GraphRaw["links"]) => {
+    const listRelations = (relations: Zigbee2MQTTNetworkMap["links"]) => {
         const listedRelations: JSX.Element[] = [];
 
         for (const relation of relations) {
@@ -64,7 +72,7 @@ export default function MapHierarchy() {
         return listedRelations;
     };
 
-    const groupRelations = (graph: GraphRaw, node: GraphRaw["nodes"][number]) => {
+    const groupRelations = (graph: Zigbee2MQTTNetworkMap, node: Zigbee2MQTTNetworkMap["nodes"][number]) => {
         const grouped = groupBy(
             graph.links.filter((link) => link.target.ieeeAddr === node.ieeeAddr),
             (link) => link.relationship,
@@ -161,7 +169,10 @@ export default function MapHierarchy() {
                 </label>
                 <Button
                     className="btn btn-primary btn-square join-item"
-                    onClick={async () => await MapApi.networkMapRequest(sendMessage, dispatch)}
+                    onClick={async () => {
+                        dispatch(setNetworkGraphIsLoading());
+                        await sendMessage("bridge/request/networkmap", { type: "raw", routes: false });
+                    }}
                     title={graph.nodes.length > 0 ? t("refresh_data") : t("load")}
                 >
                     {graph.nodes.length > 0 ? <FontAwesomeIcon icon={faSync} /> : <FontAwesomeIcon icon={faDownLong} />}

@@ -11,6 +11,7 @@ import { DEVICE_AVAILABILITY } from "./deviceAvailability.js";
 import { DEVICE_STATES } from "./deviceState.js";
 import { GENERATE_EXTERNAL_DEFINITION_RESPONSE } from "./generateExternalDefinitionResponse.js";
 import { NETWORK_MAP_RESPONSE } from "./networkMapResponse.js";
+import { PERMIT_JOIN_RESPONSE } from "./permitJoinResponse.js";
 import { TOUCHLINK_RESPONSE } from "./touchlinkResponse.js";
 
 export function startServer() {
@@ -65,6 +66,86 @@ export function startServer() {
                     setTimeout(() => {
                         ws.send(JSON.stringify(GENERATE_EXTERNAL_DEFINITION_RESPONSE).replace("$ID", msg.payload.id));
                     }, 500);
+                    break;
+                }
+                case "bridge/request/permit_join": {
+                    setTimeout(() => {
+                        if (msg.payload.time > 0) {
+                            ws.send(JSON.stringify(PERMIT_JOIN_RESPONSE));
+
+                            const permitBridgeInfo = structuredClone(BRIDGE_INFO);
+                            permitBridgeInfo.payload.permit_join = true;
+                            permitBridgeInfo.payload.permit_join_end = Date.now() + msg.payload.time * 1000;
+
+                            ws.send(JSON.stringify(permitBridgeInfo));
+
+                            setTimeout(() => {
+                                ws.send(JSON.stringify(BRIDGE_INFO));
+                            }, msg.payload.time * 1000);
+                        } else {
+                            ws.send(JSON.stringify(BRIDGE_INFO));
+                        }
+                    }, 50);
+                    break;
+                }
+                case "bridge/request/device/ota_update/update": {
+                    const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
+
+                    if (deviceState) {
+                        const updatedDeviceState = structuredClone(deviceState);
+                        updatedDeviceState.payload.update = {
+                            progress: 0,
+                            remaining: 600,
+                            state: "updating",
+                            installed_version: 1,
+                            latest_version: 2,
+                        };
+
+                        const interval = setInterval(() => {
+                            ws.send(JSON.stringify(updatedDeviceState));
+
+                            updatedDeviceState.payload.update!.progress! += 1;
+                            updatedDeviceState.payload.update!.remaining! -= 1;
+                        }, 1000);
+
+                        setTimeout(() => {
+                            clearInterval(interval);
+                        }, 25000);
+                    }
+                    break;
+                }
+                case "bridge/request/device/ota_update/schedule": {
+                    const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
+
+                    if (deviceState) {
+                        const updatedDeviceState = structuredClone(deviceState);
+
+                        if (!updatedDeviceState.payload.update) {
+                            updatedDeviceState.payload.update = { state: "scheduled", installed_version: null, latest_version: null };
+                        } else {
+                            updatedDeviceState.payload.update.state = "scheduled";
+                        }
+
+                        ws.send(JSON.stringify(updatedDeviceState));
+                    }
+
+                    break;
+                }
+                case "bridge/request/device/ota_update/unschedule": {
+                    const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
+
+                    if (deviceState) {
+                        const updatedDeviceState = structuredClone(deviceState);
+
+                        if (!updatedDeviceState.payload.update) {
+                            updatedDeviceState.payload.update = { state: "idle", installed_version: null, latest_version: null };
+                        } else if (deviceState.payload.update?.state === "scheduled") {
+                            updatedDeviceState.payload.update.state = "idle"; // simpler
+                        }
+
+                        ws.send(JSON.stringify(updatedDeviceState));
+                    }
+
                     break;
                 }
                 default: {

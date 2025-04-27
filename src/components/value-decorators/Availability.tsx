@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
-import type { AvailabilityState } from "../../store.js";
+import type { AvailabilityState } from "../../types.js";
 
 export type AvailabilityStateProps = {
     availability: AvailabilityState;

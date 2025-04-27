@@ -1,15 +1,13 @@
 import { type JSX, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../../actions/DeviceApi.js";
-import { useAppSelector } from "../../hooks/store.js";
-import type { LogMessage } from "../../store.js";
-import type { Device } from "../../types.js";
+import { useAppSelector } from "../../hooks/useApp.js";
+import type { Device, LogMessage } from "../../types.js";
 import Button from "../button/Button.js";
 import InputField from "../form-fields/InputField.js";
 import TextareaField from "../form-fields/TextareaField.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
+import type { ClusterGroup } from "../pickers/index.js";
 import { LastLogResult } from "./LastLogResult.js";
 
 interface CommandExecutorProps {
@@ -25,7 +23,7 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
     const [command, setCommand] = useState<string>("");
     const [payload, setPayload] = useState(JSON.stringify({}, null, 2));
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const bridgeDefinition = useAppSelector((state) => state.bridgeDefinition);
+    const bridgeDefinitions = useAppSelector((state) => state.bridgeDefinitions);
 
     const formIsValid = useMemo(() => {
         try {
@@ -37,34 +35,62 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
         return !!cluster && !!command;
     }, [payload, cluster, command]);
 
-    const clusters = useMemo(() => {
+    const clusters = useMemo((): ClusterGroup[] => {
         const deviceEndpoint = device.endpoints[endpoint];
         const uniqueClusters = new Set<string>();
+        const deviceInputs = new Set<string>();
+        const deviceOutputs = new Set<string>();
+        const deviceCustoms = new Set<string>();
+        const otherZcls = new Set<string>();
 
         if (deviceEndpoint) {
             for (const inCluster of deviceEndpoint.clusters.input) {
                 uniqueClusters.add(inCluster);
+                deviceInputs.add(inCluster);
             }
 
             for (const outCluster of deviceEndpoint.clusters.output) {
                 uniqueClusters.add(outCluster);
+                deviceOutputs.add(outCluster);
             }
         }
 
-        const customClusters = bridgeDefinition.custom_clusters[device.friendly_name];
+        const customClusters = bridgeDefinitions.custom_clusters[device.friendly_name];
 
         if (customClusters) {
-            for (const key in bridgeDefinition.custom_clusters[device.friendly_name]) {
-                uniqueClusters.add(key);
+            for (const key in bridgeDefinitions.custom_clusters[device.friendly_name]) {
+                if (!uniqueClusters.has(key)) {
+                    uniqueClusters.add(key);
+                    deviceCustoms.add(key);
+                }
             }
         }
 
-        for (const key in bridgeDefinition.clusters) {
-            uniqueClusters.add(key);
+        for (const key in bridgeDefinitions.clusters) {
+            if (!uniqueClusters.has(key)) {
+                otherZcls.add(key);
+            }
         }
 
-        return uniqueClusters;
-    }, [device.friendly_name, device.endpoints, endpoint, bridgeDefinition]);
+        return [
+            {
+                name: "input_clusters",
+                clusters: deviceInputs,
+            },
+            {
+                name: "output_clusters",
+                clusters: deviceOutputs,
+            },
+            {
+                name: "custom_clusters",
+                clusters: deviceCustoms,
+            },
+            {
+                name: "other_zcl_clusters",
+                clusters: otherZcls,
+            },
+        ];
+    }, [device.friendly_name, device.endpoints, endpoint, bridgeDefinitions]);
 
     return (
         <div className="flex flex-col gap-3">
@@ -94,7 +120,7 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
                     type="text"
                     name="command"
                     label={t("command")}
-                    value={command}
+                    defaultValue={command}
                     placeholder={"state, color..."}
                     onChange={(e) => setCommand(e.target.value)}
                     pattern="^\d+|^\w+"
@@ -111,9 +137,21 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
                 required
             />
             <Button
-                onClick={async () =>
-                    await DeviceApi.executeCommand(sendMessage, device.ieee_address, endpoint, cluster, command, JSON.parse(payload))
-                }
+                onClick={async () => {
+                    let commandKey: string | number = Number.parseInt(command, 10);
+
+                    if (Number.isNaN(commandKey)) {
+                        commandKey = command;
+                    }
+
+                    await sendMessage(
+                        // @ts-expect-error templated API endpoint
+                        `${device.ieee_address}/${endpoint}/set`,
+                        {
+                            command: { cluster, command: commandKey, payload: JSON.parse(payload) },
+                        },
+                    );
+                }}
                 disabled={!formIsValid}
                 className="btn btn-success"
             >

@@ -5,10 +5,10 @@ import { type JSX, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as TouchlinkApi from "../actions/TouchlinkApi.js";
 import Button from "../components/button/Button.js";
 import Table from "../components/grid/Table.js";
-import { useAppDispatch, useAppSelector } from "../hooks/store.js";
+import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
+import { setTouchlinkIdentifyInProgress, setTouchlinkResetInProgress, setTouchlinkScan } from "../store.js";
 import type { TouchlinkDevice } from "../types.js";
 import { getDeviceDetailsLink } from "../utils.js";
 
@@ -23,11 +23,17 @@ export default function TouchlinkPage() {
     const touchlinkInProgress = touchlinkIdentifyInProgress || touchlinkResetInProgress;
     const { t } = useTranslation("touchlink");
 
+    const onScanClick = async () => {
+        dispatch(setTouchlinkScan({ inProgress: true, devices: [] }));
+        await sendMessage("bridge/request/touchlink/scan", "");
+    };
     const onIdentifyClick = async (device: TouchlinkDevice): Promise<void> => {
-        await TouchlinkApi.touchlinkIdentify(sendMessage, dispatch, device as unknown as Record<string, unknown>);
+        dispatch(setTouchlinkIdentifyInProgress(true));
+        await sendMessage("bridge/request/touchlink/identify", device);
     };
     const onResetClick = async (device: TouchlinkDevice): Promise<void> => {
-        await TouchlinkApi.touchlinkReset(sendMessage, dispatch, device as unknown as Record<string, unknown>);
+        dispatch(setTouchlinkResetInProgress(true));
+        await sendMessage("bridge/request/touchlink/factory_reset", device);
     };
     const renderTouchlinkDevices = (): JSX.Element => {
         // biome-ignore lint/suspicious/noExplicitAny: tmp
@@ -95,7 +101,7 @@ export default function TouchlinkPage() {
     };
     const renderNoDevices = (): JSX.Element => {
         return (
-            <Button className="btn btn-primary mx-auto d-block" onClick={async () => await TouchlinkApi.touchlinkScan(sendMessage, dispatch)}>
+            <Button className="btn btn-primary mx-auto d-block" onClick={onScanClick}>
                 {t("scan")}
             </Button>
         );
@@ -105,11 +111,7 @@ export default function TouchlinkPage() {
         <div className="card">
             <div className="card-header allign-middle">
                 {t("detected_devices_message", { count: touchlinkDevices.length })}
-                <Button
-                    title={t("rescan")}
-                    className="btn btn-primary btn-sm float-right"
-                    onClick={async () => await TouchlinkApi.touchlinkScan(sendMessage, dispatch)}
-                >
+                <Button title={t("rescan")} className="btn btn-primary btn-sm float-right" onClick={onScanClick}>
                     <FontAwesomeIcon icon={faSync} />
                 </Button>
             </div>

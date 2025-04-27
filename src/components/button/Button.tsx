@@ -4,7 +4,7 @@ import { DialogConfirmationModal } from "../modal/components/DialogConfirmationM
 
 interface ButtonProps<T> extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
     item?: T;
-    onClick?(arg1: T): void;
+    onClick?(entity: T): void;
     prompt?: boolean | string;
 }
 

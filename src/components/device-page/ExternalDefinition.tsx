@@ -2,9 +2,8 @@ import { useCallback, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../../actions/DeviceApi.js";
 import { SUPPORT_NEW_DEVICES_URL } from "../../consts.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import type { Device } from "../../types.js";
 import Button from "../button/Button.js";
 import TextareaField from "../form-fields/TextareaField.js";
@@ -22,7 +21,7 @@ export function ExternalDefinition(props: ExternalDefinitionProps) {
 
     const onGenerateExternalDefinitionClick = useCallback(async (): Promise<void> => {
         setLoading(true);
-        await DeviceApi.generateExternalDefinition(sendMessage, device.ieee_address);
+        await sendMessage("bridge/request/device/generate_external_definition", { id: device.ieee_address });
     }, [sendMessage, device.ieee_address]);
 
     return externalDefinition ? (

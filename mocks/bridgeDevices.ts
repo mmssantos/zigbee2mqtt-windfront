@@ -270,7 +270,7 @@ export const BRIDGE_DEVICES: Message<Device[]> = {
                 options: [],
                 vendor: "IKEA",
                 supports_ota: false,
-                icon: '',
+                icon: "",
             },
             endpoints: {
                 "1": {

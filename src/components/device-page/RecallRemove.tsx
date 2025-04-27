@@ -1,7 +1,6 @@
 import { type JSX, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as StateApi from "../../actions/SceneApi.js";
 import type { Device, DeviceState, Group, Scene } from "../../types.js";
 import Button from "../button/Button.js";
 import { ScenePicker } from "./ScenePicker.js";
@@ -43,7 +42,13 @@ export function RecallRemove(props: RecallRemoveAndMayBeStoreSceneProps): JSX.El
             <div className="join">
                 <Button
                     disabled={sceneIsNotSelected}
-                    onClick={async () => await StateApi.sceneRecall(sendMessage, friendly_name, scene.id)}
+                    onClick={async () =>
+                        await sendMessage<"{friendlyNameOrId}/set">(
+                            // @ts-expect-error templated API endpoint
+                            `${friendly_name}/set`, // TODO: swap to ID/ieee_address
+                            { scene_recall: scene.id },
+                        )
+                    }
                     className="btn btn-success join-item"
                 >
                     {t("recall")}
@@ -51,14 +56,26 @@ export function RecallRemove(props: RecallRemoveAndMayBeStoreSceneProps): JSX.El
                 <Button
                     disabled={sceneIsNotSelected}
                     prompt
-                    onClick={async () => await StateApi.sceneRemove(sendMessage, friendly_name, scene.id)}
+                    onClick={async () =>
+                        await sendMessage<"{friendlyNameOrId}/set">(
+                            // @ts-expect-error templated API endpoint
+                            `${friendly_name}/set`, // TODO: swap to ID/ieee_address
+                            { scene_remove: scene.id },
+                        )
+                    }
                     className="btn btn-error join-item"
                 >
                     {t("remove")}
                 </Button>
                 <Button
                     prompt
-                    onClick={async () => await StateApi.sceneRemoveAll(sendMessage, friendly_name)}
+                    onClick={async () =>
+                        await sendMessage<"{friendlyNameOrId}/set">(
+                            // @ts-expect-error templated API endpoint
+                            `${friendly_name}/set`, // TODO: swap to ID/ieee_address
+                            { scene_remove_all: "" },
+                        )
+                    }
                     className="btn btn-error btn-outline join-item"
                 >
                     {t("remove_all")}

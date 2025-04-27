@@ -1,11 +1,10 @@
-import { keyBy } from "lodash";
 import { useEffect } from "react";
-import type { Zigbee2MQTTAPI, Zigbee2MQTTResponse } from "zigbee2mqtt/dist/types/api.js";
+import type { Zigbee2MQTTAPI, Zigbee2MQTTResponse } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "./WebSocketApiRouterContext.js";
-import { useAppDispatch } from "./hooks/store.js";
 import { resolvePendingRequests, useApiWebSocket } from "./hooks/useApiWebSocket.js";
+import { useAppDispatch } from "./hooks/useApp.js";
 import * as store from "./store.js";
-import type { Message, ResponseMessage } from "./types.js";
+import type { Message, RecursiveMutable, ResponseMessage } from "./types.js";
 
 const processDeviceStateMessage = (message: Message, dispatch: ReturnType<typeof useAppDispatch>): void => {
     dispatch(store.updateDeviceStateMessage(message));
@@ -26,15 +25,19 @@ const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useAppD
             break;
         }
         case "bridge/definitions": {
-            dispatch(store.setBridgeDefinitions(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
+            dispatch(store.setBridgeDefinitions(data.payload as RecursiveMutable<Zigbee2MQTTAPI[typeof data.topic]>));
             break;
         }
         case "bridge/devices": {
-            dispatch(store.setDevices(keyBy(data.payload as Zigbee2MQTTAPI[typeof data.topic], "ieee_address")));
+            dispatch(store.setDevices(data.payload as unknown as Zigbee2MQTTAPI[typeof data.topic]));
             break;
         }
         case "bridge/groups": {
-            dispatch(store.setGroups(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
+            dispatch(store.setGroups(data.payload as unknown as Zigbee2MQTTAPI[typeof data.topic]));
+            break;
+        }
+        case "bridge/converters": {
+            dispatch(store.setConverters(data.payload as Zigbee2MQTTAPI[typeof data.topic])); // TODO: missing in Z2M
             break;
         }
         case "bridge/extensions": {

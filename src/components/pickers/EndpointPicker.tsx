@@ -4,7 +4,7 @@ import SelectField from "../form-fields/SelectField.js";
 
 interface EndpointPickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "onChange"> {
     onChange(endpoint: string): void;
-    value: string;
+    value?: string;
     label?: string;
     values: Set<string>;
 }

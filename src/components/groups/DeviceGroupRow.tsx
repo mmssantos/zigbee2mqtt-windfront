@@ -11,9 +11,9 @@ import { onlyValidFeaturesForScenes } from "../device-page/index.js";
 
 interface DeviceGroupRowProps extends WithDevices, WithDeviceStates, WithBridgeInfo {
     groupMember: Group["members"][number];
-    removeDeviceFromGroup(deviceFriendlyName: string, endpoint: Endpoint): Promise<void>;
-    setDeviceState(friendlyName: string, value: Record<string, unknown>): Promise<void>;
-    getDeviceState(friendlyName: string, value: Record<string, unknown>): Promise<void>;
+    removeDeviceFromGroup(deviceIeee: string, endpoint: Endpoint): Promise<void>;
+    setDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
+    getDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
 }
 
 export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
@@ -38,14 +38,14 @@ export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
             device={device}
             endpoint={endpoint}
             deviceState={deviceState}
-            onChange={async (_endpoint, value) => await setDeviceState(device.friendly_name, value)}
-            onRead={async (_endpoint, value) => await getDeviceState(device.friendly_name, value)}
+            onChange={async (_endpoint, value) => await setDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
+            onRead={async (_endpoint, value) => await getDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
             featureWrapperClass={DashboardFeatureWrapper}
             lastSeenType={bridgeInfo.config.advanced.last_seen}
             controls={
                 <Button<string>
                     prompt
-                    onClick={async () => await removeDeviceFromGroup(device.friendly_name, endpoint)}
+                    onClick={async () => await removeDeviceFromGroup(device.ieee_address, endpoint)}
                     className="btn btn-square btn-error btn-sm"
                 >
                     <FontAwesomeIcon icon={faTrash} />

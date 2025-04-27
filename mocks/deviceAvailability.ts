@@ -1,5 +1,4 @@
-import type { AvailabilityState } from "../src/store.js";
-import type { Message } from "../src/types.js";
+import type { AvailabilityState, Message } from "../src/types.js";
 
 export const DEVICE_AVAILABILITY: Message<AvailabilityState>[] = [
     {

@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { Navigate, useParams } from "react-router";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import { Bind } from "./Bind.js";
 import Clusters from "./Clusters.js";
 import { DevConsole } from "./DevConsole.js";

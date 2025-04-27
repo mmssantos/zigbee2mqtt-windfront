@@ -1,6 +1,7 @@
-import type { BridgeDefinition, Message } from "../src/types.js";
+import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
+import type { Message } from "../src/types.js";
 
-export const BRIDGE_DEFINITION: Message<BridgeDefinition> = {
+export const BRIDGE_DEFINITION: Message<Zigbee2MQTTAPI["bridge/definitions"]> = {
     payload: {
         clusters: {
             barrierControl: {
@@ -4057,6 +4058,7 @@ export const BRIDGE_DEFINITION: Message<BridgeDefinition> = {
                     },
                 },
             },
+            // biome-ignore lint/style/useNamingConvention: mock
             manuSpecificTuya_2: {
                 ID: 57346,
                 attributes: {
@@ -4071,6 +4073,7 @@ export const BRIDGE_DEFINITION: Message<BridgeDefinition> = {
                 commands: {},
                 commandsResponse: {},
             },
+            // biome-ignore lint/style/useNamingConvention: mock
             manuSpecificTuya_3: {
                 ID: 57345,
                 attributes: {

@@ -5,14 +5,12 @@ import Validator from "@rjsf/validator-ajv8";
 import { type JSX, useCallback, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as BridgeApi from "../actions/BridgeApi.js";
-import * as Utils from "../actions/Utils.js";
 import Button from "../components/button/Button.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import SelectField from "../components/form-fields/SelectField.js";
 import { LEVEL_CMAP, LOG_LEVELS, LOG_LIMITS } from "../consts.js";
-import { useAppDispatch, useAppSelector } from "../hooks/store.js";
-import { setLogsLimit } from "../store.js";
+import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
+import { clearLogs as clearStateLogs, setLogsLimit } from "../store.js";
 import { formatDate } from "../utils.js";
 
 // XXX: workaround typing
@@ -91,21 +89,13 @@ export default function LogsPage() {
                     </option>
                 ))}
             </SelectField>
-            <Button
-                onClick={async () => await Utils.clearLogs(dispatch)}
-                className="btn btn-primary self-center"
-                disabled={filteredLogs.length === 0}
-            >
+            <Button onClick={() => dispatch(clearStateLogs())} className="btn btn-primary self-center" disabled={filteredLogs.length === 0}>
                 {t("common:clear")}
             </Button>
             <FormTyped
                 schema={bridgeInfo.config_schema.properties.advanced?.properties?.log_level || {}}
                 formData={bridgeInfo.config.advanced.log_level}
-                onChange={async (params) => {
-                    const payload = { advanced: { log_level: params.formData } };
-
-                    await BridgeApi.setOptions(sendMessage, payload);
-                }}
+                onChange={async (params) => await sendMessage("bridge/request/options", { options: { advanced: { log_level: params.formData } } })}
                 validator={ValidatorTyped}
             />
         </div>

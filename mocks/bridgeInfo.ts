@@ -709,6 +709,7 @@ export const BRIDGE_INFO: Message<BridgeInfo> = {
                 devices: {
                     patternProperties: {
                         "^.*$": {
+                            // biome-ignore lint/style/useNamingConvention: mock
                             $ref: "#/definitions/device",
                         },
                     },
@@ -791,6 +792,7 @@ export const BRIDGE_INFO: Message<BridgeInfo> = {
                 groups: {
                     patternProperties: {
                         "^.*$": {
+                            // biome-ignore lint/style/useNamingConvention: mock
                             $ref: "#/definitions/group",
                         },
                     },

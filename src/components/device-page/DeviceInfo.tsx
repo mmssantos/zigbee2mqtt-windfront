@@ -4,9 +4,8 @@ import { type JSX, useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../../actions/DeviceApi.js";
 import { SUPPORT_NEW_DEVICES_URL } from "../../consts.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import type { Device, DeviceState } from "../../types.js";
 import { toHex } from "../../utils.js";
 import { DeviceControlEditName } from "../device-control/DeviceControlEditName.js";
@@ -38,31 +37,36 @@ export function DeviceInfo(props: DeviceInfoProps) {
 
     const renameDevice = useCallback(
         async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
-            await DeviceApi.renameDevice(sendMessage, from, to, homeassistantRename);
+            await sendMessage("bridge/request/device/rename", {
+                from,
+                to,
+                homeassistant_rename: homeassistantRename,
+                last: undefined,
+            });
         },
         [sendMessage],
     );
     const setDeviceDescription = useCallback(
-        async (old: string, newDesc: string): Promise<void> => {
-            await DeviceApi.setDeviceDescription(sendMessage, old, newDesc);
+        async (id: string, description: string): Promise<void> => {
+            await sendMessage("bridge/request/device/options", { id, options: { description } });
         },
         [sendMessage],
     );
     const configureDevice = useCallback(
-        async (name: string): Promise<void> => {
-            await DeviceApi.configureDevice(sendMessage, name);
+        async (id: string): Promise<void> => {
+            await sendMessage("bridge/request/device/configure", { id });
         },
         [sendMessage],
     );
     const removeDevice = useCallback(
-        async (dev: string, force: boolean, block: boolean): Promise<void> => {
-            await DeviceApi.removeDevice(sendMessage, dev, force, block);
+        async (id: string, force: boolean, block: boolean): Promise<void> => {
+            await sendMessage("bridge/request/device/remove", { id, force, block });
         },
         [sendMessage],
     );
     const interviewDevice = useCallback(
-        async (name: string): Promise<void> => {
-            await DeviceApi.interviewDevice(sendMessage, name);
+        async (id: string): Promise<void> => {
+            await sendMessage("bridge/request/device/interview", { id });
         },
         [sendMessage],
     );

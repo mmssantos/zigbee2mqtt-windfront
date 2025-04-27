@@ -1,19 +1,17 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../actions/DeviceApi.js";
-import * as StateApi from "../actions/StateApi.js";
 import Button from "../components/button/Button.js";
 import DashboardDevice from "../components/dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../components/dashboard-page/DashboardFeatureWrapper.js";
 import { onlyValidFeaturesForDashboard } from "../components/dashboard-page/index.js";
 import { DeviceControlEditName } from "../components/device-control/DeviceControlEditName.js";
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
-import { useAppSelector } from "../hooks/store.js";
-import type { Devices } from "../store.js";
+import { useAppSelector } from "../hooks/useApp.js";
+import type { WithDeviceStates, WithDevices } from "../store.js";
 import type { CompositeFeature, Device, DeviceState, GenericFeature } from "../types.js";
 
 type DeviceStateAndFilteredFeatures = {
@@ -21,7 +19,8 @@ type DeviceStateAndFilteredFeatures = {
     deviceState: DeviceState;
     filteredFeatures: GenericFeature[];
 };
-function filterDeviceByFeatures(devices: Devices, deviceStates: Record<string, DeviceState>): DeviceStateAndFilteredFeatures[] {
+
+function filterDeviceByFeatures(devices: WithDevices["devices"], deviceStates: WithDeviceStates["deviceStates"]): DeviceStateAndFilteredFeatures[] {
     const filteredDevices: DeviceStateAndFilteredFeatures[] = [];
 
     for (const key in devices) {
@@ -57,23 +56,41 @@ export default function Dashboard() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("zigbee");
     const renameDevice = async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
-        await DeviceApi.renameDevice(sendMessage, from, to, homeassistantRename);
+        await sendMessage("bridge/request/device/rename", {
+            from,
+            to,
+            homeassistant_rename: homeassistantRename,
+            last: false,
+        });
     };
-    const removeDevice = async (dev: string, force: boolean, block: boolean): Promise<void> => {
-        await DeviceApi.removeDevice(sendMessage, dev, force, block);
+    const removeDevice = async (id: string, force: boolean, block: boolean): Promise<void> => {
+        await sendMessage("bridge/request/device/remove", { id, force, block });
     };
+    const filteredDevices = useMemo(() => filterDeviceByFeatures(devices, deviceStates), [devices, deviceStates]);
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3 mt-2 px-2">
             {/** TODO: this is re-rendering rather often */}
-            {filterDeviceByFeatures(devices, deviceStates).map(({ device, deviceState, filteredFeatures }) => (
+            {filteredDevices.map(({ device, deviceState, filteredFeatures }) => (
                 <ul className="list rounded-box shadow-md" key={device.ieee_address}>
                     <DashboardDevice
                         feature={{ features: filteredFeatures } as CompositeFeature}
                         device={device}
                         deviceState={deviceState}
-                        onChange={async (_endpoint, value) => await StateApi.setDeviceState(sendMessage, device.friendly_name, value)}
-                        onRead={async (_endpoint, value) => await StateApi.getDeviceState(sendMessage, device.friendly_name, value)}
+                        onChange={async (_endpoint, value) =>
+                            await sendMessage<"{friendlyNameOrId}/set">(
+                                // @ts-expect-error templated API endpoint
+                                `${device.ieee_address}/set`,
+                                value,
+                            )
+                        }
+                        onRead={async (_endpoint, value) =>
+                            await sendMessage<"{friendlyNameOrId}/get">(
+                                // @ts-expect-error templated API endpoint
+                                `${device.ieee_address}/get`,
+                                value,
+                            )
+                        }
                         featureWrapperClass={DashboardFeatureWrapper}
                         lastSeenType={bridgeInfo.config.advanced.last_seen}
                         controls={

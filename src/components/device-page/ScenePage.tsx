@@ -1,4 +1,4 @@
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import type { Device } from "../../types.js";
 import { AddScene } from "./AddScene.js";
 import { RecallRemove } from "./RecallRemove.js";

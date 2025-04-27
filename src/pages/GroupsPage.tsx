@@ -2,30 +2,37 @@ import NiceModal from "@ebay/nice-modal-react";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ColumnDef } from "@tanstack/react-table";
-import { type ChangeEvent, type JSX, useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
+import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as GroupsApi from "../actions/GroupsApi.js";
 import Button from "../components/button/Button.js";
+import InputField from "../components/form-fields/InputField.js";
 import Table from "../components/grid/Table.js";
 import { RenameGroupForm } from "../components/modal/components/RenameGroupModal.js";
-import { useAppSelector } from "../hooks/store.js";
-import type { ApiSendMessage } from "../hooks/useApiWebSocket.js";
+import { useAppSelector } from "../hooks/useApp.js";
 import { GROUP_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { Group } from "../types.js";
 
-interface GroupsPageState {
-    newGroupName: string;
-    newGroupId?: number;
-}
-
-function GroupsTable({ sendMessage }: { sendMessage: ApiSendMessage }) {
-    const { t } = useTranslation(["groups"]);
+export default function GroupsPage() {
+    const [newGroupName, setNewGroupName] = useState<string>("");
+    const [newGroupId, setNewGroupId] = useState<string>();
     const groups = useAppSelector((state) => state.groups);
+    const { sendMessage } = useContext(WebSocketApiRouterContext);
+    const { t } = useTranslation(["groups", "common"]);
+
+    const onGroupCreateSubmit = async (): Promise<void> => {
+        const payload: Zigbee2MQTTAPI["bridge/request/group/add"] = { friendly_name: newGroupName };
+
+        if (newGroupId !== undefined) {
+            payload.id = newGroupId;
+        }
+
+        await sendMessage("bridge/request/group/add", payload);
+    };
 
     // biome-ignore lint/suspicious/noExplicitAny: tmp
-    // biome-ignore lint/correctness/useExhaustiveDependencies: ???
     const columns = useMemo<ColumnDef<Group, any>[]>(
         () => [
             {
@@ -53,19 +60,18 @@ function GroupsTable({ sendMessage }: { sendMessage: ApiSendMessage }) {
                 header: t("group_members"),
                 accessorFn: (group) => group.members.length ?? 0,
                 cell: ({ row: { original: group } }) => (
-                    <div className="stats shadow">
-                        <div className="stat place-items-center">
-                            <div className="stat-value">{group.members.length ?? 0}</div>
-                            <div className="stat-desc">
+                    <div className="flex flex-col items-center gap-3">
+                        {group.members.length ?? 0}
+                        <div className="flex flex-row gap-1 mt-2">
+                            <span className="badge badge-soft badge-ghost cursor-default">
                                 {t("group_scenes")}
                                 {": "}
                                 {group.scenes?.length ?? 0}
-                            </div>
+                            </span>
                         </div>
                     </div>
                 ),
                 enableColumnFilter: false,
-                enableSorting: false,
             },
             {
                 header: "",
@@ -77,7 +83,7 @@ function GroupsTable({ sendMessage }: { sendMessage: ApiSendMessage }) {
                             onClick={() =>
                                 NiceModal.show(RenameGroupForm, {
                                     name: group.friendly_name,
-                                    onRename: async (oldName, newName) => await GroupsApi.renameGroup(sendMessage, oldName, newName),
+                                    onRename: async (from, to) => await sendMessage("bridge/request/group/rename", { from, to }),
                                 })
                             }
                             title={t("rename_group")}
@@ -87,8 +93,8 @@ function GroupsTable({ sendMessage }: { sendMessage: ApiSendMessage }) {
                         <Button<string>
                             prompt
                             title={t("remove_group")}
-                            item={group.friendly_name}
-                            onClick={async (group) => await GroupsApi.removeGroup(sendMessage, group)}
+                            item={group.id.toString()}
+                            onClick={async (id) => await sendMessage("bridge/request/group/remove", { id })}
                             className="btn btn-error join-item"
                         >
                             <FontAwesomeIcon icon={faTrash} />
@@ -99,70 +105,40 @@ function GroupsTable({ sendMessage }: { sendMessage: ApiSendMessage }) {
                 enableColumnFilter: false,
             },
         ],
-        [sendMessage],
+        [sendMessage, t],
     );
-    return <Table id="groups" columns={columns} data={groups} pageSizeStoreKey={GROUP_TABLE_PAGE_SIZE_KEY} />;
-}
 
-export default function GroupsPage() {
-    const [state, setState] = useState<GroupsPageState>({ newGroupName: "", newGroupId: undefined });
-    const { sendMessage } = useContext(WebSocketApiRouterContext);
-
-    const changeHandler = (event: ChangeEvent<HTMLInputElement>): void => {
-        const { name, value } = event.target;
-        setState({ ...state, [name]: value });
-    };
-    const onGroupCreateSubmit = async (): Promise<void> => {
-        const { newGroupName, newGroupId } = state;
-        await GroupsApi.createGroup(sendMessage, newGroupName, newGroupId);
-    };
-
-    const renderGroupCreationForm = (): JSX.Element => {
-        const { t } = useTranslation(["groups"]);
-        const { newGroupName, newGroupId } = state;
-        return (
-            <div className="card">
-                <div className="card-body">
-                    <div className="input-group">
-                        <label htmlFor="newGroupName" className="sr-only">
-                            {t("new_group_name")}
-                        </label>
-                        <input
-                            onChange={changeHandler}
-                            value={newGroupName}
-                            required
+    return (
+        <div className="mt-2 px-2">
+            <div className="hero bg-base-200">
+                <div className="hero-content text-center">
+                    <div className="flex flex-row flex-wrap gap-2">
+                        <InputField
                             type="text"
-                            name="newGroupName"
-                            className="form-control"
-                            id="newGroupName"
+                            name="group_name"
+                            label={t("new_group_name")}
+                            defaultValue={newGroupName}
                             placeholder={t("new_group_name_placeholder")}
+                            onChange={(e) => setNewGroupName(e.target.value)}
+                            required
                         />
-
-                        <label htmlFor="newGroupName" className="sr-only">
-                            {t("new_group_id")}
-                        </label>
-                        <input
-                            onChange={changeHandler}
-                            value={newGroupId === undefined ? "" : newGroupId}
+                        <InputField
                             type="number"
-                            name="newGroupId"
-                            className="form-control"
-                            id="newGroupId"
-                            placeholder={t("new_group_id_placeholder")}
+                            name="group_id"
+                            label={t("new_group_id")}
+                            defaultValue={newGroupId}
+                            detail={t("common:optional")}
+                            min={0}
+                            max={255}
+                            onChange={(e) => setNewGroupId(e.target.value ? undefined : e.target.value)}
                         />
-                        <Button<void> onClick={onGroupCreateSubmit} className="btn btn-primary form-control">
+                        <Button<void> onClick={onGroupCreateSubmit} className="btn btn-primary self-center" disabled={!newGroupName}>
                             {t("create_group")}
                         </Button>
                     </div>
                 </div>
             </div>
-        );
-    };
-
-    return (
-        <>
-            {renderGroupCreationForm()}
-            <GroupsTable sendMessage={sendMessage} />
-        </>
+            <Table id="groups" columns={columns} data={groups} pageSizeStoreKey={GROUP_TABLE_PAGE_SIZE_KEY} />
+        </div>
     );
 }

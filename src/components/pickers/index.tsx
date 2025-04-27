@@ -6,5 +6,5 @@ export interface ClusterGroup {
 }
 
 export function isClusterGroup(clusters: Set<Cluster> | ClusterGroup[]): clusters is ClusterGroup[] {
-    return "name" in clusters && "clusters" in clusters;
+    return Array.isArray(clusters);
 }

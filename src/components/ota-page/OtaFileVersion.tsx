@@ -8,7 +8,7 @@ type OtaFileVersionProps = {
 export default function OtaFileVersion(props: OtaFileVersionProps) {
     const { t } = useTranslation("ota");
     const versions = useMemo(() => {
-        if (props.version === undefined) {
+        if (props.version == null) {
             return undefined;
         }
 

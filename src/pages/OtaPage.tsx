@@ -5,7 +5,6 @@ import { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import * as OtaApi from "../actions/OtaApi.js";
 import Button from "../components/button/Button.js";
 import { DeviceImage } from "../components/device-image/DeviceImage.js";
 import Table from "../components/grid/Table.js";
@@ -14,7 +13,7 @@ import OtaFileVersion from "../components/ota-page/OtaFileVersion.js";
 import ModelLink from "../components/value-decorators/ModelLink.js";
 import OtaLink from "../components/value-decorators/OtaLink.js";
 import VendorLink from "../components/value-decorators/VendorLink.js";
-import { useAppSelector } from "../hooks/store.js";
+import { useAppSelector } from "../hooks/useApp.js";
 import { OTA_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { Device, DeviceState } from "../types.js";
 import { getDeviceDetailsLink } from "../utils.js";
@@ -49,7 +48,7 @@ export default function OtaPage() {
 
     const checkAllOTA = useCallback(async () => {
         for (const otaDevice of allOtaDevices) {
-            await OtaApi.checkOTA(sendMessage, otaDevice.device.friendly_name);
+            await sendMessage("bridge/request/device/ota_update/check", { id: otaDevice.device.friendly_name });
         }
     }, [sendMessage, allOtaDevices]);
 

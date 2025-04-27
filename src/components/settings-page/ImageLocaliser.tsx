@@ -2,7 +2,6 @@ import { type JSX, useContext, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../../actions/DeviceApi.js";
 import type { WithDevices } from "../../store.js";
 import type { Device } from "../../types.js";
 import Button from "../button/Button.js";
@@ -59,10 +58,12 @@ export function ImageLocaliser(props: Props): JSX.Element {
         const success = await asyncSome([getZ2mDeviceImage], async (generator) => {
             const imageUrl = generator(device);
             const imageContent = await downloadImage(imageUrl);
-            await DeviceApi.setDeviceOptions(sendMessage, device.ieee_address, { icon: imageContent });
+
+            await sendMessage("bridge/request/device/options", { id: device.ieee_address, options: { icon: imageContent } });
             setLocalisationStatus((curr) => {
                 return { ...curr, [device.ieee_address]: "done" };
             });
+
             return true;
         });
         if (!success) {

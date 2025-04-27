@@ -7,7 +7,7 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "ignore": ["package.json", "package-lock.json", "src/styles/styles.global.css", "mocks/bridge*"]
+        "ignore": ["package.json", "package-lock.json", "src/styles/styles.global.css"]
     },
     "formatter": {
         "enabled": true,

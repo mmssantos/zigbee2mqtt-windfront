@@ -23,7 +23,7 @@ export const UpdateDeviceDescModal = NiceModal.create((props: RenameActionProps)
 
     const onSaveDescriptionClick = async (): Promise<void> => {
         modal.remove();
-        await setDeviceDescription(device.friendly_name, description);
+        await setDeviceDescription(device.ieee_address, description);
     };
     const renderFooter = () => (
         <>

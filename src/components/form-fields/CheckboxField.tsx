@@ -3,12 +3,12 @@ import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, use
 export type CheckboxFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     name: string;
     label?: string;
-    desc: string;
+    detail?: string;
     onChange(event: ChangeEvent<HTMLInputElement>): void;
 };
 
 export default function CheckboxField(props: CheckboxFieldProps) {
-    const { type, label, desc, onChange, ...rest } = props;
+    const { type, label, detail, onChange, ...rest } = props;
 
     const onValidChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,8 +22,14 @@ export default function CheckboxField(props: CheckboxFieldProps) {
     return (
         <fieldset className="fieldset">
             {label && <legend className="fieldset-legend">{label}</legend>}
-            <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onValidChange} {...rest} />
-            {desc}
+            {detail ? (
+                <label className="label">
+                    <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onValidChange} {...rest} />
+                    {detail}
+                </label>
+            ) : (
+                <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onValidChange} {...rest} />
+            )}
         </fieldset>
     );
 }

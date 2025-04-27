@@ -39,7 +39,8 @@
         "done": "Done",
         "enter_auth_token": "Enter auth token",
         "token": "Token",
-        "documentation": "Documentation"
+        "documentation": "Documentation",
+        "optional": "Optional"
     },
     "devicePage": {
         "about": "About",
@@ -2541,10 +2542,9 @@
         "add_to_group_header": "Add a device to the group",
         "add_to_group": "Add to group",
         "create_group": "Create group",
-        "new_group_id": "New group id",
-        "new_group_id_placeholder": "Specify group id if necessary",
+        "new_group_id": "New group ID",
         "new_group_name": "New group name",
-        "new_group_name_placeholder": "example: my_bedroom_lights",
+        "new_group_name_placeholder": "bedroom_lights, garden...",
         "remove_group": "Remove group",
         "group_id": "Group ID",
         "group_name": "Group Name",
@@ -2592,9 +2592,9 @@
         "check": "Check for new updates",
         "check_all": "Check all",
         "empty_ota_message": "You don't have any devices that support OTA",
-        "remaining_time": "Remaining time {{- remaining}}",
-        "schedule": "Schedule update on next device OTA request",
-        "scheduled": "Remove scheduled update on next OTA request",
+        "remaining_time": "Remaining time",
+        "schedule": "Schedule update on next OTA request from device",
+        "unschedule": "Cancel scheduled update",
         "update": "Update device firmware",
         "firmware_version": "Firmware version",
         "available_firmware_version": "Available firmware version",
@@ -2680,7 +2680,6 @@
         "force_remove": "Force remove",
         "friendly_name": "Friendly name",
         "ieee_address": "IEEE Address",
-        "input_clusters": "Input clusters",
         "interview": "Interview",
         "interview_completed": "Interview completed",
         "interview_failed": "Interview failed",
@@ -2697,7 +2696,6 @@
         "network_address_hex": "Network address in hexadecimal format",
         "network_address_dec": "Network address in decimal format",
         "none": "None",
-        "output_clusters": "Output clusters",
         "pic": "Pic",
         "power": "Power",
         "power_level": "power level",
@@ -2723,7 +2721,11 @@
         "save_description": "Save description",
         "update_description": "Update description",
         "read_write_attributes": "Read / Write attributes from endpoint cluster",
-        "execute_command": "Execute command"
+        "execute_command": "Execute command",
+        "input_clusters": "Input clusters",
+        "output_clusters": "Output clusters",
+        "custom_clusters": "Custom clusters",
+        "other_zcl_clusters": "Other ZCL clusters"
     },
     "scene": {
         "manage_scenes_header": "Manage scenes",
@@ -2755,7 +2757,9 @@
     },
     "devConsole": {
         "generate_external_definition": "Generate external definition",
-        "generated_external_definition": "Generated external definition"
+        "generated_external_definition": "Generated external definition",
+        "state_property": "State property",
+        "state_property_detail": "Set the result into the device's state (only for read)"
     },
     "settingsSchemaDescriptions": {
         "Home Assistant integration (MQTT discovery)": "Home Assistant integration (MQTT discovery)",

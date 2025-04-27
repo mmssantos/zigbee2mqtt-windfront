@@ -1,9 +1,8 @@
 import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import type { Device, Endpoint } from "../../types.js";
 
-import type { Zigbee2MQTTDevice } from "zigbee2mqtt/dist/types/api.js";
+import type { Zigbee2MQTTDevice } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as ReportingApi from "../../actions/ReportingApi.js";
 import { ReportingRow } from "./ReportingRow.js";
 
 interface ReportingProps {
@@ -52,15 +51,19 @@ export function Reporting(props: ReportingProps): JSX.Element {
     const onApply = useCallback(
         async (rule: NiceReportingRule): Promise<void> => {
             const { cluster, endpoint, attribute, minimum_report_interval, maximum_report_interval, reportable_change } = rule;
-            await ReportingApi.configureReport(sendMessage, device.friendly_name, endpoint, {
+
+            await sendMessage("bridge/request/device/configure_reporting", {
+                id: device.ieee_address,
+                endpoint,
                 cluster,
                 attribute,
                 minimum_report_interval,
                 maximum_report_interval,
                 reportable_change,
+                option: {}, // TODO: check this
             });
         },
-        [sendMessage, device.friendly_name],
+        [sendMessage, device.ieee_address],
     );
 
     return (

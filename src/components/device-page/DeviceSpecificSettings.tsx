@@ -3,8 +3,7 @@ import type { CompositeFeature, Device, Endpoint } from "../../types.js";
 
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../../actions/DeviceApi.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import { Composite } from "../features/Composite.js";
 import FeatureWrapper from "../features/FeatureWrapper.js";
 
@@ -17,8 +16,8 @@ export function DeviceSpecificSettings(props: DeviceSpecificSettingsProps) {
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const setDeviceOptions = useCallback(
-        async (_endpoint: Endpoint, value: Record<string, unknown>) => {
-            await DeviceApi.setDeviceOptions(sendMessage, props.device.ieee_address, value as Record<string, unknown>);
+        async (_endpoint: Endpoint, options: Record<string, unknown>) => {
+            await sendMessage("bridge/request/device/options", { id: props.device.ieee_address, options });
         },
         [sendMessage, props.device.ieee_address],
     );

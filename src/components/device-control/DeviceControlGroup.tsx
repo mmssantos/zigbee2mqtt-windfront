@@ -14,9 +14,9 @@ interface DeviceControlGroupProps {
     state?: DeviceState;
     homeassistantEnabled: boolean;
     renameDevice: (from: string, to: string, homeassistantRename: boolean) => Promise<void>;
-    configureDevice: (name: string) => Promise<void>;
-    interviewDevice: (name: string) => Promise<void>;
-    removeDevice: (dev: string, force: boolean, block: boolean) => Promise<void>;
+    configureDevice: (id: string) => Promise<void>;
+    interviewDevice: (id: string) => Promise<void>;
+    removeDevice: (id: string, force: boolean, block: boolean) => Promise<void>;
 }
 
 export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.Element {
@@ -34,7 +34,7 @@ export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.
             <Button<string>
                 className="btn btn-warning join-item btn-square"
                 onClick={configureDevice}
-                item={device.friendly_name}
+                item={device.ieee_address}
                 title={t("reconfigure")}
                 prompt
             >
@@ -43,7 +43,7 @@ export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.
             <Button<string>
                 className="btn btn-info join-item btn-square"
                 onClick={interviewDevice}
-                item={device.friendly_name}
+                item={device.ieee_address}
                 title={t("interview")}
                 prompt
             >

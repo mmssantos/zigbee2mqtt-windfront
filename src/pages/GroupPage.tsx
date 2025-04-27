@@ -4,7 +4,7 @@ import { AddScene } from "../components/device-page/AddScene.js";
 import { RecallRemove } from "../components/device-page/RecallRemove.js";
 import { AddDeviceToGroup } from "../components/groups/AddDeviceToGroup.js";
 import { DeviceGroup } from "../components/groups/DeviceGroup.js";
-import { useAppSelector } from "../hooks/store.js";
+import { useAppSelector } from "../hooks/useApp.js";
 import type { DeviceState } from "../types.js";
 
 type UrlParams = {

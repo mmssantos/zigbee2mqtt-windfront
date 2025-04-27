@@ -1,5 +1,4 @@
 import { groupBy } from "lodash";
-import type { SceneId } from "../../actions/SceneApi.js";
 import type {
     BinaryFeature,
     ClimateFeature,
@@ -31,7 +30,7 @@ export type DevicePageUrlParams = {
     tab?: TabName;
 };
 
-export const isValidSceneId = (id: SceneId, existingScenes: Scene[] = []): boolean => {
+export const isValidSceneId = (id: number, existingScenes: Scene[] = []): boolean => {
     return id >= 0 && id <= 255 && !existingScenes.find((s) => s.id === id);
 };
 

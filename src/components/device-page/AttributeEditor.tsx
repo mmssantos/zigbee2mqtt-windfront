@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DataType } from "../../ZCLenums.js";
-import type { LogMessage } from "../../store.js";
-import type { Cluster, Device, Endpoint } from "../../types.js";
+import type { Cluster, Device, Endpoint, LogMessage } from "../../types.js";
 import { getEndpoints, getObjectFirstKey } from "../../utils.js";
 import Button from "../button/Button.js";
+import InputField from "../form-fields/InputField.js";
 import AttributePicker, { type AttributeDefinition } from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
@@ -15,26 +15,21 @@ import { LastLogResult } from "./LastLogResult.js";
 export interface AttributeEditorProps {
     device: Device;
     lastLog?: LogMessage;
-    readDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], options: Record<string, unknown>): Promise<void>;
-    writeDeviceAttributes(
-        id: string,
-        endpoint: Endpoint,
-        cluster: Cluster,
-        attributes: AttributeInfo[],
-        options: Record<string, unknown>,
-    ): Promise<void>;
+    readDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], stateProperty?: string): Promise<void>;
+    writeDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: AttributeInfo[]): Promise<void>;
 }
+
 export type AttributeInfo = {
     attribute: string;
     definition: AttributeDefinition;
-    value?: unknown;
+    value?: string | number;
 };
 
 export type AttributeValueInputProps = {
-    onChange(attribute: string, value: unknown): void;
+    onChange(attribute: string, value?: string | number): void;
     attribute: string;
     definition: AttributeDefinition;
-    value?: unknown;
+    value?: string | number;
 };
 
 const TYPES_MAP = {
@@ -55,7 +50,7 @@ function AttributeValueInput(props: Readonly<AttributeValueInputProps>): JSX.Ele
             onChange={(e): void => {
                 const val = type === "number" ? e.target.valueAsNumber : e.target.value;
 
-                onChange(attribute, val);
+                onChange(attribute, Number.isNaN(val) ? undefined : val);
             }}
             {...rest}
         />
@@ -67,6 +62,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
     const [endpoint, setEndpoint] = useState(getObjectFirstKey(device.endpoints));
     const [cluster, setCluster] = useState("");
     const [attributes, setAttributes] = useState<AttributeInfo[]>([]);
+    const [stateProperty, setStateProperty] = useState<string>();
     const { t } = useTranslation(["common", "zigbee"]);
 
     const selectedAttributes = useMemo(
@@ -79,11 +75,11 @@ export function AttributeEditor(props: AttributeEditorProps) {
                             <label className="input join-item">
                                 {attribute}
                                 <AttributeValueInput
-                                    value={value as string | number}
+                                    value={value}
                                     attribute={attribute}
                                     definition={definition}
                                     onChange={(attribute, value): void => {
-                                        const newAttributes = [...attributes];
+                                        const newAttributes = Array.from(attributes);
                                         const attr = newAttributes.find((info) => info.attribute === attribute);
 
                                         if (attr) {
@@ -171,11 +167,23 @@ export function AttributeEditor(props: AttributeEditorProps) {
                         }
                     }}
                 />
+                <InputField
+                    type="text"
+                    name="state_property"
+                    label={t("devConsole:state_property")}
+                    defaultValue={""}
+                    detail={`${t("optional")}. ${t("devConsole:state_property_detail")}`}
+                    onChange={(e) => {
+                        if (e.target.value) {
+                            setStateProperty(e.target.value);
+                        }
+                    }}
+                />
             </div>
             {selectedAttributes}
             <div className="flex flex-row flex-wrap join">
                 <Button<void>
-                    disabled={disableButtons}
+                    disabled={disableButtons || attributes.some((attr) => !!attr.value)}
                     className="btn btn-success join-item"
                     data-testid="read-attribute"
                     onClick={async () => {
@@ -184,7 +192,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
                             endpoint,
                             cluster,
                             attributes.map((info) => info.attribute),
-                            {},
+                            stateProperty,
                         );
                     }}
                 >
@@ -195,7 +203,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
                     className="btn btn-error join-item"
                     data-testid="write-attribute"
                     onClick={async () => {
-                        await writeDeviceAttributes(device.ieee_address, endpoint, cluster, attributes, {});
+                        await writeDeviceAttributes(device.ieee_address, endpoint, cluster, attributes);
                     }}
                 >
                     {t("write")}

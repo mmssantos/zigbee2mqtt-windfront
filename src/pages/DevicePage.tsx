@@ -11,13 +11,13 @@ import {
     faWandSparkles,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useCallback } from "react";
+import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useParams } from "react-router";
 import { ContentRenderer } from "../components/device-page/ContentRenderer.js";
 import { HeaderDeviceSelector } from "../components/device-page/HeaderDeviceSelector.js";
 import type { DevicePageUrlParams } from "../components/device-page/index.js";
-import { useAppSelector } from "../hooks/store.js";
+import { useAppSelector } from "../hooks/useApp.js";
 
 export default function DevicePage(): JSX.Element {
     const { t } = useTranslation("devicePage");
@@ -25,7 +25,7 @@ export default function DevicePage(): JSX.Element {
     const params = useParams<DevicePageUrlParams>();
     const device = params.dev ? devices[params.dev] : undefined;
 
-    const isActive = useCallback(({ isActive }) => (isActive ? " menu-active" : ""), []);
+    const isActive = ({ isActive }) => (isActive ? " menu-active" : "");
 
     if (!device) {
         return <div className="flex-auto justify-center items-center">{t("unknown_device")}</div>;

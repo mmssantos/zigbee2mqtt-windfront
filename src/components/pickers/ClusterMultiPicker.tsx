@@ -1,8 +1,8 @@
-import { type ChangeEvent, type JSX, useCallback, useMemo } from "react";
-import type { CheckboxFieldProps } from "../form-fields/CheckboxField.js";
+import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, type JSX, useCallback, useMemo } from "react";
 import { isClusterGroup } from "./index.js";
 
-export interface ClusterMultiPickerProps extends Omit<CheckboxFieldProps, "onChange"> {
+export interface ClusterMultiPickerProps extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onChange"> {
+    label?: string;
     clusters: Set<string>;
     value: string[];
     onChange(clusters: string[] | undefined): void;

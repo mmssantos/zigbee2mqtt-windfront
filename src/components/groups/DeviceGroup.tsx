@@ -1,8 +1,6 @@
 import { type JSX, useContext } from "react";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as GroupsApi from "../../actions/GroupsApi.js";
-import * as StateApi from "../../actions/StateApi.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import type { Endpoint, Group } from "../../types.js";
 import { DeviceGroupRow } from "./DeviceGroupRow.js";
 
@@ -16,13 +14,21 @@ export function DeviceGroup(props: DeviceGroupProps): JSX.Element {
     const deviceStates = useAppSelector((state) => state.deviceStates);
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const removeMember = async (device: string, endpoint: Endpoint): Promise<void> =>
-        await GroupsApi.removeDeviceFromGroup(sendMessage, device, endpoint, group.friendly_name);
-    const setDeviceState = async (friendlyName: string, value: Record<string, unknown>): Promise<void> => {
-        await StateApi.setDeviceState(sendMessage, friendlyName, value);
+    const removeMember = async (deviceIeee: string, endpoint: Endpoint): Promise<void> =>
+        await sendMessage("bridge/request/group/members/remove", { device: deviceIeee, endpoint, group: group.id.toString() });
+    const setDeviceState = async (ieee: string, value: Record<string, unknown>): Promise<void> => {
+        await sendMessage<"{friendlyNameOrId}/set">(
+            // @ts-expect-error templated API endpoint
+            `${ieee}/set`,
+            value,
+        );
     };
-    const getDeviceState = async (friendlyName: string, value: Record<string, unknown>): Promise<void> => {
-        await StateApi.getDeviceState(sendMessage, friendlyName, value);
+    const getDeviceState = async (ieee: string, value: Record<string, unknown>): Promise<void> => {
+        await sendMessage<"{friendlyNameOrId}/get">(
+            // @ts-expect-error templated API endpoint
+            `${ieee}/get`,
+            value,
+        );
     };
 
     return (

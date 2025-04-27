@@ -1,6 +1,6 @@
 import { type JSX, useMemo, useState } from "react";
-import { useAppSelector } from "../../hooks/store.js";
-import type { Cluster, Device, Endpoint } from "../../types.js";
+import { useAppSelector } from "../../hooks/useApp.js";
+import type { Device } from "../../types.js";
 import { BindRow } from "./BindRow.js";
 
 interface BindProps {
@@ -8,20 +8,20 @@ interface BindProps {
 }
 type BindTarget = {
     id?: number;
-    endpoint?: Endpoint;
+    endpoint?: string;
     ieee_address?: string;
     type: "endpoint" | "group";
 };
 type BindSource = {
     ieee_address: string;
-    endpoint: Endpoint;
+    endpoint: string;
 };
 export interface NiceBindingRule {
     id?: number;
     isNew?: true;
     source: BindSource;
     target: BindTarget;
-    clusters: Cluster[];
+    clusters: string[];
 }
 const rule2key = (rule: NiceBindingRule): string =>
     `${rule.source.endpoint}-${rule.isNew}${rule.source.ieee_address}-${rule.target.id}-${rule.target.ieee_address}-${rule.clusters.join("-")}`;

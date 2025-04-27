@@ -44,11 +44,6 @@ export const DEVICE_STATES: Message<DeviceState>[] = [
             color_temp_startup: 500,
             last_seen: "2022-04-15T17:48:28+08:00",
             state: "ON",
-            update: {
-                installed_version: 268776729,
-                latest_version: 269497625,
-                state: "available",
-            },
         },
         topic: "hue_back_tv",
     },
@@ -148,7 +143,9 @@ export const DEVICE_STATES: Message<DeviceState>[] = [
             last_seen: "2022-04-15T17:48:30+08:00",
             state: "ON",
             update: {
-                state: "scheduled",
+                installed_version: 268776729,
+                latest_version: 269497625,
+                state: "available",
             },
         },
         topic: "0x0017880103d55d65",

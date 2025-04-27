@@ -3,8 +3,7 @@ import type { RJSFSchema } from "@rjsf/utils";
 import merge from "lodash/merge.js";
 import { useCallback, useContext, useState } from "react";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../../actions/DeviceApi.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import { DescriptionField, TitleField } from "../../i18n/rjsf-translation-fields.js";
 import type { Device } from "../../types.js";
 import { computeSettingsDiff } from "../../utils.js";
@@ -48,7 +47,7 @@ export function DeviceSettings(props: DeviceSettingsProps) {
             const { data } = getSchemaAndConfig();
             const diff = computeSettingsDiff(data, params.formData);
 
-            await DeviceApi.setDeviceOptions(sendMessage, props.device.ieee_address, diff as Record<string, unknown>);
+            await sendMessage("bridge/request/device/options", { id: props.device.ieee_address, options: diff });
 
             setState({});
         },

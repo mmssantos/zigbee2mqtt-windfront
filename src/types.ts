@@ -8,8 +8,9 @@ import type {
     Zigbee2MQTTResponse,
     Zigbee2MQTTResponseEndpoints,
     Zigbee2MQTTScene,
-} from "zigbee2mqtt/dist/types/api.js";
+} from "zigbee2mqtt";
 
+export type RecursiveMutable<T> = { -readonly [K in keyof T]: RecursiveMutable<T[K]> };
 // biome-ignore lint/complexity/noBannedTypes: generic type
 export type OmitFunctions<T> = { [K in keyof T as T[K] extends Function ? never : K]: T[K] };
 
@@ -18,6 +19,17 @@ export type Cluster = string | number;
 export type Endpoint = string | number;
 
 export type DeviceType = "Coordinator" | "Router" | "EndDevice" | "Unknown" | "GreenPower";
+
+export type SendMessageEndpoints =
+    | Zigbee2MQTTRequestEndpoints
+    | "{friendlyNameOrId}/set"
+    | "{friendlyNameOrId}/set/{attribute}"
+    | "{friendlyNameOrId}/{endpoint}/set"
+    | "{friendlyNameOrId}/{endpoint}/set/{attribute}"
+    | "{friendlyNameOrId}/get"
+    | "{friendlyNameOrId}/get/{attribute}"
+    | "{friendlyNameOrId}/{endpoint}/get"
+    | "{friendlyNameOrId}/{endpoint}/get/{attribute}";
 
 export type DeviceState = Zigbee2MQTTAPI["{friendlyName}"];
 
@@ -30,19 +42,21 @@ export type PowerSource =
     | "Emergency mains constantly powered"
     | "Emergency mains and transfer switch";
 
-export type BridgeDefinition = Zigbee2MQTTAPI["bridge/definition"];
-
 export type BridgeInfo = Zigbee2MQTTAPI["bridge/info"];
-
-export type Scene = Zigbee2MQTTScene;
 
 export type EntityType = "device" | "group";
 
-export type Group = Zigbee2MQTTGroup;
-
 export type Device = Zigbee2MQTTDevice;
 
+export type Group = Zigbee2MQTTGroup;
+
+export type Scene = Zigbee2MQTTScene;
+
 export type TouchlinkDevice = Zigbee2MQTTAPI["bridge/response/touchlink/scan"]["found"][number];
+
+export type LogMessage = Zigbee2MQTTAPI["bridge/logging"] & { timestamp: string };
+
+export type AvailabilityState = Zigbee2MQTTAPI["{friendlyName}/availability"];
 
 export type LastSeenType = "disable" | "ISO_8601" | "ISO_8601_local" | "epoch";
 

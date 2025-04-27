@@ -1,75 +1,43 @@
 import { type PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
-import type { Zigbee2MQTTAPI } from "zigbee2mqtt/dist/types/api.js";
-import type { GraphRaw } from "./components/map/types.js";
-import type { BridgeDefinition, BridgeInfo, Device, DeviceState, Group, Message, TouchlinkDevice } from "./types.js";
+import type { Zigbee2MQTTAPI, Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
+import type { AvailabilityState, BridgeInfo, Device, DeviceState, Group, LogMessage, Message, RecursiveMutable, TouchlinkDevice } from "./types.js";
 import { formatDate } from "./utils.js";
 
-export interface LogMessage {
-    level: "error" | "info" | "warning" | "debug";
-    message: string;
-    timestamp: string;
-}
-
-export type Extension = {
-    name: string;
-    code: string;
-};
-
-export type Devices = Record<string, Device>;
-
-// Zigbee2MQTTAPI['bridge/devices']
 export type WithDevices = {
-    devices: Devices; // TODO change to Device[]
+    devices: Record<string, Device>; // TODO change to Device[]
 };
 
-// Zigbee2MQTTAPI['{friendlyName}'];
 export type WithDeviceStates = {
     deviceStates: Record<string, DeviceState>;
 };
 
-// Zigbee2MQTTAPI['bridge/groups']
 export type WithGroups = {
     groups: Group[];
 };
 
-// Zigbee2MQTTAPI['bridge/info']
 export type WithBridgeInfo = {
     bridgeInfo: BridgeInfo;
 };
 
-export type WithBridgeState = {
-    bridgeState: {
-        state: "online" | "offline";
-    };
-};
-
-// Zigbee2MQTTAPI["{friendlyName}/availability"]
-export type AvailabilityState = {
-    state: "online" | "offline";
-};
-
-// Zigbee2MQTTAPI['{friendlyName}/availability']
-export type WithAvailability = {
+export interface GlobalState extends WithDevices, WithDeviceStates, WithGroups, WithBridgeInfo {
+    bridgeState: Zigbee2MQTTAPI["bridge/state"];
+    bridgeDefinitions: Zigbee2MQTTAPI["bridge/definitions"];
     availability: Record<string, AvailabilityState>;
-};
-
-export type Base64String = string;
-
-export interface GlobalState extends WithDevices, WithDeviceStates, WithGroups, WithBridgeInfo, WithBridgeState, WithAvailability {
+    generatedExternalDefinitions: Record<string, string>;
+    logs: LogMessage[];
+    logsLimit: number;
+    extensions: Zigbee2MQTTAPI["bridge/extensions"];
+    converters: Zigbee2MQTTAPI["bridge/converters"];
     touchlinkDevices: TouchlinkDevice[];
     touchlinkScanInProgress: boolean;
     touchlinkIdentifyInProgress: boolean;
     touchlinkResetInProgress: boolean;
-    networkGraph: GraphRaw;
+    networkGraph: Zigbee2MQTTNetworkMap;
     networkGraphIsLoading: boolean;
-    bridgeDefinition: BridgeDefinition;
-    logs: LogMessage[];
-    logsLimit: number;
-    extensions: Extension[];
-    missingTranslations: Record<string, unknown>;
     preparingBackup: boolean;
-    backup: Base64String;
-    generatedExternalDefinitions: Record<string, string>;
+    /** base64 */
+    backup: string;
+    missingTranslations: Record<string, unknown>;
 }
 
 export const AVAILABILITY_FEATURE_TOPIC_ENDING = "/availability";
@@ -88,7 +56,7 @@ const initialState: GlobalState = {
     networkGraphIsLoading: false,
     groups: [],
     bridgeState: { state: "offline" },
-    bridgeDefinition: {
+    bridgeDefinitions: {
         // @ts-expect-error unloaded
         clusters: {},
         custom_clusters: {},
@@ -210,6 +178,9 @@ export const storeSlice = createSlice({
         setExtensions: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/extensions"]>) => {
             state.extensions = action.payload;
         },
+        setConverters: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/converters"]>) => {
+            state.converters = action.payload;
+        },
         setTouchlinkScan: (
             state,
             action: PayloadAction<{ inProgress: boolean; devices: Zigbee2MQTTAPI["bridge/response/touchlink/scan"]["found"] }>,
@@ -230,7 +201,7 @@ export const storeSlice = createSlice({
             state.logsLimit = action.payload;
             state.logs = state.logs.slice(-action.payload);
         },
-        addLog: (state, action: PayloadAction<LogMessage>) => {
+        addLog: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/logging"]>) => {
             if (state.logs.length > state.logsLimit) {
                 state.logs.pop();
             }
@@ -250,8 +221,8 @@ export const storeSlice = createSlice({
         setBridgeState: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/state"]>) => {
             state.bridgeState = action.payload;
         },
-        setBridgeDefinitions: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/definition"]>) => {
-            state.bridgeDefinition = action.payload;
+        setBridgeDefinitions: (state, action: PayloadAction<RecursiveMutable<Zigbee2MQTTAPI["bridge/definitions"]>>) => {
+            state.bridgeDefinitions = action.payload;
         },
         setDevices: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/devices"]>) => {
             state.devices = action.payload;
@@ -294,6 +265,7 @@ const store = configureStore<GlobalState>({
 
 export const {
     setExtensions,
+    setConverters,
     setTouchlinkScan,
     setTouchlinkIdentifyInProgress,
     setTouchlinkResetInProgress,

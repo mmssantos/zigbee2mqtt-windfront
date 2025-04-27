@@ -1,7 +1,7 @@
 import { type ChangeEvent, type InputHTMLAttributes, type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { DataType } from "../../ZCLenums.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import type { Cluster, Device } from "../../types.js";
 import SelectField from "../form-fields/SelectField.js";
 
@@ -20,18 +20,18 @@ interface AttributePickerProps extends Omit<InputHTMLAttributes<HTMLSelectElemen
 
 export default function AttributePicker(props: AttributePickerProps): JSX.Element {
     const { cluster, device, onChange, label, ...rest } = props;
-    const bridgeDefinition = useAppSelector((state) => state.bridgeDefinition);
+    const bridgeDefinitions = useAppSelector((state) => state.bridgeDefinitions);
     const { t } = useTranslation("zigbee");
 
     // retrieve cluster attributes, priority to ZH, then device custom if any
     const clusterAttributes = useMemo(() => {
-        const stdCluster = bridgeDefinition.clusters[cluster];
+        const stdCluster = bridgeDefinitions.clusters[cluster];
 
         if (stdCluster) {
             return stdCluster.attributes;
         }
 
-        const deviceCustomClusters = bridgeDefinition.custom_clusters[device.ieee_address];
+        const deviceCustomClusters = bridgeDefinitions.custom_clusters[device.ieee_address];
 
         if (deviceCustomClusters) {
             const customClusters = deviceCustomClusters[cluster];
@@ -42,7 +42,7 @@ export default function AttributePicker(props: AttributePickerProps): JSX.Elemen
         }
 
         return [];
-    }, [bridgeDefinition, device.ieee_address, cluster]);
+    }, [bridgeDefinitions, device.ieee_address, cluster]);
 
     const options = useMemo(() => {
         const attrs: JSX.Element[] = [];

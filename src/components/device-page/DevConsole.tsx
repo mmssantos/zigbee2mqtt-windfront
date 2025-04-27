@@ -1,9 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as DeviceApi from "../../actions/DeviceApi.js";
-import { useAppSelector } from "../../hooks/store.js";
-import type { LogMessage } from "../../store.js";
-import type { Cluster, Device, Endpoint } from "../../types.js";
+import { useAppSelector } from "../../hooks/useApp.js";
+import type { Cluster, Device, Endpoint, LogMessage } from "../../types.js";
 import { AttributeEditor, type AttributeInfo } from "./AttributeEditor.js";
 import { CommandExecutor } from "./CommandExecutor.js";
 import { ExternalDefinition } from "./ExternalDefinition.js";
@@ -33,13 +31,35 @@ export function DevConsole(props: DevConsoleProps) {
 
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const readDeviceAttributes = useCallback(
-        async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], options: Record<string, unknown>) =>
-            await DeviceApi.readDeviceAttributes(sendMessage, ieee, endpoint, cluster, attributes, options),
+        async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], stateProperty?: string) => {
+            const payload = { read: { cluster, attributes } };
+
+            if (stateProperty) {
+                (payload.read as Record<string, unknown>).state_property = stateProperty;
+            }
+
+            await sendMessage<"{friendlyNameOrId}/{endpoint}/set">(
+                // @ts-expect-error templated API endpoint
+                `${ieee}/${endpoint}/set`,
+                payload,
+            );
+        },
         [sendMessage],
     );
     const writeDeviceAttributes = useCallback(
-        async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: AttributeInfo[], options: Record<string, unknown>) =>
-            await DeviceApi.writeDeviceAttributes(sendMessage, ieee, endpoint, cluster, attributes, options),
+        async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: AttributeInfo[]) => {
+            const payload = { write: { cluster, payload: {} } };
+
+            for (const attrInfo of attributes) {
+                (payload.write.payload as Record<string, unknown>)[attrInfo.attribute] = attrInfo.value;
+            }
+
+            await sendMessage<"{friendlyNameOrId}/{endpoint}/set">(
+                // @ts-expect-error templated API endpoint
+                `${ieee}/${endpoint}/set`,
+                payload,
+            );
+        },
         [sendMessage],
     );
 

@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { LEVEL_CMAP } from "../../consts.js";
-import type { LogMessage } from "../../store.js";
+import type { LogMessage } from "../../types.js";
 
 export type LastLogResultProps = {
     message: LogMessage;

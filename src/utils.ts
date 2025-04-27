@@ -21,7 +21,8 @@ export const randomString = (len: number): string =>
         .toString(36)
         .slice(2, 2 + len);
 
-export const computeSettingsDiff = (before: object, after: object) => {
+// TODO: revamp this whole logic (SettingsPage)
+export const computeSettingsDiff = (before: Record<string, unknown>, after: Record<string, unknown>) => {
     let diffObj = diff(before, after);
 
     // diff converts arrays to objects, set original array back here
@@ -58,20 +59,6 @@ export const getObjectFirstKey = <T>(object: T): string | undefined => {
 
 export const stringifyWithPreservingUndefinedAsNull = (data: Record<string, unknown>): string =>
     JSON.stringify(data, (_k, v) => (v === undefined ? null : v));
-
-export const toHHMMSS = (secs: number): string => {
-    if (!secs) {
-        return "N/A";
-    }
-    const hours = Math.floor(secs / 3600);
-    const minutes = Math.floor(secs / 60) % 60;
-    const seconds = Math.floor(secs % 60);
-
-    return [hours, minutes, seconds]
-        .map((v) => (v < 10 ? `0${v}` : v))
-        .filter((v, i) => v !== "00" || i > 0)
-        .join(":");
-};
 
 export const lastSeen = (state: DeviceState, lastSeenType: LastSeenType): Date | undefined => {
     if (!state.last_seen) {

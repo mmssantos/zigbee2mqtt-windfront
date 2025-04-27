@@ -20,7 +20,7 @@ export const DeviceControlEditName = (props: DeviceControlEditNameProps): JSX.El
     const { t } = useTranslation(["zigbee", "common"]);
 
     return (
-        <Button<void>
+        <Button<undefined>
             className={`btn ${style} join-item`}
             onClick={() =>
                 NiceModal.show(RenameDeviceModal, {

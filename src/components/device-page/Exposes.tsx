@@ -1,10 +1,9 @@
 import { useContext } from "react";
-import * as StateApi from "../../actions/StateApi.js";
 import type { CompositeFeature, Device, DeviceState } from "../../types.js";
 
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import { useAppSelector } from "../../hooks/store.js";
+import { useAppSelector } from "../../hooks/useApp.js";
 import { Feature } from "../features/Feature.js";
 import FeatureWrapper from "../features/FeatureWrapper.js";
 
@@ -28,10 +27,18 @@ export function Exposes(props: ExposesProps) {
                 device={device}
                 deviceState={deviceState}
                 onChange={async (_endpoint, value) => {
-                    await StateApi.setDeviceState(sendMessage, device.friendly_name, value);
+                    await sendMessage<"{friendlyNameOrId}/set">(
+                        // @ts-expect-error templated API endpoint
+                        `${device.ieee_address}/set`,
+                        value,
+                    );
                 }}
                 onRead={async (_endpoint, value) => {
-                    await StateApi.getDeviceState(sendMessage, device.friendly_name, value);
+                    await sendMessage<"{friendlyNameOrId}/get">(
+                        // @ts-expect-error templated API endpoint
+                        `${device.ieee_address}/get`,
+                        value,
+                    );
                 }}
                 parentFeatures={[]}
                 featureWrapperClass={FeatureWrapper}

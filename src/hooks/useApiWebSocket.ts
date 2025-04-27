@@ -2,16 +2,14 @@ import NiceModal from "@ebay/nice-modal-react";
 import { useCallback, useEffect, useRef } from "react";
 import useWebSocket from "react-use-websocket";
 import store2 from "store2";
-import type { Zigbee2MQTTResponse } from "zigbee2mqtt/dist/types/api.js";
+import type { Zigbee2MQTTAPI, Zigbee2MQTTResponse } from "zigbee2mqtt";
 import { AUTH_FLAG_KEY, TOKEN_KEY } from "../localStoreConsts.js";
-import type { Message } from "../types.js";
+import type { Message, SendMessageEndpoints } from "../types.js";
 import { isSecurePage, randomString, stringifyWithPreservingUndefinedAsNull } from "../utils.js";
 
 // XXX: workaround typing
 const local = store2 as unknown as typeof store2.default;
 const UNAUTHORIZED_ERROR_CODE = 4401;
-
-export type ApiSendMessage = (topic: string, payload: Record<string, unknown>) => Promise<void>;
 
 // biome-ignore lint/suspicious/noExplicitAny: tmp
 const pendingRequests = new Map<string, [() => void, (reason: any) => void]>();
@@ -98,22 +96,33 @@ export function useApiWebSocket() {
     }, []);
 
     // wrap raw sendMessage
-    const sendMessage: ApiSendMessage = useCallback(
-        async (topic: string, payload: Record<string, unknown> = {}): Promise<void> => {
-            console.debug("Calling API:", topic, payload);
-
+    const sendMessage = useCallback(
+        async <T extends SendMessageEndpoints>(topic: T, payload: Zigbee2MQTTAPI[T]): Promise<void> => {
             if (topic.startsWith("bridge/request/")) {
+                if (payload !== "" && typeof payload === "string") {
+                    console.error("Only `Record<string, unknown>` or empty string payloads allowed");
+                    return;
+                }
+
                 const transaction = `${transactionRndPrefix}-${transactionNumber++}`;
                 const promise = new Promise<void>((resolve, reject) => {
                     pendingRequests.set(transaction, [resolve, reject]);
                 });
+                const finalPayload = stringifyWithPreservingUndefinedAsNull({
+                    topic,
+                    payload: payload === "" ? { transaction } : { ...payload, transaction },
+                });
 
-                sendMessageRaw(stringifyWithPreservingUndefinedAsNull({ topic, payload: { ...payload, transaction } }));
+                sendMessageRaw(finalPayload);
+                console.debug("Calling Request API:", topic, payload, finalPayload);
 
                 return await promise;
             }
 
-            sendMessageRaw(stringifyWithPreservingUndefinedAsNull({ topic, payload }));
+            const finalPayload = stringifyWithPreservingUndefinedAsNull({ topic, payload });
+
+            console.debug("Calling API:", topic, payload, finalPayload);
+            sendMessageRaw(finalPayload);
 
             return await Promise.resolve();
         },

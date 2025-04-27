@@ -3,9 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import * as BindApi from "../../actions/BindApi.js";
-import type { Devices, WithDevices } from "../../store.js";
-import type { Cluster, Device, Endpoint, EntityType, Group } from "../../types.js";
+import type { WithDevices } from "../../store.js";
+import type { Device, EntityType, Group } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import Button from "../button/Button.js";
 import ClusterMultiPicker from "../pickers/ClusterMultiPicker.js";
@@ -24,7 +23,7 @@ interface BindRowState {
     stateRule: NiceBindingRule;
 }
 
-const getTarget = (rule: NiceBindingRule, devices: Devices, groups: Group[]): Device | Group | undefined => {
+const getTarget = (rule: NiceBindingRule, devices: WithDevices["devices"], groups: Group[]): Device | Group | undefined => {
     if (rule.target.type === "group") {
         return groups.find((g) => g.id === rule.target.id);
     }
@@ -41,7 +40,7 @@ export function BindRow(props: BindRowProps) {
     const { t } = useTranslation(["common", "zigbee"]);
     const { stateRule } = state;
 
-    const setSourceEp = (sourceEp: Endpoint): void => {
+    const setSourceEp = (sourceEp: string): void => {
         stateRule.source.endpoint = sourceEp;
 
         setState({ stateRule });
@@ -62,18 +61,18 @@ export function BindRow(props: BindRowProps) {
         stateRule.clusters = [];
         setState({ stateRule });
     };
-    const setDestinationEp = (destinationEp: Endpoint): void => {
+    const setDestinationEp = (destinationEp: string): void => {
         stateRule.target.endpoint = destinationEp;
         stateRule.clusters = [];
         setState({ stateRule });
     };
-    const setClusters = (clusters: Cluster[]): void => {
+    const setClusters = (clusters: string[]): void => {
         stateRule.clusters = clusters;
         setState({ stateRule });
     };
     const onBindOrUnBindClick = async (action: Action): Promise<void> => {
         let to = "";
-        let toEndpoint: Endpoint | undefined;
+        let toEndpoint: string | undefined;
 
         if (stateRule.target.type === "group") {
             const targetGroup = groups.find((group) => group.id === stateRule.target.id) as Group;
@@ -96,9 +95,9 @@ export function BindRow(props: BindRowProps) {
         };
 
         if (action === "Bind") {
-            await BindApi.bind(sendMessage, bindParams);
+            await sendMessage("bridge/request/device/bind", bindParams);
         } else {
-            await BindApi.unbind(sendMessage, bindParams);
+            await sendMessage("bridge/request/device/unbind", bindParams);
         }
     };
     const isValidRule = (): boolean => {
@@ -117,7 +116,7 @@ export function BindRow(props: BindRowProps) {
     const target = getTarget(stateRule, devices, groups);
     const destinationEndpoints = useMemo(() => getEndpoints(target), [target]);
 
-    const possibleClusters: Set<Cluster> = new Set(stateRule.clusters);
+    const possibleClusters: Set<string> = new Set(stateRule.clusters);
     const srcEndpoint = device.endpoints[stateRule.source.endpoint];
     const dstEndpoint =
         stateRule.target.type === "endpoint" && stateRule.target.endpoint
