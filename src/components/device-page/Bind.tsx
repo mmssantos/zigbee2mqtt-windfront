@@ -6,21 +6,24 @@ import { BindRow } from "./BindRow.js";
 interface BindProps {
     device: Device;
 }
-type BindTarget = {
-    id?: number;
-    endpoint?: string;
-    ieee_address?: string;
-    type: "endpoint" | "group";
-};
-type BindSource = {
-    ieee_address: string;
-    endpoint: string;
-};
+
 export interface NiceBindingRule {
     id?: number;
     isNew?: true;
-    source: BindSource;
-    target: BindTarget;
+    source: {
+        ieee_address: string;
+        endpoint: string;
+    };
+    target:
+        | {
+              type: "group";
+              id: number;
+          }
+        | {
+              type: "endpoint";
+              endpoint: string;
+              ieee_address: string;
+          };
     clusters: string[];
 }
 const rule2key = (rule: NiceBindingRule): string =>
@@ -61,12 +64,13 @@ export function Bind(props: BindProps): JSX.Element {
     const groups = useAppSelector((state) => state.groups);
     const [newBindingRule] = useState<NiceBindingRule>({
         isNew: true,
-        target: {} as BindTarget,
+        target: { type: "endpoint", ieee_address: "", endpoint: "" },
         source: { ieee_address: device.ieee_address, endpoint: "" },
         clusters: [],
     });
 
     const bidingRules = useMemo(() => convertBindingsIntoNiceStructure(device), [device]);
+
     return (
         <div className="flex flex-col gap-2">
             {[...bidingRules, newBindingRule].map((rule, idx) => (

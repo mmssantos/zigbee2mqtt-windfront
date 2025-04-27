@@ -1,36 +1,40 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { JSX } from "react";
-import { useTranslation } from "react-i18next";
-import type { WithBridgeInfo, WithDeviceStates, WithDevices } from "../../store.js";
-import type { CompositeFeature, DeviceState, Endpoint, GenericFeature, Group } from "../../types.js";
+import { type JSX, useMemo } from "react";
+import type { RootState } from "../../store.js";
+import type { CompositeFeature, Endpoint, GenericFeature, Group } from "../../types.js";
 import Button from "../button/Button.js";
 import DashboardDevice from "../dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { onlyValidFeaturesForScenes } from "../device-page/index.js";
 
-interface DeviceGroupRowProps extends WithDevices, WithDeviceStates, WithBridgeInfo {
+interface DeviceGroupRowProps {
+    device: RootState["devices"][number];
+    deviceState: RootState["deviceStates"][string];
     groupMember: Group["members"][number];
+    lastSeenConfig: RootState["bridgeInfo"]["config"]["advanced"]["last_seen"];
     removeDeviceFromGroup(deviceIeee: string, endpoint: Endpoint): Promise<void>;
     setDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
     getDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
 }
 
 export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
-    const { t } = useTranslation("devicePage");
-    const { removeDeviceFromGroup, groupMember, devices, deviceStates, bridgeInfo, setDeviceState, getDeviceState } = props;
-    const { endpoint, ieee_address } = groupMember;
-    const device = devices[ieee_address] ?? { ieee_address, friendly_name: t("unknown_device") };
-    const deviceState = deviceStates[device.friendly_name] ?? ({} as DeviceState);
-    const filteredFeatures: (GenericFeature | CompositeFeature)[] = [];
+    const { removeDeviceFromGroup, groupMember, device, deviceState, lastSeenConfig, setDeviceState, getDeviceState } = props;
+    const { endpoint } = groupMember;
 
-    for (const feature of device.definition?.exposes ?? []) {
-        const validFeature = onlyValidFeaturesForScenes(feature, deviceState);
+    const filteredFeatures = useMemo(() => {
+        const features: (GenericFeature | CompositeFeature)[] = [];
 
-        if (validFeature) {
-            filteredFeatures.push(validFeature);
+        for (const feature of device.definition?.exposes ?? []) {
+            const validFeature = onlyValidFeaturesForScenes(feature, deviceState);
+
+            if (validFeature) {
+                features.push(validFeature);
+            }
         }
-    }
+
+        return features;
+    }, [device, deviceState]);
 
     return (
         <DashboardDevice
@@ -41,7 +45,7 @@ export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
             onChange={async (_endpoint, value) => await setDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
             onRead={async (_endpoint, value) => await getDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
             featureWrapperClass={DashboardFeatureWrapper}
-            lastSeenType={bridgeInfo.config.advanced.last_seen}
+            lastSeenConfig={lastSeenConfig}
             controls={
                 <Button<string>
                     prompt

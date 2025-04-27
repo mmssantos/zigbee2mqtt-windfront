@@ -138,7 +138,7 @@ export default function GroupsPage() {
                     </div>
                 </div>
             </div>
-            <Table id="groups" columns={columns} data={groups} pageSizeStoreKey={GROUP_TABLE_PAGE_SIZE_KEY} />
+            <Table id="all-groups" columns={columns} data={groups} pageSizeStoreKey={GROUP_TABLE_PAGE_SIZE_KEY} />
         </div>
     );
 }

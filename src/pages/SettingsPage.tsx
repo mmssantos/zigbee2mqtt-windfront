@@ -117,7 +117,7 @@ export default function SettingsPage() {
         }
     };
     const getSettingsTabs = (): { name: string; title: string }[] => {
-        const tabs = Object.entries<RJSFSchema>((bridgeInfo.config_schema?.properties as unknown as ArrayLike<RJSFSchema>) || {})
+        const tabs = Object.entries<RJSFSchema>((bridgeInfo.config_schema.properties as unknown as ArrayLike<RJSFSchema>) || {})
             .filter(([key, value]) => isValidKeyToRenderAsTab(key, value))
             .map(([key, value]) => ({
                 name: key,

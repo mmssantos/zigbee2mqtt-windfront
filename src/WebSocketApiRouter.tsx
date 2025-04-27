@@ -6,11 +6,14 @@ import { useAppDispatch } from "./hooks/useApp.js";
 import * as store from "./store.js";
 import type { Message, RecursiveMutable, ResponseMessage } from "./types.js";
 
-const processDeviceStateMessage = (message: Message, dispatch: ReturnType<typeof useAppDispatch>): void => {
+const processDeviceStateMessage = (message: Message<Zigbee2MQTTAPI["{friendlyName}"]>, dispatch: ReturnType<typeof useAppDispatch>): void => {
     dispatch(store.updateDeviceStateMessage(message));
 };
 
-const processDeviceAvailabilityMessage = (message: Message, dispatch: ReturnType<typeof useAppDispatch>): void => {
+const processDeviceAvailabilityMessage = (
+    message: Message<Zigbee2MQTTAPI["{friendlyName}/availability"]>,
+    dispatch: ReturnType<typeof useAppDispatch>,
+): void => {
     dispatch(store.updateAvailability(message));
 };
 
@@ -37,11 +40,11 @@ const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useAppD
             break;
         }
         case "bridge/converters": {
-            dispatch(store.setConverters(data.payload as Zigbee2MQTTAPI[typeof data.topic])); // TODO: missing in Z2M
+            dispatch(store.setConverters(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
             break;
         }
         case "bridge/extensions": {
-            dispatch(store.setExtensions(data.payload as Zigbee2MQTTAPI[typeof data.topic])); // TODO: missing in Z2M
+            dispatch(store.setExtensions(data.payload as Zigbee2MQTTAPI[typeof data.topic]));
             break;
         }
         case "bridge/logging": {
@@ -105,11 +108,11 @@ export function WebSocketApiRouter({ children }) {
         if (webSocket.lastJsonMessage != null) {
             try {
                 if (webSocket.lastJsonMessage.topic.endsWith(store.AVAILABILITY_FEATURE_TOPIC_ENDING)) {
-                    processDeviceAvailabilityMessage(webSocket.lastJsonMessage, dispatch);
+                    processDeviceAvailabilityMessage(webSocket.lastJsonMessage as Message<Zigbee2MQTTAPI["{friendlyName}/availability"]>, dispatch);
                 } else if (webSocket.lastJsonMessage.topic.startsWith("bridge/")) {
                     processBridgeMessage(webSocket.lastJsonMessage, dispatch);
                 } else {
-                    processDeviceStateMessage(webSocket.lastJsonMessage, dispatch);
+                    processDeviceStateMessage(webSocket.lastJsonMessage as Message<Zigbee2MQTTAPI["{friendlyName}"]>, dispatch);
                 }
             } catch (error) {
                 dispatch(store.addLog({ level: "error", message: `browser: ${error.message}`, namespace: "browser" }));

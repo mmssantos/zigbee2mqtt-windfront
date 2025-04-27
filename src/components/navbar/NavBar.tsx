@@ -55,7 +55,7 @@ const CONNECTION_STATUS = {
 
 export const NavBar = () => {
     const { t } = useTranslation("navbar");
-    const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
+    const restartRequired = useAppSelector((state) => state.bridgeInfo.restart_required);
     const { sendMessage, readyState } = useContext(WebSocketApiRouterContext);
     const connectionStatus = CONNECTION_STATUS[readyState];
 
@@ -98,7 +98,7 @@ export const NavBar = () => {
 
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1">
-                    {bridgeInfo.restart_required ? (
+                    {restartRequired ? (
                         <Button
                             key="restart-bridge"
                             onClick={async () => await sendMessage("bridge/request/restart", "")}

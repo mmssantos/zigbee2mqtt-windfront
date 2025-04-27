@@ -3,16 +3,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import type { WithDevices } from "../../store.js";
-import type { Device, EntityType, Group } from "../../types.js";
-import { getEndpoints } from "../../utils.js";
+import type { RootState } from "../../store.js";
+import type { Device, Group } from "../../types.js";
+import { getEndpoints, isDevice } from "../../utils.js";
 import Button from "../button/Button.js";
 import ClusterMultiPicker from "../pickers/ClusterMultiPicker.js";
 import DevicePicker from "../pickers/DevicePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
 import type { NiceBindingRule } from "./Bind.js";
 
-interface BindRowProps extends WithDevices {
+interface BindRowProps extends Pick<RootState, "devices"> {
     rule: NiceBindingRule;
     idx: number;
     groups: Group[];
@@ -23,12 +23,10 @@ interface BindRowState {
     stateRule: NiceBindingRule;
 }
 
-const getTarget = (rule: NiceBindingRule, devices: WithDevices["devices"], groups: Group[]): Device | Group | undefined => {
-    if (rule.target.type === "group") {
-        return groups.find((g) => g.id === rule.target.id);
-    }
+const getTarget = (rule: NiceBindingRule, devices: RootState["devices"], groups: Group[]): Device | Group | undefined => {
+    const { target } = rule;
 
-    return rule.target?.ieee_address ? devices[rule.target.ieee_address] : undefined;
+    return target.type === "group" ? groups.find((g) => g.id === target.id) : devices.find((device) => device.ieee_address === target.ieee_address);
 };
 
 type Action = "Bind" | "Unbind";
@@ -45,44 +43,61 @@ export function BindRow(props: BindRowProps) {
 
         setState({ stateRule });
     };
-    const setDestination = (destination: Device | Group, type: EntityType): void => {
-        if (type === "device") {
+    const setDestination = (destination?: Device | Group): void => {
+        if (!destination) {
+            return;
+        }
+
+        if (isDevice(destination)) {
             const endpoints = getEndpoints(destination);
-            stateRule.target.ieee_address = (destination as Device).ieee_address;
-            stateRule.target.type = "endpoint";
-            stateRule.target.endpoint = endpoints[0];
-            stateRule.target.id = undefined; // XXX: biome: changed from delete
-        } else if (type === "group") {
-            stateRule.target.id = (destination as Group).id;
-            stateRule.target.type = "group";
-            stateRule.target.ieee_address = undefined; // XXX: biome: changed from delete
+            stateRule.target = { type: "endpoint", ieee_address: destination.ieee_address, endpoint: endpoints[0] };
+        } else {
+            stateRule.target = { type: "group", id: destination.id };
         }
 
         stateRule.clusters = [];
+
         setState({ stateRule });
     };
     const setDestinationEp = (destinationEp: string): void => {
-        stateRule.target.endpoint = destinationEp;
-        stateRule.clusters = [];
-        setState({ stateRule });
+        if (stateRule.target.type === "endpoint") {
+            stateRule.target.endpoint = destinationEp;
+            stateRule.clusters = [];
+
+            setState({ stateRule });
+        }
     };
     const setClusters = (clusters: string[]): void => {
         stateRule.clusters = clusters;
+
         setState({ stateRule });
     };
     const onBindOrUnBindClick = async (action: Action): Promise<void> => {
         let to = "";
         let toEndpoint: string | undefined;
+        const { target } = stateRule;
 
-        if (stateRule.target.type === "group") {
-            const targetGroup = groups.find((group) => group.id === stateRule.target.id) as Group;
-            to = targetGroup.friendly_name;
-        } else if (stateRule.target.type === "endpoint") {
-            const targetDevice = devices[stateRule.target?.ieee_address as string];
-            to = targetDevice.friendly_name;
+        if (target.type === "group") {
+            const targetGroup = groups.find((group) => group.id === target.id);
 
-            if (targetDevice.type !== "Coordinator") {
-                toEndpoint = stateRule.target.endpoint;
+            if (targetGroup) {
+                to = targetGroup.friendly_name;
+            } else {
+                console.log("Target group does not exist:", target.id);
+                return;
+            }
+        } else if (target.type === "endpoint") {
+            const targetDevice = devices.find((device) => device.ieee_address === target.ieee_address);
+
+            if (targetDevice) {
+                to = targetDevice.friendly_name;
+
+                if (targetDevice.type !== "Coordinator") {
+                    toEndpoint = target.endpoint;
+                }
+            } else {
+                console.log("Target device does not exist:", target.ieee_address);
+                return;
             }
         }
 
@@ -154,7 +169,7 @@ export function BindRow(props: BindRowProps) {
                 <DevicePicker
                     label={t("destination")}
                     disabled={!stateRule.isNew}
-                    value={(stateRule.target.ieee_address || stateRule.target.id) as string}
+                    value={"ieee_address" in stateRule.target ? stateRule.target.ieee_address : stateRule.target.id}
                     devices={devices}
                     groups={groups}
                     onChange={setDestination}

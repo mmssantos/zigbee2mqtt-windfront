@@ -1,7 +1,6 @@
 import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import type { Device, Endpoint } from "../../types.js";
 
-import type { Zigbee2MQTTDevice } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { ReportingRow } from "./ReportingRow.js";
 
@@ -13,7 +12,7 @@ export type NiceReportingRule = {
     id?: number;
     isNew?: number;
     endpoint: Endpoint;
-} & Zigbee2MQTTDevice["endpoints"][number]["configured_reportings"][number];
+} & Device["endpoints"][number]["configured_reportings"][number];
 
 const convertBindingsIntoNiceStructure = (device: Device): NiceReportingRule[] => {
     const niceReportingRules: NiceReportingRule[] = [];

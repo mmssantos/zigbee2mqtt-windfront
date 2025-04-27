@@ -1,26 +1,16 @@
 import { type PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
 import type { Zigbee2MQTTAPI, Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
-import type { AvailabilityState, BridgeInfo, Device, DeviceState, Group, LogMessage, Message, RecursiveMutable, TouchlinkDevice } from "./types.js";
+import type { AvailabilityState, LogMessage, Message, RecursiveMutable, TouchlinkDevice } from "./types.js";
 import { formatDate } from "./utils.js";
 
-export type WithDevices = {
-    devices: Record<string, Device>; // TODO change to Device[]
-};
-
-export type WithDeviceStates = {
-    deviceStates: Record<string, DeviceState>;
-};
-
-export type WithGroups = {
-    groups: Group[];
-};
-
-export type WithBridgeInfo = {
-    bridgeInfo: BridgeInfo;
-};
-
-export interface GlobalState extends WithDevices, WithDeviceStates, WithGroups, WithBridgeInfo {
+interface State {
+    /** Sorted by friendlyName */
+    devices: Zigbee2MQTTAPI["bridge/devices"];
+    deviceStates: Record<string, Zigbee2MQTTAPI["{friendlyName}"]>;
+    /** Sorted by friendlyName */
+    groups: Zigbee2MQTTAPI["bridge/groups"];
     bridgeState: Zigbee2MQTTAPI["bridge/state"];
+    bridgeInfo: Zigbee2MQTTAPI["bridge/info"];
     bridgeDefinitions: Zigbee2MQTTAPI["bridge/definitions"];
     availability: Record<string, AvailabilityState>;
     generatedExternalDefinitions: Record<string, string>;
@@ -42,30 +32,18 @@ export interface GlobalState extends WithDevices, WithDeviceStates, WithGroups, 
 
 export const AVAILABILITY_FEATURE_TOPIC_ENDING = "/availability";
 
-const initialState: GlobalState = {
-    devices: {},
+const initialState: State = {
+    devices: [],
     deviceStates: {},
-    touchlinkDevices: [],
-    touchlinkScanInProgress: false,
-    touchlinkIdentifyInProgress: false,
-    touchlinkResetInProgress: false,
-    networkGraph: {
-        links: [],
-        nodes: [],
-    },
-    networkGraphIsLoading: false,
     groups: [],
     bridgeState: { state: "offline" },
-    bridgeDefinitions: {
-        // @ts-expect-error unloaded
-        clusters: {},
-        custom_clusters: {},
-    },
     bridgeInfo: {
         config_schema: {
             // @ts-expect-error unloaded
             properties: {},
             required: [],
+            // @ts-expect-error unloaded
+            definitions: {},
         },
         config: {
             advanced: {
@@ -161,14 +139,29 @@ const initialState: GlobalState = {
             ieee_address: "",
         },
     },
+    bridgeDefinitions: {
+        // @ts-expect-error unloaded
+        clusters: {},
+        custom_clusters: {},
+    },
+    availability: {},
+    generatedExternalDefinitions: {},
     logs: [],
     logsLimit: 100,
     extensions: [],
-    missingTranslations: {},
-    generatedExternalDefinitions: {},
-    availability: {},
+    converters: [],
+    touchlinkDevices: [],
+    touchlinkScanInProgress: false,
+    touchlinkIdentifyInProgress: false,
+    touchlinkResetInProgress: false,
+    networkGraph: {
+        links: [],
+        nodes: [],
+    },
+    networkGraphIsLoading: false,
     preparingBackup: false,
     backup: "",
+    missingTranslations: {},
 };
 
 export const storeSlice = createSlice({
@@ -225,10 +218,12 @@ export const storeSlice = createSlice({
             state.bridgeDefinitions = action.payload;
         },
         setDevices: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/devices"]>) => {
-            state.devices = action.payload;
+            // avoid sorting on-sites
+            state.devices = action.payload.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name));
         },
         setGroups: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/groups"]>) => {
-            state.groups = action.payload;
+            // avoid sorting on-sites
+            state.groups = action.payload.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name));
         },
         setNetworkGraph: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/response/networkmap"]["value"] | null>) => {
             state.networkGraphIsLoading = false;
@@ -259,7 +254,7 @@ export const storeSlice = createSlice({
     },
 });
 
-const store = configureStore<GlobalState>({
+const store = configureStore<State>({
     reducer: storeSlice.reducer,
 });
 

@@ -11,7 +11,6 @@ import { onlyValidFeaturesForDashboard } from "../components/dashboard-page/inde
 import { DeviceControlEditName } from "../components/device-control/DeviceControlEditName.js";
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
 import { useAppSelector } from "../hooks/useApp.js";
-import type { WithDeviceStates, WithDevices } from "../store.js";
 import type { CompositeFeature, Device, DeviceState, GenericFeature } from "../types.js";
 
 type DeviceStateAndFilteredFeatures = {
@@ -20,38 +19,9 @@ type DeviceStateAndFilteredFeatures = {
     filteredFeatures: GenericFeature[];
 };
 
-function filterDeviceByFeatures(devices: WithDevices["devices"], deviceStates: WithDeviceStates["deviceStates"]): DeviceStateAndFilteredFeatures[] {
-    const filteredDevices: DeviceStateAndFilteredFeatures[] = [];
-
-    for (const key in devices) {
-        const device = devices[key];
-
-        if (!device.disabled && device.supported) {
-            const deviceState = deviceStates[device.friendly_name] ?? {};
-            const filteredFeatures: DeviceStateAndFilteredFeatures["filteredFeatures"] = [];
-
-            for (const feature of device.definition?.exposes ?? []) {
-                const validFeature = onlyValidFeaturesForDashboard(feature, deviceState);
-
-                if (validFeature) {
-                    filteredFeatures.push(validFeature);
-                }
-            }
-
-            if (filteredFeatures.length > 0) {
-                filteredDevices.push({ device, deviceState, filteredFeatures });
-            }
-        }
-    }
-
-    filteredDevices.sort((a, b) => a.device.friendly_name.localeCompare(b.device.friendly_name));
-
-    return filteredDevices;
-}
-
 export default function Dashboard() {
     const deviceStates = useAppSelector((state) => state.deviceStates);
-    const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
+    const bridgeConfig = useAppSelector((state) => state.bridgeInfo.config);
     const devices = useAppSelector((state) => state.devices);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("zigbee");
@@ -66,7 +36,30 @@ export default function Dashboard() {
     const removeDevice = async (id: string, force: boolean, block: boolean): Promise<void> => {
         await sendMessage("bridge/request/device/remove", { id, force, block });
     };
-    const filteredDevices = useMemo(() => filterDeviceByFeatures(devices, deviceStates), [devices, deviceStates]);
+    const filteredDevices = useMemo(() => {
+        const filteredDevices: DeviceStateAndFilteredFeatures[] = [];
+
+        for (const device of devices) {
+            if (!device.disabled && device.supported) {
+                const deviceState = deviceStates[device.friendly_name] ?? {};
+                const filteredFeatures: DeviceStateAndFilteredFeatures["filteredFeatures"] = [];
+
+                for (const feature of device.definition?.exposes ?? []) {
+                    const validFeature = onlyValidFeaturesForDashboard(feature, deviceState);
+
+                    if (validFeature) {
+                        filteredFeatures.push(validFeature);
+                    }
+                }
+
+                if (filteredFeatures.length > 0) {
+                    filteredDevices.push({ device, deviceState, filteredFeatures });
+                }
+            }
+        }
+
+        return filteredDevices;
+    }, [devices, deviceStates]);
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3 mt-2 px-2">
@@ -92,13 +85,13 @@ export default function Dashboard() {
                             )
                         }
                         featureWrapperClass={DashboardFeatureWrapper}
-                        lastSeenType={bridgeInfo.config.advanced.last_seen}
+                        lastSeenConfig={bridgeConfig.advanced.last_seen}
                         controls={
                             <div className="join">
                                 <DeviceControlEditName
                                     device={device}
                                     renameDevice={renameDevice}
-                                    homeassistantEnabled={bridgeInfo.config.homeassistant?.enabled ?? false}
+                                    homeassistantEnabled={bridgeConfig.homeassistant.enabled}
                                     style="btn-primary btn-square btn-sm join-item"
                                 />
                                 <Button<void>

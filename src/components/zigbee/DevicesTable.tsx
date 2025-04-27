@@ -5,7 +5,7 @@ import { getDeviceDetailsLink, lastSeen, toHex } from "../../utils.js";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import { DEVICE_TABLE_PAGE_SIZE_KEY } from "../../localStoreConsts.js";
-import type { AvailabilityState, Device, DeviceState, LastSeenType } from "../../types.js";
+import type { AvailabilityState, Device, DeviceState, LastSeenConfig } from "../../types.js";
 import DeviceControlGroup from "../device-control/DeviceControlGroup.js";
 import { DeviceImage } from "../device-image/DeviceImage.js";
 import Table from "../grid/Table.js";
@@ -15,11 +15,10 @@ import { Lqi } from "../value-decorators/Lqi.js";
 import ModelLink from "../value-decorators/ModelLink.js";
 import PowerSource from "../value-decorators/PowerSource.js";
 import VendorLink from "../value-decorators/VendorLink.js";
-import { DEVICES_GLOBAL_NAME } from "./index.js";
 
 export type DevicesTableProps = {
     devices: DeviceTableData[];
-    lastSeenType: LastSeenType;
+    lastSeenConfig: LastSeenConfig;
     availabilityFeatureEnabled: boolean;
     homeassistantEnabled: boolean;
     renameDevice(from: string, to: string, homeassistantRename: boolean): Promise<void>;
@@ -35,8 +34,16 @@ export type DeviceTableData = {
 };
 
 export function DevicesTable(props: DevicesTableProps): JSX.Element {
-    const { devices, lastSeenType, availabilityFeatureEnabled, homeassistantEnabled, renameDevice, removeDevice, configureDevice, interviewDevice } =
-        props;
+    const {
+        devices,
+        lastSeenConfig,
+        availabilityFeatureEnabled,
+        homeassistantEnabled,
+        renameDevice,
+        removeDevice,
+        configureDevice,
+        interviewDevice,
+    } = props;
     const { t } = useTranslation(["zigbee", "common", "availability"]);
 
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -118,12 +125,12 @@ export function DevicesTable(props: DevicesTableProps): JSX.Element {
             {
                 id: "last_seen",
                 header: t("last_seen"),
-                accessorFn: ({ state }) => lastSeen(state, lastSeenType)?.getTime(),
+                accessorFn: ({ state }) => lastSeen(state, lastSeenConfig)?.getTime(),
                 cell: ({
                     row: {
                         original: { state },
                     },
-                }) => <LastSeen state={state} lastSeenType={lastSeenType} />,
+                }) => <LastSeen state={state} config={lastSeenConfig} />,
                 enableColumnFilter: false,
             },
             {
@@ -170,27 +177,19 @@ export function DevicesTable(props: DevicesTableProps): JSX.Element {
                 enableColumnFilter: false,
             },
         ],
-        [lastSeenType, availabilityFeatureEnabled, t, homeassistantEnabled, renameDevice, removeDevice, configureDevice, interviewDevice],
+        [lastSeenConfig, availabilityFeatureEnabled, t, homeassistantEnabled, renameDevice, removeDevice, configureDevice, interviewDevice],
     );
     const visibleColumns = useMemo(
         () => ({
             friendly_name: true,
             ieee_address: true,
             model: true,
-            last_seen: lastSeenType !== "disable",
+            last_seen: lastSeenConfig !== "disable",
             availability: availabilityFeatureEnabled || devices.some((device) => device.availabilityEnabledForDevice),
             controls: true,
         }),
-        [lastSeenType, availabilityFeatureEnabled, devices],
+        [lastSeenConfig, availabilityFeatureEnabled, devices],
     );
 
-    return (
-        <Table
-            id={DEVICES_GLOBAL_NAME}
-            columns={columns}
-            data={devices}
-            pageSizeStoreKey={DEVICE_TABLE_PAGE_SIZE_KEY}
-            visibleColumns={visibleColumns}
-        />
-    );
+    return <Table id="all-devices" columns={columns} data={devices} pageSizeStoreKey={DEVICE_TABLE_PAGE_SIZE_KEY} visibleColumns={visibleColumns} />;
 }

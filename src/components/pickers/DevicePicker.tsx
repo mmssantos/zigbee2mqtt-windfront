@@ -1,15 +1,15 @@
 import { type ChangeEvent, type JSX, type SelectHTMLAttributes, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import type { WithDevices } from "../../store.js";
-import type { Device, EntityType, Group } from "../../types.js";
+import type { RootState } from "../../store.js";
+import type { Device, Group } from "../../types.js";
 import { getDeviceDisplayName } from "../../utils.js";
 import SelectField from "../form-fields/SelectField.js";
 
-interface DevicePickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "onChange">, WithDevices {
+interface DevicePickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "onChange">, Pick<RootState, "devices"> {
     value: string | number;
     label?: string;
     groups?: Group[];
-    onChange(device: Device | Group, type: EntityType): void;
+    onChange(device?: Device | Group): void;
 }
 
 export default function DevicePicker(props: DevicePickerProps) {
@@ -19,33 +19,29 @@ export default function DevicePicker(props: DevicePickerProps) {
     const onSelectHandler = (e: ChangeEvent<HTMLSelectElement>): void => {
         const { value: selectedValue } = e.target;
 
-        if (devices[selectedValue]) {
-            onChange(devices[selectedValue], "device");
+        if (selectedValue.startsWith("0x") /* ieee */) {
+            onChange(devices.find((device) => device.ieee_address === selectedValue));
         } else {
-            const group = groups.find((g) => Number.parseInt(selectedValue, 10) === g.id);
+            const selectedId = Number.parseInt(selectedValue, 10);
 
-            onChange(group as Group, "group");
+            onChange(groups.find((g) => selectedId === g.id));
         }
     };
 
     const options = useMemo(() => {
         const options: JSX.Element[] = [];
-        const devicesOptions = Object.values(devices)
-            .sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
-            .map((device) => (
-                <option title={device.definition?.description} key={device.ieee_address} value={device.ieee_address}>
-                    {getDeviceDisplayName(device)}
-                </option>
-            ));
+        const devicesOptions = devices.map((device) => (
+            <option title={device.definition?.description} key={device.ieee_address} value={device.ieee_address}>
+                {getDeviceDisplayName(device)}
+            </option>
+        ));
 
         if (groups?.length) {
-            const groupOptions = Array.from(groups)
-                .sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
-                .map((group) => (
-                    <option key={group.friendly_name} value={group.id}>
-                        {group.friendly_name}
-                    </option>
-                ));
+            const groupOptions = groups.map((group) => (
+                <option key={group.id} value={group.id}>
+                    {group.friendly_name}
+                </option>
+            ));
 
             options.push(
                 <optgroup key="Groups" label={t("groups")}>

@@ -17,7 +17,7 @@ export function AddDeviceToGroup(props: AddDeviceToGroupProps): JSX.Element {
     const [deviceIeee, setDeviceIeee] = useState<string>("");
     const { group } = props;
     const devices = useAppSelector((state) => state.devices);
-    const endpoints = useMemo(() => getEndpoints(devices[deviceIeee]), [deviceIeee, devices]);
+    const endpoints = useMemo(() => getEndpoints(devices.find((device) => device.ieee_address === deviceIeee)), [deviceIeee, devices]);
     const { t } = useTranslation(["groups", "zigbee"]);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 

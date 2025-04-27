@@ -1,15 +1,15 @@
-import { type JSX, useContext, useEffect, useState } from "react";
+import { type JSX, useCallback, useContext, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import type { WithDevices } from "../../store.js";
+import type { RootState } from "../../store.js";
 import type { Device } from "../../types.js";
 import Button from "../button/Button.js";
 import { getZ2mDeviceImage } from "../device-image/index.js";
 
 type LocaliserState = "none" | "start" | "inprogress" | "done";
 
-type Props = WithDevices;
+type Props = Pick<RootState, "devices">;
 
 type LStatus = "init" | "error" | "done";
 
@@ -51,30 +51,34 @@ export function ImageLocaliser(props: Props): JSX.Element {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("settings");
 
-    async function localiseImage(device: Device) {
-        setLocalisationStatus((curr) => {
-            return { ...curr, [device.ieee_address]: "init" };
-        });
-        const success = await asyncSome([getZ2mDeviceImage], async (generator) => {
-            const imageUrl = generator(device);
-            const imageContent = await downloadImage(imageUrl);
-
-            await sendMessage("bridge/request/device/options", { id: device.ieee_address, options: { icon: imageContent } });
+    const localiseImage = useCallback(
+        async (device: Device) => {
             setLocalisationStatus((curr) => {
-                return { ...curr, [device.ieee_address]: "done" };
+                return { ...curr, [device.ieee_address]: "init" };
             });
 
-            return true;
-        });
-        if (!success) {
-            throw new Error("Failed to localise image");
-        }
-    }
+            const success = await asyncSome([getZ2mDeviceImage], async (generator) => {
+                const imageUrl = generator(device);
+                const imageContent = await downloadImage(imageUrl);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: ???
+                await sendMessage("bridge/request/device/options", { id: device.ieee_address, options: { icon: imageContent } });
+                setLocalisationStatus((curr) => {
+                    return { ...curr, [device.ieee_address]: "done" };
+                });
+
+                return true;
+            });
+
+            if (!success) {
+                throw new Error("Failed to localise image");
+            }
+        },
+        [sendMessage],
+    );
+
     useEffect(() => {
         if (currentState === "start") {
-            for (const device of Object.values<Device>(devices)) {
+            for (const device of devices) {
                 if (device.type !== "Coordinator") {
                     localiseImage(device)
                         .catch((err) => {
@@ -88,7 +92,7 @@ export function ImageLocaliser(props: Props): JSX.Element {
             }
             setCurrentState("inprogress");
         }
-    }, [currentState, devices]);
+    }, [currentState, devices, localiseImage]);
 
     switch (currentState) {
         case "none":
@@ -100,7 +104,7 @@ export function ImageLocaliser(props: Props): JSX.Element {
         case "inprogress":
             return (
                 <ul className="menu menu-xs bg-base-200 max-w-xs w-full join-item">
-                    {Object.values(devices).map((device) => {
+                    {devices.map((device) => {
                         return (
                             <li key={device.ieee_address} className="flex-row justify-between items-center border-b py-0.5">
                                 {device.friendly_name}

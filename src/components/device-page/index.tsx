@@ -23,13 +23,6 @@ import type {
 
 import { isDevice } from "../../utils.js";
 
-export type TabName = "info" | "bind" | "state" | "exposes" | "clusters" | "reporting" | "settings" | "settings-specific" | "dev-console" | "scene";
-
-export type DevicePageUrlParams = {
-    dev: string;
-    tab?: TabName;
-};
-
 export const isValidSceneId = (id: number, existingScenes: Scene[] = []): boolean => {
     return id >= 0 && id <= 255 && !existingScenes.find((s) => s.id === id);
 };

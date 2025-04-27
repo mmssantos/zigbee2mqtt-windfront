@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { CompositeFeature, Endpoint, LastSeenType } from "../../types.js";
+import type { CompositeFeature, Endpoint, LastSeenConfig } from "../../types.js";
 import type { BaseFeatureProps } from "../features/index.js";
 
 import { Link } from "react-router";
@@ -13,7 +13,7 @@ import { Lqi } from "../value-decorators/Lqi.js";
 import PowerSource from "../value-decorators/PowerSource.js";
 
 type Props = BaseFeatureProps<CompositeFeature> & {
-    lastSeenType: LastSeenType;
+    lastSeenConfig: LastSeenConfig;
     controls?: JSX.Element;
     endpoint?: Endpoint;
 };
@@ -24,7 +24,7 @@ export default function DashboardDevice({
     device,
     endpoint,
     deviceState,
-    lastSeenType,
+    lastSeenConfig,
     feature,
     featureWrapperClass,
     controls,
@@ -61,7 +61,7 @@ export default function DashboardDevice({
             </li>
             <li className="flex flex-row flex-wrap gap-1 m-4 justify-around items-center">
                 <span className="badge badge-soft badge-ghost cursor-default" title={t("last_seen")}>
-                    <LastSeen state={deviceState} lastSeenType={lastSeenType} />
+                    <LastSeen state={deviceState} config={lastSeenConfig} />
                 </span>
                 <span className="badge badge-soft badge-ghost cursor-default" title={t("lqi")}>
                     <Lqi value={deviceState.linkquality as number | undefined} />

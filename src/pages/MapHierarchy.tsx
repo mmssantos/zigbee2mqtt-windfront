@@ -2,7 +2,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import { faDownLong, faMagnifyingGlass, faQuestion, faRoute, faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { groupBy } from "lodash";
-import { type JSX, useContext, useState } from "react";
+import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
@@ -43,87 +43,109 @@ export default function MapHierarchy() {
     const { t } = useTranslation("map");
     const [filterValue, setFilterValue] = useState<string>("");
 
-    const listRelations = (relations: Zigbee2MQTTNetworkMap["links"]) => {
-        const listedRelations: JSX.Element[] = [];
+    const listRelations = useCallback(
+        (relations: Zigbee2MQTTNetworkMap["links"]) => {
+            const listedRelations: JSX.Element[] = [];
 
-        for (const relation of relations) {
-            const device = devices[relation.source.ieeeAddr];
+            for (const relation of relations) {
+                const device = devices.find((device) => device.ieee_address === relation.source.ieeeAddr);
 
-            listedRelations.push(
-                <li
-                    key={relation.source.ieeeAddr}
-                    title={`${t("zigbee:ieee_address")}: ${device.ieee_address} | ${t("zigbee:network_address")}: ${toHex(device.network_address, 4)} (${device.network_address})`}
-                >
-                    <Link to="#">
-                        <DeviceImage disabled={false} device={device} className="size-8" noIndicator={true} />
-                        {device.friendly_name}
-                        <span className="badge badge-ghost">
-                            <Lqi value={relation.linkquality} />
-                        </span>
-                        <span className="badge badge-ghost" title={t("depth")}>
-                            <FontAwesomeIcon icon={faRoute} />
-                            {relation.depth === 255 ? "N/A" : relation.depth}
-                        </span>
-                    </Link>
-                </li>,
+                if (device) {
+                    listedRelations.push(
+                        <li
+                            key={relation.source.ieeeAddr}
+                            title={`${t("zigbee:ieee_address")}: ${device.ieee_address} | ${t("zigbee:network_address")}: ${toHex(device.network_address, 4)} (${device.network_address})`}
+                        >
+                            <Link to="#">
+                                <DeviceImage disabled={false} device={device} className="size-8" noIndicator={true} />
+                                {device.friendly_name}
+                                <span className="badge badge-ghost">
+                                    <Lqi value={relation.linkquality} />
+                                </span>
+                                <span className="badge badge-ghost" title={t("depth")}>
+                                    <FontAwesomeIcon icon={faRoute} />
+                                    {relation.depth === 255 ? "N/A" : relation.depth}
+                                </span>
+                            </Link>
+                        </li>,
+                    );
+                } else {
+                    listedRelations.push(
+                        <li>
+                            {t("zigbee:unknown")}: {relation.source.ieeeAddr}
+                        </li>,
+                    );
+                }
+            }
+
+            return listedRelations;
+        },
+        [devices, t],
+    );
+
+    const groupRelations = useCallback(
+        (graph: Zigbee2MQTTNetworkMap, node: Zigbee2MQTTNetworkMap["nodes"][number]) => {
+            const grouped = groupBy(
+                graph.links.filter((link) => link.target.ieeeAddr === node.ieeeAddr),
+                (link) => link.relationship,
             );
-        }
+            const groupedRelations: JSX.Element[] = [];
 
-        return listedRelations;
-    };
+            for (const key in grouped) {
+                const relations = grouped[key];
 
-    const groupRelations = (graph: Zigbee2MQTTNetworkMap, node: Zigbee2MQTTNetworkMap["nodes"][number]) => {
-        const grouped = groupBy(
-            graph.links.filter((link) => link.target.ieeeAddr === node.ieeeAddr),
-            (link) => link.relationship,
-        );
-        const groupedRelations: JSX.Element[] = [];
+                groupedRelations.push(
+                    <li key={key}>
+                        <details>
+                            <summary>{t(RELATION_TMAP[key])}</summary>
+                            <ul>{listRelations(relations)}</ul>
+                        </details>
+                    </li>,
+                );
+            }
 
-        for (const key in grouped) {
-            const relations = grouped[key];
+            return groupedRelations;
+        },
+        [listRelations, t],
+    );
 
-            groupedRelations.push(
-                <li key={key}>
-                    <details>
-                        <summary>{t(RELATION_TMAP[key])}</summary>
-                        <ul>{listRelations(relations)}</ul>
-                    </details>
-                </li>,
-            );
-        }
-
-        return groupedRelations;
-    };
-
-    const sortNodes = () => {
+    const sortedNodes = useMemo(() => {
         const sortedNodes: JSX.Element[] = [];
 
         for (const node of graph.nodes) {
-            const device = devices[node.ieeeAddr];
+            const device = devices.find((device) => device.ieee_address === node.ieeeAddr);
 
-            if (!filterValue || node.friendlyName.toLowerCase().includes(filterValue.toLowerCase())) {
+            if (device) {
+                if (!filterValue || node.friendlyName.toLowerCase().includes(filterValue.toLowerCase())) {
+                    sortedNodes.push(
+                        <ul className="menu bg-base-200 rounded-box w-full" key={node.friendlyName}>
+                            <li
+                                title={`${t("zigbee:ieee_address")}: ${node.ieeeAddr} | ${t("zigbee:network_address")}: ${toHex(node.networkAddress, 4)} (${node.networkAddress})`}
+                            >
+                                {node.type === "Coordinator" ? (
+                                    <Link to="/settings/about">
+                                        <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
+                                        {node.friendlyName}
+                                    </Link>
+                                ) : (
+                                    <Link to={getDeviceDetailsLink(node.ieeeAddr)} className="link link-hover link-primary">
+                                        <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
+                                        {node.friendlyName}
+                                        <span className="badge badge-ghost">
+                                            <PowerSource device={device} showLevel={false} />
+                                        </span>
+                                    </Link>
+                                )}
+                            </li>
+                            {groupRelations(graph, node)}
+                        </ul>,
+                    );
+                }
+            } else {
                 sortedNodes.push(
-                    <ul className="menu bg-base-200 rounded-box w-full" key={node.friendlyName}>
-                        <li
-                            title={`${t("zigbee:ieee_address")}: ${node.ieeeAddr} | ${t("zigbee:network_address")}: ${toHex(node.networkAddress, 4)} (${node.networkAddress})`}
-                        >
-                            {node.type === "Coordinator" ? (
-                                <Link to="/settings/about">
-                                    <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
-                                    {node.friendlyName}
-                                </Link>
-                            ) : (
-                                <Link to={getDeviceDetailsLink(node.ieeeAddr)} className="link link-hover link-primary">
-                                    <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
-                                    {node.friendlyName}
-                                    <span className="badge badge-ghost">
-                                        <PowerSource device={device} showLevel={false} />
-                                    </span>
-                                </Link>
-                            )}
-                        </li>
-                        {groupRelations(graph, node)}
-                    </ul>,
+                    <li>
+                        {t("zigbee:unknown")}: {node.ieeeAddr}
+                    </li>,
                 );
             }
         }
@@ -131,7 +153,7 @@ export default function MapHierarchy() {
         sortedNodes.sort((a, b) => (a.key === "Coordinator" ? -1 : a.key!.localeCompare(b.key!)));
 
         return sortedNodes;
-    };
+    }, [devices, filterValue, graph, groupRelations, t]);
 
     return isLoading ? (
         <>
@@ -181,7 +203,7 @@ export default function MapHierarchy() {
                     <FontAwesomeIcon icon={faQuestion} />
                 </Button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-3 px-6">{sortNodes()}</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-3 px-6">{sortedNodes}</div>
         </>
     );
 }

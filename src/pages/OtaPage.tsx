@@ -30,13 +30,11 @@ export default function OtaPage() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("zigbee");
 
-    const allOtaDevices = useMemo(() => {
+    const otaDevices = useMemo(() => {
         const otaDevices: OtaGridData[] = [];
 
-        for (const key in devices) {
-            const device = devices[key];
-
-            if (device?.definition?.supports_ota && !device.disabled) {
+        for (const device of devices) {
+            if (device.definition?.supports_ota && !device.disabled) {
                 const state = deviceStates[device.friendly_name] ?? ({} as DeviceState);
 
                 otaDevices.push({ id: device.friendly_name, device, state });
@@ -47,10 +45,10 @@ export default function OtaPage() {
     }, [deviceStates, devices]);
 
     const checkAllOTA = useCallback(async () => {
-        for (const otaDevice of allOtaDevices) {
+        for (const otaDevice of otaDevices) {
             await sendMessage("bridge/request/device/ota_update/check", { id: otaDevice.device.friendly_name });
         }
-    }, [sendMessage, allOtaDevices]);
+    }, [sendMessage, otaDevices]);
 
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const columns = useMemo<ColumnDef<OtaGridData, any>[]>(
@@ -143,5 +141,5 @@ export default function OtaPage() {
         [sendMessage, checkAllOTA, t],
     );
 
-    return <Table id="otaDevices" columns={columns} data={allOtaDevices} pageSizeStoreKey={OTA_TABLE_PAGE_SIZE_KEY} />;
+    return <Table id="ota-devices" columns={columns} data={otaDevices} pageSizeStoreKey={OTA_TABLE_PAGE_SIZE_KEY} />;
 }

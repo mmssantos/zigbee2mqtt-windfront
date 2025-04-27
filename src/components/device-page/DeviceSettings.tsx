@@ -26,12 +26,12 @@ export function DeviceSettings(props: DeviceSettingsProps) {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
     const getGenericDeviceSettingsSchema = useCallback(
-        (): RJSFSchema => (bridgeInfo.config_schema.definitions?.device ?? { properties: {} }) as RJSFSchema,
+        (): RJSFSchema => (bridgeInfo.config_schema.definitions.device ?? { properties: {} }) as RJSFSchema,
         [bridgeInfo.config_schema.definitions],
     );
 
     const getDeviceConfig = useCallback(
-        (): Kvp | Kvp[] => merge({}, bridgeInfo.config?.device_options, bridgeInfo.config?.devices[props.device.ieee_address], state),
+        (): Kvp | Kvp[] => merge({}, bridgeInfo.config.device_options, bridgeInfo.config.devices[props.device.ieee_address], state),
         [bridgeInfo.config, state, props.device.ieee_address],
     );
 

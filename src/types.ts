@@ -8,6 +8,7 @@ import type {
     Zigbee2MQTTResponse,
     Zigbee2MQTTResponseEndpoints,
     Zigbee2MQTTScene,
+    Zigbee2MQTTSettings,
 } from "zigbee2mqtt";
 
 export type RecursiveMutable<T> = { -readonly [K in keyof T]: RecursiveMutable<T[K]> };
@@ -58,7 +59,7 @@ export type LogMessage = Zigbee2MQTTAPI["bridge/logging"] & { timestamp: string 
 
 export type AvailabilityState = Zigbee2MQTTAPI["{friendlyName}/availability"];
 
-export type LastSeenType = "disable" | "ISO_8601" | "ISO_8601_local" | "epoch";
+export type LastSeenConfig = Zigbee2MQTTSettings["advanced"]["last_seen"];
 
 export interface Message<T = string | Record<string, unknown> | Record<string, unknown>[] | string[]> {
     topic: string;

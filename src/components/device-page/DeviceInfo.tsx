@@ -29,9 +29,9 @@ export function DeviceInfo(props: DeviceInfoProps) {
     const { device } = props;
     const { t } = useTranslation("zigbee");
     const deviceStates = useAppSelector((state) => state.deviceStates);
-    const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
+    const bridgeConfig = useAppSelector((state) => state.bridgeInfo.config);
     const availability = useAppSelector((state) => state.availability);
-    const homeassistantEnabled = !!bridgeInfo.config?.homeassistant?.enabled;
+    const homeassistantEnabled = bridgeConfig.homeassistant.enabled;
     const deviceState: DeviceState = deviceStates[device.friendly_name] ?? ({} as DeviceState);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
@@ -71,7 +71,7 @@ export function DeviceInfo(props: DeviceInfoProps) {
         [sendMessage],
     );
 
-    const deviceAvailability = bridgeInfo.config.devices[device.ieee_address]?.availability;
+    const deviceAvailability = bridgeConfig.devices[device.ieee_address]?.availability;
     const deviceDescription = useMemo(() => {
         const result = MARKDOWN_LINK_REGEX.exec(device.definition?.description as string);
         let content: JSX.Element;
@@ -111,13 +111,13 @@ export function DeviceInfo(props: DeviceInfoProps) {
                     <DeviceControlUpdateDesc device={device} setDeviceDescription={setDeviceDescription} />
                 </div>
                 <div className="">
-                    <LastSeen lastSeenType={bridgeInfo.config.advanced.last_seen} state={deviceState} />
+                    <LastSeen config={bridgeConfig.advanced.last_seen} state={deviceState} />
                 </div>
                 <div className="">
                     <Availability
                         availability={availability[device.friendly_name] ?? { state: "offline" }}
                         disabled={device.disabled}
-                        availabilityFeatureEnabled={!!bridgeInfo.config.availability?.enabled}
+                        availabilityFeatureEnabled={bridgeConfig.availability.enabled}
                         availabilityEnabledForDevice={deviceAvailability != null ? !!deviceAvailability : undefined}
                     />
                 </div>

@@ -1,6 +1,7 @@
-import type { BridgeInfo, Message } from "../src/types.js";
+import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
+import type { Message } from "../src/types.js";
 
-export const BRIDGE_INFO: Message<BridgeInfo> = {
+export const BRIDGE_INFO: Message<Zigbee2MQTTAPI["bridge/info"]> = {
     payload: {
         commit: "3ad20ddc",
         config: {

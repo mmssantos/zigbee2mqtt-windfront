@@ -20,9 +20,7 @@ export default function PermitJoinButton({ popoverId }: { popoverId: string }) {
     const routers = useMemo(() => {
         const filteredDevices: JSX.Element[] = [];
 
-        for (const key in devices) {
-            const device = devices[key];
-
+        for (const device of devices) {
             if (device.type === "Coordinator" || device.type === "Router") {
                 filteredDevices.push(
                     <li key={device.friendly_name}>

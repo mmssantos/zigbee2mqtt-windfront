@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 type OtaFileVersionProps = {
-    version?: number;
+    version?: number | null;
 };
 
 export default function OtaFileVersion(props: OtaFileVersionProps) {

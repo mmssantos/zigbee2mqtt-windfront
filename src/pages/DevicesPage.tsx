@@ -7,20 +7,16 @@ import type { DeviceState } from "../types.js";
 export default function DevicesPage(): JSX.Element {
     const devices = useAppSelector((state) => state.devices);
     const deviceStates = useAppSelector((state) => state.deviceStates);
-    const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
+    const bridgeConfig = useAppSelector((state) => state.bridgeInfo.config);
     const availability = useAppSelector((state) => state.availability);
-    const availabilityFeatureEnabled = !!bridgeInfo.config.availability?.enabled;
-    const homeassistantEnabled = !!bridgeInfo.config?.homeassistant?.enabled;
 
     const data = useMemo((): DeviceTableData[] => {
         const renderDevices: DeviceTableData[] = [];
 
-        for (const key in devices) {
-            const device = devices[key];
-
+        for (const device of devices) {
             if (device.type !== "Coordinator") {
                 const state = deviceStates[device.friendly_name] ?? ({} as DeviceState);
-                const deviceAvailability = bridgeInfo.config.devices[device.ieee_address]?.availability;
+                const deviceAvailability = bridgeConfig.devices[device.ieee_address]?.availability;
 
                 renderDevices.push({
                     device,
@@ -32,7 +28,7 @@ export default function DevicesPage(): JSX.Element {
         }
 
         return renderDevices;
-    }, [devices, deviceStates, bridgeInfo, availability]);
+    }, [devices, deviceStates, bridgeConfig.devices, availability]);
 
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
@@ -69,9 +65,9 @@ export default function DevicesPage(): JSX.Element {
     return (
         <DevicesTable
             devices={data}
-            lastSeenType={bridgeInfo.config.advanced.last_seen}
-            availabilityFeatureEnabled={availabilityFeatureEnabled}
-            homeassistantEnabled={homeassistantEnabled}
+            lastSeenConfig={bridgeConfig.advanced.last_seen}
+            availabilityFeatureEnabled={bridgeConfig.availability.enabled}
+            homeassistantEnabled={bridgeConfig.homeassistant.enabled}
             renameDevice={renameDevice}
             removeDevice={removeDevice}
             configureDevice={configureDevice}

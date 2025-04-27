@@ -1,59 +1,81 @@
-import orderBy from "lodash/orderBy.js";
 import snakeCase from "lodash/snakeCase.js";
-import type { JSX } from "react";
+import { type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
-import type { WithDevices } from "../../store.js";
+import type { RootState } from "../../store.js";
 
-type StatsProps = WithDevices;
+type StatRowProps = {
+    name: string;
+    data: Record<string, number>;
+};
+type StatsProps = Pick<RootState, "devices">;
 
-export function Stats(props: StatsProps): JSX.Element {
-    const { devices } = props;
-    const { t } = useTranslation(["stats", "zigbee"]);
-    const allDevices = Object.values(devices).filter((d) => d.type !== "Coordinator");
-    const totalDevices = allDevices.length;
-    const stats = {
-        byType: {},
-        byPowerSource: {},
-        byVendor: {},
-        byModel: {},
-    };
+function StatRow({ name, data }: StatRowProps) {
+    const children: JSX.Element[] = [];
+    const { t } = useTranslation("stats");
 
-    for (const device of allDevices) {
-        const modelId = device.model_id || t("zigbee:unknown");
-        const manufacturer = device.manufacturer || t("zigbee:unknown");
-        const powerSource = t(`zigbee:${snakeCase(device.power_source || "unknown")}`);
+    for (const key in data) {
+        const count = data[key];
 
-        stats.byModel[modelId] = (stats.byModel[modelId] || 0) + 1;
-        stats.byVendor[manufacturer] = (stats.byVendor[manufacturer] || 0) + 1;
-        stats.byType[t(device.type)] = (stats.byType[t(device.type)] || 0) + 1;
-        stats.byPowerSource[powerSource] = (stats.byPowerSource[powerSource] || 0) + 1;
+        children.push(
+            <li key={key}>
+                <Link to="#">
+                    {key}: {count}
+                </Link>
+            </li>,
+        );
     }
 
-    const statRows = Object.entries(stats).map(([key, values]) => {
+    return (
+        <li>
+            <details>
+                <summary>{t(name)}</summary>
+                <ul>{children}</ul>
+            </details>
+        </li>
+    );
+}
+
+export function Stats(props: StatsProps) {
+    const { devices } = props;
+    const { t } = useTranslation(["stats", "zigbee"]);
+
+    const statRows = useMemo(() => {
+        const byType: Record<string, number> = {};
+        const byPowerSource: Record<string, number> = {};
+        const byModel: Record<string, number> = {};
+        const byVendor: Record<string, number> = {};
+
+        for (const device of devices) {
+            if (device.type === "Coordinator") {
+                continue;
+            }
+
+            const modelId = device.model_id || t("zigbee:unknown");
+            const manufacturer = device.manufacturer || t("zigbee:unknown");
+            const powerSource = t(`zigbee:${snakeCase(device.power_source || "unknown")}`);
+
+            byType[t(device.type)] = (byType[t(device.type)] || 0) + 1;
+            byPowerSource[powerSource] = (byPowerSource[powerSource] || 0) + 1;
+            byModel[modelId] = (byModel[modelId] || 0) + 1;
+            byVendor[manufacturer] = (byVendor[manufacturer] || 0) + 1;
+        }
+
         return (
-            <li key={key}>
-                <details>
-                    <summary>{t(key)}</summary>
-                    <ul>
-                        {orderBy(Object.entries(values), [([, v]) => v], ["desc"]).map(([key, value]) => (
-                            <li key={key}>
-                                <Link to="#">
-                                    {key}: {value as number}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </details>
-            </li>
+            <>
+                <StatRow name={"byType"} data={byType} />
+                <StatRow name={"byPowerSource"} data={byPowerSource} />
+                <StatRow name={"byModel"} data={byModel} />
+                <StatRow name={"byVendor"} data={byVendor} />
+            </>
         );
-    });
+    }, [devices, t]);
 
     return (
         <ul>
             <li>
                 <Link to="#">
-                    {t("total")} {totalDevices}
+                    {t("total")} {devices.length - 1 /* coordinator */}
                 </Link>
             </li>
             {statRows}
