@@ -10,7 +10,7 @@ import Button from "../button/Button.js";
 import InputField from "../form-fields/InputField.js";
 import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
-import type { NiceReportingRule } from "./Reporting.js";
+import type { NiceReportingRule } from "./tabs/Reporting.js";
 
 interface ReportingRowProps {
     rule: NiceReportingRule;

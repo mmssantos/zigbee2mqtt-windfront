@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import { useAppSelector } from "../../hooks/useApp.js";
-import type { Cluster, Device, Endpoint, LogMessage } from "../../types.js";
-import { AttributeEditor, type AttributeInfo } from "./AttributeEditor.js";
-import { CommandExecutor } from "./CommandExecutor.js";
-import { ExternalDefinition } from "./ExternalDefinition.js";
+import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import type { Cluster, Device, Endpoint, LogMessage } from "../../../types.js";
+import { AttributeEditor, type AttributeInfo } from "../AttributeEditor.js";
+import { CommandExecutor } from "../CommandExecutor.js";
+import { ExternalDefinition } from "../ExternalDefinition.js";
 
 interface DevConsoleProps {
     device: Device;

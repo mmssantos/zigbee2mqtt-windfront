@@ -1,9 +1,9 @@
-import { useAppSelector } from "../../hooks/useApp.js";
-import type { Device } from "../../types.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import type { Device } from "../../../types.js";
 
 type StatesProps = { device: Device };
 
-export function States(props: StatesProps) {
+export function State(props: StatesProps) {
     const { device } = props;
     const deviceStates = useAppSelector((state) => state.deviceStates);
     const deviceState = deviceStates[device.friendly_name] ?? {};

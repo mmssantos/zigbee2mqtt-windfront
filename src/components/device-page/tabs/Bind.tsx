@@ -1,7 +1,7 @@
 import { type JSX, useMemo, useState } from "react";
-import { useAppSelector } from "../../hooks/useApp.js";
-import type { Device } from "../../types.js";
-import { BindRow } from "./BindRow.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import type { Device } from "../../../types.js";
+import { BindRow } from "../BindRow.js";
 
 interface BindProps {
     device: Device;

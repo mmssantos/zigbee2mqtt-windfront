@@ -14,17 +14,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate, useParams } from "react-router";
-import { Bind } from "../components/device-page/Bind.js";
-import Clusters from "../components/device-page/Clusters.js";
-import { DevConsole } from "../components/device-page/DevConsole.js";
-import { DeviceInfo } from "../components/device-page/DeviceInfo.js";
-import { DeviceSettings } from "../components/device-page/DeviceSettings.js";
-import { DeviceSpecificSettings } from "../components/device-page/DeviceSpecificSettings.js";
-import { Exposes } from "../components/device-page/Exposes.js";
 import { HeaderDeviceSelector } from "../components/device-page/HeaderDeviceSelector.js";
-import { Reporting } from "../components/device-page/Reporting.js";
-import { ScenePage } from "../components/device-page/ScenePage.js";
-import { States } from "../components/device-page/States.js";
+import { Bind } from "../components/device-page/tabs/Bind.js";
+import Clusters from "../components/device-page/tabs/Clusters.js";
+import { DevConsole } from "../components/device-page/tabs/DevConsole.js";
+import { DeviceInfo } from "../components/device-page/tabs/DeviceInfo.js";
+import { DeviceSettings } from "../components/device-page/tabs/DeviceSettings.js";
+import { DeviceSpecificSettings } from "../components/device-page/tabs/DeviceSpecificSettings.js";
+import { Exposes } from "../components/device-page/tabs/Exposes.js";
+import { Reporting } from "../components/device-page/tabs/Reporting.js";
+import { Scene } from "../components/device-page/tabs/Scene.js";
+import { State } from "../components/device-page/tabs/State.js";
 import { useAppSelector } from "../hooks/useApp.js";
 
 export type TabName = "info" | "bind" | "state" | "exposes" | "clusters" | "reporting" | "settings" | "settings-specific" | "dev-console" | "scene";
@@ -58,7 +58,7 @@ export default function DevicePage(): JSX.Element {
             case "bind":
                 return <Bind device={device} />;
             case "state":
-                return <States device={device} />;
+                return <State device={device} />;
             case "exposes":
                 return <Exposes device={device} />;
             case "clusters":
@@ -72,7 +72,7 @@ export default function DevicePage(): JSX.Element {
             case "dev-console":
                 return <DevConsole device={device} />;
             case "scene":
-                return <ScenePage device={device} />;
+                return <Scene device={device} />;
             default:
                 return <DeviceInfo device={device} />;
         }

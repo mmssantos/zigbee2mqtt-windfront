@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import type { CompositeFeature, Device, DeviceState } from "../../types.js";
+import type { CompositeFeature, Device, DeviceState } from "../../../types.js";
 
 import { useTranslation } from "react-i18next";
-import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import { useAppSelector } from "../../hooks/useApp.js";
-import { Feature } from "../features/Feature.js";
-import FeatureWrapper from "../features/FeatureWrapper.js";
+import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import { Feature } from "../../features/Feature.js";
+import FeatureWrapper from "../../features/FeatureWrapper.js";
 
 type ExposesProps = {
     device: Device;

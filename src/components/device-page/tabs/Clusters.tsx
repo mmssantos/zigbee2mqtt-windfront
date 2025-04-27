@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { Cluster, Device } from "../../types.js";
+import type { Cluster, Device } from "../../../types.js";
 
 interface ClustersProps {
     device: Device;

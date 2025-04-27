@@ -1,13 +1,13 @@
-import { useAppSelector } from "../../hooks/useApp.js";
-import type { Device } from "../../types.js";
-import { AddScene } from "./AddScene.js";
-import { RecallRemove } from "./RecallRemove.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import type { Device } from "../../../types.js";
+import { AddScene } from "../AddScene.js";
+import { RecallRemove } from "../RecallRemove.js";
 
 type SceneProps = {
     device: Device;
 };
 
-export function ScenePage(props: SceneProps) {
+export function Scene(props: SceneProps) {
     const deviceState = useAppSelector((state) => state.deviceStates[props.device.friendly_name] ?? {});
 
     return (

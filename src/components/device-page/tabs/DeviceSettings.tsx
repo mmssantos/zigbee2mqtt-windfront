@@ -2,12 +2,12 @@ import Form, { type ISubmitEvent, type UiSchema } from "@rjsf/core";
 import type { RJSFSchema } from "@rjsf/utils";
 import merge from "lodash/merge.js";
 import { useCallback, useContext, useState } from "react";
-import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import { useAppSelector } from "../../hooks/useApp.js";
-import { DescriptionField, TitleField } from "../../i18n/rjsf-translation-fields.js";
-import type { Device } from "../../types.js";
-import { computeSettingsDiff } from "../../utils.js";
-import { ReadTheDocsInfo } from "../ReadTheDocsInfo.js";
+import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import { DescriptionField, TitleField } from "../../../i18n/rjsf-translation-fields.js";
+import type { Device } from "../../../types.js";
+import { computeSettingsDiff } from "../../../utils.js";
+import { ReadTheDocsInfo } from "../../ReadTheDocsInfo.js";
 
 type Kvp = Record<string, unknown>;
 

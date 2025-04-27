@@ -1,8 +1,8 @@
 import { type JSX, useCallback, useContext, useMemo, useState } from "react";
-import type { Device, Endpoint } from "../../types.js";
+import type { Device, Endpoint } from "../../../types.js";
 
-import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import { ReportingRow } from "./ReportingRow.js";
+import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
+import { ReportingRow } from "../ReportingRow.js";
 
 interface ReportingProps {
     device: Device;

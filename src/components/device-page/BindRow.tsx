@@ -10,7 +10,7 @@ import Button from "../button/Button.js";
 import ClusterMultiPicker from "../pickers/ClusterMultiPicker.js";
 import DevicePicker from "../pickers/DevicePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
-import type { NiceBindingRule } from "./Bind.js";
+import type { NiceBindingRule } from "./tabs/Bind.js";
 
 interface BindRowProps extends Pick<RootState, "devices"> {
     rule: NiceBindingRule;

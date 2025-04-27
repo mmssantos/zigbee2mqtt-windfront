@@ -1,11 +1,11 @@
 import { useCallback, useContext } from "react";
-import type { CompositeFeature, Device, Endpoint } from "../../types.js";
+import type { CompositeFeature, Device, Endpoint } from "../../../types.js";
 
 import { useTranslation } from "react-i18next";
-import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import { useAppSelector } from "../../hooks/useApp.js";
-import { Composite } from "../features/Composite.js";
-import FeatureWrapper from "../features/FeatureWrapper.js";
+import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import { Composite } from "../../features/Composite.js";
+import FeatureWrapper from "../../features/FeatureWrapper.js";
 
 type DeviceSpecificSettingsProps = {
     device: Device;
