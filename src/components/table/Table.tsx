@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     type ColumnDef,
     type ColumnFiltersState,
-    type RowData,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -11,28 +10,16 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { type ChangeEvent, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import store2 from "store2";
 import Button from "../button/Button.js";
-import { Filter } from "./Filter.js";
+import TextFilter from "./TextFilter.js";
 
-declare module "@tanstack/react-table" {
-    // allows us to define custom properties for our columns
-    // biome-ignore lint/correctness/noUnusedVariables: bad detection
-    interface ColumnMeta<TData extends RowData, TValue> {
-        filterVariant?: "text" | "range";
-        rangeMin?: number;
-        rangeMax?: number;
-    }
-}
-
-interface Props {
+interface Props<T> {
     id: string;
-    // biome-ignore lint/suspicious/noExplicitAny: tmp
-    columns: ColumnDef<any, any>[];
-    // biome-ignore lint/suspicious/noExplicitAny: tmp
-    data: any[];
+    columns: ColumnDef<T, unknown>[];
+    data: T[];
     pageSizeStoreKey?: string;
     visibleColumns?: Record<string, boolean>;
 }
@@ -40,7 +27,7 @@ interface Props {
 // XXX: workaround typing
 const local = store2 as unknown as typeof store2.default;
 
-export default function Table(props: Props) {
+export default function Table<T>(props: Props<T>) {
     const { id, columns, data, pageSizeStoreKey, visibleColumns } = props;
     const { t } = useTranslation("common");
     const [columnVisibility] = useState<Record<string, boolean>>(visibleColumns ?? {});
@@ -61,13 +48,25 @@ export default function Table(props: Props) {
         },
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
-        getFilteredRowModel: getFilteredRowModel(), //client side filtering
+        getFilteredRowModel: getFilteredRowModel(), // client side filtering
         getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        // debugTable: true,
-        // debugHeaders: true,
+        // debugTable: false,
+        // debugHeaders: false,
         // debugColumns: false,
+        // debugCells: false,
+        // debugRows: false,
+        // debugAll: false,
     });
+    const onPageSizeChange = useCallback(
+        (e: ChangeEvent<HTMLSelectElement>) => {
+            const newSize = Number(e.target.value);
+
+            local.set(pageSizeStoreKey, newSize);
+            table.setPageSize(newSize);
+        },
+        [pageSizeStoreKey, table.setPageSize],
+    );
 
     return (
         <div className="overflow-x-auto">
@@ -76,25 +75,27 @@ export default function Table(props: Props) {
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
+                                const sorting = header.column.getIsSorted();
+                                const sortingText = sorting === "asc" ? " ↑" : sorting === "desc" ? " ↓" : null;
+
                                 return (
                                     <th key={header.id} colSpan={header.colSpan}>
                                         {header.isPlaceholder ? null : (
                                             <>
+                                                {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
                                                 <div
-                                                    {...{
-                                                        className: header.column.getCanSort() ? "cursor-pointer select-none" : "",
-                                                        onClick: header.column.getToggleSortingHandler(),
-                                                    }}
+                                                    className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                                                    onClick={header.column.getToggleSortingHandler()}
                                                 >
                                                     {flexRender(header.column.columnDef.header, header.getContext())}
-                                                    {{
-                                                        asc: " ↑",
-                                                        desc: " ↓",
-                                                    }[header.column.getIsSorted() as string] ?? null}
+                                                    {sortingText}
                                                 </div>
                                                 {header.column.getCanFilter() ? (
                                                     <div className="mt-1">
-                                                        <Filter column={header.column} />
+                                                        <TextFilter
+                                                            getFilterValue={header.column.getFilterValue}
+                                                            setFilterValue={header.column.setFilterValue}
+                                                        />
                                                     </div>
                                                 ) : null}
                                             </>
@@ -106,15 +107,13 @@ export default function Table(props: Props) {
                     ))}
                 </thead>
                 <tbody>
-                    {table.getRowModel().rows.map((row) => {
-                        return (
-                            <tr key={row.id} className="hover:bg-base-300">
-                                {row.getVisibleCells().map((cell) => {
-                                    return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
-                                })}
-                            </tr>
-                        );
-                    })}
+                    {table.getRowModel().rows.map((row) => (
+                        <tr key={row.id} className="hover:bg-base-300">
+                            {row.getVisibleCells().map((cell) => (
+                                <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                            ))}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
             <div className="divider" />
@@ -142,16 +141,7 @@ export default function Table(props: Props) {
                     </Button>
                 </div>
                 <div className="navbar-end">
-                    <select
-                        value={table.getState().pagination.pageSize}
-                        onChange={(e) => {
-                            const newSize = Number(e.target.value);
-
-                            local.set(pageSizeStoreKey, newSize);
-                            table.setPageSize(newSize);
-                        }}
-                        className="select w-32 mx-1"
-                    >
+                    <select value={table.getState().pagination.pageSize} onChange={onPageSizeChange} className="select w-32 mx-1">
                         {[10, 30, 50, 100].map((pageSize) => (
                             <option key={pageSize} value={pageSize}>
                                 {t("show")} {pageSize}

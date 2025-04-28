@@ -2640,7 +2640,9 @@
     "touchlink": {
         "detected_devices_message": "Detected {{count}} touchlink devices.",
         "rescan": "Scan again",
-        "scan": "Scan"
+        "scan": "Scan",
+        "identify": "Identify",
+        "factory_reset": "Factory reset"
     },
     "values": {
         "clear": "Clear",

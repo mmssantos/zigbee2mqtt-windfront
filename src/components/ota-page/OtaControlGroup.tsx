@@ -1,34 +1,32 @@
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
-import type { useApiWebSocket } from "../../hooks/useApiWebSocket.js";
 import type { Device, DeviceState } from "../../types.js";
 import Button from "../button/Button.js";
 
 type OtaControlGroup = {
     device: Device;
     state: DeviceState;
-    sendMessage: ReturnType<typeof useApiWebSocket>["sendMessage"];
+    onCheckClick: (ieee: string) => Promise<void>;
+    onUpdateClick: (ieee: string) => Promise<void>;
+    onScheduleClick: (ieee: string) => Promise<void>;
+    onUnscheduleClick: (ieee: string) => Promise<void>;
 };
 
 export default function OtaControlGroup(props: OtaControlGroup) {
     const { t } = useTranslation("ota");
-    const { device, state, sendMessage } = props;
+    const { device, state, onCheckClick, onUpdateClick, onScheduleClick, onUnscheduleClick } = props;
     const otaState = state?.update;
 
     if (otaState == null || otaState.state === "idle") {
         return (
             <div className="join">
-                <Button<string>
-                    className="btn btn-primary btn-sm join-item"
-                    onClick={async (ieee) => await sendMessage("bridge/request/device/ota_update/check", { id: ieee })}
-                    item={device.ieee_address}
-                >
+                <Button<string> className="btn btn-primary btn-sm join-item" onClick={onCheckClick} item={device.ieee_address}>
                     {t("check")}
                 </Button>
                 <Button<string>
                     className="btn btn-info btn-sm join-item"
-                    onClick={async (ieee) => await sendMessage("bridge/request/device/ota_update/schedule", { id: ieee })}
+                    onClick={onScheduleClick}
                     item={device.ieee_address}
                     title={t("schedule")}
                     prompt
@@ -64,17 +62,12 @@ export default function OtaControlGroup(props: OtaControlGroup) {
         <div className="join">
             {otaState.state === "available" ? (
                 <>
-                    <Button<string>
-                        className="btn btn-error btn-sm join-item"
-                        onClick={async (ieee) => await sendMessage("bridge/request/device/ota_update/update", { id: ieee })}
-                        item={device.ieee_address}
-                        prompt
-                    >
+                    <Button<string> className="btn btn-error btn-sm join-item" onClick={onUpdateClick} item={device.ieee_address} prompt>
                         {t("update")}
                     </Button>
                     <Button<string>
                         className="btn btn-info btn-sm join-item"
-                        onClick={async (ieee) => await sendMessage("bridge/request/device/ota_update/schedule", { id: ieee })}
+                        onClick={onScheduleClick}
                         item={device.ieee_address}
                         title={t("schedule")}
                         prompt
@@ -83,26 +76,17 @@ export default function OtaControlGroup(props: OtaControlGroup) {
                     </Button>
                 </>
             ) : otaState.state === "scheduled" ? (
-                <Button<string>
-                    className="btn btn-sm btn-error join-item"
-                    onClick={async (ieee) => await sendMessage("bridge/request/device/ota_update/unschedule", { id: ieee })}
-                    item={device.ieee_address}
-                    prompt
-                >
+                <Button<string> className="btn btn-sm btn-error join-item" onClick={onUnscheduleClick} item={device.ieee_address} prompt>
                     {t("unschedule")}
                 </Button>
             ) : (
                 <>
-                    <Button<string>
-                        className="btn btn-primary btn-sm join-item"
-                        onClick={async (ieee) => await sendMessage("bridge/request/device/ota_update/check", { id: ieee })}
-                        item={device.ieee_address}
-                    >
+                    <Button<string> className="btn btn-primary btn-sm join-item" onClick={onCheckClick} item={device.ieee_address}>
                         {t("check")}
                     </Button>
                     <Button<string>
                         className="btn btn-info btn-sm join-item"
-                        onClick={async (ieee) => await sendMessage("bridge/request/device/ota_update/schedule", { id: ieee })}
+                        onClick={onScheduleClick}
                         item={device.ieee_address}
                         title={t("schedule")}
                         prompt

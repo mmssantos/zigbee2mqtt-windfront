@@ -2,15 +2,15 @@ import NiceModal from "@ebay/nice-modal-react";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
 import InputField from "../components/form-fields/InputField.js";
-import Table from "../components/grid/Table.js";
 import { RenameGroupForm } from "../components/modal/components/RenameGroupModal.js";
+import Table from "../components/table/Table.js";
 import { useAppSelector } from "../hooks/useApp.js";
 import { GROUP_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { Group } from "../types.js";
@@ -22,7 +22,7 @@ export default function GroupsPage() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["groups", "common"]);
 
-    const onGroupCreateSubmit = async (): Promise<void> => {
+    const onGroupCreateSubmit = useCallback(async (): Promise<void> => {
         const payload: Zigbee2MQTTAPI["bridge/request/group/add"] = { friendly_name: newGroupName };
 
         if (newGroupId !== undefined) {
@@ -30,7 +30,14 @@ export default function GroupsPage() {
         }
 
         await sendMessage("bridge/request/group/add", payload);
-    };
+    }, [newGroupName, newGroupId, sendMessage]);
+
+    const onRenameClick = useCallback(
+        async (from: string, to: string) => await sendMessage("bridge/request/group/rename", { from, to }),
+        [sendMessage],
+    );
+
+    const onRemoveClick = useCallback(async (id: string) => await sendMessage("bridge/request/group/remove", { id }), [sendMessage]);
 
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const columns = useMemo<ColumnDef<Group, any>[]>(
@@ -83,7 +90,7 @@ export default function GroupsPage() {
                             onClick={() =>
                                 NiceModal.show(RenameGroupForm, {
                                     name: group.friendly_name,
-                                    onRename: async (from, to) => await sendMessage("bridge/request/group/rename", { from, to }),
+                                    onRename: onRenameClick,
                                 })
                             }
                             title={t("rename_group")}
@@ -94,7 +101,7 @@ export default function GroupsPage() {
                             prompt
                             title={t("remove_group")}
                             item={group.id.toString()}
-                            onClick={async (id) => await sendMessage("bridge/request/group/remove", { id })}
+                            onClick={onRemoveClick}
                             className="btn btn-error join-item"
                         >
                             <FontAwesomeIcon icon={faTrash} />
@@ -105,7 +112,7 @@ export default function GroupsPage() {
                 enableColumnFilter: false,
             },
         ],
-        [sendMessage, t],
+        [onRenameClick, onRemoveClick, t],
     );
 
     return (

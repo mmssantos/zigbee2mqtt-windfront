@@ -5,7 +5,7 @@ import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import DeviceControlGroup from "../components/device-control/DeviceControlGroup.js";
 import { DeviceImage } from "../components/device-image/DeviceImage.js";
-import Table from "../components/grid/Table.js";
+import Table from "../components/table/Table.js";
 import { Availability } from "../components/value-decorators/Availability.js";
 import { LastSeen } from "../components/value-decorators/LastSeen.js";
 import { Lqi } from "../components/value-decorators/Lqi.js";
@@ -217,12 +217,12 @@ export default function DevicesPage(): JSX.Element {
         [
             bridgeConfig.advanced.last_seen,
             bridgeConfig.availability.enabled,
-            t,
             bridgeConfig.homeassistant.enabled,
             renameDevice,
             removeDevice,
             configureDevice,
             interviewDevice,
+            t,
         ],
     );
     const visibleColumns = useMemo(

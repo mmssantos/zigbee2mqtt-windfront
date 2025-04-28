@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
-import Table from "../components/grid/Table.js";
+import Table from "../components/table/Table.js";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { setTouchlinkIdentifyInProgress, setTouchlinkResetInProgress, setTouchlinkScan } from "../store.js";
 import type { TouchlinkDevice } from "../types.js";

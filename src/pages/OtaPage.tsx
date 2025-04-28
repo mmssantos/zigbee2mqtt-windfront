@@ -7,9 +7,9 @@ import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
 import { DeviceImage } from "../components/device-image/DeviceImage.js";
-import Table from "../components/grid/Table.js";
 import OtaControlGroup from "../components/ota-page/OtaControlGroup.js";
 import OtaFileVersion from "../components/ota-page/OtaFileVersion.js";
+import Table from "../components/table/Table.js";
 import ModelLink from "../components/value-decorators/ModelLink.js";
 import OtaLink from "../components/value-decorators/OtaLink.js";
 import VendorLink from "../components/value-decorators/VendorLink.js";
@@ -18,7 +18,7 @@ import { OTA_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { Device, DeviceState } from "../types.js";
 import { getDeviceDetailsLink } from "../utils.js";
 
-type OtaGridData = {
+type OtaTableData = {
     id: string;
     device: Device;
     state: DeviceState;
@@ -31,17 +31,17 @@ export default function OtaPage() {
     const { t } = useTranslation("zigbee");
 
     const otaDevices = useMemo(() => {
-        const otaDevices: OtaGridData[] = [];
+        const filteredDevices: OtaTableData[] = [];
 
         for (const device of devices) {
             if (device.definition?.supports_ota && !device.disabled) {
                 const state = deviceStates[device.friendly_name] ?? ({} as DeviceState);
 
-                otaDevices.push({ id: device.friendly_name, device, state });
+                filteredDevices.push({ id: device.friendly_name, device, state });
             }
         }
 
-        return otaDevices;
+        return filteredDevices;
     }, [deviceStates, devices]);
 
     const checkAllOTA = useCallback(async () => {
@@ -50,8 +50,28 @@ export default function OtaPage() {
         }
     }, [sendMessage, otaDevices]);
 
+    const onCheckClick = useCallback(
+        async (ieee: string) => await sendMessage("bridge/request/device/ota_update/check", { id: ieee }),
+        [sendMessage],
+    );
+
+    const onUpdateClick = useCallback(
+        async (ieee: string) => await sendMessage("bridge/request/device/ota_update/update", { id: ieee }),
+        [sendMessage],
+    );
+
+    const onScheduleClick = useCallback(
+        async (ieee: string) => await sendMessage("bridge/request/device/ota_update/schedule", { id: ieee }),
+        [sendMessage],
+    );
+
+    const onUnscheduleClick = useCallback(
+        async (ieee: string) => await sendMessage("bridge/request/device/ota_update/unschedule", { id: ieee }),
+        [sendMessage],
+    );
+
     // biome-ignore lint/suspicious/noExplicitAny: tmp
-    const columns = useMemo<ColumnDef<OtaGridData, any>[]>(
+    const columns = useMemo<ColumnDef<OtaTableData, any>[]>(
         () => [
             {
                 header: t("friendly_name"),
@@ -133,12 +153,21 @@ export default function OtaPage() {
                     row: {
                         original: { device, state },
                     },
-                }) => <OtaControlGroup device={device} state={state} sendMessage={sendMessage} />,
+                }) => (
+                    <OtaControlGroup
+                        device={device}
+                        state={state}
+                        onCheckClick={onCheckClick}
+                        onUpdateClick={onUpdateClick}
+                        onScheduleClick={onScheduleClick}
+                        onUnscheduleClick={onUnscheduleClick}
+                    />
+                ),
                 enableSorting: false,
                 enableColumnFilter: false,
             },
         ],
-        [sendMessage, checkAllOTA, t],
+        [checkAllOTA, onCheckClick, onUpdateClick, onScheduleClick, onUnscheduleClick, t],
     );
 
     return <Table id="ota-devices" columns={columns} data={otaDevices} pageSizeStoreKey={OTA_TABLE_PAGE_SIZE_KEY} />;
