@@ -17,7 +17,7 @@ export function ScenePicker(props: ScenePickerProps): JSX.Element {
         <SelectField
             name="scene_picker"
             label={t("scene_name")}
-            value={value?.id}
+            value={value?.id ?? ""}
             onChange={(e) => onSceneSelected(Number.parseInt(e.target.value, 10))}
         >
             <option value="" disabled>
@@ -34,7 +34,7 @@ export function ScenePicker(props: ScenePickerProps): JSX.Element {
             name="scene_picker"
             label={t("scene_id")}
             type="number"
-            value={value?.id}
+            value={value?.id ?? ""}
             onChange={(e) => onSceneSelected(e.target.valueAsNumber)}
             min={0}
             max={255}

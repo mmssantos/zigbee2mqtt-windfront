@@ -80,17 +80,20 @@ export function AddScene(props: AddSceneProps): JSX.Element {
                     placeholder={`Scene ${sceneId}`}
                     onChange={(e) => setSceneName(e.target.value)}
                 />
-
-                <Composite
-                    feature={{ features: filteredFeatures } as CompositeFeature}
-                    className="row"
-                    type="composite"
-                    device={target as Device}
-                    deviceState={deviceState}
-                    onChange={onCompositeChange}
-                    featureWrapperClass={DashboardFeatureWrapper}
-                    minimal={true}
-                />
+                <div className="card card-border bg-base-100 my-2">
+                    <div className="card-body">
+                        <Composite
+                            feature={{ features: filteredFeatures } as CompositeFeature}
+                            className="row"
+                            type="composite"
+                            device={target as Device}
+                            deviceState={deviceState}
+                            onChange={onCompositeChange}
+                            featureWrapperClass={DashboardFeatureWrapper}
+                            minimal={true}
+                        />
+                    </div>
+                </div>
             </div>
             <Button disabled={!isValidSceneId(sceneId, scenes)} onClick={onStoreClick} className="btn btn-primary">
                 {t("store")}

@@ -1,5 +1,4 @@
-import merge from "lodash/merge.js";
-import { type ChangeEvent, useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useCallback, useMemo, useState } from "react";
 import type { Device, Endpoint } from "../../types.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
 import type { ClusterGroup } from "../pickers/index.js";
@@ -18,7 +17,7 @@ interface ReportingRowProps {
     onApply(rule: NiceReportingRule): void;
 }
 interface ReportingRowState {
-    stateRule: NiceReportingRule;
+    rule: NiceReportingRule;
 }
 
 const REQUIRED_RULE_FIELDS = ["maximum_report_interval", "minimum_report_interval", "reportable_change", "endpoint", "cluster", "attribute"];
@@ -28,67 +27,61 @@ const isValidRule = (rule: NiceReportingRule): boolean => {
 };
 
 export function ReportingRow(props: ReportingRowProps) {
-    const [state, setState] = useState<ReportingRowState>({
-        stateRule: {} as NiceReportingRule,
-    });
+    const { rule, device, onApply } = props;
+    const [state, setState] = useState<ReportingRowState>({ rule });
     const { t } = useTranslation(["zigbee", "common"]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: loop
-    useEffect(() => {
-        setState({ stateRule: merge({}, props.rule, state.stateRule) });
-    }, [props.rule]);
+    const setSourceEp = useCallback(
+        (sourceEp: Endpoint): void => {
+            state.rule.endpoint = sourceEp;
 
-    const setSourceEp = (sourceEp: Endpoint): void => {
-        const { stateRule } = state;
-        stateRule.endpoint = sourceEp;
+            setState({ rule: state.rule });
+        },
+        [state],
+    );
 
-        setState({ stateRule });
-    };
-    const setCluster = (cluster: string): void => {
-        const { stateRule } = state;
-        stateRule.cluster = cluster;
+    const setCluster = useCallback(
+        (cluster: string): void => {
+            state.rule.cluster = cluster;
 
-        setState({ stateRule });
-    };
-    const setAttribute = (attr: string): void => {
-        const { stateRule } = state;
-        stateRule.attribute = attr;
+            setState({ rule: state.rule });
+        },
+        [state],
+    );
 
-        setState({ stateRule });
-    };
-    const changeHandlerNumber = (event: ChangeEvent<HTMLInputElement>): void => {
-        const { stateRule } = state;
-        const { name, valueAsNumber } = event.target;
-        stateRule[name] = valueAsNumber;
+    const setAttribute = useCallback(
+        (attr: string): void => {
+            state.rule.attribute = attr;
 
-        setState({ stateRule });
-    };
+            setState({ rule: state.rule });
+        },
+        [state],
+    );
 
-    const applyRule = (): void => {
-        const { onApply } = props;
-        const { stateRule } = state;
-        onApply(stateRule);
-    };
+    const changeHandlerNumber = useCallback(
+        (event: ChangeEvent<HTMLInputElement>): void => {
+            const { name, valueAsNumber } = event.target;
+            state.rule[name] = valueAsNumber;
 
-    const disableRule = (): void => {
-        const { onApply } = props;
-        const { stateRule } = state;
+            setState({ rule: state.rule });
+        },
+        [state],
+    );
 
-        onApply({ ...stateRule, maximum_report_interval: 0xffff });
-    };
+    const disableRule = useCallback((): void => {
+        onApply({ ...state.rule, maximum_report_interval: 0xffff });
+    }, [state, onApply]);
 
-    const { rule, device } = props;
-    const { stateRule } = state;
     const sourceEndpoints = useMemo(() => getEndpoints(device), [device]);
     const clusters = useMemo((): ClusterGroup[] => {
         const possibleClusters = new Set<string>();
         const availableClusters = new Set<string>();
 
-        if (stateRule.cluster) {
-            availableClusters.add(stateRule.cluster);
+        if (state.rule.cluster) {
+            availableClusters.add(state.rule.cluster);
         }
 
-        const ep = device.endpoints[stateRule.endpoint];
+        const ep = device.endpoints[state.rule.endpoint];
 
         if (ep) {
             for (const outputCluster of ep.clusters.output) {
@@ -112,7 +105,7 @@ export function ReportingRow(props: ReportingRowProps) {
                 clusters: possibleClusters,
             },
         ];
-    }, [device.endpoints, stateRule.endpoint, stateRule.cluster]);
+    }, [device.endpoints, state.rule.endpoint, state.rule.cluster]);
 
     return (
         <tr>
@@ -121,7 +114,7 @@ export function ReportingRow(props: ReportingRowProps) {
                     label={t("endpoint")}
                     disabled={!rule.isNew}
                     values={sourceEndpoints}
-                    value={stateRule.endpoint}
+                    value={state.rule.endpoint}
                     onChange={setSourceEp}
                     required
                 />
@@ -129,9 +122,9 @@ export function ReportingRow(props: ReportingRowProps) {
             <td>
                 <ClusterSinglePicker
                     label={t("cluster")}
-                    disabled={!stateRule.endpoint}
+                    disabled={!state.rule.endpoint}
                     clusters={clusters}
-                    value={stateRule.cluster}
+                    value={state.rule.cluster}
                     onChange={setCluster}
                     required
                 />
@@ -139,9 +132,9 @@ export function ReportingRow(props: ReportingRowProps) {
             <td>
                 <AttributePicker
                     label={t("attribute")}
-                    disabled={!stateRule.cluster}
-                    value={stateRule.attribute}
-                    cluster={stateRule.cluster}
+                    disabled={!state.rule.cluster}
+                    value={state.rule.attribute}
+                    cluster={state.rule.cluster}
                     device={device}
                     onChange={setAttribute}
                     required
@@ -152,7 +145,7 @@ export function ReportingRow(props: ReportingRowProps) {
                     name="minimum_report_interval"
                     label={t("min_rep_interval")}
                     type="number"
-                    value={stateRule.minimum_report_interval}
+                    value={state.rule.minimum_report_interval}
                     onChange={changeHandlerNumber}
                     required
                 />
@@ -162,7 +155,7 @@ export function ReportingRow(props: ReportingRowProps) {
                     name="maximum_report_interval"
                     label={t("max_rep_interval")}
                     type="number"
-                    value={stateRule.maximum_report_interval}
+                    value={state.rule.maximum_report_interval}
                     onChange={changeHandlerNumber}
                     required
                 />
@@ -172,7 +165,7 @@ export function ReportingRow(props: ReportingRowProps) {
                     name="reportable_change"
                     label={t("min_rep_change")}
                     type="number"
-                    value={stateRule.reportable_change}
+                    value={state.rule.reportable_change}
                     onChange={changeHandlerNumber}
                     required
                 />
@@ -181,10 +174,15 @@ export function ReportingRow(props: ReportingRowProps) {
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">{t("actions")}</legend>
                     <div className="join">
-                        <Button<void> disabled={!isValidRule(stateRule)} className="btn btn-primary join-item" onClick={applyRule}>
+                        <Button<NiceReportingRule>
+                            className="btn btn-primary join-item"
+                            item={state.rule}
+                            onClick={onApply}
+                            disabled={!isValidRule(state.rule)}
+                        >
                             {t("common:apply")}
                         </Button>
-                        {!stateRule.isNew ? (
+                        {!state.rule.isNew ? (
                             <Button<void> prompt className="btn btn-error join-item" onClick={disableRule}>
                                 {t("common:disable")}
                             </Button>
