@@ -1,6 +1,7 @@
 import capitalize from "lodash/capitalize.js";
 import lowerCase from "lodash/lowerCase.js";
-import { type JSX, useCallback, useContext, useMemo } from "react";
+import snakeCase from "lodash/snakeCase.js";
+import { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
@@ -27,12 +28,12 @@ const MARKDOWN_LINK_REGEX = /\[(.*?)]\((.*?)\)/;
 
 export function DeviceInfo(props: DeviceInfoProps) {
     const { device } = props;
-    const { t } = useTranslation("zigbee");
+    const { t } = useTranslation(["zigbee", "availability"]);
     const deviceStates = useAppSelector((state) => state.deviceStates);
     const bridgeConfig = useAppSelector((state) => state.bridgeInfo.config);
     const availability = useAppSelector((state) => state.availability);
     const homeassistantEnabled = bridgeConfig.homeassistant.enabled;
-    const deviceState: DeviceState = deviceStates[device.friendly_name] ?? ({} as DeviceState);
+    const deviceState = useMemo(() => deviceStates[device.friendly_name] ?? ({} as DeviceState), [device.friendly_name, deviceStates]);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
     const renameDevice = useCallback(
@@ -72,103 +73,127 @@ export function DeviceInfo(props: DeviceInfoProps) {
     );
 
     const deviceAvailability = bridgeConfig.devices[device.ieee_address]?.availability;
-    const deviceDescription = useMemo(() => {
-        const result = MARKDOWN_LINK_REGEX.exec(device.definition?.description as string);
-        let content: JSX.Element;
+    const definitionDescription = useMemo(() => {
+        const result = device.definition?.description ? MARKDOWN_LINK_REGEX.exec(device.definition?.description) : undefined;
 
         if (result) {
             const [, title, link] = result;
 
-            content = (
+            return (
                 <Link target="_blank" rel="noopener noreferrer" to={link} className="link link-hover">
                     {title}
                 </Link>
             );
-        } else {
-            content = <span>{device.definition?.description}</span>;
         }
 
-        return <div className="">{content}</div>;
+        return <>{device.definition?.description}</>;
     }, [device.definition]);
 
     return (
-        <>
-            <div className="flex flex-col justify-content-center">
-                <DeviceImage device={device} deviceState={deviceState} disabled={device.disabled} />
-            </div>
-            <div className="flex flex-col">
-                <div className="">
-                    <strong>{device.friendly_name}</strong>
+        <div className="card lg:card-side bg-base-100 shadow-sm">
+            <figure style={{ overflow: "visible" }}>
+                <div>
+                    <DeviceImage device={device} deviceState={deviceState} disabled={device.disabled} className="self-start max-w-xs" />
+                </div>
+            </figure>
+            <div className="card-body">
+                <h2 className="card-title">
+                    {device.friendly_name} ({device.ieee_address})
                     <DeviceControlEditName
                         device={device}
                         renameDevice={renameDevice}
                         homeassistantEnabled={homeassistantEnabled}
                         style="btn-link btn-sm btn-square"
                     />
+                </h2>
+                <div className="flex flex-row flex-wrap gap-2">
+                    <span className={`badge ${device.supported ? " badge-success" : " badge-warning"}`}>
+                        <DisplayValue name="supported" value={device.supported} />
+                    </span>
+                    {!device.supported && (
+                        <span className="badge animate-bounce">
+                            <Link target="_blank" rel="noopener noreferrer" to={SUPPORT_NEW_DEVICES_URL} className="link link-hover">
+                                {t("how_to_add_support")}
+                            </Link>
+                        </span>
+                    )}
+                    <span className="badge opacity-70">
+                        <DisplayValue name="interview_state" value={`${t("interview_state")}: ${capitalize(lowerCase(device.interview_state))}`} />
+                    </span>
                 </div>
-                <div className="">
-                    <pre style={{ display: "inline" }}>{device.description || ""}</pre>
+                <div>
+                    <pre className="inline">{device.description || ""}</pre>
                     <DeviceControlUpdateDesc device={device} setDeviceDescription={setDeviceDescription} />
                 </div>
-                <div className="">
-                    <LastSeen config={bridgeConfig.advanced.last_seen} state={deviceState} />
+                <div className="stats stats-vertical lg:stats-horizontal shadow">
+                    <div className="stat">
+                        <div className="stat-title">{device.type}</div>
+                        <div className="stat-value">{toHex(device.network_address)}</div>
+                        <div className="stat-desc">
+                            {t("network_address_dec")}: {device.network_address}
+                        </div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title">{t("last_seen")}</div>
+                        <div className="stat-value">
+                            <LastSeen config={bridgeConfig.advanced.last_seen} state={deviceState} />
+                        </div>
+                        <div className="stat-desc">
+                            {t("availability:availability")}
+                            {": "}
+                            <Availability
+                                availability={availability[device.friendly_name] ?? { state: "offline" }}
+                                disabled={device.disabled}
+                                availabilityFeatureEnabled={bridgeConfig.availability.enabled}
+                                availabilityEnabledForDevice={deviceAvailability != null ? !!deviceAvailability : undefined}
+                            />
+                        </div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title">{t("power")}</div>
+                        <div className="stat-value">
+                            <PowerSource showLevel={true} device={device} deviceState={deviceState} />
+                        </div>
+                        <div className="stat-desc">{t(snakeCase(device.power_source) || "unknown")}</div>
+                    </div>
+                    {
+                        <div className="stat">
+                            <div className="stat-title">{t("firmware_id")}</div>
+                            <div className="stat-value">{device.software_build_id || t("unknown")}</div>
+                            <div className="stat-desc">{device.date_code || t("unknown")}</div>
+                        </div>
+                    }
                 </div>
-                <div className="">
-                    <Availability
-                        availability={availability[device.friendly_name] ?? { state: "offline" }}
-                        disabled={device.disabled}
-                        availabilityFeatureEnabled={bridgeConfig.availability.enabled}
-                        availabilityEnabledForDevice={deviceAvailability != null ? !!deviceAvailability : undefined}
+                <div className="stats stats-vertical lg:stats-horizontal shadow">
+                    <div className="stat">
+                        <div className="stat-title">{t("zigbee_model")}</div>
+                        <div className="stat-value">{device.model_id}</div>
+                        <div className="stat-desc">
+                            {device.manufacturer} ({definitionDescription})
+                        </div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title">{t("model")}</div>
+                        <div className="stat-value">
+                            <ModelLink device={device} />
+                        </div>
+                        <div className="stat-desc">
+                            <VendorLink device={device} />
+                        </div>
+                    </div>
+                </div>
+                <div className="card-actions justify-end mt-2">
+                    <DeviceControlGroup
+                        device={device}
+                        state={deviceState}
+                        homeassistantEnabled={homeassistantEnabled}
+                        configureDevice={configureDevice}
+                        renameDevice={renameDevice}
+                        removeDevice={removeDevice}
+                        interviewDevice={interviewDevice}
                     />
                 </div>
-                <div className="">{device.type}</div>
-                <div className="">{device.model_id}</div>
-                <div className="">{device.manufacturer}</div>
-                <div className="">{deviceDescription}</div>
-                <div className="">
-                    <p className={`mb-0 font-bold${device.supported ? " text-success" : " text-error"}`}>
-                        <DisplayValue name="supported" value={device.supported} />
-                        {!device.supported && (
-                            <>
-                                {" "}
-                                <Link target="_blank" rel="noopener noreferrer" to={SUPPORT_NEW_DEVICES_URL} className="link link-hover">
-                                    ({t("how_to_add_support")})
-                                </Link>
-                            </>
-                        )}
-                    </p>
-                </div>
-                <div className="">
-                    <abbr title={t("network_address_hex")}>{toHex(device.network_address)}</abbr>
-                    {" / "}
-                    <abbr title={t("network_address_dec")}>{device.network_address}</abbr>
-                </div>
-                <div className="">{device.ieee_address}</div>
-                <div className="">{device.network_address}</div>
-                <div className="">{device.date_code}</div>
-                <div className="">{device.software_build_id}</div>
-                <div className="">
-                    <VendorLink device={device} />
-                </div>
-                <div className="">
-                    <ModelLink device={device} />
-                </div>
-                <div className="">
-                    <PowerSource showLevel={true} device={device} deviceState={deviceState} />
-                </div>
-                <div className="">
-                    <DisplayValue name="interview_state" value={capitalize(lowerCase(device.interview_state))} />
-                </div>
             </div>
-            <DeviceControlGroup
-                device={device}
-                state={deviceState}
-                homeassistantEnabled={homeassistantEnabled}
-                configureDevice={configureDevice}
-                renameDevice={renameDevice}
-                removeDevice={removeDevice}
-                interviewDevice={interviewDevice}
-            />
-        </>
+        </div>
     );
 }

@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { Device, DeviceState } from "../../types.js";
+import { type Device, type DeviceState, InterviewState } from "../../types.js";
 import Button from "../button/Button.js";
 
 import NiceModal from "@ebay/nice-modal-react";
@@ -20,8 +20,12 @@ interface DeviceControlGroupProps {
 }
 
 export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.Element {
-    const { device, renameDevice, configureDevice, interviewDevice, removeDevice } = props;
+    const { device, state, renameDevice, configureDevice, interviewDevice, removeDevice } = props;
     const { t } = useTranslation("zigbee");
+    const disableInterview =
+        device.interview_state === InterviewState.InProgress ||
+        device.interview_state === InterviewState.Pending ||
+        (state && state.update?.state === "updating");
 
     return (
         <div className="join">
@@ -37,6 +41,7 @@ export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.
                 item={device.ieee_address}
                 title={t("reconfigure")}
                 prompt
+                disabled={disableInterview}
             >
                 <FontAwesomeIcon icon={faRetweet} />
             </Button>
@@ -46,6 +51,7 @@ export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.
                 item={device.ieee_address}
                 title={t("interview")}
                 prompt
+                disabled={disableInterview}
             >
                 <FontAwesomeIcon icon={faInfo} />
             </Button>

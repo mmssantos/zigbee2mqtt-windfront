@@ -231,10 +231,10 @@ export default function DevicesPage(): JSX.Element {
             ieee_address: true,
             model: true,
             last_seen: bridgeConfig.advanced.last_seen !== "disable",
-            availability: bridgeConfig.availability.enabled || devices.some((device) => device.availabilityEnabledForDevice),
+            availability: bridgeConfig.availability.enabled || data.some((device) => device.availabilityEnabledForDevice),
             controls: true,
         }),
-        [bridgeConfig.advanced.last_seen, bridgeConfig.availability.enabled, devices],
+        [bridgeConfig.advanced.last_seen, bridgeConfig.availability.enabled, data],
     );
 
     return <Table id="all-devices" columns={columns} data={data} pageSizeStoreKey={DEVICE_TABLE_PAGE_SIZE_KEY} visibleColumns={visibleColumns} />;

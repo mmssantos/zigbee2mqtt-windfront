@@ -2685,7 +2685,6 @@
         "friendly_name": "Friendly name",
         "ieee_address": "IEEE Address",
         "interview": "Interview",
-        "interview_completed": "Interview completed",
         "interview_failed": "Interview failed",
         "interviewing": "Interviewing",
         "interview_state": "Interview state",
@@ -2712,8 +2711,8 @@
         "unsupported": "Unsupported",
         "updating_firmware": "Updating firmware",
         "update_Home_assistant_entity_id": "Update Home Assistant entity ID",
-        "zigbee_manufacturer": "Zigbee Manufacturer",
-        "zigbee_model": "Zigbee Model",
+        "zigbee_manufacturer": "ZigBee Manufacturer",
+        "zigbee_model": "ZigBee Model",
         "device": "Device",
         "channel": "Channel",
         "possible": "Possible",
@@ -2729,7 +2728,8 @@
         "input_clusters": "Input clusters",
         "output_clusters": "Output clusters",
         "custom_clusters": "Custom clusters",
-        "other_zcl_clusters": "Other ZCL clusters"
+        "other_zcl_clusters": "Other ZCL clusters",
+        "how_to_add_support": "How to add support?"
     },
     "scene": {
         "manage_scenes_header": "Manage scenes",

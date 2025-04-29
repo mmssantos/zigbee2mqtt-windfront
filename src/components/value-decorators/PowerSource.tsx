@@ -105,12 +105,8 @@ export default function PowerSource(props: PowerSourceProps) {
 
             return (
                 <>
-                    {showLevel ? (
-                        <span className="pe-2">
-                            {t("battery")} {batteryFormatted}
-                        </span>
-                    ) : null}
                     <FontAwesomeIcon icon={batteryIcon} fade={fade} title={title} className={fade ? "text-error" : ""} {...rest} />
+                    {showLevel && <span className="ps-2">{batteryFormatted}</span>}
                 </>
             );
         }

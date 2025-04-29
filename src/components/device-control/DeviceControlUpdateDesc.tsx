@@ -19,7 +19,7 @@ export const DeviceControlUpdateDesc = (props: DeviceControlUpdateDescProps): JS
 
     return (
         <Button<void>
-            className="btn btn-link btn-sm btn-square"
+            className={`btn btn-link btn-sm${device.description ? " btn-square" : ""}`}
             onClick={() =>
                 NiceModal.show(UpdateDeviceDescModal, {
                     device,
@@ -28,7 +28,7 @@ export const DeviceControlUpdateDesc = (props: DeviceControlUpdateDescProps): JS
             }
             title={t("edit_description")}
         >
-            <FontAwesomeIcon icon={faEdit} />
+            {device.description ? <FontAwesomeIcon icon={faEdit} /> : t("edit_description")}
         </Button>
     );
 };
