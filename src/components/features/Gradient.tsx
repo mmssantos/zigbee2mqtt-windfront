@@ -27,7 +27,7 @@ export function Gradient(props: GradientProps) {
     const {
         minimal,
         onChange,
-        feature: { endpoint, length_min, length_max },
+        feature: { length_min, length_max },
         deviceState,
     } = props;
     const { t } = useTranslation(["gradient", "common"]);
@@ -93,7 +93,7 @@ export function Gradient(props: GradientProps) {
             <div>
                 <Button
                     className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`}
-                    onClick={() => onChange(endpoint, { gradient: colors.map(rgbToHex) })}
+                    onClick={() => onChange({ gradient: colors.map(rgbToHex) })}
                 >
                     {t("common:apply")}
                 </Button>

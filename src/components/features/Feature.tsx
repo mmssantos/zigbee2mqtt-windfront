@@ -1,6 +1,6 @@
 import type React from "react";
 import type { FunctionComponent, JSX, PropsWithChildren } from "react";
-import type { CompositeFeature, Device, DeviceState, Endpoint, GenericFeature } from "../../types.js";
+import type { CompositeFeature, Device, DeviceState, GenericFeature } from "../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import Binary from "./Binary.js";
 import Climate from "./Climate.js";
@@ -24,8 +24,8 @@ interface FeatureProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onCha
     deviceState: DeviceState;
     device: Device;
     steps?: ValueWithLabelOrPrimitive[];
-    onChange(endpoint: Endpoint, value: Record<string, unknown>): void;
-    onRead(endpoint: Endpoint, value: Record<string, unknown>): void;
+    onChange(value: Record<string, unknown>): void;
+    onRead(value: Record<string, unknown>): void;
     featureWrapperClass: FunctionComponent<PropsWithChildren<FeatureWrapperProps>>;
     minimal?: boolean;
 }

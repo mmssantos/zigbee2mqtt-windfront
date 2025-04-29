@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { type CompositeFeature, FeatureAccessMode, type GenericFeature, type ListFeature } from "../../types.js";
 import Button from "../button/Button.js";
@@ -17,65 +17,59 @@ type Props = BaseFeatureProps<ListFeature> & {
     parentFeatures: (CompositeFeature | GenericFeature)[];
 };
 
+const isListRoot = (parentFeatures: (CompositeFeature | GenericFeature)[]): boolean => {
+    return (
+        parentFeatures !== undefined &&
+        (parentFeatures.length === 1 ||
+            // When parent is e.g. climate
+            (parentFeatures.length === 2 && ![null, undefined, "composite", "list"].includes(parentFeatures[1].type)))
+    );
+};
+
 export default function List(props: Props) {
+    const { feature, minimal, parentFeatures, onChange, deviceState } = props;
     const [state, setState] = useState<State>({ value: [] });
     const { t } = useTranslation(["list", "common"]);
 
     useEffect(() => {
         // biome-ignore lint/suspicious/noExplicitAny: tmp
-        setState({ value: props.feature.property ? ((props.deviceState[props.feature.property] as any[]) ?? []) : [] });
-    }, [props.feature.property, props.deviceState]);
+        setState({ value: feature.property ? ((deviceState[feature.property] as any[]) ?? []) : [] });
+    }, [feature.property, deviceState]);
 
-    // biome-ignore lint/suspicious/noExplicitAny: tmp
-    const onChange = (value: any[]): void => {
-        const { endpoint, property } = props.feature;
+    const onEditorChange = useCallback(
+        // biome-ignore lint/suspicious/noExplicitAny: tmp
+        (value: any[]): void => {
+            setState({ value });
 
-        setState({ value });
-        if (!isListRoot()) {
-            props.onChange(endpoint, property ? { [property]: value } : value);
-        }
-    };
+            if (!isListRoot(parentFeatures)) {
+                onChange(feature.property ? { [feature.property]: value } : value);
+            }
+        },
+        [feature.property, onChange, parentFeatures],
+    );
 
-    const onApply = () => {
-        const { value } = state;
-        const { endpoint, property } = props.feature;
-        props.onChange(endpoint, property ? { [property]: value } : value);
-    };
+    const onApply = useCallback(() => {
+        onChange(feature.property ? { [feature.property]: state.value } : state.value);
+    }, [feature.property, onChange, state.value]);
 
-    const isListRoot = (): boolean => {
-        const { parentFeatures } = props;
-        return (
-            parentFeatures !== undefined &&
-            (parentFeatures.length === 1 ||
-                // When parent is e.g. climate
-                (parentFeatures.length === 2 && ![null, undefined, "composite", "list"].includes(parentFeatures[1].type)))
-        );
-    };
-
-    const { feature, minimal, parentFeatures } = props;
     const { access = FeatureAccessMode.SET, item_type: itemType } = feature;
 
     if (access & FeatureAccessMode.SET) {
         // TODO ???
         if (itemType === "number") {
-            return <RangeListEditor onChange={onChange} value={state.value} minimal={minimal} />;
+            return <RangeListEditor onChange={onEditorChange} value={state.value} minimal={minimal} />;
         }
 
-        const result = [
-            <ListEditor key="1" feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onChange} value={state.value} />,
-        ];
-
-        if (isListRoot()) {
-            result.push(
-                <div key="2">
+        return (
+            <>
+                <ListEditor feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onEditorChange} value={state.value} />
+                {isListRoot(parentFeatures) && (
                     <Button className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`} onClick={onApply}>
                         {t("common:apply")}
                     </Button>
-                </div>,
-            );
-        }
-
-        return result;
+                )}
+            </>
+        );
     }
 
     if (access & FeatureAccessMode.STATE) {

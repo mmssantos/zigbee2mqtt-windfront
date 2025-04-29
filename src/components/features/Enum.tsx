@@ -10,7 +10,7 @@ const VERY_BIG_ENUM_SIZE = 4;
 export default function Enum(props: EnumProps) {
     const {
         onChange,
-        feature: { access = FeatureAccessMode.SET, values, endpoint, property },
+        feature: { access = FeatureAccessMode.SET, values, property },
         deviceState,
         minimal,
     } = props;
@@ -20,7 +20,7 @@ export default function Enum(props: EnumProps) {
     if (access & FeatureAccessMode.SET) {
         return (
             <EnumEditor
-                onChange={(value) => onChange(endpoint, { [property]: value })}
+                onChange={(value) => onChange({ [property]: value })}
                 values={values as unknown as ValueWithLabelOrPrimitive[]}
                 value={deviceState[property] as ValueWithLabelOrPrimitive}
                 minimal={minimal || thisIsVeryBigEnumeration}

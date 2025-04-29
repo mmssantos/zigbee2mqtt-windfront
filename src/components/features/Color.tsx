@@ -12,7 +12,5 @@ export default function Color(props: ColorProps) {
         value[innerFeature.name] = (deviceState[feature.property] as Record<string, Record<string, unknown>>)?.[innerFeature.property] ?? 0;
     }
 
-    return (
-        <ColorEditor onChange={(color) => onChange(feature.endpoint, { color })} value={value as AnyColor} format={feature.name} minimal={minimal} />
-    );
+    return <ColorEditor onChange={(color) => onChange({ color })} value={value as AnyColor} format={feature.name} minimal={minimal} />;
 }

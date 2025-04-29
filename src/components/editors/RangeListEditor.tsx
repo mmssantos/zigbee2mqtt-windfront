@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../button/Button.js";
 import RangeEditor from "./RangeEditor.js";
 
@@ -16,55 +16,61 @@ export default function RangeListEditor(props: RangeListProps) {
         setCurrentListValue(listValue);
     }, [listValue]);
 
-    const replaceList = (newListValue: number[]) => {
-        setCurrentListValue(newListValue);
-        onChange(newListValue);
-    };
+    const replaceList = useCallback(
+        (newListValue: number[]) => {
+            setCurrentListValue(newListValue);
+            onChange(newListValue);
+        },
+        [onChange],
+    );
 
-    const onItemChange = (itemValue: number, itemIndex: number) => {
-        const newListValue = [...currentListValue];
-        newListValue[itemIndex] = itemValue;
-        replaceList(newListValue);
-    };
+    const onItemChange = useCallback(
+        (itemValue: number, itemIndex: number) => {
+            const newListValue = Array.from(currentListValue);
+            newListValue[itemIndex] = itemValue;
+            replaceList(newListValue);
+        },
+        [currentListValue, replaceList],
+    );
 
-    const handleRemoveClick = (itemIndex: number) => () => {
-        const newListValue = [...currentListValue];
-        newListValue.splice(itemIndex, 1);
-        replaceList(newListValue);
-    };
+    const handleRemoveClick = useCallback(
+        (itemIndex: number) => () => {
+            const newListValue = Array.from(currentListValue);
+            newListValue.splice(itemIndex, 1);
+            replaceList(newListValue);
+        },
+        [currentListValue, replaceList],
+    );
 
-    const handleAddClick = () => replaceList([...currentListValue, 0]);
+    const handleAddClick = useCallback(() => replaceList([...currentListValue, 0]), [currentListValue, replaceList]);
 
-    if (currentListValue.length === 0) {
-        return (
-            <div className="mt-3 mb-3 row">
-                <Button<void> className="btn btn-success col-1 me-2" onClick={handleAddClick}>
-                    +
-                </Button>
-            </div>
-        );
-    }
-    return (
+    return currentListValue.length === 0 ? (
+        <div className="mt-3 mb-3 row">
+            <Button<void> className="btn btn-success col-1 me-2" onClick={handleAddClick}>
+                +
+            </Button>
+        </div>
+    ) : (
         <div>
-            {currentListValue.map((itemValue, itemIndex) => {
-                const showAddButton = currentListValue.length - 1 === itemIndex;
-                return (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: no fixed value type
-                    <div className="mt-3 mb-3 row" key={itemIndex}>
-                        <div className="col-10">
-                            <RangeEditor onChange={(newValue) => onItemChange(newValue, itemIndex)} value={itemValue} minimal={minimal} {...rest} />
-                        </div>
-                        <div className="join col-2">
-                            <Button<void> className="btn btn-error join-item me-2" onClick={handleRemoveClick(itemIndex)}>
-                                -
-                            </Button>
-                            <Button<void> className={`btn btn-success join-item ${showAddButton ? "" : "invisible"}`} onClick={handleAddClick}>
-                                +
-                            </Button>
-                        </div>
+            {currentListValue.map((itemValue, itemIndex) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: no fixed value type
+                <div className="mt-3 mb-3 row" key={itemIndex}>
+                    <div className="col-10">
+                        <RangeEditor onChange={(newValue) => onItemChange(newValue, itemIndex)} value={itemValue} minimal={minimal} {...rest} />
                     </div>
-                );
-            })}
+                    <div className="join col-2">
+                        <Button<void> className="btn btn-error join-item me-2" onClick={handleRemoveClick(itemIndex)}>
+                            -
+                        </Button>
+                        <Button<void>
+                            className={`btn btn-success join-item ${currentListValue.length - 1 === itemIndex ? "" : "invisible"}`}
+                            onClick={handleAddClick}
+                        >
+                            +
+                        </Button>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }

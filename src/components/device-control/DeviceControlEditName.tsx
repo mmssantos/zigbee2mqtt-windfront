@@ -17,7 +17,7 @@ interface DeviceControlEditNameProps {
 
 export const DeviceControlEditName = (props: DeviceControlEditNameProps): JSX.Element => {
     const { homeassistantEnabled, device, renameDevice, style } = props;
-    const { t } = useTranslation(["zigbee", "common"]);
+    const { t } = useTranslation("zigbee");
 
     return (
         <Button<undefined>

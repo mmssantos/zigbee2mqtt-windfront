@@ -11,16 +11,7 @@ interface NumericProps extends BaseFeatureProps<NumericFeature> {
 
 export default function Numeric(props: NumericProps) {
     const {
-        feature: {
-            presets,
-            access = FeatureAccessMode.SET,
-            endpoint,
-            property,
-            unit,
-            value_max: valueMax,
-            value_min: valueMin,
-            value_step: valueStep,
-        },
+        feature: { presets, access = FeatureAccessMode.SET, property, unit, value_max: valueMax, value_min: valueMin, value_step: valueStep },
         deviceState,
         steps,
         onChange,
@@ -30,7 +21,7 @@ export default function Numeric(props: NumericProps) {
     if (access & FeatureAccessMode.SET) {
         return (
             <RangeEditor
-                onChange={(value) => onChange(endpoint, { [property]: value })}
+                onChange={(value) => onChange({ [property]: value })}
                 value={(deviceState[property] ?? "") as number}
                 min={valueMin}
                 max={valueMax}

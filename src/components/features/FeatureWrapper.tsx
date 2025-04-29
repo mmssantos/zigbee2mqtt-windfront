@@ -2,7 +2,7 @@ import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PropsWithChildren } from "react";
 import { useTranslation } from "react-i18next";
-import { type CompositeFeature, type DeviceState, type Endpoint, FeatureAccessMode, type GenericFeature } from "../../types.js";
+import { type CompositeFeature, type DeviceState, FeatureAccessMode, type GenericFeature } from "../../types.js";
 import Button from "../button/Button.js";
 import { isColorFeature } from "../device-page/index.js";
 
@@ -10,7 +10,7 @@ export type FeatureWrapperProps = {
     feature: CompositeFeature | GenericFeature;
     parentFeatures: (CompositeFeature | GenericFeature)[];
     deviceState?: DeviceState;
-    onRead(endpoint: Endpoint, property: Record<string, unknown>): void;
+    onRead(property: Record<string, unknown>): void;
 };
 export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperProps>) {
     const { t } = useTranslation(["featureDescriptions"]);
@@ -35,7 +35,7 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
                         <Button<CompositeFeature | GenericFeature>
                             item={feature}
                             onClick={(item) => {
-                                onRead(feature.endpoint, { [item.property as string]: "" });
+                                onRead({ [item.property as string]: "" });
                             }}
                             className="btn btn-sm btn-primary"
                         >

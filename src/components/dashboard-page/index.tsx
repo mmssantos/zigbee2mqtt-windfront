@@ -32,7 +32,7 @@ const GENERIC_RENDERER_IGNORED_NAMES = [
 const WHITELIST_FEATURE_NAMES = ["state", "brightness", "color_temp", "mode", "sound", "occupancy", "tamper", "alarm", "action", "contact"];
 const WHITELIST_FEATURE_TYPES = ["light"];
 
-export const onlyValidFeaturesForDashboard = (
+export const getDashboardFeatures = (
     feature: GenericFeature | CompositeFeature,
     deviceState: DeviceState = {} as DeviceState,
 ): GenericFeature | CompositeFeature | false => {
@@ -45,7 +45,7 @@ export const onlyValidFeaturesForDashboard = (
         const validFeatures: GenericFeature[] = [];
 
         for (const subFeature of feature.features) {
-            const validFeature = onlyValidFeaturesForDashboard(subFeature, state);
+            const validFeature = getDashboardFeatures(subFeature, state);
 
             if (validFeature) {
                 validFeatures.push(validFeature);
@@ -69,7 +69,7 @@ export const onlyValidFeaturesForDashboard = (
         return filteredOutFeature;
     }
 
-    const stateProperty = deviceState[property];
+    const stateProperty = property ? deviceState[property] : null;
 
     if (access && !(access & FeatureAccessMode.STATE && stateProperty != null && stateProperty !== "")) {
         return false;

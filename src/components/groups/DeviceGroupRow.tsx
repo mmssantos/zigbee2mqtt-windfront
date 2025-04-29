@@ -6,7 +6,7 @@ import type { CompositeFeature, Endpoint, GenericFeature, Group } from "../../ty
 import Button from "../button/Button.js";
 import DashboardDevice from "../dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
-import { onlyValidFeaturesForScenes } from "../device-page/index.js";
+import { getScenesFeatures } from "../device-page/index.js";
 
 interface DeviceGroupRowProps {
     device: RootState["devices"][number];
@@ -26,7 +26,7 @@ export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
         const features: (GenericFeature | CompositeFeature)[] = [];
 
         for (const feature of device.definition?.exposes ?? []) {
-            const validFeature = onlyValidFeaturesForScenes(feature, deviceState);
+            const validFeature = getScenesFeatures(feature, deviceState);
 
             if (validFeature) {
                 features.push(validFeature);
@@ -42,8 +42,8 @@ export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
             device={device}
             endpoint={endpoint}
             deviceState={deviceState}
-            onChange={async (_endpoint, value) => await setDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
-            onRead={async (_endpoint, value) => await getDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
+            onChange={async (value) => await setDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
+            onRead={async (value) => await getDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
             featureWrapperClass={DashboardFeatureWrapper}
             lastSeenConfig={lastSeenConfig}
             controls={

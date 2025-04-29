@@ -5,7 +5,7 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import type { RootState } from "../../store.js";
 import type { Device } from "../../types.js";
 import Button from "../button/Button.js";
-import { getZ2mDeviceImage } from "../device-image/index.js";
+import { getZ2MDeviceImage } from "../device-image/index.js";
 
 type LocaliserState = "none" | "start" | "inprogress" | "done";
 
@@ -31,19 +31,6 @@ async function downloadImage(imageSrc: string): Promise<string> {
     return Promise.reject(image.status);
 }
 
-async function asyncSome<X>(arr: Iterable<X>, predicate: (x: X) => Promise<boolean>): Promise<boolean> {
-    for (const e of arr) {
-        try {
-            if (await predicate(e)) {
-                return true;
-            }
-        } catch {
-            /* empty */
-        }
-    }
-    return false;
-}
-
 export function ImageLocaliser(props: Props): JSX.Element {
     const [currentState, setCurrentState] = useState<LocaliserState>("none");
     const { devices } = props;
@@ -57,21 +44,15 @@ export function ImageLocaliser(props: Props): JSX.Element {
                 return { ...curr, [device.ieee_address]: "init" };
             });
 
-            const success = await asyncSome([getZ2mDeviceImage], async (generator) => {
-                const imageUrl = generator(device);
-                const imageContent = await downloadImage(imageUrl);
+            const imageUrl = getZ2MDeviceImage(device);
+            const imageContent = await downloadImage(imageUrl);
 
-                await sendMessage("bridge/request/device/options", { id: device.ieee_address, options: { icon: imageContent } });
-                setLocalisationStatus((curr) => {
-                    return { ...curr, [device.ieee_address]: "done" };
-                });
-
-                return true;
+            await sendMessage("bridge/request/device/options", { id: device.ieee_address, options: { icon: imageContent } });
+            setLocalisationStatus((curr) => {
+                return { ...curr, [device.ieee_address]: "done" };
             });
 
-            if (!success) {
-                throw new Error("Failed to localise image");
-            }
+            return true;
         },
         [sendMessage],
     );

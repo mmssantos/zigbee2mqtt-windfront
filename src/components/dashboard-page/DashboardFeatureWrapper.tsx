@@ -51,7 +51,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import camelCase from "lodash/camelCase.js";
 import startCase from "lodash/startCase.js";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { FeatureWrapperProps } from "../features/FeatureWrapper.js";
 
@@ -202,7 +202,10 @@ const getGenericFeatureIcon = (name: string, value: unknown, unit?: unknown): [I
 
 export default function DashboardFeatureWrapper(props: PropsWithChildren<FeatureWrapperProps>) {
     const { children, feature, deviceState = {} } = props;
-    const fi = getGenericFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined);
+    const fi = useMemo(
+        () => getGenericFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined),
+        [feature, deviceState],
+    );
     const { t } = useTranslation(["featureNames"]);
     const featureName = feature.name === "state" ? feature.property : feature.name;
     const fallbackFeatureName = startCase(camelCase(featureName));

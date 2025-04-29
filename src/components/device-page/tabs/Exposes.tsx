@@ -26,14 +26,14 @@ export function Exposes(props: ExposesProps) {
                 feature={{ features: device.definition.exposes, type: "composite" } as CompositeFeature}
                 device={device}
                 deviceState={deviceState}
-                onChange={async (_endpoint, value) => {
+                onChange={async (value) => {
                     await sendMessage<"{friendlyNameOrId}/set">(
                         // @ts-expect-error templated API endpoint
                         `${device.ieee_address}/set`,
                         value,
                     );
                 }}
-                onRead={async (_endpoint, value) => {
+                onRead={async (value) => {
                     await sendMessage<"{friendlyNameOrId}/get">(
                         // @ts-expect-error templated API endpoint
                         `${device.ieee_address}/get`,

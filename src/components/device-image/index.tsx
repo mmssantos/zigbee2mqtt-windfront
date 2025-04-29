@@ -2,11 +2,10 @@ import genericDevice from "../../images/generic-zigbee-device.png";
 import type { Device } from "../../types.js";
 import { sanitizeZ2MDeviceName } from "../../utils.js";
 
-type ImageGeneratorFn = (device: Device) => string | undefined;
-const z2mBasePath = "https://www.zigbee2mqtt.io/images/devices/";
+const DEVICE_IMAGE_BASE_PATH = "https://www.zigbee2mqtt.io/images/devices/";
 
-export const getZ2mDeviceImage = (device: Device): string => `${z2mBasePath}${sanitizeZ2MDeviceName(device?.definition?.model)}.png`;
-const getConverterDeviceImage = (device: Device): string | undefined => device.definition?.icon;
+export const getZ2MDeviceImage = (device: Device): string => {
+    const sanitizedName = sanitizeZ2MDeviceName(device?.definition?.model);
 
-/* prettier-ignore */
-export const AVAILABLE_GENERATORS: ImageGeneratorFn[] = [getConverterDeviceImage, getZ2mDeviceImage, () => genericDevice];
+    return sanitizedName === "NA" ? genericDevice : `${DEVICE_IMAGE_BASE_PATH}${sanitizedName}.png`;
+};

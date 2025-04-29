@@ -95,7 +95,7 @@ export function padTo2Digits(num: number): string {
     return num.toString().padStart(2, "0");
 }
 
-export const sanitizeZ2MDeviceName = (deviceName?: string): string => (deviceName ? deviceName.replace(/:|\s|\//g, "-") : "NA");
+export const sanitizeZ2MDeviceName = (deviceName?: string): string | "NA" => (deviceName ? deviceName.replace(/:|\s|\//g, "-") : "NA");
 
 export const getDeviceDisplayName = (device: Device): string => {
     const model = device.definition?.model ? `(${device.definition?.model})` : "";

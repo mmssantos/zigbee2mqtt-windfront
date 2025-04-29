@@ -47,7 +47,7 @@ export function getScenes(target: Group | Device): Scene[] {
 
 const WHITELIST_FEATURE_NAMES = ["state", "color_temp", "color", "transition", "brightness"];
 
-export function onlyValidFeaturesForScenes(
+export function getScenesFeatures(
     feature: GenericFeature | CompositeFeature,
     deviceState: DeviceState = {} as DeviceState,
 ): GenericFeature | CompositeFeature | undefined {
@@ -61,7 +61,7 @@ export function onlyValidFeaturesForScenes(
         const validFeatures: GenericFeature[] = [];
 
         for (const subFeature of feature.features) {
-            const validFeature = onlyValidFeaturesForScenes(subFeature, state);
+            const validFeature = getScenesFeatures(subFeature, state);
 
             if (validFeature) {
                 validFeatures.push(validFeature);

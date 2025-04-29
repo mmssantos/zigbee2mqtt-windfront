@@ -15,7 +15,7 @@ interface DeviceControlUpdateDescProps {
 
 export const DeviceControlUpdateDesc = (props: DeviceControlUpdateDescProps): JSX.Element => {
     const { device, setDeviceDescription } = props;
-    const { t } = useTranslation(["zigbee"]);
+    const { t } = useTranslation("zigbee");
 
     return (
         <Button<void>

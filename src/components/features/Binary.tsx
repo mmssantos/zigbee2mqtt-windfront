@@ -8,7 +8,7 @@ type BinaryProps = BaseFeatureProps<BinaryFeature>;
 
 export default function Binary(props: BinaryProps) {
     const {
-        feature: { access = FeatureAccessMode.SET, endpoint, name, property, value_off: valueOff, value_on: valueOn },
+        feature: { access = FeatureAccessMode.SET, name, property, value_off: valueOff, value_on: valueOn },
         deviceState,
         onChange,
         minimal,
@@ -17,7 +17,7 @@ export default function Binary(props: BinaryProps) {
     if (access & FeatureAccessMode.SET) {
         return (
             <Toggle
-                onChange={(value) => onChange(endpoint, { [property]: value })}
+                onChange={(value) => onChange({ [property]: value })}
                 value={deviceState[property]}
                 valueOn={valueOn}
                 valueOff={valueOff}

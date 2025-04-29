@@ -40,7 +40,9 @@
         "enter_auth_token": "Enter auth token",
         "token": "Token",
         "documentation": "Documentation",
-        "optional": "Optional"
+        "optional": "Optional",
+        "init": "Init",
+        "undefined": "Undefined"
     },
     "devicePage": {
         "about": "About",

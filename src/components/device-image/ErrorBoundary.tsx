@@ -1,10 +1,12 @@
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { JSX } from "react";
 
-// biome-ignore lint/suspicious/noExplicitAny: tmp
-export function ErrorBoundary({ error, children }: any) {
-    if (error) {
-        return <FontAwesomeIcon icon={faExclamationTriangle} size="3x" className="text-error" title="Missing image" />;
-    }
-    return children;
+type ErrorBoundaryProps = {
+    error?: unknown;
+    children: JSX.Element | JSX.Element[];
+};
+
+export function ErrorBoundary({ error, children }: ErrorBoundaryProps) {
+    return error ? <FontAwesomeIcon icon={faExclamationTriangle} size="3x" className="text-error" title="Missing image" /> : children;
 }

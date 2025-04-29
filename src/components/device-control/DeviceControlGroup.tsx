@@ -21,7 +21,7 @@ interface DeviceControlGroupProps {
 
 export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.Element {
     const { device, renameDevice, configureDevice, interviewDevice, removeDevice } = props;
-    const { t } = useTranslation(["zigbee", "common"]);
+    const { t } = useTranslation("zigbee");
 
     return (
         <div className="join">

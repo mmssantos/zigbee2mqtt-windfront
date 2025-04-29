@@ -1,30 +1,32 @@
 import { useImage } from "react-image";
+import genericDevice from "../../images/generic-zigbee-device.png";
 import type { Device } from "../../types.js";
-import { AVAILABLE_GENERATORS } from "./index.js";
+import { getZ2MDeviceImage } from "./index.js";
 
-type LazyImageProps =
-    | {
-          type: "svg";
-          device: Device;
-          width?: number;
-          height?: number;
-      }
-    | {
-          type: "img";
-          device: Device;
-          className?: string;
-      };
+type LazyImageProps = {
+    device: Device;
+    className?: string;
+};
 
 export function LazyImage(props: Readonly<LazyImageProps>) {
-    const { device, type, ...rest } = props;
+    const { device, ...rest } = props;
+    const fromDefinition = device.definition?.icon;
+    const fromZ2MDocs = getZ2MDeviceImage(device);
+    const srcList: string[] = [];
 
-    const { src } = useImage({
-        srcList: AVAILABLE_GENERATORS.map((fn) => fn(device)).filter(Boolean) as string[],
-    });
-
-    if (type === "svg") {
-        return <image crossOrigin={"anonymous"} {...rest} href={src} />;
+    if (fromDefinition) {
+        srcList.push(fromDefinition);
     }
+
+    if (fromZ2MDocs) {
+        srcList.push(fromZ2MDocs);
+    }
+
+    if (fromZ2MDocs !== genericDevice) {
+        srcList.push(genericDevice);
+    }
+
+    const { src } = useImage({ srcList });
 
     // biome-ignore lint/a11y/useAltText: bad detection
     return <img alt={device.ieee_address} crossOrigin={"anonymous"} src={src} {...rest} />;
