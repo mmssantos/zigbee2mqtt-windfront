@@ -1,5 +1,4 @@
-import NiceModal from "@ebay/nice-modal-react";
-import { faDownLong, faMagnifyingGlass, faQuestion, faRoute, faSync } from "@fortawesome/free-solid-svg-icons";
+import { faDownLong, faMagnifyingGlass, faQuestionCircle, faRoute, faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { groupBy } from "lodash";
 import { type JSX, useCallback, useContext, useMemo, useState } from "react";
@@ -10,7 +9,6 @@ import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
 import { DeviceImage } from "../components/device-image/DeviceImage.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
-import { MapHelpModal } from "../components/modal/components/MapHelpModal.js";
 import { Lqi } from "../components/value-decorators/Lqi.js";
 import PowerSource from "../components/value-decorators/PowerSource.js";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
@@ -34,13 +32,13 @@ const RELATION_TMAP = {
     [ZigbeeRelationship.NeighborIsPreviousChild]: "previous_children",
 };
 
-export default function MapHierarchy() {
+export default function NetworkPage() {
     const isLoading = useAppSelector((state) => state.networkGraphIsLoading);
     const graph = useAppSelector((state) => state.networkGraph);
     const devices = useAppSelector((state) => state.devices);
     const dispatch = useAppDispatch();
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const { t } = useTranslation("map");
+    const { t } = useTranslation("network");
     const [filterValue, setFilterValue] = useState<string>("");
 
     const listRelations = useCallback(
@@ -164,7 +162,7 @@ export default function MapHierarchy() {
         </>
     ) : (
         <>
-            <div className="flex flex-row justify-center items-center p-6 join">
+            <div className="flex flex-row justify-center items-center pt-6 join">
                 {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
                 <label className="input w-64 join-item">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -199,9 +197,10 @@ export default function MapHierarchy() {
                 >
                     {graph.nodes.length > 0 ? <FontAwesomeIcon icon={faSync} /> : <FontAwesomeIcon icon={faDownLong} />}
                 </Button>
-                <Button<void> className="btn btn-info btn-square join-item" onClick={() => NiceModal.show(MapHelpModal)} title={t("help")}>
-                    <FontAwesomeIcon icon={faQuestion} />
-                </Button>
+            </div>
+            <div className="flex flex-row justify-center items-center gap-2 pt-3 pb-6 opacity-60">
+                <FontAwesomeIcon icon={faQuestionCircle} />
+                {t("lqi_help")}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-3 px-6">{sortedNodes}</div>
         </>

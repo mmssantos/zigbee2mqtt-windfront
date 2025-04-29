@@ -9,36 +9,16 @@ import { NavBar } from "./components/navbar/NavBar.js";
 import i18n from "./i18n/index.js";
 import store from "./store.js";
 
-const DevicesPage = lazy(async () => {
-    return await import("./pages/DevicesPage.js");
-});
-const DevicePage = lazy(async () => {
-    return await import("./pages/DevicePage.js");
-});
-const DashboardPage = lazy(async () => {
-    return await import("./pages/Dashboard.js");
-});
-const MapPage = lazy(async () => {
-    return await import("./pages/MapHierarchy.js");
-});
-const GroupsPage = lazy(async () => {
-    return await import("./pages/GroupsPage.js");
-});
-const GroupPage = lazy(async () => {
-    return await import("./pages/GroupPage.js");
-});
-const OtaPage = lazy(async () => {
-    return await import("./pages/OtaPage.js");
-});
-const TouchlinkPage = lazy(async () => {
-    return await import("./pages/TouchlinkPage.js");
-});
-const LogsPage = lazy(async () => {
-    return await import("./pages/LogsPage.js");
-});
-const SettingsPage = lazy(async () => {
-    return await import("./pages/SettingsPage.js");
-});
+const DevicesPage = lazy(async () => await import("./pages/DevicesPage.js"));
+const DevicePage = lazy(async () => await import("./pages/DevicePage.js"));
+const DashboardPage = lazy(async () => await import("./pages/Dashboard.js"));
+const NetworkPage = lazy(async () => await import("./pages/NetworkPage.js"));
+const GroupsPage = lazy(async () => await import("./pages/GroupsPage.js"));
+const GroupPage = lazy(async () => await import("./pages/GroupPage.js"));
+const OtaPage = lazy(async () => await import("./pages/OtaPage.js"));
+const TouchlinkPage = lazy(async () => await import("./pages/TouchlinkPage.js"));
+const LogsPage = lazy(async () => await import("./pages/LogsPage.js"));
+const SettingsPage = lazy(async () => await import("./pages/SettingsPage.js"));
 
 export function Main() {
     useEffect(() => {
@@ -60,7 +40,7 @@ export function Main() {
                                     <Suspense fallback={<div>Loading...</div>}>
                                         <Routes>
                                             <Route path="/ota" element={<OtaPage />} />
-                                            <Route path="/map" element={<MapPage />} />
+                                            <Route path="/network" element={<NetworkPage />} />
                                             <Route path="/device/:dev/:tab?" element={<DevicePage />} />
                                             <Route path="/settings/:tab?" element={<SettingsPage />} />
                                             <Route path="/groups" element={<GroupsPage />} />

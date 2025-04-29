@@ -2561,12 +2561,12 @@
         "logs_limit": "Logs limit",
         "highlight_only": "Highlight only"
     },
-    "map": {
-        "network_map": "Network map",
+    "network": {
+        "network_hierarchy": "Network hierarchy",
         "help": "Help",
         "refresh_data": "Refresh data",
-        "help_lqi_description": "Link quality is between 0 - 255 (higher is better), values with / represents multiple types of links",
-        "load": "Load map",
+        "lqi_help": "Link quality is between 0 - 255 (higher is better)",
+        "load": "Load",
         "loading": "Depending on the size of your network this can take somewhere between 10 seconds and 2 minutes.",
         "parents": "Parents",
         "children": "Children",
@@ -2582,7 +2582,7 @@
         "extensions": "Extensions",
         "groups": "Groups",
         "logs": "Logs",
-        "map": "Map",
+        "network": "Network",
         "ota": "OTA",
         "permit_join": "Permit join",
         "restart": "Restart",

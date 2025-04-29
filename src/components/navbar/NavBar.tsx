@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 
 import { faBars, faCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,8 +24,8 @@ const URLS = [
         key: "dashboard",
     },
     {
-        href: "/map",
-        key: "map",
+        href: "/network",
+        key: "network",
     },
     {
         href: "/groups",
@@ -59,24 +59,38 @@ export const NavBar = () => {
     const { sendMessage, readyState } = useContext(WebSocketApiRouterContext);
     const connectionStatus = CONNECTION_STATUS[readyState];
 
-    const renderLinks = (id: "lg" | "sm") => (
-        <>
-            {URLS.map((url) => (
-                <li key={url.href}>
-                    <NavLink to={url.href} className={({ isActive }) => (isActive ? "menu-active" : "")}>
-                        {t(url.key)}
+    const renderLinks = useCallback(
+        (id: "lg" | "sm") => (
+            <>
+                {URLS.map((url) => (
+                    <li key={url.href}>
+                        <NavLink to={url.href} className={({ isActive }) => (isActive ? "menu-active" : "")}>
+                            {t(url.key)}
+                        </NavLink>
+                    </li>
+                ))}
+                <li key="settings">
+                    <NavLink className={({ isActive }) => `${isActive ? " menu-active" : ""}`} to="/settings/about">
+                        &nbsp;
+                        <FontAwesomeIcon icon={faCog} title={t("settings")} />
+                        &nbsp;
                     </NavLink>
                 </li>
-            ))}
-            <li key="settings">
-                <NavLink className={({ isActive }) => `${isActive ? " menu-active" : ""}`} to="/settings/about">
-                    &nbsp;
-                    <FontAwesomeIcon icon={faCog} title={t("settings")} />
-                    &nbsp;
-                </NavLink>
-            </li>
-            <PermitJoinButton key="permit-join" popoverId={id} />
-        </>
+                <PermitJoinButton key="permit-join" popoverId={id} />
+            </>
+        ),
+        [t],
+    );
+    const renderedLinksLg = useMemo(() => renderLinks("lg"), [renderLinks]);
+    const renderedLinksSm = useMemo(() => renderLinks("sm"), [renderLinks]);
+    const showRestart = useMemo(
+        () =>
+            restartRequired ? (
+                <Button className="btn btn-error me-1 animate-pulse" onClick={async () => await sendMessage("bridge/request/restart", "")} prompt>
+                    {t("restart")}
+                </Button>
+            ) : null,
+        [restartRequired, sendMessage, t],
     );
 
     return (
@@ -86,28 +100,18 @@ export const NavBar = () => {
                     <div className="btn btn-ghost lg:hidden">
                         <FontAwesomeIcon icon={faBars} />
                     </div>
-                    <ul className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-max p-2 shadow">{renderLinks("sm")}</ul>
+                    <ul className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-max p-2 shadow">{renderedLinksSm}</ul>
                 </div>
             </div>
-            <Link to="/" className="link link-hover">
-                {isIframe() ? `Z2M@${document.location.hostname}` : "Zigbee2MQTT"}
+            <Link to="/" className="link link-hover me-1" title={isIframe() ? `Zigbee2MQTT@${document.location.hostname}` : ""}>
+                Zigbee2MQTT
             </Link>
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">{renderLinks("lg")}</ul>
+                <ul className="menu menu-horizontal px-1">{renderedLinksLg}</ul>
             </div>
-
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1">
-                    {restartRequired ? (
-                        <Button
-                            key="restart-bridge"
-                            onClick={async () => await sendMessage("bridge/request/restart", "")}
-                            prompt
-                            className="btn btn-error mr-1"
-                        >
-                            {t("restart")}
-                        </Button>
-                    ) : null}
+                    {showRestart}
                     <LocalePicker />
                     <ThemeSwitcher />
                 </ul>
