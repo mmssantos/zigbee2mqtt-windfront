@@ -114,7 +114,11 @@ export default function LogsPage() {
             <div className="mockup-code w-full">
                 {filteredLogs.length > 0 ? (
                     filteredLogs.map((log, idx) => (
-                        <pre key={log.timestamp} data-prefix={idx} className={`${LEVEL_CMAP[log.level]} ${highlighted(log.message)}`}>
+                        <pre
+                            key={`${log.timestamp}-${log.message}`}
+                            data-prefix={idx}
+                            className={`${LEVEL_CMAP[log.level]} ${highlighted(log.message)}`}
+                        >
                             <code>
                                 [{log.timestamp}] {log.message}
                             </code>

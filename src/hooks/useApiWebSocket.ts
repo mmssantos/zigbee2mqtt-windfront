@@ -185,8 +185,8 @@ export function useApiWebSocket() {
                         processDeviceStateMessage(jsonMessage as Message<Zigbee2MQTTAPI["{friendlyName}"]>, dispatch);
                     }
                 } catch (error) {
-                    dispatch(store.addLog({ level: "error", message: `browser: ${error.message}`, namespace: "browser" }));
-                    console.error(error);
+                    dispatch(store.addLog({ level: "error", message: `frontend: ${error.message}`, namespace: "frontend" }));
+                    // console.error(error);
                 }
             }
 
@@ -230,20 +230,22 @@ export function useApiWebSocket() {
                     payload: payload === "" ? { transaction } : { ...payload, transaction },
                 });
 
+                // console.debug("Calling Request API:", topic, payload, finalPayload);
+                dispatch(store.addLog({ level: "info", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
                 sendMessageRaw(finalPayload);
-                console.debug("Calling Request API:", topic, payload, finalPayload);
 
                 return await promise;
             }
 
             const finalPayload = stringifyWithPreservingUndefinedAsNull({ topic, payload });
 
-            console.debug("Calling API:", topic, payload, finalPayload);
+            // console.debug("Calling API:", topic, payload, finalPayload);
+            dispatch(store.addLog({ level: "info", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
             sendMessageRaw(finalPayload);
 
             return await Promise.resolve();
         },
-        [sendMessageRaw],
+        [sendMessageRaw, dispatch],
     );
 
     return { sendMessage, readyState };
