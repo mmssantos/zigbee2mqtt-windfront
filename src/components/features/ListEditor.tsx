@@ -59,8 +59,8 @@ export default function ListEditor(props: ListEditorProps) {
     const handleAddClick = useCallback(() => setCurrentValue([...currentValue, {}]), [currentValue]);
 
     return currentValue.length === 0 ? (
-        <div className="mt-3 mb-3 row">
-            <Button<void> className="btn btn-success col-1 me-2" onClick={handleAddClick}>
+        <div className="flex flex-row flex-wrap gap-2 mt-3 mb-3">
+            <Button<void> className="btn btn-success col-1" onClick={handleAddClick}>
                 +
             </Button>
         </div>
@@ -68,30 +68,26 @@ export default function ListEditor(props: ListEditorProps) {
         <div>
             {currentValue.map((itemValue, itemIndex) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: don't have a fixed value type
-                <div className="mt-3 mb-3 row" key={itemIndex}>
-                    <div className="col-10">
-                        <Feature
-                            feature={feature as CompositeFeature}
-                            device={{} as Device}
-                            deviceState={itemValue as DeviceState}
-                            onChange={(value) => onItemChange(value, itemIndex)}
-                            onRead={(_value) => {}}
-                            featureWrapperClass={FeatureWrapper}
-                            parentFeatures={parentFeatures}
-                        />
-                    </div>
-                    <div className="col-2">
-                        <div className="join">
-                            <Button<void> className="btn btn-error join-item me-2" onClick={handleRemoveClick(itemIndex)}>
-                                -
-                            </Button>
-                            <Button<void>
-                                className={`btn btn-success join-item ${currentValue.length - 1 === itemIndex ? "" : "invisible"}`}
-                                onClick={handleAddClick}
-                            >
-                                +
-                            </Button>
-                        </div>
+                <div className="flex flex-row flex-wrap gap-2 mt-3 mb-3" key={itemIndex}>
+                    <Feature
+                        feature={feature as CompositeFeature}
+                        device={{} as Device}
+                        deviceState={itemValue as DeviceState}
+                        onChange={(value) => onItemChange(value, itemIndex)}
+                        onRead={(_value) => {}}
+                        featureWrapperClass={FeatureWrapper}
+                        parentFeatures={parentFeatures}
+                    />
+                    <div className="join">
+                        <Button<void> className="btn btn-error join-item me-2" onClick={handleRemoveClick(itemIndex)}>
+                            -
+                        </Button>
+                        <Button<void>
+                            className={`btn btn-success join-item ${currentValue.length - 1 === itemIndex ? "" : "invisible"}`}
+                            onClick={handleAddClick}
+                        >
+                            +
+                        </Button>
                     </div>
                 </div>
             ))}

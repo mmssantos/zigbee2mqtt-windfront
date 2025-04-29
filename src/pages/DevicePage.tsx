@@ -143,7 +143,7 @@ export default function DevicePage(): JSX.Element {
                     </NavLink>
                 </li>
             </ul>
-            <div className="block bg-base-100 border-base-300 p-6">{content}</div>
+            <div className="block p-6">{content}</div>
         </>
     );
 }

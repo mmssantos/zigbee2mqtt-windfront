@@ -23,18 +23,28 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
         <div className="flex flex-row flex-wrap gap-2 items-center">
             {!minimal && steps ? <EnumEditor values={steps} onChange={onChange} value={currentValue} /> : null}
             {showRange ? (
-                <input
-                    min={min}
-                    max={max}
-                    step={valueStep}
-                    type="range"
-                    className="range range-primary"
-                    value={currentValue}
-                    onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
-                    onTouchEnd={() => onChange(currentValue)}
-                    onMouseUp={() => onChange(currentValue)}
-                    {...rest}
-                />
+                <div className="w-full max-w-xs">
+                    <input
+                        min={min}
+                        max={max}
+                        step={valueStep}
+                        type="range"
+                        className="range range-xs range-primary"
+                        value={currentValue}
+                        onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
+                        onTouchEnd={() => onChange(currentValue)}
+                        onMouseUp={() => onChange(currentValue)}
+                        {...rest}
+                    />
+                    <div className="flex justify-between px-1 mt-1 text-xs">
+                        <span>|</span>
+                        <span>|</span>
+                    </div>
+                    <div className="flex justify-between px-1 mt-1 text-xs">
+                        <span>{min}</span>
+                        <span>{max}</span>
+                    </div>
+                </div>
             ) : null}
             {(!minimal || !showRange) && (
                 <input

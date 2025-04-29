@@ -120,9 +120,9 @@ export const Feature = (props: FeatureProps): JSX.Element => {
             const specificDeviceState = parentFeatures ? (feature.property ? deviceState[feature.property] : deviceState) : deviceState;
 
             return (
-                <FeatureWrapper key={key} {...wrapperParams}>
-                    <Composite type="composite" feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
-                </FeatureWrapper>
+                // <FeatureWrapper key={key} {...wrapperParams}>
+                <Composite type="composite" feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
+                // </FeatureWrapper>
             );
         }
         default: {

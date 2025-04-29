@@ -17,15 +17,12 @@ export function Exposes(props: ExposesProps) {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const deviceStates = useAppSelector((state) => state.deviceStates);
 
-    if (device.definition?.exposes?.length) {
-        const deviceState = deviceStates[device.friendly_name] ?? ({} as DeviceState);
-
-        return (
+    return device.definition?.exposes?.length ? (
+        <div className="stats flex flex-row flex-wrap shadow">
             <Feature
-                // showEndpointLabels={true}
                 feature={{ features: device.definition.exposes, type: "composite" } as CompositeFeature}
                 device={device}
-                deviceState={deviceState}
+                deviceState={deviceStates[device.friendly_name] ?? ({} as DeviceState)}
                 onChange={async (value) => {
                     await sendMessage<"{friendlyNameOrId}/set">(
                         // @ts-expect-error templated API endpoint
@@ -43,8 +40,8 @@ export function Exposes(props: ExposesProps) {
                 parentFeatures={[]}
                 featureWrapperClass={FeatureWrapper}
             />
-        );
-    }
-
-    return t("empty_exposes_definition");
+        </div>
+    ) : (
+        t("empty_exposes_definition")
+    );
 }
