@@ -9,7 +9,6 @@ interface ReportingProps {
 }
 
 export type NiceReportingRule = {
-    id?: number;
     isNew?: number;
     endpoint: Endpoint;
 } & Device["endpoints"][number]["configured_reportings"][number];
@@ -31,7 +30,7 @@ const convertBindingsIntoNiceStructure = (device: Device): NiceReportingRule[] =
     return niceReportingRules;
 };
 
-const rule2key = (rule: NiceReportingRule): string => `${rule.isNew}${rule.endpoint}${rule.cluster}-${rule.attribute}`;
+const getRuleKey = (rule: NiceReportingRule): string => `${rule.isNew}-${rule.endpoint}-${rule.cluster}-${rule.attribute}`;
 
 export function Reporting(props: ReportingProps): JSX.Element {
     const { device } = props;
@@ -70,7 +69,7 @@ export function Reporting(props: ReportingProps): JSX.Element {
             <table className="table">
                 <tbody>
                     {[...reportingRules, newReportingRule].map((rule) => (
-                        <ReportingRow key={rule2key(rule)} rule={rule} device={device} onApply={onApply} />
+                        <ReportingRow key={getRuleKey(rule)} rule={rule} device={device} onApply={onApply} />
                     ))}
                 </tbody>
             </table>

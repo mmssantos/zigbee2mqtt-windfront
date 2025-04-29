@@ -1,7 +1,7 @@
 import groupBy from "lodash/groupBy.js";
 import { type JSX, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { CompositeFeature, GenericFeature } from "../../types.js";
+import type { CompositeFeature, GenericFeature, OmitFunctions } from "../../types.js";
 import Button from "../button/Button.js";
 import { isCompositeFeature } from "../device-page/index.js";
 import { Feature } from "./Feature.js";
@@ -32,6 +32,9 @@ const isCompositeRoot = (feature: CompositeFeature, parentFeatures: (CompositeFe
             (parentFeatures.length === 2 && ![null, undefined, "composite", "list"].includes(parentFeatures[1].type)))
     );
 };
+
+const getFeatureKey = (feature: OmitFunctions<CompositeFeature["features"][number]>) =>
+    `${feature.type}-${feature.name}-${feature.label}-${feature.property}-${feature.access}-${feature.category}-${feature.endpoint}`;
 
 export function Composite(props: CompositeProps) {
     const { feature, onChange, parentFeatures, onRead, device, deviceState, featureWrapperClass, minimal, showEndpointLabels = false } = props;
@@ -82,7 +85,7 @@ export function Composite(props: CompositeProps) {
             renderedFeatures.push(
                 ...groupedFeatures[MAGIC_NO_ENDPOINT].map((f) => (
                     <Feature
-                        key={JSON.stringify(f)}
+                        key={getFeatureKey(f)}
                         feature={f}
                         parentFeatures={[...parentFeaturesOrEmpty, feature]}
                         device={device}
@@ -127,7 +130,7 @@ export function Composite(props: CompositeProps) {
         for (const subFeature of features) {
             renderedFeatures.push(
                 <Feature
-                    key={JSON.stringify(subFeature)}
+                    key={getFeatureKey(subFeature)}
                     feature={subFeature}
                     parentFeatures={parentFeaturesOrEmpty}
                     device={device}

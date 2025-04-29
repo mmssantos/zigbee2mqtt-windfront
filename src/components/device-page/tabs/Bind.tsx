@@ -26,8 +26,9 @@ export interface NiceBindingRule {
           };
     clusters: string[];
 }
-const rule2key = (rule: NiceBindingRule): string =>
-    `${rule.source.endpoint}-${rule.isNew}${rule.source.ieee_address}-${"ieee_address" in rule.target ? rule.target.ieee_address : rule.target.id}-${rule.clusters.join("-")}`;
+
+const getRuleKey = (rule: NiceBindingRule): string =>
+    `${rule.isNew}-${rule.source.endpoint}-${rule.source.ieee_address}-${"ieee_address" in rule.target ? rule.target.ieee_address : rule.target.id}-${rule.clusters.join("-")}`;
 
 const convertBindingsIntoNiceStructure = (device: Device): NiceBindingRule[] => {
     const bindings: Record<string, NiceBindingRule> = {};
@@ -73,7 +74,7 @@ export function Bind(props: BindProps): JSX.Element {
     return (
         <div className="flex flex-col">
             {[...bindingRules, newBindingRule].map((rule) => (
-                <BindRow key={rule2key(rule)} rule={rule} groups={groups} device={device} devices={devices} />
+                <BindRow key={getRuleKey(rule)} rule={rule} groups={groups} device={device} devices={devices} />
             ))}
         </div>
     );

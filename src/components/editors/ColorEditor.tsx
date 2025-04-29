@@ -3,6 +3,8 @@ import type { AnyColor } from "../../types.js";
 import Button from "../button/Button.js";
 import { type ColorProps, PRIDE_PALLET, WHITE_PALLET, toRGB } from "./index.js";
 
+const getPalletKey = (pallet: string[]) => pallet.join("-");
+
 export default function ColorEditor(props: ColorProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
     const { onChange, value = {} as AnyColor, format, steps = [PRIDE_PALLET, WHITE_PALLET], minimal, ...rest } = props;
     const [currentColor, setCurrentColor] = useState<string>(toRGB(value, format));
@@ -15,7 +17,7 @@ export default function ColorEditor(props: ColorProps & Omit<InputHTMLAttributes
         <>
             {!minimal &&
                 steps.map((pallet) => (
-                    <div key={JSON.stringify(pallet)} className="join me-2 float-start border">
+                    <div key={getPalletKey(pallet)} className="join me-2 float-start border">
                         {pallet.map((step) => (
                             <Button<string>
                                 className="btn join-item"
