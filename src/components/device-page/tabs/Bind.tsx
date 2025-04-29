@@ -12,7 +12,7 @@ export interface NiceBindingRule {
     isNew?: true;
     source: {
         ieee_address: string;
-        endpoint: string;
+        endpoint: string | number;
     };
     target:
         | {
@@ -21,22 +21,22 @@ export interface NiceBindingRule {
           }
         | {
               type: "endpoint";
-              endpoint: string;
+              endpoint: string | number;
               ieee_address: string;
           };
     clusters: string[];
 }
 const rule2key = (rule: NiceBindingRule): string =>
-    `${rule.source.endpoint}-${rule.isNew}${rule.source.ieee_address}-${rule.target.id}-${rule.target.ieee_address}-${rule.clusters.join("-")}`;
+    `${rule.source.endpoint}-${rule.isNew}${rule.source.ieee_address}-${"ieee_address" in rule.target ? rule.target.ieee_address : rule.target.id}-${rule.clusters.join("-")}`;
 
 const convertBindingsIntoNiceStructure = (device: Device): NiceBindingRule[] => {
-    const bindings = {};
+    const bindings: Record<string, NiceBindingRule> = {};
 
     for (const endpoint in device.endpoints) {
         const endpointDesc = device.endpoints[endpoint];
 
         for (const binding of endpointDesc.bindings) {
-            let targetId = binding.target.id ?? `${binding.target.ieee_address}-${binding.target.endpoint}`;
+            let targetId = "ieee_address" in binding.target ? `${binding.target.ieee_address}-${binding.target.endpoint}` : binding.target.id;
 
             targetId = `${targetId}-${endpoint}`;
 
@@ -46,7 +46,7 @@ const convertBindingsIntoNiceStructure = (device: Device): NiceBindingRule[] => 
                 bindings[targetId] = {
                     source: {
                         ieee_address: device.ieee_address,
-                        key: endpoint,
+                        endpoint,
                     },
                     target: binding.target,
                     clusters: [binding.cluster],
@@ -68,13 +68,12 @@ export function Bind(props: BindProps): JSX.Element {
         source: { ieee_address: device.ieee_address, endpoint: "" },
         clusters: [],
     });
-
-    const bidingRules = useMemo(() => convertBindingsIntoNiceStructure(device), [device]);
+    const bindingRules = useMemo(() => convertBindingsIntoNiceStructure(device), [device]);
 
     return (
-        <div className="flex flex-col gap-2">
-            {[...bidingRules, newBindingRule].map((rule, idx) => (
-                <BindRow key={rule2key(rule)} rule={rule} groups={groups} device={device} idx={idx} devices={devices} />
+        <div className="flex flex-col">
+            {[...bindingRules, newBindingRule].map((rule) => (
+                <BindRow key={rule2key(rule)} rule={rule} groups={groups} device={device} devices={devices} />
             ))}
         </div>
     );

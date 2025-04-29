@@ -124,7 +124,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
     }, [device.endpoints, endpoint]);
 
     const disableButtons = attributes.length === 0 || cluster === "";
-    const endpoints = getEndpoints(device);
+    const endpoints = useMemo(() => getEndpoints(device), [device]);
 
     return endpoint ? (
         <div className="flex flex-col gap-3">

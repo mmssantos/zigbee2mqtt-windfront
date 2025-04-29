@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import SelectField from "../form-fields/SelectField.js";
 
 interface EndpointPickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "onChange"> {
-    onChange(endpoint: string): void;
-    value?: string;
+    onChange(endpoint: string | number): void;
+    value?: string | number;
     label?: string;
-    values: Set<string>;
+    values: Set<string | number>;
 }
 
 export default function EndpointPicker(props: EndpointPickerProps) {

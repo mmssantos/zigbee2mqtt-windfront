@@ -13,7 +13,7 @@ interface AddDeviceToGroupProps {
 }
 
 export function AddDeviceToGroup(props: AddDeviceToGroupProps): JSX.Element {
-    const [endpoint, setEndpoint] = useState<string>("");
+    const [endpoint, setEndpoint] = useState<string | number>("");
     const [deviceIeee, setDeviceIeee] = useState<string>("");
     const { group } = props;
     const devices = useAppSelector((state) => state.devices);

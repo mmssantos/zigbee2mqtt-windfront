@@ -116,8 +116,8 @@ export function isGroup(entity: Device | Group): entity is Group {
     return "members" in entity;
 }
 
-export const getEndpoints = (entity?: Device | Group): Set<string> => {
-    const endpoints = new Set<string>();
+export const getEndpoints = (entity?: Device | Group): Set<string | number> => {
+    const endpoints = new Set<string | number>();
 
     if (!entity) {
         return endpoints;
@@ -125,7 +125,7 @@ export const getEndpoints = (entity?: Device | Group): Set<string> => {
 
     if (isDevice(entity)) {
         for (const key in entity.endpoints) {
-            endpoints.add(key);
+            endpoints.add(Number.parseInt(key, 10));
         }
 
         if (entity.definition?.exposes) {
@@ -135,9 +135,9 @@ export const getEndpoints = (entity?: Device | Group): Set<string> => {
                 }
             }
         }
-    } else if (entity.members) {
+    } else {
         for (const member of entity.members) {
-            endpoints.add(member.endpoint.toString());
+            endpoints.add(member.endpoint);
         }
     }
 

@@ -54,7 +54,7 @@ export default function ClusterMultiPicker(props: ClusterMultiPickerProps): JSX.
     return (
         <fieldset className="fieldset">
             {label && <legend className="fieldset-legend">{label}</legend>}
-            <div className="flex flex-row flex-row gap-2">{options}</div>
+            <div className="flex flex-row flex-wrap gap-2">{options}</div>
         </fieldset>
     );
 }
