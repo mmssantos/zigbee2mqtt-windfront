@@ -16,6 +16,7 @@ export function DevConsole(props: DevConsoleProps) {
     const logs = useAppSelector((state) => state.logs);
     const [lastAttributeLog, setLastAttributeLog] = useState<LogMessage>();
     const [lastCommandLog, setLastCommandLog] = useState<LogMessage>();
+    const { sendMessage } = useContext(WebSocketApiRouterContext);
 
     useEffect(() => {
         const lastLog = logs[logs.length - 1];
@@ -29,7 +30,6 @@ export function DevConsole(props: DevConsoleProps) {
         }
     }, [logs]);
 
-    const { sendMessage } = useContext(WebSocketApiRouterContext);
     const readDeviceAttributes = useCallback(
         async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], stateProperty?: string) => {
             const payload = { read: { cluster, attributes } };
@@ -46,6 +46,7 @@ export function DevConsole(props: DevConsoleProps) {
         },
         [sendMessage],
     );
+
     const writeDeviceAttributes = useCallback(
         async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: AttributeInfo[]) => {
             const payload = { write: { cluster, payload: {} } };

@@ -59,7 +59,7 @@ function AttributeValueInput(props: Readonly<AttributeValueInputProps>): JSX.Ele
 
 export function AttributeEditor(props: AttributeEditorProps) {
     const { device, readDeviceAttributes, writeDeviceAttributes, lastLog } = props;
-    const [endpoint, setEndpoint] = useState(getObjectFirstKey(device.endpoints));
+    const [endpoint, setEndpoint] = useState(getObjectFirstKey(device.endpoints) ?? "");
     const [cluster, setCluster] = useState("");
     const [attributes, setAttributes] = useState<AttributeInfo[]>([]);
     const [stateProperty, setStateProperty] = useState<string>();
@@ -115,13 +115,15 @@ export function AttributeEditor(props: AttributeEditorProps) {
         if (endpoint) {
             const deviceEndpoint = device.endpoints[Number.parseInt(endpoint, 10)];
 
-            for (const inCluster of deviceEndpoint.clusters.input) {
-                clusters.add(inCluster);
+            if (deviceEndpoint) {
+                for (const inCluster of deviceEndpoint.clusters.input) {
+                    clusters.add(inCluster);
+                }
             }
         }
 
         return clusters;
-    }, [device.endpoints, endpoint]);
+    }, [device, endpoint]);
 
     const disableButtons = attributes.length === 0 || cluster === "";
     const endpoints = useMemo(() => getEndpoints(device), [device]);
