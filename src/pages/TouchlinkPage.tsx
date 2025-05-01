@@ -10,7 +10,6 @@ import Table from "../components/table/Table.js";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { setTouchlinkIdentifyInProgress, setTouchlinkResetInProgress, setTouchlinkScan } from "../store.js";
 import type { TouchlinkDevice } from "../types.js";
-import { getDeviceDetailsLink } from "../utils.js";
 
 export default function TouchlinkPage() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
@@ -52,7 +51,7 @@ export default function TouchlinkPage() {
                 accessorFn: (touchlinkDevice) => touchlinkDevice.ieee_address,
                 cell: ({ row: { original: touchlinkDevice } }) =>
                     devices.find((device) => device.ieee_address === touchlinkDevice.ieee_address) ? (
-                        <Link to={getDeviceDetailsLink(touchlinkDevice.ieee_address)} className="link link-hover">
+                        <Link to={`/device/${touchlinkDevice.ieee_address}`} className="link link-hover">
                             {touchlinkDevice.ieee_address}
                         </Link>
                     ) : (

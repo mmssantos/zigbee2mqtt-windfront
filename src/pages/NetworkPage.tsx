@@ -13,7 +13,7 @@ import { Lqi } from "../components/value-decorators/Lqi.js";
 import PowerSource from "../components/value-decorators/PowerSource.js";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { setNetworkGraphIsLoading } from "../store.js";
-import { getDeviceDetailsLink, toHex } from "../utils.js";
+import { toHex } from "../utils.js";
 
 const enum ZigbeeRelationship {
     NeighborIsParent = 0x00,
@@ -126,7 +126,7 @@ export default function NetworkPage() {
                                         {node.friendlyName}
                                     </Link>
                                 ) : (
-                                    <Link to={getDeviceDetailsLink(node.ieeeAddr)} className="link link-hover link-primary">
+                                    <Link to={`/device/${node.ieeeAddr}`} className="link link-hover link-primary">
                                         <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
                                         {node.friendlyName}
                                         <span className="badge badge-ghost">

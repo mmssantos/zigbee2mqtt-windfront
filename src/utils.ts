@@ -102,8 +102,6 @@ export const getDeviceDisplayName = (device: Device): string => {
     return `${device.friendly_name} ${model}`;
 };
 
-export const getDeviceDetailsLink = (deviceIdentifier: string | number): string => `/device/${deviceIdentifier}`;
-
 // #endregion
 
 // #region Device/Group

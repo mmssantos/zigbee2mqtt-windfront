@@ -3,7 +3,6 @@ import type { CompositeFeature, Endpoint, LastSeenConfig } from "../../types.js"
 import type { BaseFeatureProps } from "../features/index.js";
 
 import { Link } from "react-router";
-import { getDeviceDetailsLink } from "../../utils.js";
 
 import { useTranslation } from "react-i18next";
 import { DeviceImage } from "../device-image/DeviceImage.js";
@@ -39,7 +38,7 @@ export default function DashboardDevice({
                     <DeviceImage disabled={false} device={device} deviceState={deviceState} className="size-10" />
                 </div>
                 <div>
-                    <Link to={getDeviceDetailsLink(device.ieee_address)} className="link link-hover link-primary">
+                    <Link to={`/device/${device.ieee_address}`} className="link link-hover link-primary">
                         {device.friendly_name}
                         {endpoint ? ` (${t("endpoint")}: ${endpoint})` : ""}
                     </Link>

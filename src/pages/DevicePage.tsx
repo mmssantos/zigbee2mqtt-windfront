@@ -6,6 +6,7 @@ import {
     faDownLong,
     faInfo,
     faLink,
+    faObjectGroup,
     faReceipt,
     faWandMagic,
     faWandSparkles,
@@ -22,12 +23,24 @@ import { DeviceInfo } from "../components/device-page/tabs/DeviceInfo.js";
 import { DeviceSettings } from "../components/device-page/tabs/DeviceSettings.js";
 import { DeviceSpecificSettings } from "../components/device-page/tabs/DeviceSpecificSettings.js";
 import { Exposes } from "../components/device-page/tabs/Exposes.js";
+import { Groups } from "../components/device-page/tabs/Groups.js";
 import { Reporting } from "../components/device-page/tabs/Reporting.js";
 import { Scene } from "../components/device-page/tabs/Scene.js";
 import { State } from "../components/device-page/tabs/State.js";
 import { useAppSelector } from "../hooks/useApp.js";
 
-export type TabName = "info" | "bind" | "state" | "exposes" | "clusters" | "reporting" | "settings" | "settings-specific" | "dev-console" | "scene";
+export type TabName =
+    | "info"
+    | "bind"
+    | "state"
+    | "exposes"
+    | "clusters"
+    | "reporting"
+    | "settings"
+    | "settings-specific"
+    | "dev-console"
+    | "groups"
+    | "scene";
 
 type DevicePageUrlParams = {
     dev: string;
@@ -71,6 +84,8 @@ export default function DevicePage(): JSX.Element {
                 return <DeviceSpecificSettings device={device} />;
             case "dev-console":
                 return <DevConsole device={device} />;
+            case "groups":
+                return <Groups device={device} />;
             case "scene":
                 return <Scene device={device} />;
             default:
@@ -128,6 +143,12 @@ export default function DevicePage(): JSX.Element {
                     <NavLink to={`/device/${dev!}/clusters`} className={isActive}>
                         <FontAwesomeIcon icon={faReceipt} />
                         {t("clusters")}
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to={`/device/${dev!}/groups`} className={isActive}>
+                        <FontAwesomeIcon icon={faObjectGroup} />
+                        {t("groups")}
                     </NavLink>
                 </li>
                 <li>

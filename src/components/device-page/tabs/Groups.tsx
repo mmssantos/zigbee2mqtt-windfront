@@ -1,0 +1,126 @@
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
+import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
+import { useAppSelector } from "../../../hooks/useApp.js";
+import type { Device, Group } from "../../../types.js";
+import { getEndpoints } from "../../../utils.js";
+import Button from "../../button/Button.js";
+import EndpointPicker from "../../pickers/EndpointPicker.js";
+import GroupPicker from "../../pickers/GroupPicker.js";
+
+type GroupsProps = {
+    device: Device;
+};
+
+export function Groups({ device }: GroupsProps) {
+    const { t } = useTranslation(["groups", "zigbee"]);
+    const groups = useAppSelector((state) => state.groups);
+    const { sendMessage } = useContext(WebSocketApiRouterContext);
+    const [endpoint, setEndpoint] = useState<string | number>("");
+    const [groupId, setGroupId] = useState<string | number>("");
+    const endpoints = useMemo(() => getEndpoints(device), [device]);
+    const [memberGroups, nonMemberGroups] = useMemo(() => {
+        const inGroups: [Group, number][] = [];
+        const notInGroups: Group[] = [];
+
+        for (const group of groups) {
+            const groupMembers = group.members.filter((member) => member.ieee_address === device.ieee_address);
+
+            if (groupMembers.length > 0) {
+                for (const groupMember of groupMembers) {
+                    inGroups.push([group, groupMember.endpoint]);
+                }
+            } else {
+                notInGroups.push(group);
+            }
+        }
+
+        return [inGroups, notInGroups];
+    }, [groups, device.ieee_address]);
+
+    const onGroupChange = useCallback(
+        (selectedGroup: Group): void => {
+            setGroupId(selectedGroup.id);
+            setEndpoint(endpoints.values().next().value);
+        },
+        [endpoints],
+    );
+
+    const addToGroup = useCallback(
+        async () =>
+            await sendMessage("bridge/request/group/members/add", {
+                group: groupId.toString(),
+                endpoint,
+                device: device.ieee_address,
+            }),
+        [sendMessage, groupId, device.ieee_address, endpoint],
+    );
+
+    const removeFromGroup = useCallback(
+        async ([group, endpoint]: [Group, number]): Promise<void> =>
+            await sendMessage("bridge/request/group/members/remove", {
+                device: device.ieee_address,
+                endpoint: endpoint,
+                group: group.id.toString(),
+            }),
+        [sendMessage, device.ieee_address],
+    );
+
+    return (
+        <>
+            <div className="grid grid-cols-1 auto-rows-fr gap-3 my-2">
+                <div>
+                    <h2 className="text-lg font-semibold">{t("add_to_group")}</h2>
+                    <div className="mb-3">
+                        <GroupPicker label={t("zigbee:group")} value={groupId} groups={nonMemberGroups} onChange={onGroupChange} required />
+                        <EndpointPicker label={t("zigbee:endpoint")} values={endpoints} value={endpoint} onChange={(e) => setEndpoint(e)} required />
+                    </div>
+                    <Button<void>
+                        onClick={addToGroup}
+                        className="btn btn-primary"
+                        disabled={endpoint == null || groupId == null || endpoint === "" || groupId === ""}
+                    >
+                        {t("add_to_group")}
+                    </Button>
+                </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3 mt-2">
+                {memberGroups.map(([group, endpoint]) => (
+                    <ul className="list rounded-box shadow-md" key={`${group.id}-${endpoint}`}>
+                        <li className="list-row flex-grow">
+                            <div>
+                                <Link to={`/group/${group.id}`} className="link link-hover link-primary">
+                                    {group.friendly_name}
+                                    {endpoint ? ` (${t("endpoint")}: ${endpoint})` : ""}
+                                </Link>
+                                <div className="text-xs opacity-50">{group.description || ""}</div>
+                            </div>
+                            <div className="list-col-wrap text-sm w-full gap-2">
+                                <div className="badge badge-soft badge-ghost cursor-default me-2">
+                                    {t("group_members")}: {group.members.length}
+                                </div>
+                                <div className="badge badge-soft badge-ghost cursor-default me-2">
+                                    {t("group_scenes")}: {group.scenes.length}
+                                </div>
+                            </div>
+                        </li>
+                        <li className="flex flex-row flex-wrap gap-1 m-4 justify-around items-center">
+                            <Button<[Group, number]>
+                                prompt
+                                item={[group, endpoint]}
+                                onClick={removeFromGroup}
+                                className="btn btn-square btn-error btn-sm"
+                                title={t("remove_from_group")}
+                            >
+                                <FontAwesomeIcon icon={faTrash} />
+                            </Button>
+                        </li>
+                    </ul>
+                ))}
+            </div>
+        </>
+    );
+}

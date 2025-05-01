@@ -25,6 +25,7 @@
         "save": "Save",
         "select_device": "Select device",
         "select_endpoint": "Select endpoint",
+        "select_group": "Select group",
         "source_endpoint": "Source endpoint",
         "the_only_endpoint": "The only endpoint",
         "unbind": "Unbind",
@@ -53,6 +54,7 @@
         "settings": "Settings",
         "settings_specific": "Settings (specific)",
         "state": "State",
+        "groups": "Groups",
         "scene": "Scene",
         "unknown_device": "Unknown device",
         "exposes": "Exposes",
@@ -2552,7 +2554,8 @@
         "group_name": "Group Name",
         "group_members": "Group members",
         "group_scenes": "Group scenes",
-        "rename_group": "Rename group"
+        "rename_group": "Rename group",
+        "remove_from_group": "Remove from group"
     },
     "logs": {
         "empty_logs_message": "Nothing to display",
@@ -2729,7 +2732,8 @@
         "output_clusters": "Output clusters",
         "custom_clusters": "Custom clusters",
         "other_zcl_clusters": "Other ZCL clusters",
-        "how_to_add_support": "How to add support?"
+        "how_to_add_support": "How to add support?",
+        "group": "Group"
     },
     "scene": {
         "manage_scenes_header": "Manage scenes",

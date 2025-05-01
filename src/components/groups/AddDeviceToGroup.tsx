@@ -1,4 +1,4 @@
-import { type JSX, useContext, useMemo, useState } from "react";
+import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
@@ -21,13 +21,13 @@ export function AddDeviceToGroup(props: AddDeviceToGroupProps): JSX.Element {
     const { t } = useTranslation(["groups", "zigbee"]);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
-    const onDeviceChange = (selectedDevice: Device): void => {
+    const onDeviceChange = useCallback((selectedDevice: Device): void => {
         setDeviceIeee(selectedDevice.ieee_address);
 
         const deviceEndpoints = getEndpoints(selectedDevice);
 
         setEndpoint(deviceEndpoints.values().next().value);
-    };
+    }, []);
 
     return (
         <>
