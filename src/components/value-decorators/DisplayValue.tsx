@@ -5,6 +5,7 @@ type DisplayValueProps = {
     name: string;
     value: unknown;
 };
+
 function BooleanValueView(props: DisplayValueProps) {
     const { value, name } = props;
     const { t } = useTranslation("values");
@@ -37,11 +38,7 @@ export function DisplayValue(props: DisplayValueProps): JSX.Element {
 
     switch (typeof value) {
         case "boolean":
-            return (
-                <>
-                    <BooleanValueView {...props} />
-                </>
-            );
+            return <BooleanValueView {...props} />;
         case "undefined":
             return <>N/A</>;
         case "object":

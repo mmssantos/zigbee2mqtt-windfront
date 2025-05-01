@@ -1,7 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import viteCompression from "vite-plugin-compression2";
+import { compression } from "vite-plugin-compression2";
 import { startServer } from "./mocks/ws.js";
 
 export default defineConfig(async ({ command, mode }) => {
@@ -41,7 +41,7 @@ export default defineConfig(async ({ command, mode }) => {
                 },
             },
         },
-        plugins: [react(), tailwindcss(), viteCompression({ algorithm: "brotliCompress" })],
+        plugins: [react(), tailwindcss(), compression({ algorithm: "brotliCompress" })],
         server: {
             proxy: {
                 "/api": {

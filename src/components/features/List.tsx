@@ -55,8 +55,8 @@ export default function List(props: Props) {
     const { access = FeatureAccessMode.SET, item_type: itemType } = feature;
 
     if (access & FeatureAccessMode.SET) {
-        // TODO ???
-        if (itemType === "number") {
+        // TODO: verify this
+        if (itemType.type === "numeric") {
             return <RangeListEditor onChange={onEditorChange} value={state.value} minimal={minimal} />;
         }
 

@@ -53,8 +53,8 @@ export default function RangeListEditor(props: RangeListProps) {
     ) : (
         <div>
             {currentListValue.map((itemValue, itemIndex) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: no fixed value type
-                <div className="mt-3 mb-3 row" key={itemIndex}>
+                // biome-ignore lint/suspicious/noArrayIndexKey: no better way?
+                <div className="mt-3 mb-3 row" key={`${itemValue}-${itemIndex}`}>
                     <div className="col-10">
                         <RangeEditor onChange={(newValue) => onItemChange(newValue, itemIndex)} value={itemValue} minimal={minimal} {...rest} />
                     </div>

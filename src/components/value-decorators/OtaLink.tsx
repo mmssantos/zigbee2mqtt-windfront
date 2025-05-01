@@ -4,7 +4,7 @@ import type { VendorProps } from "./VendorLink.js";
 export default function OtaLink(props: VendorProps) {
     const { device } = props;
     const { t } = useTranslation("zigbee");
-    let url = "";
+    let url = "https://github.com/Koenkk/zigbee-OTA/releases";
     const title = device.software_build_id || t("unknown");
 
     switch (device?.definition?.vendor) {
@@ -27,12 +27,9 @@ export default function OtaLink(props: VendorProps) {
             break;
     }
 
-    if (url !== "") {
-        return (
-            <a target="_blank" rel="noopener noreferrer" href={url} className="link link-hover">
-                {title}
-            </a>
-        );
-    }
-    return <>{title}</>;
+    return (
+        <a target="_blank" rel="noopener noreferrer" href={url} className="link link-hover">
+            {title}
+        </a>
+    );
 }

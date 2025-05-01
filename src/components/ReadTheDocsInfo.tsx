@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 export const ReadTheDocsInfo = (props: { docsUrl: string }): JSX.Element => {
     const { docsUrl } = props;
     const { t } = useTranslation("common");
+
     return (
         <div className="card alert alert-info" role="alert">
             <div className="card-body">
