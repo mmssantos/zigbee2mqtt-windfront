@@ -2686,6 +2686,7 @@
         "firmware_id": "Firmware ID",
         "firmware_build_date": "Firmware build date",
         "force_remove": "Force remove",
+        "force_remove_notice": "Use only as last resort (will not propagate to the network)",
         "friendly_name": "Friendly name",
         "ieee_address": "IEEE Address",
         "interview": "Interview",

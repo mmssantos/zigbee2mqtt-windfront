@@ -7,32 +7,35 @@ import Button from "../../button/Button.js";
 import Modal from "../Modal.js";
 
 type DialogConfirmationModalProps = {
-    onConfirmHandler(): void;
+    onConfirmHandler(): Promise<void>;
 };
 
 export const DialogConfirmationModal = NiceModal.create((props: DialogConfirmationModalProps): JSX.Element => {
     const { onConfirmHandler } = props;
-    const { t } = useTranslation("common");
     const modal = useModal();
-    const renderFooter = () => (
-        <>
-            <Button className="btn btn-secondary" onClick={modal.remove}>
-                {t("common:close")}
-            </Button>
-            <Button
-                className="btn btn-primary ms-1"
-                onClick={() => {
-                    modal.remove();
-                    onConfirmHandler();
-                }}
-            >
-                {t("common:ok")}
-            </Button>
-        </>
-    );
+    const { t } = useTranslation("common");
 
     return (
-        <Modal isOpen={modal.visible} title={t("confirmation")} footer={renderFooter()}>
+        <Modal
+            isOpen={modal.visible}
+            title={t("confirmation")}
+            footer={
+                <>
+                    <Button className="btn btn-secondary" onClick={modal.remove}>
+                        {t("common:close")}
+                    </Button>
+                    <Button
+                        className="btn btn-primary ms-1"
+                        onClick={async () => {
+                            modal.remove();
+                            await onConfirmHandler();
+                        }}
+                    >
+                        {t("common:ok")}
+                    </Button>
+                </>
+            }
+        >
             <div className="flex flex-row justify-center items-center gap-2">
                 <FontAwesomeIcon icon={faExclamationTriangle} size="3x" className="text-error" />
                 {t("dialog_confirmation_prompt")}

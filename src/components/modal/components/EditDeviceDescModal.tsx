@@ -6,6 +6,7 @@ import type { Device } from "../../../types.js";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 
 import Button from "../../button/Button.js";
+import TextareaField from "../../form-fields/TextareaField.js";
 import Modal from "../Modal.js";
 
 export type RenameActionProps = {
@@ -16,32 +17,35 @@ export type RenameActionProps = {
     setDeviceDescription(friendlyName: string, description: string): Promise<void>;
 };
 export const UpdateDeviceDescModal = NiceModal.create((props: RenameActionProps): JSX.Element => {
-    const modal = useModal();
     const { device, setDeviceDescription } = props;
-    const [description, setDescription] = useState(device.description || "");
+    const modal = useModal();
     const { t } = useTranslation(["zigbee", "common"]);
-
-    const onSaveDescriptionClick = async (): Promise<void> => {
-        modal.remove();
-        await setDeviceDescription(device.ieee_address, description);
-    };
-    const renderFooter = () => (
-        <>
-            <Button className="btn btn-secondary" onClick={modal.remove}>
-                {t("common:close")}
-            </Button>
-            <Button className="btn btn-primary ms-1" onClick={onSaveDescriptionClick}>
-                {t("zigbee:save_description")}
-            </Button>
-        </>
-    );
+    const [description, setDescription] = useState(device.description || "");
 
     return (
-        <Modal isOpen={modal.visible} title={`${t("update_description")} ${device.friendly_name}`} footer={renderFooter()}>
-            <fieldset className="fieldset">
-                <legend className="fieldset-legend">{t("description")}</legend>
-                <textarea className="textarea h-24" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
-            </fieldset>
+        <Modal
+            isOpen={modal.visible}
+            title={`${t("update_description")} ${device.friendly_name}`}
+            footer={
+                <>
+                    <Button className="btn btn-secondary" onClick={modal.remove}>
+                        {t("common:close")}
+                    </Button>
+                    <Button
+                        className="btn btn-primary ms-1"
+                        onClick={async () => {
+                            modal.remove();
+                            await setDeviceDescription(device.ieee_address, description);
+                        }}
+                    >
+                        {t("zigbee:save_description")}
+                    </Button>
+                </>
+            }
+        >
+            <div className="flex flex-col gap-2">
+                <TextareaField label={t("description")} name="update_description" onChange={(e) => setDescription(e.target.value)} rows={3} />
+            </div>
         </Modal>
     );
 });

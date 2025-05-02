@@ -45,6 +45,7 @@ export const AuthForm = NiceModal.create((props: AuthFormProps): JSX.Element => 
                             onLoginClick();
                         }
                     }}
+                    required
                 />
             </label>
         </Modal>
