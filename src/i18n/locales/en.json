@@ -2641,7 +2641,10 @@
         "translation_prompt": "You can help with the translation at",
         "zigbee_herdsman_converters_version": "zigbee-herdsman-converters version",
         "zigbee_herdsman_version": "zigbee-herdsman version",
-        "localise_images": "Localise device images"
+        "localise_images": "Localise device images",
+        "frontend_notice": "These settings are stored locally in your browser. Using private windows or clearing the cache will reset them to defaults.",
+        "change_theme": "Change theme",
+        "set_homepage": "Set homepage"
     },
     "touchlink": {
         "detected_devices_message": "Detected {{count}} touchlink devices.",

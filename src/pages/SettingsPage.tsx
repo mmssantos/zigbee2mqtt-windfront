@@ -1,29 +1,34 @@
-import { faCode, faCogs, faInfo, faThumbsUp, faToolbox } from "@fortawesome/free-solid-svg-icons";
+import { faCode, faCogs, faDisplay, faInfo, faThumbsUp, faToolbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Form from "@rjsf/core";
 import type { RJSFSchema } from "@rjsf/utils";
 import Validator from "@rjsf/validator-ajv8";
 import { saveAs } from "file-saver";
 import cloneDeep from "lodash/cloneDeep.js";
-import { type JSX, useContext, useState } from "react";
+import { type JSX, useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Navigate, useParams } from "react-router";
+import store2 from "store2";
 import frontendPackageJson from "../../package.json" with { type: "json" };
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
+import { ThemeSwitcher } from "../components/ThemeSwitcher.js";
 import Button from "../components/button/Button.js";
+import SelectField from "../components/form-fields/SelectField.js";
 import { ImageLocaliser } from "../components/settings-page/ImageLocaliser.js";
 import { Stats } from "../components/settings-page/Stats.js";
 import uiSchemas from "../components/settings-page/uiSchema.json" with { type: "json" };
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { DescriptionField, TitleField } from "../i18n/rjsf-translation-fields.js";
+import { HOMEPAGE_KEY } from "../localStoreConsts.js";
 import store, { setBackupPreparing } from "../store.js";
 import { computeSettingsDiff, download, formatDate } from "../utils.js";
 
 // XXX: workaround typing
 const FormTyped = Form as unknown as typeof Form.default;
 const ValidatorTyped = Validator as unknown as typeof Validator.default;
+const local = store2 as unknown as typeof store2.default;
 
-type SettingsTab = "settings" | "bridge" | "about" | "tools" | "donate" | "translate";
+type SettingsTab = "frontend" | "settings" | "bridge" | "about" | "tools" | "donate";
 
 type SettingsKeys = string;
 type UrlParams = {
@@ -103,19 +108,28 @@ export default function SettingsPage() {
     const backup = useAppSelector((state) => state.backup);
     const preparingBackup = useAppSelector((state) => state.preparingBackup);
     const devices = useAppSelector((state) => state.devices);
-    const { t } = useTranslation("settings");
+    const { t } = useTranslation(["settings", "navbar"]);
+    const [homepage, setHomepage] = useState<string>(local.get(HOMEPAGE_KEY) || "devices");
 
-    const downloadBackup = (): void => {
+    useEffect(() => {
+        local.set(HOMEPAGE_KEY, homepage);
+    }, [homepage]);
+
+    const downloadBackup = useCallback((): void => {
         const ts = formatDate(new Date()).replace(/[\s_:]/g, "-");
         const backupFileName = `z2m-backup.${bridgeInfo.version}.${ts}.zip`;
+
         saveAs(`data:application/zip;base64,${backup}`, backupFileName);
-    };
-    const addInstallCode = async () => {
+    }, [backup, bridgeInfo.version]);
+
+    const addInstallCode = useCallback(async () => {
         const code = prompt(t("enter_install_code"));
+
         if (code) {
             await sendMessage("bridge/request/install_code/add", { value: code });
         }
-    };
+    }, [sendMessage, t]);
+
     const getSettingsTabs = (): { name: string; title: string }[] => {
         const tabs = Object.entries<RJSFSchema>((bridgeInfo.config_schema.properties as unknown as ArrayLike<RJSFSchema>) || {})
             .filter(([key, value]) => isValidKeyToRenderAsTab(key, value))
@@ -123,12 +137,15 @@ export default function SettingsPage() {
                 name: key,
                 title: t(key, { defaultValue: value.title }),
             }));
+
         tabs.unshift({
             name: ROOT_KEY_NAME,
             title: t("main", { defaultValue: "Main" }),
         });
+
         return tabs;
     };
+
     const getSettingsInfo = (): { currentSchema: RJSFSchema; currentConfig: Record<string, unknown> } => {
         const { keyName } = state;
 
@@ -154,11 +171,18 @@ export default function SettingsPage() {
         }
         return { currentSchema, currentConfig };
     };
-    const isActive = ({ isActive }) => (isActive ? " menu-active" : "");
 
     const renderCategoriesTabs = (): JSX.Element => {
+        const isActive = ({ isActive }) => (isActive ? " menu-active" : "");
+
         return (
             <ul className="menu bg-base-200 lg:menu-horizontal rounded-box">
+                <li>
+                    <NavLink to="/settings/frontend" className={isActive}>
+                        <FontAwesomeIcon icon={faDisplay} />
+                        {t("frontend")}
+                    </NavLink>
+                </li>
                 <li>
                     <NavLink to="/settings/settings" className={isActive}>
                         <FontAwesomeIcon icon={faCogs} />
@@ -192,25 +216,28 @@ export default function SettingsPage() {
             </ul>
         );
     };
-    const renderSwitcher = (): JSX.Element => {
-        switch (params.tab) {
-            case "settings":
-                return renderSettings();
-            case "tools":
-                return renderTools();
-            case "about":
-                return renderAbout();
-            case "bridge":
-                return renderBridgeInfo();
-            case "donate":
-                return renderDonate();
-            default:
-                return <Navigate to={"/settings/settings"} />;
-        }
+
+    const renderFrontend = (): JSX.Element => {
+        return (
+            <div className="flex flex-col gap-2">
+                <div className="alert alert-info mb-3">{t("frontend_notice")}</div>
+                <div>
+                    {t("change_theme")} <ThemeSwitcher />
+                </div>
+                <div>
+                    <SelectField name="homepage" label={t("set_homepage")} onChange={(e) => setHomepage(e.target.value)} defaultValue={homepage}>
+                        <option value="devices">{t("navbar:devices")}</option>
+                        <option value="dashboard">{t("navbar:dashboard")}</option>
+                    </SelectField>
+                </div>
+            </div>
+        );
     };
+
     const renderSettingsTabs = (): JSX.Element => {
         const tabs = getSettingsTabs();
         const { keyName } = state;
+
         return (
             <div className="nav nav-pills">
                 {tabs.map((tab) => (
@@ -231,13 +258,16 @@ export default function SettingsPage() {
             </div>
         );
     };
+
     const renderSettings = (): JSX.Element => {
         const { keyName } = state;
         const { currentSchema, currentConfig } = getSettingsInfo();
+
         // Put formData in separate variable to prevent overwrites on re-render.
         if (!(keyName in settingsFormData)) {
             settingsFormData[keyName] = currentConfig;
         }
+
         return (
             <div className="tab">
                 {renderSettingsTabs()}
@@ -270,44 +300,44 @@ export default function SettingsPage() {
             </div>
         );
     };
-    const renderTools = (): JSX.Element => {
-        return (
-            <div className="join join-vertical">
-                <Button className="btn btn-error join-item mb-2" onClick={async () => await sendMessage("bridge/request/restart", "")} prompt>
-                    {t("restart_zigbee2mqtt")}
+
+    const renderTools = (): JSX.Element => (
+        <div className="join join-vertical">
+            <Button className="btn btn-error join-item mb-2" onClick={async () => await sendMessage("bridge/request/restart", "")} prompt>
+                {t("restart_zigbee2mqtt")}
+            </Button>
+            <Button
+                className="btn btn-primary join-item"
+                onClick={async () => await download(store.getState() as unknown as Record<string, unknown>, "state.json")}
+            >
+                {t("download_state")}
+            </Button>
+            {preparingBackup ? (
+                <Button className="btn btn-primary join-item disabled">
+                    <span className="loading loading-dots loading-xl" />
                 </Button>
+            ) : backup ? (
+                <Button className="btn btn-primary join-item" onClick={downloadBackup}>
+                    {t("download_z2m_backup")}
+                </Button>
+            ) : (
                 <Button
                     className="btn btn-primary join-item"
-                    onClick={async () => await download(store.getState() as unknown as Record<string, unknown>, "state.json")}
+                    onClick={async () => {
+                        dispatch(setBackupPreparing());
+                        await sendMessage("bridge/request/backup", "");
+                    }}
                 >
-                    {t("download_state")}
+                    {t("request_z2m_backup")}
                 </Button>
-                {preparingBackup ? (
-                    <Button className="btn btn-primary join-item disabled">
-                        <span className="loading loading-dots loading-xl" />
-                    </Button>
-                ) : backup ? (
-                    <Button className="btn btn-primary join-item" onClick={downloadBackup}>
-                        {t("download_z2m_backup")}
-                    </Button>
-                ) : (
-                    <Button
-                        className="btn btn-primary join-item"
-                        onClick={async () => {
-                            dispatch(setBackupPreparing());
-                            await sendMessage("bridge/request/backup", "");
-                        }}
-                    >
-                        {t("request_z2m_backup")}
-                    </Button>
-                )}
-                <Button className="btn btn-primary join-item" onClick={addInstallCode}>
-                    {t("add_install_code")}
-                </Button>
-                <ImageLocaliser devices={devices} />
-            </div>
-        );
-    };
+            )}
+            <Button className="btn btn-primary join-item" onClick={addInstallCode}>
+                {t("add_install_code")}
+            </Button>
+            <ImageLocaliser devices={devices} />
+        </div>
+    );
+
     const renderAbout = (): JSX.Element => {
         const isZigbee2mqttDevVersion = bridgeInfo.version.match(/^\d+\.\d+\.\d+$/) === null;
         const zigbee2mqttVersion = isZigbee2mqttDevVersion ? (
@@ -421,19 +451,38 @@ export default function SettingsPage() {
             </div>
         );
     };
+
     const renderBridgeInfo = (): JSX.Element => {
         const jsonState = JSON.stringify(bridgeInfo, null, 4);
         const lines = Math.max(10, (jsonState.match(/\n/g) || "").length + 1);
 
         return <textarea className="textarea w-full" readOnly rows={lines} defaultValue={JSON.stringify(bridgeInfo, null, 4)} />;
     };
-    const renderDonate = (): JSX.Element => {
-        return (
-            <div className="container-fluid">
-                {t("donation_text")}
-                {DONATE_ROWS}
-            </div>
-        );
+
+    const renderDonate = (): JSX.Element => (
+        <div className="container-fluid">
+            {t("donation_text")}
+            {DONATE_ROWS}
+        </div>
+    );
+
+    const renderSwitcher = (): JSX.Element => {
+        switch (params.tab) {
+            case "frontend":
+                return renderFrontend();
+            case "settings":
+                return renderSettings();
+            case "tools":
+                return renderTools();
+            case "about":
+                return renderAbout();
+            case "bridge":
+                return renderBridgeInfo();
+            case "donate":
+                return renderDonate();
+            default:
+                return <Navigate to={"/settings/settings"} />;
+        }
     };
 
     return (

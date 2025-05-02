@@ -9,6 +9,7 @@ import { NavBar } from "./components/navbar/NavBar.js";
 import i18n from "./i18n/index.js";
 import store from "./store.js";
 
+const HomePage = lazy(async () => await import("./pages/HomePage.js"));
 const DevicesPage = lazy(async () => await import("./pages/DevicesPage.js"));
 const DevicePage = lazy(async () => await import("./pages/DevicePage.js"));
 const DashboardPage = lazy(async () => await import("./pages/Dashboard.js"));
@@ -41,7 +42,7 @@ export function Main() {
                                         <Routes>
                                             <Route path="/ota" element={<OtaPage />} />
                                             <Route path="/network" element={<NetworkPage />} />
-                                            <Route path="/device/:dev/:tab?" element={<DevicePage />} />
+                                            <Route path="/device/:deviceId/:tab?" element={<DevicePage />} />
                                             <Route path="/settings/:tab?" element={<SettingsPage />} />
                                             <Route path="/groups" element={<GroupsPage />} />
                                             <Route path="/group/:groupId?" element={<GroupPage />} />
@@ -49,7 +50,8 @@ export function Main() {
                                             <Route path="/logs" element={<LogsPage />} />
                                             <Route path="/touchlink" element={<TouchlinkPage />} />
                                             <Route path="/dashboard" element={<DashboardPage />} />
-                                            <Route path="/" element={<DevicesPage />} />
+                                            <Route path="/devices" element={<DevicesPage />} />
+                                            <Route path="/" element={<HomePage />} />
                                         </Routes>
                                     </Suspense>
                                 </main>

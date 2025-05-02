@@ -15,17 +15,12 @@ import PermitJoinButton from "./PermitJoinButton.js";
 
 const URLS = [
     {
-        href: "/",
+        href: "/devices",
         key: "devices",
-        exact: true,
     },
     {
         href: "/dashboard",
         key: "dashboard",
-    },
-    {
-        href: "/network",
-        key: "network",
     },
     {
         href: "/groups",
@@ -38,6 +33,10 @@ const URLS = [
     {
         href: "/touchlink",
         key: "touchlink",
+    },
+    {
+        href: "/network",
+        key: "network",
     },
     {
         href: "/logs",

@@ -9,3 +9,6 @@ export const GROUP_TABLE_PAGE_SIZE_KEY = "group-table-page-size";
 
 //-- Theme
 export const THEME_KEY = "theme";
+
+//-- Other
+export const HOMEPAGE_KEY = "homepage";
