@@ -5,7 +5,8 @@ import { Composite } from "./Composite.js";
 import type { BaseFeatureProps } from "./index.js";
 
 type LightProps = BaseFeatureProps<LightFeature>;
-const stepsConfiguration = {
+
+const STEPS_CONFIG = {
     brightness: [0, 25, 50, 75, 100].map<ValueWithLabelOrPrimitive>((item) => ({
         value: scale(item, [0, 100], [0, 255]),
         name: `${item}%`,
@@ -17,5 +18,5 @@ const stepsConfiguration = {
 };
 
 export default function Light(props: LightProps) {
-    return <Composite type="light" {...props} stepsConfiguration={stepsConfiguration} />;
+    return <Composite type="light" {...props} steps={STEPS_CONFIG} />;
 }

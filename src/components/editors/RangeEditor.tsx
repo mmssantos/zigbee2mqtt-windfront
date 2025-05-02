@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, useEffect, useState } from "react";
+import { type InputHTMLAttributes, useState } from "react";
 import EnumEditor, { type ValueWithLabelOrPrimitive } from "./EnumEditor.js";
 
 type RangeProps = {
@@ -13,14 +13,10 @@ type RangeProps = {
 export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
     const { onChange, value, valueStep, min, max, unit, steps, minimal, ...rest } = props;
     const [currentValue, setCurrentValue] = useState<number>(value);
-
-    useEffect(() => {
-        setCurrentValue(value);
-    }, [value]);
-
     const showRange = min != null && max != null;
+
     return (
-        <div className="flex flex-row flex-wrap gap-2 items-center">
+        <div className="flex flex-row flex-wrap gap-3 items-center">
             {!minimal && steps ? <EnumEditor values={steps} onChange={onChange} value={currentValue} /> : null}
             {showRange ? (
                 <div className="w-full max-w-xs">
@@ -47,25 +43,22 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
                 </div>
             ) : null}
             {(!minimal || !showRange) && (
-                <input
-                    type="number"
-                    className={`input${showRange ? " ms-1" : ""}`}
-                    value={currentValue}
-                    step={valueStep}
-                    onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
-                    onBlur={() => onChange(currentValue)}
-                    onMouseUp={() => onChange(currentValue)}
-                    min={min}
-                    max={max}
-                    {...rest}
-                    style={showRange ? { maxWidth: "100px" } : {}}
-                />
-            )}
-            {!minimal && unit ? (
-                <span className="input" style={{ minWidth: "66px" }}>
+                <label className="input">
                     {unit}
-                </span>
-            ) : null}
+                    <input
+                        type="number"
+                        className="grow"
+                        value={currentValue}
+                        step={valueStep}
+                        onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
+                        onBlur={() => onChange(currentValue)}
+                        onMouseUp={() => onChange(currentValue)}
+                        min={min}
+                        max={max}
+                        {...rest}
+                    />
+                </label>
+            )}
         </div>
     );
 }

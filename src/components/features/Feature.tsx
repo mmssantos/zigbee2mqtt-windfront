@@ -1,6 +1,6 @@
 import type React from "react";
 import type { FunctionComponent, JSX, PropsWithChildren } from "react";
-import type { CompositeFeature, Device, DeviceState, GenericFeature } from "../../types.js";
+import type { ColorFeature, CompositeFeature, Device, DeviceState, GenericFeature, GradientFeature } from "../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import Binary from "./Binary.js";
 import Climate from "./Climate.js";
@@ -63,7 +63,7 @@ export const Feature = (props: FeatureProps): JSX.Element => {
             if (feature.name === "gradient" && feature.length_min != null && feature.length_max != null) {
                 return (
                     <FeatureWrapper key={key} {...wrapperParams}>
-                        <Gradient feature={feature} key={key} {...genericParams} />
+                        <Gradient feature={feature as GradientFeature} key={key} {...genericParams} />
                     </FeatureWrapper>
                 );
             }
@@ -110,7 +110,7 @@ export const Feature = (props: FeatureProps): JSX.Element => {
             if (feature.name === "color_xy" || feature.name === "color_hs") {
                 return (
                     <FeatureWrapper key={key} {...wrapperParams}>
-                        <Color feature={feature} key={key} {...genericParams} />
+                        <Color feature={feature as ColorFeature} key={key} {...genericParams} />
                     </FeatureWrapper>
                 );
             }

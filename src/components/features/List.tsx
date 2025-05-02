@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { type CompositeFeature, FeatureAccessMode, type GenericFeature, type ListFeature } from "../../types.js";
 import Button from "../button/Button.js";
+import ListEditor from "../editors/ListEditor.js";
 import RangeListEditor from "../editors/RangeListEditor.js";
 import BaseViewer from "./BaseViewer.js";
-import ListEditor from "./ListEditor.js";
 import NoAccessError from "./NoAccessError.js";
 import type { BaseFeatureProps } from "./index.js";
 
@@ -28,13 +28,9 @@ const isListRoot = (parentFeatures: (CompositeFeature | GenericFeature)[]): bool
 
 export default function List(props: Props) {
     const { feature, minimal, parentFeatures, onChange, deviceState } = props;
-    const [state, setState] = useState<State>({ value: [] });
+    // biome-ignore lint/suspicious/noExplicitAny: tmp
+    const [state, setState] = useState<State>({ value: feature.property ? ((deviceState[feature.property] as any[]) ?? []) : [] });
     const { t } = useTranslation(["list", "common"]);
-
-    useEffect(() => {
-        // biome-ignore lint/suspicious/noExplicitAny: tmp
-        setState({ value: feature.property ? ((deviceState[feature.property] as any[]) ?? []) : [] });
-    }, [feature.property, deviceState]);
 
     const onEditorChange = useCallback(
         // biome-ignore lint/suspicious/noExplicitAny: tmp
@@ -55,18 +51,19 @@ export default function List(props: Props) {
     const { access = FeatureAccessMode.SET, item_type: itemType } = feature;
 
     if (access & FeatureAccessMode.SET) {
-        // TODO: verify this
-        if (itemType.type === "numeric") {
-            return <RangeListEditor onChange={onEditorChange} value={state.value} minimal={minimal} />;
-        }
-
         return (
             <>
-                <ListEditor feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onEditorChange} value={state.value} />
+                {itemType.type === "numeric" ? (
+                    <RangeListEditor onChange={onEditorChange} value={state.value} minimal={minimal} />
+                ) : (
+                    <ListEditor feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onEditorChange} value={state.value} />
+                )}
                 {isListRoot(parentFeatures) && (
-                    <Button className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`} onClick={onApply}>
-                        {t("common:apply")}
-                    </Button>
+                    <div>
+                        <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onApply} disabled={state.value.length === 0}>
+                            {t("common:apply")}
+                        </Button>
+                    </div>
                 )}
             </>
         );

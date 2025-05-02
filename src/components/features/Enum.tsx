@@ -5,7 +5,7 @@ import NoAccessError from "./NoAccessError.js";
 import type { BaseFeatureProps } from "./index.js";
 
 type EnumProps = BaseFeatureProps<EnumFeature>;
-const VERY_BIG_ENUM_SIZE = 4;
+const BIG_ENUM_SIZE = 6;
 
 export default function Enum(props: EnumProps) {
     const {
@@ -15,15 +15,13 @@ export default function Enum(props: EnumProps) {
         minimal,
     } = props;
 
-    const thisIsVeryBigEnumeration = values.length > VERY_BIG_ENUM_SIZE;
-
     if (access & FeatureAccessMode.SET) {
         return (
             <EnumEditor
                 onChange={(value) => onChange({ [property]: value })}
-                values={values as unknown as ValueWithLabelOrPrimitive[]}
-                value={deviceState[property] as ValueWithLabelOrPrimitive}
-                minimal={minimal || thisIsVeryBigEnumeration}
+                values={values}
+                value={(deviceState[property] as ValueWithLabelOrPrimitive) || ""}
+                minimal={minimal || values.length > BIG_ENUM_SIZE}
             />
         );
     }

@@ -6,11 +6,11 @@ type ColorProps = BaseFeatureProps<ColorFeature>;
 
 export default function Color(props: ColorProps) {
     const { deviceState, feature, onChange, minimal } = props;
-    const value = {};
+    const value = {} as AnyColor;
 
     for (const innerFeature of feature.features) {
-        value[innerFeature.name] = (deviceState[feature.property] as Record<string, Record<string, unknown>>)?.[innerFeature.property] ?? 0;
+        value[innerFeature.name] = deviceState[feature.property]?.[innerFeature.property] ?? 0;
     }
 
-    return <ColorEditor onChange={(color) => onChange({ color })} value={value as AnyColor} format={feature.name} minimal={minimal} />;
+    return <ColorEditor onChange={(color) => onChange({ color })} value={value} format={feature.name} minimal={minimal} />;
 }

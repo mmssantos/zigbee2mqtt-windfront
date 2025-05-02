@@ -12,11 +12,13 @@ import type {
 } from "zigbee2mqtt";
 
 export type RecursiveMutable<T> = { -readonly [K in keyof T]: RecursiveMutable<T[K]> };
+
 // biome-ignore lint/complexity/noBannedTypes: generic type
 export type OmitFunctions<T> = { [K in keyof T as T[K] extends Function ? never : K]: T[K] };
 
 // TODO remove
 export type Cluster = string | number;
+
 export type Endpoint = string | number;
 
 export type DeviceType = "Coordinator" | "Router" | "EndDevice" | "Unknown" | "GreenPower";
@@ -85,6 +87,7 @@ export enum InterviewState {
 //-- ZHC
 
 export type GenericFeatureType = "binary" | "list" | "numeric" | "enum" | "text";
+
 export type CompositeFeatureType = "switch" | "lock" | "composite" | "light" | "cover" | "fan" | "climate";
 
 export enum FeatureAccessMode {
@@ -173,6 +176,7 @@ export type RGBColor = {
     g: number;
     b: number;
 };
+
 export type HueSaturationColor = {
     hue: number;
     saturation: number;
@@ -182,4 +186,7 @@ export type XYColor = {
     x: number;
     y: number;
 };
+
 export type AnyColor = RGBColor | XYColor | HueSaturationColor;
+
+export type ColorFormat = "color_rgb" | "color_xy" | "color_hs";

@@ -6,11 +6,11 @@ export default function BaseViewer(props: BaseFeatureProps<GenericFeature>) {
     return (
         <div>
             {props.feature.property && (
-                <strong>
+                <span className="font-bold">
                     <DisplayValue value={props.deviceState[props.feature.property]} name={props.feature.name} />
-                </strong>
+                </span>
             )}
-            {"unit" in props.feature && <small className="text-muted ms-1">{props.feature.unit}</small>}
+            {"unit" in props.feature && <span className="text-xs ms-1">{props.feature.unit}</span>}
         </div>
     );
 }

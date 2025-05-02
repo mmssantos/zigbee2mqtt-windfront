@@ -3,8 +3,8 @@ import type { BaseFeatureProps } from "./index.js";
 
 export default function NoAccessError(props: BaseFeatureProps<GenericFeature | CompositeFeature>) {
     return (
-        <div className="alert alert-warning p-0" role="alert">
-            Unknown access {JSON.stringify(props.feature.access, null, 4)}
+        <div className="alert alert-warning" role="alert">
+            Unknown access <pre>{props.feature.access}</pre>
         </div>
     );
 }

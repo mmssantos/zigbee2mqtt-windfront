@@ -4,9 +4,8 @@ import camelCase from "lodash/camelCase.js";
 import startCase from "lodash/startCase.js";
 import { type PropsWithChildren, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { type CompositeFeature, type DeviceState, FeatureAccessMode, type GenericFeature } from "../../types.js";
+import { type ColorFeature, type CompositeFeature, type DeviceState, FeatureAccessMode, type GenericFeature } from "../../types.js";
 import Button from "../button/Button.js";
-import { isColorFeature } from "../device-page/index.js";
 import { getGenericFeatureIcon } from "./index.js";
 
 export type FeatureWrapperProps = {
@@ -15,6 +14,11 @@ export type FeatureWrapperProps = {
     deviceState?: DeviceState;
     onRead(property: Record<string, unknown>): void;
 };
+
+function isColorFeature(feature: GenericFeature | CompositeFeature): feature is ColorFeature {
+    return feature.type === "composite" && (feature.name === "color_xy" || feature.name === "color_hs");
+}
+
 export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperProps>) {
     const { t } = useTranslation(["featureDescriptions", "featureNames"]);
     const { children, feature, deviceState = {}, onRead } = props;
@@ -41,17 +45,19 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
     );
 
     return (
-        <div className="stat bg-base-100 border border-base-300">
-            <div className="stat-figure">{fi && <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} size="2xl" />}</div>
-            <div className="stat-title">{label}</div>
-            <div className="stat-value">{children}</div>
-            {feature.description && <div className="stat-desc">{t(feature.description)}</div>}
-            {isReadable && (
-                <div className="stat-actions mt-1.5">
-                    <Button<CompositeFeature | GenericFeature> item={feature} onClick={onSyncClick} className="btn btn-xs btn-square btn-primary">
-                        <FontAwesomeIcon icon={faSync} />
-                    </Button>
+        <div className="list-row">
+            <div>{fi && <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} size="2xl" />}</div>
+            <div>
+                <div>{label}</div>
+                <div className="text-xs font-semibold opacity-60">
+                    {feature.description && <div className="stat-desc">{t(feature.description)}</div>}
                 </div>
+            </div>
+            <div className="list-col-wrap flex flex-col gap-2">{children}</div>
+            {isReadable && (
+                <Button<CompositeFeature | GenericFeature> item={feature} onClick={onSyncClick} className="btn btn-xs btn-square btn-primary">
+                    <FontAwesomeIcon icon={faSync} />
+                </Button>
             )}
         </div>
     );

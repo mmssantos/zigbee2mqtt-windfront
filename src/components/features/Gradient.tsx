@@ -31,7 +31,7 @@ export function Gradient(props: GradientProps) {
         deviceState,
     } = props;
     const { t } = useTranslation(["gradient", "common"]);
-    const [colors, setColors] = useState<Array<RGBColor>>(Array(gradientColors).fill({ x: 0, y: 0 }));
+    const [colors, setColors] = useState<Array<RGBColor>>(Array(gradientColors).fill({ r: 0, g: 0, b: 0 }));
 
     const setColor = (idx: number, hex: string) => {
         const c = [...colors];
@@ -68,37 +68,33 @@ export function Gradient(props: GradientProps) {
     }, [colors, length_min, length_max]);
 
     return (
-        <div className="d-flex flex-column gap-1">
+        <div className="flex flex-col gap-2">
             {colors.map((color, idx) => (
-                <div key={`${color.r}${color.g}${color.b}`} className="d-flex gap-2">
+                <div key={`${color.r}${color.g}${color.b}-${idx}`} className="flex flex-row flex-wrap gap-2 items-center">
                     <ColorEditor
                         onChange={(ch) => {
-                            setColor(idx, ch.hex as string);
+                            setColor(idx, ch.hex);
                         }}
                         value={color}
                         format="color_rgb"
                     />
                     {canRemove && (
-                        <Button<void> className="btn btn-error me-2" onClick={() => removeColor(idx)}>
+                        <Button<void> className="btn btn-error" onClick={() => removeColor(idx)}>
                             -
                         </Button>
                     )}
                 </div>
             ))}
             {canAdd && (
-                <Button<void> className="btn btn-success me-2" onClick={addColor}>
+                <Button<void> className="btn btn-success" onClick={addColor}>
                     +
                 </Button>
             )}
             <div>
-                <Button
-                    className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`}
-                    onClick={() => onChange({ gradient: colors.map(rgbToHex) })}
-                >
+                <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={() => onChange({ gradient: colors.map(rgbToHex) })}>
                     {t("common:apply")}
                 </Button>
             </div>
-            ,
         </div>
     );
 }

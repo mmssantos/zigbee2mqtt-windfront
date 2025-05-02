@@ -3,7 +3,6 @@ import { type JSX, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { CompositeFeature, GenericFeature, OmitFunctions } from "../../types.js";
 import Button from "../button/Button.js";
-import { isCompositeFeature } from "../device-page/index.js";
 import { Feature } from "./Feature.js";
 import type { BaseFeatureProps } from "./index.js";
 
@@ -12,7 +11,7 @@ type CompositeType = "composite" | "light" | "switch" | "cover" | "lock" | "fan"
 interface CompositeProps extends BaseFeatureProps<CompositeFeature> {
     type: CompositeType;
     parentFeatures?: (CompositeFeature | GenericFeature)[];
-    stepsConfiguration?: Record<string, unknown>;
+    steps?: Record<string, unknown>;
     minimal?: boolean;
     showEndpointLabels?: boolean;
 }
@@ -25,7 +24,7 @@ const MAGIC_NO_ENDPOINT = "MAGIC_NO_ENDPOINT";
 
 const isCompositeRoot = (feature: CompositeFeature, parentFeatures: (CompositeFeature | GenericFeature)[] | undefined): boolean => {
     return (
-        isCompositeFeature(feature) &&
+        feature.type === "composite" &&
         parentFeatures !== undefined &&
         (parentFeatures.length === 1 ||
             // When parent is e.g. climate
@@ -48,7 +47,7 @@ export function Composite(props: CompositeProps) {
             setState({ ...state, ...value });
 
             if (!isCompositeRoot(feature, parentFeatures)) {
-                if (isCompositeFeature(feature)) {
+                if (feature.type === "composite") {
                     onChange(feature.property ? { [feature.property]: { ...state, ...value } } : value);
                 } else {
                     onChange(value);
@@ -66,7 +65,7 @@ export function Composite(props: CompositeProps) {
 
     const onFeatureRead = useCallback(
         (property: Record<string, unknown>): void => {
-            if (isCompositeFeature(feature)) {
+            if (feature.type === "composite") {
                 onRead?.(feature.property ? { [feature.property]: property } : property);
             } else {
                 onRead?.(property);
@@ -144,15 +143,16 @@ export function Composite(props: CompositeProps) {
         }
     }
 
-    if (isCompositeRoot(feature, parentFeatures)) {
-        renderedFeatures.push(
-            <div key={`${feature.name}apply`}>
-                <Button className={`btn btn-primary float-end${minimal ? " btn-sm" : ""}`} onClick={onCompositeFeatureApply}>
-                    {t("common:apply")}
-                </Button>
-            </div>,
-        );
-    }
-
-    return renderedFeatures;
+    return (
+        <>
+            {renderedFeatures}
+            {isCompositeRoot(feature, parentFeatures) && (
+                <div>
+                    <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onCompositeFeatureApply}>
+                        {t("common:apply")}
+                    </Button>
+                </div>
+            )}
+        </>
+    );
 }

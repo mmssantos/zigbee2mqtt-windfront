@@ -23,6 +23,7 @@
         "ok": "OK",
         "read": "Read",
         "save": "Save",
+        "select_value": "Select value",
         "select_device": "Select device",
         "select_endpoint": "Select endpoint",
         "select_group": "Select group",

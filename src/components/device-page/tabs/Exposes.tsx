@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import type { CompositeFeature, Device, DeviceState } from "../../../types.js";
 
 import { useTranslation } from "react-i18next";
@@ -17,26 +17,36 @@ export function Exposes(props: ExposesProps) {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const deviceStates = useAppSelector((state) => state.deviceStates);
 
+    const onChange = useCallback(
+        async (value: Record<string, unknown>) => {
+            await sendMessage<"{friendlyNameOrId}/set">(
+                // @ts-expect-error templated API endpoint
+                `${device.ieee_address}/set`,
+                value,
+            );
+        },
+        [sendMessage, device.ieee_address],
+    );
+
+    const onRead = useCallback(
+        async (value: Record<string, unknown>) => {
+            await sendMessage<"{friendlyNameOrId}/get">(
+                // @ts-expect-error templated API endpoint
+                `${device.ieee_address}/get`,
+                value,
+            );
+        },
+        [sendMessage, device.ieee_address],
+    );
+
     return device.definition?.exposes?.length ? (
-        <div className="stats flex flex-row flex-wrap shadow">
+        <div className="list bg-base-100 rounded-box shadow-md">
             <Feature
                 feature={{ features: device.definition.exposes, type: "composite" } as CompositeFeature}
                 device={device}
                 deviceState={deviceStates[device.friendly_name] ?? ({} as DeviceState)}
-                onChange={async (value) => {
-                    await sendMessage<"{friendlyNameOrId}/set">(
-                        // @ts-expect-error templated API endpoint
-                        `${device.ieee_address}/set`,
-                        value,
-                    );
-                }}
-                onRead={async (value) => {
-                    await sendMessage<"{friendlyNameOrId}/get">(
-                        // @ts-expect-error templated API endpoint
-                        `${device.ieee_address}/get`,
-                        value,
-                    );
-                }}
+                onChange={onChange}
+                onRead={onRead}
                 parentFeatures={[]}
                 featureWrapperClass={FeatureWrapper}
             />

@@ -1,17 +1,5 @@
 import convertColors from "color-convert";
-import type { AnyColor, HueSaturationColor, RGBColor, XYColor } from "../../types.js";
-
-type Payload = AnyColor;
-
-export type ColorFormat = "color_xy" | "color_hs" | "color_rgb";
-
-export type ColorProps = {
-    value: Payload;
-    steps?: string[][];
-    format: ColorFormat;
-    onChange(value: Record<string, unknown>): void;
-    minimal?: boolean;
-};
+import type { AnyColor, ColorFormat, HueSaturationColor, RGBColor, XYColor } from "../../types.js";
 
 export const toRGB = (source: AnyColor, sourceFormat: ColorFormat): string => {
     switch (sourceFormat) {
@@ -38,6 +26,3 @@ export const toRGB = (source: AnyColor, sourceFormat: ColorFormat): string => {
             return "#FFFFFF";
     }
 };
-
-export const WHITE_PALLET = ["#FFFFFF", "#FDF4DC", "#F4FDFF"];
-export const PRIDE_PALLET = ["#FF0018", "#FFA52C", "#FFFF41", "#008018", "#0000F9", "#86007D"];

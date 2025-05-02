@@ -12,11 +12,14 @@ export default function Text(props: TextProps) {
         deviceState,
         onChange,
     } = props;
+
     if (access & FeatureAccessMode.SET) {
         return <TextEditor onChange={(value) => onChange({ [property]: value })} value={(deviceState[property] as string) ?? ""} />;
     }
+
     if (access & FeatureAccessMode.STATE) {
         return <BaseViewer {...props} />;
     }
+
     return <NoAccessError {...props} />;
 }

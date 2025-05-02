@@ -63,7 +63,7 @@ export function ImageLocaliser(props: Props): JSX.Element {
                 if (device.type !== "Coordinator") {
                     localiseImage(device)
                         .catch((err) => {
-                            console.log("Error localising image", err);
+                            console.error("Error localising image", err);
                             setLocalisationStatus((curr) => {
                                 return { ...curr, [device.ieee_address]: "error" };
                             });

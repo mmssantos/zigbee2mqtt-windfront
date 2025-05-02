@@ -32,10 +32,8 @@ const isValidRule = (rule: NiceBindingRule): boolean => {
     let valid = false;
 
     if (rule.target.type === "endpoint") {
-        console.log(rule.source.endpoint, rule.target.ieee_address, rule.target.endpoint, rule.clusters.length > 0);
         valid = !!(rule.source.endpoint && rule.target.ieee_address && rule.target.endpoint && rule.clusters.length > 0);
     } else if (rule.target.type === "group") {
-        console.log(rule.source.endpoint, rule.target.id, rule.clusters.length > 0);
         valid = !!(rule.source.endpoint && rule.target.id && rule.clusters.length > 0);
     }
 

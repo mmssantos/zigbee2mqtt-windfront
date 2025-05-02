@@ -1,43 +1,46 @@
-import { type InputHTMLAttributes, useEffect, useState } from "react";
-import type { AnyColor } from "../../types.js";
+import { type InputHTMLAttributes, useState } from "react";
+import type { AnyColor, ColorFormat } from "../../types.js";
 import Button from "../button/Button.js";
-import { type ColorProps, PRIDE_PALLET, WHITE_PALLET, toRGB } from "./index.js";
+import { toRGB } from "./index.js";
+
+type ColorEditorProps = {
+    value: AnyColor;
+    format: ColorFormat;
+    onChange(value: { hex: string }): void;
+    minimal?: boolean;
+};
+
+const WHITE_PALLET = ["#FFFFFF", "#FDF4DC", "#F4FDFF"];
+const PRIDE_PALLET = ["#FF0018", "#FFA52C", "#FFFF41", "#008018", "#0000F9", "#86007D"];
 
 const getPalletKey = (pallet: string[]) => pallet.join("-");
 
-export default function ColorEditor(props: ColorProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
-    const { onChange, value = {} as AnyColor, format, steps = [PRIDE_PALLET, WHITE_PALLET], minimal, ...rest } = props;
-    const [currentColor, setCurrentColor] = useState<string>(toRGB(value, format));
-
-    useEffect(() => {
-        setCurrentColor(toRGB(value, format));
-    }, [value, format]);
+export default function ColorEditor(props: ColorEditorProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
+    const { onChange, value = {} as AnyColor, format, minimal, ...rest } = props;
+    const [currentColor] = useState<string>(toRGB(value, format));
 
     return (
-        <>
+        <div className="flex flex-row flex-wrap gap-2 items-center">
             {!minimal &&
-                steps.map((pallet) => (
-                    <div key={getPalletKey(pallet)} className="join me-2 float-start border">
+                [PRIDE_PALLET, WHITE_PALLET].map((pallet) => (
+                    <div key={getPalletKey(pallet)} className="join">
                         {pallet.map((step) => (
                             <Button<string>
-                                className="btn join-item"
+                                className="btn btn-sm btn-square join-item"
                                 style={{ backgroundColor: step }}
                                 key={step}
                                 item={step}
                                 title={step}
                                 onClick={(item) => onChange({ hex: item })}
-                            >
-                                &nbsp;&nbsp;&nbsp;
-                            </Button>
+                            />
                         ))}
                     </div>
                 ))}
 
             <input
                 type="color"
-                className="form-control form-control-color"
+                className="color"
                 value={currentColor}
-                style={{ minWidth: 40 }}
                 onChange={(e) => {
                     if (e.target.value.toLowerCase() !== currentColor.toLowerCase()) {
                         onChange({ hex: e.target.value });
@@ -45,6 +48,6 @@ export default function ColorEditor(props: ColorProps & Omit<InputHTMLAttributes
                 }}
                 {...rest}
             />
-        </>
+        </div>
     );
 }

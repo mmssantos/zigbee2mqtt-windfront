@@ -1,7 +1,6 @@
 import { type CompositeFeature, type DeviceState, FeatureAccessMode, type GenericFeature } from "../../types.js";
 
 import groupBy from "lodash/groupBy.js";
-import { isClimateFeature, isLightFeature } from "../device-page/index.js";
 
 const GENERIC_RENDERER_IGNORED_NAMES = [
     "linkquality",
@@ -39,7 +38,7 @@ export const getDashboardFeatures = (
     const { access, property, name, type } = feature;
     let features: CompositeFeature["features"] = feature.features ?? [];
 
-    if (isLightFeature(feature) || isClimateFeature(feature)) {
+    if (feature.type === "light" || feature.type === "climate") {
         const state = (property ? deviceState[property] : deviceState) as DeviceState;
         features = [];
         const validFeatures: GenericFeature[] = [];
