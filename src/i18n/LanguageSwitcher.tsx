@@ -56,7 +56,7 @@ const LOCALES_MAP = {
     eu,
 };
 
-export default function LocalePicker(): JSX.Element {
+export default function LanguageSwitcher({ useExistingChildren }: { useExistingChildren?: true }): JSX.Element {
     const { i18n } = useTranslation("localeNames");
     const currentLanguage = LOCALES_MAP[i18n.language] ? i18n.language : i18n.language.split("-")[0];
 
@@ -66,19 +66,20 @@ export default function LocalePicker(): JSX.Element {
             buttonChildren={<img src={LOCALES_MAP[currentLanguage] ?? missing} alt={localeNames[currentLanguage]} style={{ maxWidth: "80%" }} />}
             dropdownStyle="dropdown-end"
         >
-            {Object.keys(i18n.options.resources as Resource).map((language) => (
-                <li
-                    key={language}
-                    onClick={async () => await i18n.changeLanguage(language)}
-                    onKeyUp={async (e) => {
-                        if (e.key === "enter") {
-                            await i18n.changeLanguage(language);
-                        }
-                    }}
-                >
-                    <span className="btn btn-block btn-ghost">{localeNames[language]}</span>
-                </li>
-            ))}
+            {!useExistingChildren &&
+                Object.keys(i18n.options.resources as Resource).map((language) => (
+                    <li
+                        key={language}
+                        onClick={async () => await i18n.changeLanguage(language)}
+                        onKeyUp={async (e) => {
+                            if (e.key === "enter") {
+                                await i18n.changeLanguage(language);
+                            }
+                        }}
+                    >
+                        <span className="btn btn-block btn-ghost">{localeNames[language]}</span>
+                    </li>
+                ))}
         </PopoverDropdown>
     );
 }

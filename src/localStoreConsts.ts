@@ -12,3 +12,5 @@ export const THEME_KEY = "theme";
 
 //-- Other
 export const HOMEPAGE_KEY = "homepage";
+
+export const I18NEXTLNG_KEY = "i18nextLng";

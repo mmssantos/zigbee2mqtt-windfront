@@ -2625,7 +2625,7 @@
         "mqtt": "MQTT",
         "ota": "OTA updates",
         "passlist": "Passlist",
-        "raw": "Raw",
+        "bridge": "Bridge",
         "restart_zigbee2mqtt": "Restart Zigbee2MQTT",
         "serial": "Serial",
         "settings": "Settings",
@@ -2643,6 +2643,8 @@
         "zigbee_herdsman_version": "zigbee-herdsman version",
         "localise_images": "Localise device images",
         "frontend_notice": "These settings are stored locally in your browser. Using private windows or clearing the cache will reset them to defaults.",
+        "reset_all": "Reset all",
+        "change_language": "Change language",
         "change_theme": "Change theme",
         "set_homepage": "Set homepage"
     },

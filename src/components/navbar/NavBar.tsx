@@ -7,7 +7,7 @@ import { Link, NavLink } from "react-router";
 import { ReadyState } from "react-use-websocket";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
-import LocalePicker from "../../i18n/LocalePicker.js";
+import LanguageSwitcher from "../../i18n/LanguageSwitcher.js";
 import { isIframe } from "../../utils.js";
 import { ThemeSwitcher } from "../ThemeSwitcher.js";
 import Button from "../button/Button.js";
@@ -111,7 +111,7 @@ export const NavBar = () => {
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1">
                     {showRestart}
-                    <LocalePicker />
+                    <LanguageSwitcher />
                     <ThemeSwitcher />
                 </ul>
                 <div className="inline-grid *:[grid-area:1/1]">
