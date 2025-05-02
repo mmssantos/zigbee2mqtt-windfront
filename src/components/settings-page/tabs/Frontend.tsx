@@ -8,10 +8,12 @@ import {
     HOMEPAGE_KEY,
     I18NEXTLNG_KEY,
     OTA_TABLE_PAGE_SIZE_KEY,
+    PERMIT_JOIN_TIME_KEY,
     THEME_KEY,
 } from "../../../localStoreConsts.js";
 import { ThemeSwitcher } from "../../ThemeSwitcher.js";
 import Button from "../../button/Button.js";
+import InputField from "../../form-fields/InputField.js";
 import SelectField from "../../form-fields/SelectField.js";
 
 // XXX: workaround typing
@@ -19,11 +21,16 @@ const local = store2 as unknown as typeof store2.default;
 
 export default function Frontend() {
     const { t } = useTranslation(["settings", "navbar"]);
-    const [homepage, setHomepage] = useState<string>(local.get(HOMEPAGE_KEY) || "devices");
+    const [homepage, setHomepage] = useState<string>(local.get(HOMEPAGE_KEY, "devices"));
+    const [permitJoinTime, setPermitJoinTime] = useState<number>(local.get(PERMIT_JOIN_TIME_KEY, 254));
 
     useEffect(() => {
         local.set(HOMEPAGE_KEY, homepage);
     }, [homepage]);
+
+    useEffect(() => {
+        local.set(PERMIT_JOIN_TIME_KEY, permitJoinTime);
+    }, [permitJoinTime]);
 
     const resetAll = () => {
         local.remove(DEVICE_TABLE_PAGE_SIZE_KEY);
@@ -31,6 +38,7 @@ export default function Frontend() {
         local.remove(GROUP_TABLE_PAGE_SIZE_KEY);
         local.remove(THEME_KEY);
         local.remove(HOMEPAGE_KEY);
+        local.remove(PERMIT_JOIN_TIME_KEY);
         local.remove(I18NEXTLNG_KEY);
 
         window.location.reload();
@@ -47,16 +55,27 @@ export default function Frontend() {
                 </div>
             </div>
             <div>
-                {t("change_language")} <LanguageSwitcher useExistingChildren />
+                {t("language")} <LanguageSwitcher useExistingChildren />
             </div>
             <div>
-                {t("change_theme")} <ThemeSwitcher useExistingChildren />
+                {t("theme")} <ThemeSwitcher useExistingChildren />
             </div>
             <div>
-                <SelectField name="homepage" label={t("set_homepage")} onChange={(e) => setHomepage(e.target.value)} defaultValue={homepage}>
+                <SelectField name="homepage" label={t("homepage")} onChange={(e) => setHomepage(e.target.value)} defaultValue={homepage}>
                     <option value="devices">{t("navbar:devices")}</option>
                     <option value="dashboard">{t("navbar:dashboard")}</option>
                 </SelectField>
+            </div>
+            <div>
+                <InputField
+                    type="number"
+                    name="permit_join_time"
+                    label={t("permit_join_time")}
+                    min={1}
+                    max={254}
+                    defaultValue={permitJoinTime}
+                    onChange={(e) => setPermitJoinTime(e.target.valueAsNumber)}
+                />
             </div>
         </div>
     );

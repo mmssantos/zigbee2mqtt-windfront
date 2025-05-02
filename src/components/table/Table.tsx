@@ -43,7 +43,7 @@ export default function Table<T>(props: Props<T>) {
         initialState: {
             pagination: {
                 pageIndex: 0, // custom initial page index
-                pageSize: pageSizeStoreKey ? (local.get(pageSizeStoreKey) ?? 10) : 10, // custom default page size
+                pageSize: pageSizeStoreKey ? local.get(pageSizeStoreKey, 10) : 10, // custom default page size
             },
         },
         onColumnFiltersChange: setColumnFilters,

@@ -2,12 +2,17 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import store2 from "store2";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
+import { PERMIT_JOIN_TIME_KEY } from "../../localStoreConsts.js";
 import type { Device } from "../../types.js";
 import Button from "../button/Button.js";
 import { PopoverDropdown } from "../dropdown/PopoverDropdown.js";
 import Countdown from "../value-decorators/Countdown.js";
+
+// XXX: workaround typing
+const local = store2 as unknown as typeof store2.default;
 
 export default function PermitJoinButton({ popoverId }: { popoverId: string }) {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
@@ -54,7 +59,10 @@ export default function PermitJoinButton({ popoverId }: { popoverId: string }) {
         <div className="join ml-2">
             <Button<void>
                 onClick={async () =>
-                    await sendMessage("bridge/request/permit_join", { time: permitJoin ? 0 : 254, device: selectedRouter?.ieee_address })
+                    await sendMessage("bridge/request/permit_join", {
+                        time: permitJoin ? 0 : local.get(PERMIT_JOIN_TIME_KEY, 254),
+                        device: selectedRouter?.ieee_address,
+                    })
                 }
                 className="btn btn-outline-secondary join-item"
             >

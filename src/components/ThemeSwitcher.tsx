@@ -48,7 +48,7 @@ const ALL_THEMES = [
 const local = store2 as unknown as typeof store2.default;
 
 export const ThemeSwitcher = ({ useExistingChildren }: { useExistingChildren?: true }): JSX.Element => {
-    const [currentTheme, setCurrentTheme] = useState<string>(local.get(THEME_KEY) || "");
+    const [currentTheme, setCurrentTheme] = useState<string>(local.get(THEME_KEY, ""));
 
     useEffect(() => {
         local.set(THEME_KEY, currentTheme);

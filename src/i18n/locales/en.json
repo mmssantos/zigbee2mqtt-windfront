@@ -2644,9 +2644,10 @@
         "localise_images": "Localise device images",
         "frontend_notice": "These settings are stored locally in your browser. Using private windows or clearing the cache will reset them to defaults.",
         "reset_all": "Reset all",
-        "change_language": "Change language",
-        "change_theme": "Change theme",
-        "set_homepage": "Set homepage"
+        "language": "Language",
+        "theme": "Theme",
+        "homepage": "Homepage",
+        "permit_join_time": "Permit join time"
     },
     "touchlink": {
         "detected_devices_message": "Detected {{count}} touchlink devices.",
