@@ -11,7 +11,7 @@ type DeviceSpecificSettingsProps = {
     device: Device;
 };
 
-export function DeviceSpecificSettings(props: DeviceSpecificSettingsProps) {
+export default function DeviceSpecificSettings(props: DeviceSpecificSettingsProps) {
     const { t } = useTranslation(["exposes"]);
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const { sendMessage } = useContext(WebSocketApiRouterContext);

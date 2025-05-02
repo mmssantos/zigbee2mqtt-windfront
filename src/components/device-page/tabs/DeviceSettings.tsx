@@ -19,7 +19,7 @@ const genericUiSchema: UiSchema = {
     "ui:order": ["friendly_name", "disabled", "retain", "retention", "qos", "filtered_attributes", "*"],
 };
 
-export function DeviceSettings(props: DeviceSettingsProps) {
+export default function DeviceSettings(props: DeviceSettingsProps) {
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const [state, setState] = useState<Record<string, unknown>>({});
     let formData: Kvp | Kvp[] | undefined = undefined;

@@ -26,7 +26,7 @@ type DeviceInfoProps = {
 
 const MARKDOWN_LINK_REGEX = /\[(.*?)]\((.*?)\)/;
 
-export function DeviceInfo(props: DeviceInfoProps) {
+export default function DeviceInfo(props: DeviceInfoProps) {
     const { device } = props;
     const { t } = useTranslation(["zigbee", "availability"]);
     const deviceStates = useAppSelector((state) => state.deviceStates);

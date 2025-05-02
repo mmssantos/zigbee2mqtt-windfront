@@ -32,7 +32,7 @@ const convertBindingsIntoNiceStructure = (device: Device): NiceReportingRule[] =
 
 const getRuleKey = (rule: NiceReportingRule): string => `${rule.isNew}-${rule.endpoint}-${rule.cluster}-${rule.attribute}`;
 
-export function Reporting(props: ReportingProps): JSX.Element {
+export default function Reporting(props: ReportingProps): JSX.Element {
     const { device } = props;
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const [newReportingRule] = useState<NiceReportingRule>({

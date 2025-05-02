@@ -7,7 +7,7 @@ type SceneProps = {
     device: Device;
 };
 
-export function Scene(props: SceneProps) {
+export default function Scene(props: SceneProps) {
     const deviceState = useAppSelector((state) => state.deviceStates[props.device.friendly_name] ?? {});
 
     return (

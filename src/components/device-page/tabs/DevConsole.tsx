@@ -12,7 +12,7 @@ interface DevConsoleProps {
 
 const ATTRIBUTE_LOG_REGEX = /^(zhc:tz: Read result of |z2m: Publish 'set' 'read' to |z2m: Publish 'set' 'write' to |zhc:tz: Wrote )/;
 
-export function DevConsole(props: DevConsoleProps) {
+export default function DevConsole(props: DevConsoleProps) {
     const logs = useAppSelector((state) => state.logs);
     const [lastAttributeLog, setLastAttributeLog] = useState<LogMessage>();
     const [lastCommandLog, setLastCommandLog] = useState<LogMessage>();

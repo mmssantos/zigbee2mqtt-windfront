@@ -12,21 +12,10 @@ import {
     faWandSparkles,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useEffect, useMemo } from "react";
+import { type JSX, lazy, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { NavLink, useNavigate, useParams } from "react-router";
+import { NavLink, type NavLinkRenderProps, useNavigate, useParams } from "react-router";
 import { HeaderDeviceSelector } from "../components/device-page/HeaderDeviceSelector.js";
-import { Bind } from "../components/device-page/tabs/Bind.js";
-import Clusters from "../components/device-page/tabs/Clusters.js";
-import { DevConsole } from "../components/device-page/tabs/DevConsole.js";
-import { DeviceInfo } from "../components/device-page/tabs/DeviceInfo.js";
-import { DeviceSettings } from "../components/device-page/tabs/DeviceSettings.js";
-import { DeviceSpecificSettings } from "../components/device-page/tabs/DeviceSpecificSettings.js";
-import { Exposes } from "../components/device-page/tabs/Exposes.js";
-import { Groups } from "../components/device-page/tabs/Groups.js";
-import { Reporting } from "../components/device-page/tabs/Reporting.js";
-import { Scene } from "../components/device-page/tabs/Scene.js";
-import { State } from "../components/device-page/tabs/State.js";
 import { useAppSelector } from "../hooks/useApp.js";
 
 export type TabName =
@@ -47,6 +36,18 @@ type DevicePageUrlParams = {
     tab?: TabName;
 };
 
+const BindTab = lazy(async () => await import("../components/device-page/tabs/Bind.js"));
+const ClustersTab = lazy(async () => await import("../components/device-page/tabs/Clusters.js"));
+const DevConsoleTab = lazy(async () => await import("../components/device-page/tabs/DevConsole.js"));
+const DeviceInfoTab = lazy(async () => await import("../components/device-page/tabs/DeviceInfo.js"));
+const DeviceSettingsTab = lazy(async () => await import("../components/device-page/tabs/DeviceSettings.js"));
+const DeviceSpecificSettingsTab = lazy(async () => await import("../components/device-page/tabs/DeviceSpecificSettings.js"));
+const ExposesTab = lazy(async () => await import("../components/device-page/tabs/Exposes.js"));
+const GroupsTab = lazy(async () => await import("../components/device-page/tabs/Groups.js"));
+const ReportingTab = lazy(async () => await import("../components/device-page/tabs/Reporting.js"));
+const SceneTab = lazy(async () => await import("../components/device-page/tabs/Scene.js"));
+const StateTab = lazy(async () => await import("../components/device-page/tabs/State.js"));
+
 export default function DevicePage(): JSX.Element {
     const { t } = useTranslation("devicePage");
     const devices = useAppSelector((state) => state.devices);
@@ -54,13 +55,13 @@ export default function DevicePage(): JSX.Element {
     const navigate = useNavigate();
     const device = deviceId ? devices.find((device) => device.ieee_address === deviceId) : undefined;
 
-    const isActive = ({ isActive }) => (isActive ? " menu-active" : "");
-
     useEffect(() => {
         if (!tab && device) {
             navigate(`/device/${device.ieee_address}/info`);
         }
     }, [tab, device, navigate]);
+
+    const isActive = ({ isActive }: NavLinkRenderProps) => (isActive ? " menu-active" : "");
 
     const content = useMemo(() => {
         if (!device) {
@@ -68,35 +69,35 @@ export default function DevicePage(): JSX.Element {
         }
 
         switch (tab) {
-            case "bind":
-                return <Bind device={device} />;
-            case "state":
-                return <State device={device} />;
+            case "info":
+                return <DeviceInfoTab device={device} />;
             case "exposes":
-                return <Exposes device={device} />;
-            case "clusters":
-                return <Clusters device={device} />;
+                return <ExposesTab device={device} />;
+            case "bind":
+                return <BindTab device={device} />;
             case "reporting":
-                return <Reporting device={device} />;
+                return <ReportingTab device={device} />;
             case "settings":
-                return <DeviceSettings device={device} />;
+                return <DeviceSettingsTab device={device} />;
             case "settings-specific":
-                return <DeviceSpecificSettings device={device} />;
-            case "dev-console":
-                return <DevConsole device={device} />;
+                return <DeviceSpecificSettingsTab device={device} />;
+            case "state":
+                return <StateTab device={device} />;
+            case "clusters":
+                return <ClustersTab device={device} />;
             case "groups":
-                return <Groups device={device} />;
+                return <GroupsTab device={device} />;
             case "scene":
-                return <Scene device={device} />;
-            default:
-                return <DeviceInfo device={device} />;
+                return <SceneTab device={device} />;
+            case "dev-console":
+                return <DevConsoleTab device={device} />;
         }
     }, [device, tab, t]);
 
     return (
         <>
             <HeaderDeviceSelector devices={devices} currentDevice={device} tab={tab} />
-            <ul className="menu bg-base-200 lg:menu-horizontal rounded-box">
+            <ul className="menu bg-base-200 menu-horizontal rounded-box">
                 <li>
                     <NavLink to={`/device/${deviceId!}/info`} className={isActive}>
                         <FontAwesomeIcon icon={faInfo} />

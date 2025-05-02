@@ -59,7 +59,7 @@ const convertBindingsIntoNiceStructure = (device: Device): NiceBindingRule[] => 
     return Object.values(bindings);
 };
 
-export function Bind(props: BindProps): JSX.Element {
+export default function Bind(props: BindProps): JSX.Element {
     const { device } = props;
     const devices = useAppSelector((state) => state.devices);
     const groups = useAppSelector((state) => state.groups);

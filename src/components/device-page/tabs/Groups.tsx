@@ -15,7 +15,7 @@ type GroupsProps = {
     device: Device;
 };
 
-export function Groups({ device }: GroupsProps) {
+export default function Groups({ device }: GroupsProps) {
     const { t } = useTranslation(["groups", "zigbee"]);
     const groups = useAppSelector((state) => state.groups);
     const { sendMessage } = useContext(WebSocketApiRouterContext);

@@ -11,7 +11,7 @@ type ExposesProps = {
     device: Device;
 };
 
-export function Exposes(props: ExposesProps) {
+export default function Exposes(props: ExposesProps) {
     const { device } = props;
     const { t } = useTranslation(["exposes"]);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
