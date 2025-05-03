@@ -1,4 +1,4 @@
-import { faDownLong, faMagnifyingGlass, faQuestionCircle, faRoute, faSync } from "@fortawesome/free-solid-svg-icons";
+import { faDownLong, faMagnifyingGlass, faMarker, faQuestionCircle, faRoute, faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { groupBy } from "lodash";
 import { type JSX, useCallback, useContext, useMemo, useState } from "react";
@@ -40,6 +40,14 @@ export default function NetworkPage() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("network");
     const [filterValue, setFilterValue] = useState<string>("");
+    const [highlightValue, setHighlightValue] = useState<string>("");
+
+    const highlighted = useCallback(
+        (friendlyName: string) => {
+            return highlightValue && friendlyName.toLowerCase().includes(highlightValue.toLowerCase()) ? "bg-accent text-accent-content" : "";
+        },
+        [highlightValue],
+    );
 
     const listRelations = useCallback(
         (relations: Zigbee2MQTTNetworkMap["links"]) => {
@@ -53,6 +61,7 @@ export default function NetworkPage() {
                         <li
                             key={relation.source.ieeeAddr}
                             title={`${t("zigbee:ieee_address")}: ${device.ieee_address} | ${t("zigbee:network_address")}: ${toHex(device.network_address, 4)} (${device.network_address})`}
+                            className={highlighted(device.friendly_name)}
                         >
                             <Link to="#">
                                 <DeviceImage disabled={false} device={device} className="size-8" noIndicator={true} />
@@ -78,7 +87,7 @@ export default function NetworkPage() {
 
             return listedRelations;
         },
-        [devices, t],
+        [devices, t, highlighted],
     );
 
     const groupRelations = useCallback(
@@ -121,12 +130,12 @@ export default function NetworkPage() {
                                 title={`${t("zigbee:ieee_address")}: ${node.ieeeAddr} | ${t("zigbee:network_address")}: ${toHex(node.networkAddress, 4)} (${node.networkAddress})`}
                             >
                                 {node.type === "Coordinator" ? (
-                                    <Link to="/settings/about">
+                                    <Link to="/settings/about" className="link link-hover">
                                         <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
                                         {node.friendlyName}
                                     </Link>
                                 ) : (
-                                    <Link to={`/device/${node.ieeeAddr}`} className="link link-hover link-primary">
+                                    <Link to={`/device/${node.ieeeAddr}`} className="link link-hover">
                                         <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
                                         {node.friendlyName}
                                         <span className="badge badge-ghost">
@@ -170,7 +179,7 @@ export default function NetworkPage() {
                         className=""
                         type="search"
                         onChange={(value) => setFilterValue(value.toString())}
-                        placeholder={t("common:enter_search_criteria")}
+                        placeholder={t("common:search")}
                         value={filterValue}
                         disabled={graph.nodes.length === 0}
                     />
@@ -180,6 +189,30 @@ export default function NetworkPage() {
                         onKeyUp={(e) => {
                             if (e.key === "enter") {
                                 setFilterValue("");
+                            }
+                        }}
+                        title={t("common:clear")}
+                    >
+                        x
+                    </kbd>
+                </label>
+                {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
+                <label className="input w-64">
+                    <FontAwesomeIcon icon={faMarker} />
+                    <DebouncedInput
+                        className=""
+                        type="search"
+                        onChange={(value) => setHighlightValue(value.toString())}
+                        placeholder={t("common:highlight")}
+                        value={highlightValue}
+                        disabled={graph.nodes.length === 0}
+                    />
+                    <kbd
+                        className="kbd kbd-sm cursor-pointer"
+                        onClick={() => setHighlightValue("")}
+                        onKeyUp={(e) => {
+                            if (e.key === "enter") {
+                                setHighlightValue("");
                             }
                         }}
                         title={t("common:clear")}

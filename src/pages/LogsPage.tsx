@@ -2,7 +2,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Form from "@rjsf/core";
 import Validator from "@rjsf/validator-ajv8";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
@@ -11,11 +11,19 @@ import SelectField from "../components/form-fields/SelectField.js";
 import { LEVEL_CMAP, LOG_LEVELS, LOG_LIMITS } from "../consts.js";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { clearLogs as clearStateLogs, setLogsLimit } from "../store.js";
+import type { LogMessage } from "../types.js";
 import { formatDate } from "../utils.js";
 
 // XXX: workaround typing
 const FormTyped = Form as unknown as typeof Form.default;
 const ValidatorTyped = Validator as unknown as typeof Validator.default;
+
+const HIGHLIGHT_LEVEL_CMAP = {
+    error: "bg-error text-error-content",
+    warning: "bg-warning text-warning-content",
+    info: "bg-info text-info-content",
+    debug: "bg-accent text-accent-content opacity-50",
+};
 
 export default function LogsPage() {
     const [filterValue, setFilterValue] = useState<string>("");
@@ -27,18 +35,19 @@ export default function LogsPage() {
     const logsLimit = useAppSelector((state) => state.logsLimit);
     const { t } = useTranslation("logs");
     const logs = useAppSelector((state) => state.logs);
-    const filteredLogs = logs
-        .filter(
-            (l) =>
-                (logLevel === "all" || l.level === logLevel) &&
-                (highlightOnly || !filterValue || l.message.toLowerCase().includes(filterValue.toLowerCase())),
-        )
-        .sort();
+    const filteredLogs = useMemo(
+        () =>
+            logs.filter(
+                (log) =>
+                    (logLevel === "all" || log.level === logLevel) &&
+                    (highlightOnly || !filterValue || log.message.toLowerCase().includes(filterValue.toLowerCase())),
+            ),
+        [filterValue, highlightOnly, logLevel, logs],
+    );
 
-    const highlighted = useCallback(
-        (message: string) => {
-            return filterValue && message.toLowerCase().includes(filterValue.toLowerCase()) ? "bg-accent text-accent-content" : "";
-        },
+    const colorLog = useCallback(
+        (message: LogMessage["message"], level: LogMessage["level"]) =>
+            filterValue && message.toLowerCase().includes(filterValue.toLowerCase()) ? HIGHLIGHT_LEVEL_CMAP[level] : LEVEL_CMAP[level],
         [filterValue],
     );
 
@@ -61,7 +70,7 @@ export default function LogsPage() {
                             className=""
                             type="search"
                             onChange={(value) => setFilterValue(value.toString())}
-                            placeholder={t("common:enter_search_criteria")}
+                            placeholder={t("common:search")}
                             value={filterValue}
                             disabled={filteredLogs.length === 0}
                         />
@@ -112,11 +121,7 @@ export default function LogsPage() {
             <div className="mockup-code w-full">
                 {filteredLogs.length > 0 ? (
                     filteredLogs.map((log, idx) => (
-                        <pre
-                            key={`${log.timestamp}-${log.message}`}
-                            data-prefix={idx}
-                            className={`${LEVEL_CMAP[log.level]} ${highlighted(log.message)}`}
-                        >
+                        <pre key={`${log.timestamp}-${log.message}`} data-prefix={idx} className={colorLog(log.message, log.level)}>
                             <code>
                                 [{log.timestamp}] {log.message}
                             </code>

@@ -38,7 +38,7 @@ export default function DashboardDevice({
                     <DeviceImage disabled={false} device={device} deviceState={deviceState} className="size-10" />
                 </div>
                 <div>
-                    <Link to={`/device/${device.ieee_address}`} className="link link-hover link-primary">
+                    <Link to={`/device/${device.ieee_address}`} className="link link-hover">
                         {device.friendly_name}
                         {endpoint ? ` (${t("endpoint")}: ${endpoint})` : ""}
                     </Link>

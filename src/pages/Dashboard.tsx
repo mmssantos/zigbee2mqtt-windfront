@@ -1,7 +1,7 @@
 import NiceModal from "@ebay/nice-modal-react";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useCallback, useContext, useMemo } from "react";
+import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
@@ -9,6 +9,7 @@ import DashboardDevice from "../components/dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../components/dashboard-page/DashboardFeatureWrapper.js";
 import { getDashboardFeatures } from "../components/dashboard-page/index.js";
 import { DeviceControlEditName } from "../components/device-control/DeviceControlEditName.js";
+import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
 import { useAppSelector } from "../hooks/useApp.js";
 import type { CompositeFeature, Device, DeviceState, GenericFeature } from "../types.js";
@@ -25,6 +26,7 @@ export default function Dashboard() {
     const devices = useAppSelector((state) => state.devices);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("zigbee");
+    const [filterValue, setFilterValue] = useState<string>("");
 
     const renameDevice = useCallback(
         async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
@@ -49,7 +51,7 @@ export default function Dashboard() {
         const filteredDevices: JSX.Element[] = [];
 
         for (const device of devices) {
-            if (!device.disabled && device.supported) {
+            if (!device.disabled && device.supported && (!filterValue || device.friendly_name.toLowerCase().includes(filterValue.toLowerCase()))) {
                 const deviceState = deviceStates[device.friendly_name] ?? {};
                 const filteredFeatures: DeviceStateAndFilteredFeatures["filteredFeatures"] = [];
 
@@ -111,7 +113,47 @@ export default function Dashboard() {
         }
 
         return filteredDevices;
-    }, [devices, deviceStates, bridgeConfig.advanced.last_seen, bridgeConfig.homeassistant.enabled, sendMessage, removeDevice, renameDevice, t]);
+    }, [
+        devices,
+        deviceStates,
+        bridgeConfig.advanced.last_seen,
+        bridgeConfig.homeassistant.enabled,
+        sendMessage,
+        removeDevice,
+        renameDevice,
+        t,
+        filterValue,
+    ]);
 
-    return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3">{filteredDevices}</div>;
+    return (
+        <>
+            <div className="flex flex-row justify-center items-center gap-3 mb-3">
+                {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
+                <label className="input w-64">
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    <DebouncedInput
+                        className=""
+                        type="search"
+                        onChange={(value) => setFilterValue(value.toString())}
+                        placeholder={t("common:search")}
+                        value={filterValue}
+                        disabled={filteredDevices.length === 0}
+                    />
+                    <kbd
+                        className="kbd kbd-sm cursor-pointer"
+                        onClick={() => setFilterValue("")}
+                        onKeyUp={(e) => {
+                            if (e.key === "enter") {
+                                setFilterValue("");
+                            }
+                        }}
+                        title={t("common:clear")}
+                    >
+                        x
+                    </kbd>
+                </label>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3">{filteredDevices}</div>
+        </>
+    );
 }

@@ -19,7 +19,7 @@ export default function TextFilter<T>({
                 className=""
                 type="search"
                 onChange={setFilterValue}
-                placeholder={t("enter_search_criteria")}
+                placeholder={t("search")}
                 value={(columnFilterValue ?? "") as string}
             />
         </label>
