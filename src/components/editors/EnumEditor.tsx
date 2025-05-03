@@ -47,7 +47,7 @@ export default function EnumEditor(props: EnumProps) {
             ))}
         </select>
     ) : (
-        <div className="join">
+        <div className="join join-vertical lg:join-horizontal">
             {values.map((v) => (
                 <Button<ValueWithLabelOrPrimitive>
                     key={isPrimitive(v) ? v : v.name}

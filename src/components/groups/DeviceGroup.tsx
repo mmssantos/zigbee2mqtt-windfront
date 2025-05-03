@@ -65,5 +65,5 @@ export function DeviceGroup(props: DeviceGroupProps): JSX.Element {
         return members;
     }, [group, devices, lastSeenConfig, deviceStates, removeMember, setDeviceState, getDeviceState]);
 
-    return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3 mt-2">{groupMembers}</div>;
+    return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3">{groupMembers}</div>;
 }

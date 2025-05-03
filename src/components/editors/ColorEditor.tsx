@@ -23,7 +23,7 @@ export default function ColorEditor(props: ColorEditorProps & Omit<InputHTMLAttr
         <div className="flex flex-row flex-wrap gap-2 items-center">
             {!minimal &&
                 [PRIDE_PALLET, WHITE_PALLET].map((pallet) => (
-                    <div key={getPalletKey(pallet)} className="join">
+                    <div key={getPalletKey(pallet)} className="join join-vertical lg:join-horizontal">
                         {pallet.map((step) => (
                             <Button<string>
                                 className="btn btn-sm btn-square join-item"

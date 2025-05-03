@@ -37,7 +37,7 @@ export function Main() {
                         <HashRouter>
                             <WebSocketApiRouter>
                                 <NavBar />
-                                <main className="">
+                                <main className="p-3">
                                     <Suspense fallback={<div>Loading...</div>}>
                                         <Routes>
                                             <Route path="/ota" element={<OtaPage />} />

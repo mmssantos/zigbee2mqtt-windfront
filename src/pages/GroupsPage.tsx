@@ -84,7 +84,7 @@ export default function GroupsPage() {
                 header: "",
                 id: "actions",
                 cell: ({ row: { original: group } }) => (
-                    <div className="join float-right">
+                    <div className="join join-vertical lg:join-horizontal">
                         <Button<void>
                             className="btn btn-primary join-item"
                             onClick={() =>
@@ -116,10 +116,12 @@ export default function GroupsPage() {
     );
 
     return (
-        <div className="mt-2 px-2">
-            <div className="hero bg-base-200">
-                <div className="hero-content text-center">
-                    <div className="flex flex-row flex-wrap gap-2">
+        <>
+            <div className="collapse collapse-arrow bg-base-100 border-base-300 border mb-3">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-semibold text-center">{t("create_group")}</div>
+                <div className="collapse-content">
+                    <div className="flex flex-row flex-wrap justify-center gap-2">
                         <InputField
                             type="text"
                             name="group_name"
@@ -146,6 +148,6 @@ export default function GroupsPage() {
                 </div>
             </div>
             <Table id="all-groups" columns={columns} data={groups} pageSizeStoreKey={GROUP_TABLE_PAGE_SIZE_KEY} />
-        </div>
+        </>
     );
 }

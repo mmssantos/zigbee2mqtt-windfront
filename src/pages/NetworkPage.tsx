@@ -155,16 +155,16 @@ export default function NetworkPage() {
 
     return isLoading ? (
         <>
-            <div className="flex flex-row justify-center items-center gap-2 p-6">
+            <div className="flex flex-row justify-center items-center gap-2">
                 <span className="loading loading-infinity loading-xl" />
             </div>
-            <div className="flex flex-row justify-center items-center gap-2 p-6">{t("loading")}</div>
+            <div className="flex flex-row justify-center items-center gap-2">{t("loading")}</div>
         </>
     ) : (
         <>
-            <div className="flex flex-row justify-center items-center pt-6 join">
+            <div className="flex flex-row justify-center items-center gap-3">
                 {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
-                <label className="input w-64 join-item">
+                <label className="input w-64">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <DebouncedInput
                         className=""
@@ -188,7 +188,7 @@ export default function NetworkPage() {
                     </kbd>
                 </label>
                 <Button
-                    className="btn btn-primary btn-square join-item"
+                    className="btn btn-primary btn-square"
                     onClick={async () => {
                         dispatch(setNetworkGraphIsLoading());
                         await sendMessage("bridge/request/networkmap", { type: "raw", routes: false });

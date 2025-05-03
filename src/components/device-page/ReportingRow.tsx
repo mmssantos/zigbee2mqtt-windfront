@@ -173,7 +173,7 @@ export function ReportingRow(props: ReportingRowProps) {
             <td>
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">{t("actions")}</legend>
-                    <div className="join">
+                    <div className="join join-vertical lg:join-horizontal">
                         <Button<NiceReportingRule>
                             className="btn btn-primary join-item"
                             item={state.rule}

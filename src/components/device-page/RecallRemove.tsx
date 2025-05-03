@@ -70,7 +70,7 @@ export function RecallRemove(props: RecallRemoveAndMayBeStoreSceneProps): JSX.El
             <div className="mb-3">
                 <ScenePicker onSceneSelected={onSceneSelected} value={sceneIsNotSelected ? undefined : scene} scenes={scenes} />
             </div>
-            <div className="join">
+            <div className="join join-vertical lg:join-horizontal">
                 <Button disabled={sceneIsNotSelected} onClick={onRecallClick} className="btn btn-success join-item">
                     {t("recall")}
                 </Button>

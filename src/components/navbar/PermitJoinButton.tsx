@@ -56,7 +56,7 @@ export default function PermitJoinButton({ popoverId }: { popoverId: string }) {
     );
 
     return (
-        <div className="join ml-2">
+        <div className="join join-vertical lg:join-horizontal ml-2">
             <Button<void>
                 onClick={async () =>
                     await sendMessage("bridge/request/permit_join", {

@@ -45,48 +45,36 @@ export default function SettingsPage() {
         return <></>;
     }, [tab]);
 
-    const isActive = ({ isActive }: NavLinkRenderProps) => (isActive ? " menu-active" : "");
+    const isTabActive = ({ isActive }: NavLinkRenderProps) => (isActive ? "tab tab-active" : "tab");
 
     return (
         <>
-            <ul className="menu bg-base-200 menu-horizontal rounded-box">
-                <li>
-                    <NavLink to="/settings/frontend" className={isActive}>
-                        <FontAwesomeIcon icon={faDisplay} />
-                        {t("frontend")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/settings/settings" className={isActive}>
-                        <FontAwesomeIcon icon={faCogs} />
-                        {t("settings")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/settings/tools" className={isActive}>
-                        <FontAwesomeIcon icon={faToolbox} />
-                        {t("tools")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/settings/about" className={isActive}>
-                        <FontAwesomeIcon icon={faInfo} />
-                        {t("about")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/settings/bridge" className={isActive}>
-                        <FontAwesomeIcon icon={faCode} />
-                        {t("bridge")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to="/settings/donate" className={isActive}>
-                        <FontAwesomeIcon icon={faThumbsUp} />
-                        {t("donate")}
-                    </NavLink>
-                </li>
-            </ul>
+            <div className="tabs tabs-lift">
+                <NavLink to="/settings/frontend" className={isTabActive}>
+                    <FontAwesomeIcon icon={faDisplay} className="me-2" />
+                    {t("frontend")}
+                </NavLink>
+                <NavLink to="/settings/settings" className={isTabActive}>
+                    <FontAwesomeIcon icon={faCogs} className="me-2" />
+                    {t("settings")}
+                </NavLink>
+                <NavLink to="/settings/tools" className={isTabActive}>
+                    <FontAwesomeIcon icon={faToolbox} className="me-2" />
+                    {t("tools")}
+                </NavLink>
+                <NavLink to="/settings/about" className={isTabActive}>
+                    <FontAwesomeIcon icon={faInfo} className="me-2" />
+                    {t("about")}
+                </NavLink>
+                <NavLink to="/settings/bridge" className={isTabActive}>
+                    <FontAwesomeIcon icon={faCode} className="me-2" />
+                    {t("bridge")}
+                </NavLink>
+                <NavLink to="/settings/donate" className={isTabActive}>
+                    <FontAwesomeIcon icon={faThumbsUp} className="me-2" />
+                    {t("donate")}
+                </NavLink>
+            </div>
             <div className="block bg-base-100 border-base-300 p-3">{content}</div>
         </>
     );

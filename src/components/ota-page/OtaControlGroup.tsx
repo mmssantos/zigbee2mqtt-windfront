@@ -20,7 +20,7 @@ export default function OtaControlGroup(props: OtaControlGroup) {
 
     if (otaState == null || otaState.state === "idle") {
         return (
-            <div className="join">
+            <div className="join join-vertical lg:join-horizontal">
                 <Button<string> className="btn btn-primary btn-sm join-item" onClick={onCheckClick} item={device.ieee_address}>
                     {t("check")}
                 </Button>
@@ -59,7 +59,7 @@ export default function OtaControlGroup(props: OtaControlGroup) {
     }
 
     return (
-        <div className="join">
+        <div className="join join-vertical lg:join-horizontal">
             {otaState.state === "available" ? (
                 <>
                     <Button<string> className="btn btn-error btn-sm join-item" onClick={onUpdateClick} item={device.ieee_address} prompt>

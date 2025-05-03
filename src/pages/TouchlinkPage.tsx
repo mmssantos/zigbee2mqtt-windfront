@@ -1,4 +1,4 @@
-import { faBroom, faCircleNotch, faExclamationTriangle, faSync } from "@fortawesome/free-solid-svg-icons";
+import { faBroom, faCircleNotch, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useContext, useMemo } from "react";
@@ -65,14 +65,14 @@ export default function TouchlinkPage() {
             {
                 id: "channel",
                 header: t("zigbee:channel") as string,
-                accessorFn: () => "channel",
+                accessorFn: (touchlinkDevice) => touchlinkDevice.channel,
             },
             {
                 id: "actions",
                 header: "",
                 cell: ({ row: { original: touchlinkDevice } }) => {
                     return (
-                        <div className="join">
+                        <div className="join join-vertical lg:join-horizontal">
                             <Button<TouchlinkDevice>
                                 disabled={touchlinkInProgress}
                                 item={touchlinkDevice}
@@ -104,33 +104,19 @@ export default function TouchlinkPage() {
         [touchlinkIdentifyInProgress, touchlinkResetInProgress, touchlinkInProgress, devices, t, onIdentifyClick, onResetClick],
     );
 
-    return (
-        <div className="mt-2 px-2">
-            <div className="hero bg-base-200 mb-3">
-                <div className="hero-content text-center">
-                    <div>
-                        <h3 className="font-bold mb-2">{t("detected_devices_message", { count: touchlinkDevices.length })}</h3>
-                        {touchlinkDevices.length > 0 && (
-                            <Button title={t("rescan")} className="btn btn-primary btn-sm" onClick={onScanClick}>
-                                <FontAwesomeIcon icon={faSync} />
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            </div>
-            {touchlinkScanInProgress ? (
-                <div className="flex flex-row justify-center items-center mt-2 gap-2">
-                    <span className="loading loading-infinity loading-xl" />
-                </div>
-            ) : touchlinkDevices.length > 0 ? (
-                <Table id="touchlink-devices" columns={columns} data={touchlinkDevices} />
-            ) : (
-                <div className="flex flex-row flex-wrap justify-center items-center gap-2">
-                    <Button className="btn btn-primary" onClick={onScanClick}>
-                        {t("scan")}
-                    </Button>
-                </div>
-            )}
+    return touchlinkScanInProgress ? (
+        <div className="flex flex-row justify-center items-center gap-2">
+            <span className="loading loading-infinity loading-xl" />
         </div>
+    ) : (
+        <>
+            <div className="flex flex-row flex-wrap justify-center items-center gap-2 mb-3">
+                <Button className="btn btn-primary" onClick={onScanClick} disabled={touchlinkScanInProgress}>
+                    {t("scan")}
+                </Button>
+            </div>
+
+            <Table id="touchlink-devices" columns={columns} data={touchlinkDevices} />
+        </>
     );
 }

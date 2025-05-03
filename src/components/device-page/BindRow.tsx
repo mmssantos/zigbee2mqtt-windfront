@@ -205,7 +205,7 @@ export function BindRow(props: BindRowProps) {
                 <div className="flex-grow w-128">
                     <ClusterMultiPicker label={t("clusters")} clusters={possibleClusters} value={state.rule.clusters} onChange={setClusters} />
                 </div>
-                <div className="flex flex-row flex-wrap join items-center">
+                <div className="join join-vertical lg:join-horizontal">
                     <Button<Action>
                         item={"Bind"}
                         disabled={!isValidRule(state.rule)}
@@ -213,8 +213,8 @@ export function BindRow(props: BindRowProps) {
                         className="btn btn-primary join-item"
                         onClick={onBindOrUnBindClick}
                     >
-                        {t("bind")}&nbsp;
                         <FontAwesomeIcon icon={faLink} />
+                        {t("bind")}&nbsp;
                     </Button>
                     <Button<Action>
                         item={"Unbind"}

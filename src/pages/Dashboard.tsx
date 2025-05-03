@@ -87,7 +87,7 @@ export default function Dashboard() {
                                 featureWrapperClass={DashboardFeatureWrapper}
                                 lastSeenConfig={bridgeConfig.advanced.last_seen}
                                 controls={
-                                    <div className="join">
+                                    <div className="join join-vertical lg:join-horizontal">
                                         <DeviceControlEditName
                                             device={device}
                                             renameDevice={renameDevice}
@@ -113,5 +113,5 @@ export default function Dashboard() {
         return filteredDevices;
     }, [devices, deviceStates, bridgeConfig.advanced.last_seen, bridgeConfig.homeassistant.enabled, sendMessage, removeDevice, renameDevice, t]);
 
-    return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3 mt-2 px-2">{filteredDevices}</div>;
+    return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3">{filteredDevices}</div>;
 }

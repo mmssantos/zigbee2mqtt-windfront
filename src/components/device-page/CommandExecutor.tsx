@@ -93,7 +93,7 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
     }, [device.friendly_name, device.endpoints, endpoint, bridgeDefinitions]);
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex-1 flex flex-col gap-3">
             <h2 className="text-lg">{t("zigbee:execute_command")}</h2>
             <div className="flex flex-row flex-wrap gap-2">
                 <InputField
@@ -136,27 +136,29 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
                 className="textarea validator w-full"
                 required
             />
-            <Button
-                onClick={async () => {
-                    let commandKey: string | number = Number.parseInt(command, 10);
+            <div className="join join-vertical lg:join-horizontal">
+                <Button
+                    onClick={async () => {
+                        let commandKey: string | number = Number.parseInt(command, 10);
 
-                    if (Number.isNaN(commandKey)) {
-                        commandKey = command;
-                    }
+                        if (Number.isNaN(commandKey)) {
+                            commandKey = command;
+                        }
 
-                    await sendMessage(
-                        // @ts-expect-error templated API endpoint
-                        `${device.ieee_address}/${endpoint}/set`,
-                        {
-                            command: { cluster, command: commandKey, payload: JSON.parse(payload) },
-                        },
-                    );
-                }}
-                disabled={!formIsValid}
-                className="btn btn-success"
-            >
-                {t("execute")}
-            </Button>
+                        await sendMessage(
+                            // @ts-expect-error templated API endpoint
+                            `${device.ieee_address}/${endpoint}/set`,
+                            {
+                                command: { cluster, command: commandKey, payload: JSON.parse(payload) },
+                            },
+                        );
+                    }}
+                    disabled={!formIsValid}
+                    className="btn btn-success"
+                >
+                    {t("execute")}
+                </Button>
+            </div>
             {lastLog && <LastLogResult message={lastLog} />}
         </div>
     );

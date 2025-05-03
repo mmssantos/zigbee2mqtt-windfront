@@ -61,7 +61,7 @@ export default function DevicePage(): JSX.Element {
         }
     }, [tab, device, navigate]);
 
-    const isActive = ({ isActive }: NavLinkRenderProps) => (isActive ? " menu-active" : "");
+    const isTabActive = ({ isActive }: NavLinkRenderProps) => (isActive ? "tab tab-active" : "tab");
 
     const content = useMemo(() => {
         if (!device) {
@@ -97,74 +97,52 @@ export default function DevicePage(): JSX.Element {
     return (
         <>
             <HeaderDeviceSelector devices={devices} currentDevice={device} tab={tab} />
-            <ul className="menu bg-base-200 menu-horizontal rounded-box">
-                <li>
-                    <NavLink to={`/device/${deviceId!}/info`} className={isActive}>
-                        <FontAwesomeIcon icon={faInfo} />
-                        {t("about")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/exposes`} className={isActive}>
-                        <FontAwesomeIcon icon={faWandMagic} />
-                        {t("exposes")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/bind`} className={isActive}>
-                        <FontAwesomeIcon icon={faLink} />
-                        {t("bind")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/reporting`} className={isActive}>
-                        <FontAwesomeIcon icon={faDownLong} />
-                        {t("reporting")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/settings`} className={isActive}>
-                        <FontAwesomeIcon icon={faCogs} />
-                        {t("settings")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/settings-specific`} className={isActive}>
-                        <FontAwesomeIcon icon={faCog} />
-                        {t("settings_specific")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/state`} className={isActive}>
-                        <FontAwesomeIcon icon={faArrowsSpin} />
-                        {t("state")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/clusters`} className={isActive}>
-                        <FontAwesomeIcon icon={faReceipt} />
-                        {t("clusters")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/groups`} className={isActive}>
-                        <FontAwesomeIcon icon={faObjectGroup} />
-                        {t("groups")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/scene`} className={isActive}>
-                        <FontAwesomeIcon icon={faWandSparkles} />
-                        {t("scene")}
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to={`/device/${deviceId!}/dev-console`} className={isActive}>
-                        <FontAwesomeIcon icon={faBug} />
-                        {t("dev_console")}
-                    </NavLink>
-                </li>
-            </ul>
+            <div className="tabs tabs-lift mt-2">
+                <NavLink to={`/device/${deviceId!}/info`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faInfo} className="me-2" />
+                    {t("about")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/exposes`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faWandMagic} className="me-2" />
+                    {t("exposes")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/bind`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faLink} className="me-2" />
+                    {t("bind")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/reporting`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faDownLong} className="me-2" />
+                    {t("reporting")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/settings`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faCogs} className="me-2" />
+                    {t("settings")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/settings-specific`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faCog} className="me-2" />
+                    {t("settings_specific")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/state`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faArrowsSpin} className="me-2" />
+                    {t("state")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/clusters`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faReceipt} className="me-2" />
+                    {t("clusters")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/groups`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faObjectGroup} className="me-2" />
+                    {t("groups")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/scene`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faWandSparkles} className="me-2" />
+                    {t("scene")}
+                </NavLink>
+                <NavLink to={`/device/${deviceId!}/dev-console`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faBug} className="me-2" />
+                    {t("dev_console")}
+                </NavLink>
+            </div>
             <div className="block p-6">{content}</div>
         </>
     );

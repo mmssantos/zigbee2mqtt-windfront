@@ -56,7 +56,7 @@ export default function RangeListEditor(props: RangeListProps) {
                     <div className="">
                         <RangeEditor onChange={(newValue) => onItemChange(newValue, itemIndex)} value={itemValue} minimal={minimal} {...rest} />
                     </div>
-                    <div className="join">
+                    <div className="join join-vertical lg:join-horizontal">
                         <Button<void> className="btn btn-error btn-square join-item" onClick={handleRemoveClick(itemIndex)}>
                             -
                         </Button>

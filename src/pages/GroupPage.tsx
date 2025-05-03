@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { AddScene } from "../components/device-page/AddScene.js";
 import { RecallRemove } from "../components/device-page/RecallRemove.js";
@@ -24,31 +23,29 @@ export default function GroupPage() {
                 description: undefined,
             },
     );
-    const { t } = useTranslation(["groups"]);
 
     return (
-        <div className="mt-2 px-2">
-            <div className="hero bg-base-200">
-                <div className="hero-content text-center">
-                    <div>
-                        <h1 className="text-2xl font-bold">
-                            {t("group_name")}: {group.friendly_name} (#{group.id})
-                        </h1>
-                        <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-fr gap-3 my-2">
-                            <div>
-                                <AddDeviceToGroup group={group} />
-                            </div>
-                            <div>
-                                <RecallRemove target={group} deviceState={{} as DeviceState} />
-                            </div>
-                            <div>
-                                <AddScene target={group} deviceState={{} as DeviceState} />
-                            </div>
+        <>
+            <div className="collapse collapse-arrow bg-base-100 border-base-300 border mb-3">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-semibold text-center">
+                    {group.friendly_name} (#{group.id})
+                </div>
+                <div className="collapse-content">
+                    <div className="flex flex-row flex-wrap justify-evenly gap-4">
+                        <div className="flex-1">
+                            <AddDeviceToGroup group={group} />
+                        </div>
+                        <div className="flex-1">
+                            <RecallRemove target={group} deviceState={{} as DeviceState} />
+                        </div>
+                        <div className="flex-1">
+                            <AddScene target={group} deviceState={{} as DeviceState} />
                         </div>
                     </div>
                 </div>
             </div>
             <DeviceGroup group={group} />
-        </div>
+        </>
     );
 }

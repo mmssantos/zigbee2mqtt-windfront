@@ -100,23 +100,22 @@ export default function Settings() {
         const { keyName } = state;
 
         return (
-            <ul className="menu bg-base-200 lg:menu-horizontal rounded-box">
+            <div className="tabs tabs-lift">
                 {tabs.map((tab) => (
-                    <li key={tab.name}>
-                        <Link
-                            className={`nav-link${keyName === tab.name ? "bg-primary active" : ""}`}
-                            aria-current="page"
-                            to="#"
-                            onClick={(e) => {
-                                setState({ keyName: tab.name });
-                                e.preventDefault();
-                            }}
-                        >
-                            {t(tab.name, { defaultValue: tab.title })}
-                        </Link>
-                    </li>
+                    <Link
+                        key={tab.name}
+                        className={`tab${keyName === tab.name ? " tab-active" : ""}`}
+                        aria-current="page"
+                        to="#"
+                        onClick={(e) => {
+                            setState({ keyName: tab.name });
+                            e.preventDefault();
+                        }}
+                    >
+                        {t(tab.name, { defaultValue: tab.title })}
+                    </Link>
                 ))}
-            </ul>
+            </div>
         );
     };
 

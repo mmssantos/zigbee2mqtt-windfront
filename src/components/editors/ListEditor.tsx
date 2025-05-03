@@ -74,7 +74,7 @@ export default function ListEditor(props: ListEditorProps) {
                         featureWrapperClass={FeatureWrapper}
                         parentFeatures={parentFeatures}
                     />
-                    <div className="join">
+                    <div className="join join-vertical lg:join-horizontal">
                         <Button<void> className="btn btn-error btn-square join-item" onClick={handleRemoveClick(itemIndex)}>
                             -
                         </Button>

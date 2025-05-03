@@ -70,7 +70,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
             attributes.length > 0 && (
                 <fieldset className="fieldset flex flex-row flex-wrap gap-2 p-3 rounded-box shadow-md" data-testid="selected-attribute">
                     {attributes.map(({ attribute, value = "", definition }) => (
-                        <div key={attribute} className="join">
+                        <div key={attribute} className="join join-vertical lg:join-horizontal">
                             {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
                             <label className="input join-item">
                                 {attribute}
@@ -129,7 +129,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
     const endpoints = useMemo(() => getEndpoints(device), [device]);
 
     return endpoint ? (
-        <div className="flex flex-col gap-3">
+        <div className="flex-1 flex flex-col gap-3">
             <h2 className="text-lg">{t("zigbee:read_write_attributes")}</h2>
             <div className="flex flex-row flex-wrap gap-2">
                 <EndpointPicker
@@ -183,7 +183,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
                 />
             </div>
             {selectedAttributes}
-            <div className="flex flex-row flex-wrap join">
+            <div className="join join-vertical lg:join-horizontal">
                 <Button<void>
                     disabled={disableButtons || attributes.some((attr) => !!attr.value)}
                     className="btn btn-success join-item"

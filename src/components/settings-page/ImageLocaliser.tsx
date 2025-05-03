@@ -98,5 +98,6 @@ export function ImageLocaliser(props: Props): JSX.Element {
         case "done":
             return <div>{t("common:unknown")}</div>;
     }
+
     return <div>{t("zigbee:unknown")}</div>;
 }

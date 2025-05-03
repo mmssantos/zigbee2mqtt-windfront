@@ -21,7 +21,7 @@ export const DeviceControlEditName = (props: DeviceControlEditNameProps): JSX.El
 
     return (
         <Button<undefined>
-            className={`btn ${style} join-item`}
+            className={`btn ${style}`}
             onClick={() =>
                 NiceModal.show(RenameDeviceModal, {
                     device,

@@ -68,7 +68,7 @@ export default function DevConsole(props: DevConsoleProps) {
         <div className="flex flex-col gap-3">
             <ExternalDefinition device={props.device} />
             <div className="divider" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 auto-rows-fr gap-3">
+            <div className="flex flex-row flex-wrap justify-evenly gap-4">
                 <AttributeEditor
                     device={props.device}
                     lastLog={lastAttributeLog}
