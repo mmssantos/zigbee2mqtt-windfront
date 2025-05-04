@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { type CompositeFeature, FeatureAccessMode, type GenericFeature, type ListFeature } from "../../types.js";
 import Button from "../button/Button.js";
 import ListEditor from "../editors/ListEditor.js";
-import RangeListEditor from "../editors/RangeListEditor.js";
 import BaseViewer from "./BaseViewer.js";
 import NoAccessError from "./NoAccessError.js";
 import type { BaseFeatureProps } from "./index.js";
@@ -53,11 +52,7 @@ export default function List(props: Props) {
     if (access & FeatureAccessMode.SET) {
         return (
             <>
-                {itemType.type === "numeric" ? (
-                    <RangeListEditor onChange={onEditorChange} value={state.value} minimal={minimal} />
-                ) : (
-                    <ListEditor feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onEditorChange} value={state.value} />
-                )}
+                <ListEditor feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onEditorChange} value={state.value} />
                 {isListRoot(parentFeatures) && (
                     <div>
                         <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onApply} disabled={state.value.length === 0}>
