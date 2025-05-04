@@ -5,5 +5,5 @@ import type { BaseFeatureProps } from "./index.js";
 type FanProps = BaseFeatureProps<FanFeature>;
 
 export default function Fan(props: FanProps) {
-    return <Composite type="fan" {...props} />;
+    return <Composite {...props} />;
 }

@@ -1,8 +1,8 @@
 import { useParams } from "react-router";
-import { AddScene } from "../components/device-page/AddScene.js";
-import { RecallRemove } from "../components/device-page/RecallRemove.js";
-import { AddDeviceToGroup } from "../components/groups/AddDeviceToGroup.js";
-import { DeviceGroup } from "../components/groups/DeviceGroup.js";
+import AddScene from "../components/device-page/AddScene.js";
+import RecallRemove from "../components/device-page/RecallRemove.js";
+import AddDeviceToGroup from "../components/groups/AddDeviceToGroup.js";
+import GroupMembers from "../components/groups/GroupMembers.js";
 import { useAppSelector } from "../hooks/useApp.js";
 import type { DeviceState } from "../types.js";
 
@@ -45,7 +45,7 @@ export default function GroupPage() {
                     </div>
                 </div>
             </div>
-            <DeviceGroup group={group} />
+            <GroupMembers group={group} />
         </>
     );
 }

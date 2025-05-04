@@ -48,7 +48,6 @@ export default function DashboardDevice({
                     <Composite
                         feature={feature}
                         className="row"
-                        type="composite"
                         device={device}
                         deviceState={deviceState}
                         onChange={onChange}

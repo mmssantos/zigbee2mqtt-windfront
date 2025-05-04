@@ -5,5 +5,5 @@ import type { BaseFeatureProps } from "./index.js";
 type ClimateProps = BaseFeatureProps<ClimateFeature>;
 
 export default function Climate(props: ClimateProps) {
-    return <Composite type="climate" {...props} />;
+    return <Composite {...props} />;
 }

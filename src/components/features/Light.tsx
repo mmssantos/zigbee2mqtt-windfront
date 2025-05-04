@@ -18,5 +18,5 @@ const STEPS_CONFIG = {
 };
 
 export default function Light(props: LightProps) {
-    return <Composite type="light" {...props} steps={STEPS_CONFIG} />;
+    return <Composite {...props} steps={STEPS_CONFIG} />;
 }

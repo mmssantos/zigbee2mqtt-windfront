@@ -15,7 +15,7 @@ type AddSceneProps = {
     deviceState: DeviceState;
 };
 
-export function AddScene(props: AddSceneProps): JSX.Element {
+export default function AddScene(props: AddSceneProps): JSX.Element {
     const { target, deviceState } = props;
     const { t } = useTranslation("scene");
     const { sendMessage } = useContext(WebSocketApiRouterContext);
@@ -83,9 +83,8 @@ export function AddScene(props: AddSceneProps): JSX.Element {
                 <div className="card card-border bg-base-100 my-2">
                     <div className="card-body">
                         <Composite
-                            feature={{ features: filteredFeatures } as CompositeFeature}
+                            feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
                             className="row"
-                            type="composite"
                             device={target as Device}
                             deviceState={deviceState}
                             onChange={onCompositeChange}

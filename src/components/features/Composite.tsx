@@ -6,10 +6,7 @@ import Button from "../button/Button.js";
 import { Feature } from "./Feature.js";
 import type { BaseFeatureProps } from "./index.js";
 
-type CompositeType = "composite" | "light" | "switch" | "cover" | "lock" | "fan" | "climate";
-
 interface CompositeProps extends BaseFeatureProps<CompositeFeature> {
-    type: CompositeType;
     parentFeatures?: (CompositeFeature | GenericFeature)[];
     steps?: Record<string, unknown>;
     minimal?: boolean;

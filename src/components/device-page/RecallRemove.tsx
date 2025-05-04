@@ -6,12 +6,12 @@ import Button from "../button/Button.js";
 import { ScenePicker } from "./ScenePicker.js";
 import { getScenes } from "./index.js";
 
-export interface RecallRemoveAndMayBeStoreSceneProps {
+interface RecallRemoveProps {
     target: Device | Group;
     deviceState: DeviceState;
 }
 
-export function RecallRemove(props: RecallRemoveAndMayBeStoreSceneProps): JSX.Element {
+export default function RecallRemove(props: RecallRemoveProps): JSX.Element {
     const { target } = props;
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation("scene");

@@ -2,13 +2,13 @@ import { type JSX, useCallback, useContext, useMemo } from "react";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
 import type { Endpoint, Group } from "../../types.js";
-import { DeviceGroupRow } from "./DeviceGroupRow.js";
+import GroupMember from "./GroupMember.js";
 
-export interface DeviceGroupProps {
+interface GroupMembersProps {
     group: Group;
 }
 
-export function DeviceGroup(props: DeviceGroupProps): JSX.Element {
+export default function GroupMembers(props: GroupMembersProps): JSX.Element {
     const { group } = props;
     const devices = useAppSelector((state) => state.devices);
     const deviceStates = useAppSelector((state) => state.deviceStates);
@@ -48,7 +48,7 @@ export function DeviceGroup(props: DeviceGroupProps): JSX.Element {
             if (device) {
                 members.push(
                     <ul className="list rounded-box shadow-md" key={`${member.ieee_address}-${member.endpoint}`}>
-                        <DeviceGroupRow
+                        <GroupMember
                             removeDeviceFromGroup={removeMember}
                             device={device}
                             groupMember={member}

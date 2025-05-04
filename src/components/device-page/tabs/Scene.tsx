@@ -1,7 +1,7 @@
 import { useAppSelector } from "../../../hooks/useApp.js";
 import type { Device } from "../../../types.js";
-import { AddScene } from "../AddScene.js";
-import { RecallRemove } from "../RecallRemove.js";
+import AddScene from "../AddScene.js";
+import RecallRemove from "../RecallRemove.js";
 
 type SceneProps = {
     device: Device;

@@ -1,13 +1,17 @@
-import Form, { type ISubmitEvent, type UiSchema } from "@rjsf/core";
-import type { RJSFSchema } from "@rjsf/utils";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Form from "@rjsf/core";
+import type { RJSFSchema, UiSchema } from "@rjsf/utils";
+import Validator from "@rjsf/validator-ajv8";
 import merge from "lodash/merge.js";
 import { useCallback, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
+import { DEVICE_OPTIONS_DOCS_URL } from "../../../consts.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
 import { DescriptionField, TitleField } from "../../../i18n/rjsf-translation-fields.js";
 import type { Device } from "../../../types.js";
 import { computeSettingsDiff } from "../../../utils.js";
-import { ReadTheDocsInfo } from "../../ReadTheDocsInfo.js";
 
 type Kvp = Record<string, unknown>;
 
@@ -15,11 +19,16 @@ interface DeviceSettingsProps {
     device: Device;
 }
 
-const genericUiSchema: UiSchema = {
+// XXX: workaround typing
+const FormTyped = Form as unknown as typeof Form.default;
+const ValidatorTyped = Validator as unknown as typeof Validator.default;
+
+const GENERIC_UI_SCHEMA: UiSchema = {
     "ui:order": ["friendly_name", "disabled", "retain", "retention", "qos", "filtered_attributes", "*"],
 };
 
 export default function DeviceSettings(props: DeviceSettingsProps) {
+    const { t } = useTranslation("common");
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const [state, setState] = useState<Record<string, unknown>>({});
     let formData: Kvp | Kvp[] | undefined = undefined;
@@ -39,7 +48,7 @@ export default function DeviceSettings(props: DeviceSettingsProps) {
         const genericDeviceSettingsSchema = getGenericDeviceSettingsSchema();
         const deviceConfig = getDeviceConfig();
 
-        return { schema: genericDeviceSettingsSchema, data: deviceConfig, uiSchema: genericUiSchema };
+        return { schema: genericDeviceSettingsSchema, data: deviceConfig, uiSchema: GENERIC_UI_SCHEMA };
     }, [getDeviceConfig, getGenericDeviceSettingsSchema]);
 
     const updateConfig = useCallback(
@@ -63,9 +72,14 @@ export default function DeviceSettings(props: DeviceSettingsProps) {
 
     return (
         <>
-            <ReadTheDocsInfo docsUrl={"https://www.zigbee2mqtt.io/guide/configuration/devices-groups.html#common-device-options"} />
-
-            <Form
+            <div className="alert alert-info mb-3" role="alert">
+                <FontAwesomeIcon icon={faCircleInfo} size="2xl" />
+                <a href={DEVICE_OPTIONS_DOCS_URL} target="_blank" rel="noreferrer" className="link link-hover">
+                    {t("read_the_docs_info")}
+                </a>
+            </div>
+            <FormTyped
+                validator={ValidatorTyped}
                 schema={schema}
                 formData={formData}
                 onChange={(data) => {

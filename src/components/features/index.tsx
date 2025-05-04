@@ -58,12 +58,13 @@ import {
     faZ,
 } from "@fortawesome/free-solid-svg-icons";
 import type { FunctionComponent, HTMLAttributes, PropsWithChildren } from "react";
-import type { Device, DeviceState } from "../../types.js";
+import type { Device } from "../../types.js";
 import type { FeatureWrapperProps } from "./FeatureWrapper.js";
 
 export interface BaseFeatureProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
     feature: T;
-    deviceState: DeviceState;
+    /** Can be `DeviceState` or `Zigbee2MQTTDeviceOptions` */
+    deviceState: Record<string, unknown>;
     device: Device;
     onChange(value: Record<string, unknown> | unknown): void;
     onRead?(value: Record<string, unknown> | unknown): void;

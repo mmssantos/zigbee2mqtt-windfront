@@ -12,7 +12,7 @@ interface AddDeviceToGroupProps {
     group: Group;
 }
 
-export function AddDeviceToGroup(props: AddDeviceToGroupProps): JSX.Element {
+export default function AddDeviceToGroup(props: AddDeviceToGroupProps): JSX.Element {
     const [endpoint, setEndpoint] = useState<string | number>("");
     const [deviceIeee, setDeviceIeee] = useState<string>("");
     const { group } = props;

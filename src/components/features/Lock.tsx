@@ -5,5 +5,5 @@ import type { BaseFeatureProps } from "./index.js";
 type LockProps = BaseFeatureProps<LockFeature>;
 
 export default function Lock(props: LockProps) {
-    return <Composite type="lock" {...props} />;
+    return <Composite {...props} />;
 }

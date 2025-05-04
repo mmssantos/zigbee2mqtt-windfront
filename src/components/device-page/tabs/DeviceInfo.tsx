@@ -5,7 +5,7 @@ import { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
-import { SUPPORT_NEW_DEVICES_URL } from "../../../consts.js";
+import { SUPPORT_NEW_DEVICES_DOCS_URL } from "../../../consts.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
 import type { Device, DeviceState } from "../../../types.js";
 import { toHex } from "../../../utils.js";
@@ -112,7 +112,7 @@ export default function DeviceInfo(props: DeviceInfoProps) {
                     </span>
                     {!device.supported && (
                         <span className="badge animate-bounce">
-                            <Link target="_blank" rel="noopener noreferrer" to={SUPPORT_NEW_DEVICES_URL} className="link link-hover">
+                            <Link target="_blank" rel="noopener noreferrer" to={SUPPORT_NEW_DEVICES_DOCS_URL} className="link link-hover">
                                 {t("how_to_add_support")}
                             </Link>
                         </span>

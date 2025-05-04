@@ -5,5 +5,5 @@ import type { BaseFeatureProps } from "./index.js";
 type SwitchProps = BaseFeatureProps<SwitchFeature>;
 
 export default function Switch(props: SwitchProps) {
-    return <Composite type="switch" {...props} />;
+    return <Composite {...props} />;
 }

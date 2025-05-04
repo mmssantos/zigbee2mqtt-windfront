@@ -22,21 +22,18 @@ export default function DeviceSpecificSettings(props: DeviceSpecificSettingsProp
         [sendMessage, props.device.ieee_address],
     );
 
-    if (props.device.definition?.options?.length) {
-        const deviceState = bridgeInfo.config.devices[props.device.ieee_address] ?? {};
-
-        return (
+    return props.device.definition?.options?.length ? (
+        <div className="list bg-base-100 rounded-box shadow-md">
             <Composite
                 showEndpointLabels={true}
-                feature={{ features: props.device.definition.options } as CompositeFeature}
-                type="composite"
+                feature={{ features: props.device.definition.options, type: "composite" } as CompositeFeature}
                 device={props.device}
-                deviceState={deviceState}
+                deviceState={(bridgeInfo.config.devices[props.device.ieee_address] ?? {}) as unknown as Record<string, unknown>}
                 onChange={setDeviceOptions}
                 featureWrapperClass={FeatureWrapper}
             />
-        );
-    }
-
-    return t("empty_exposes_definition");
+        </div>
+    ) : (
+        t("empty_exposes_definition")
+    );
 }

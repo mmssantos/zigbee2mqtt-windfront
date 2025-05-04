@@ -11,5 +11,5 @@ const STEPS_CONFIG = {
 type CoverProps = BaseFeatureProps<CoverFeature>;
 
 export default function Cover(props: CoverProps) {
-    return <Composite type="cover" {...props} steps={STEPS_CONFIG} />;
+    return <Composite {...props} steps={STEPS_CONFIG} />;
 }

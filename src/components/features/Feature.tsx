@@ -121,7 +121,7 @@ export const Feature = (props: FeatureProps): JSX.Element => {
 
             return (
                 // <FeatureWrapper key={key} {...wrapperParams}>
-                <Composite type="composite" feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
+                <Composite feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
                 // </FeatureWrapper>
             );
         }

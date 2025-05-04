@@ -69,7 +69,7 @@ export default function Dashboard() {
                     filteredDevices.push(
                         <ul className="list rounded-box shadow-md" key={device.ieee_address}>
                             <DashboardDevice
-                                feature={{ features: filteredFeatures } as CompositeFeature}
+                                feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
                                 device={device}
                                 deviceState={deviceState}
                                 onChange={async (value) =>

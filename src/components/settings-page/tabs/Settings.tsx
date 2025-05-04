@@ -22,7 +22,7 @@ type SettingsPageState = {
 
 const ROOT_KEY_NAME = "main";
 
-const IGNORED_FIELDS = ["groups", "devices", "device_options", "ban", "whitelist", "map_options"];
+const IGNORED_FIELDS = ["groups", "devices", "device_options", "map_options"];
 const VALID_JSON_SCHEMAS_AS_TABS = ["object", "array"];
 
 const removePropertiesFromSchema = (names: string[], schema: RJSFSchema = {}, config: Record<string, unknown> = {}) => {

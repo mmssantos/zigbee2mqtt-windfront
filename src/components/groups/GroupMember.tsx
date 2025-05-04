@@ -8,7 +8,7 @@ import DashboardDevice from "../dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { getScenesFeatures } from "../device-page/index.js";
 
-interface DeviceGroupRowProps {
+interface GroupMemberProps {
     device: RootState["devices"][number];
     deviceState: RootState["deviceStates"][string];
     groupMember: Group["members"][number];
@@ -18,7 +18,7 @@ interface DeviceGroupRowProps {
     getDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
 }
 
-export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
+export default function GroupMember(props: GroupMemberProps): JSX.Element {
     const { removeDeviceFromGroup, groupMember, device, deviceState, lastSeenConfig, setDeviceState, getDeviceState } = props;
     const { endpoint } = groupMember;
 
@@ -38,7 +38,7 @@ export function DeviceGroupRow(props: DeviceGroupRowProps): JSX.Element {
 
     return (
         <DashboardDevice
-            feature={{ features: filteredFeatures } as CompositeFeature}
+            feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
             device={device}
             endpoint={endpoint}
             deviceState={deviceState}
