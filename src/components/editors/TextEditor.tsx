@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, useState } from "react";
+import { type InputHTMLAttributes, useEffect, useState } from "react";
 
 type TextProps = {
     value: string;
@@ -8,6 +8,10 @@ type TextProps = {
 export default function TextEditor(props: TextProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange">) {
     const { onChange, value, ...rest } = props;
     const [currentValue, setCurrentValue] = useState<string>(value);
+
+    useEffect(() => {
+        setCurrentValue(value);
+    }, [value]);
 
     return (
         <input

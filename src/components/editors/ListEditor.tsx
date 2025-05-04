@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { CompositeFeature, Device, DeviceState, GenericFeature, GenericOrCompositeFeature } from "../../types.js";
 import Button from "../button/Button.js";
 import { Feature } from "../features/Feature.js";
@@ -17,6 +17,10 @@ export default function ListEditor(props: ListEditorProps) {
     const { onChange, value, feature, parentFeatures } = props;
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const [currentValue, setCurrentValue] = useState<any[]>(value);
+
+    useEffect(() => {
+        setCurrentValue(value);
+    }, [value]);
 
     const replaceList = useCallback(
         // biome-ignore lint/suspicious/noExplicitAny: tmp

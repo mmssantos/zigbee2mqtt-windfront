@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, useState } from "react";
+import { type InputHTMLAttributes, useEffect, useState } from "react";
 import EnumEditor, { type ValueWithLabelOrPrimitive } from "./EnumEditor.js";
 
 type RangeProps = {
@@ -14,6 +14,10 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
     const { onChange, value, valueStep, min, max, unit, steps, minimal, ...rest } = props;
     const [currentValue, setCurrentValue] = useState<number>(value);
     const showRange = min != null && max != null;
+
+    useEffect(() => {
+        setCurrentValue(value);
+    }, [value]);
 
     return (
         <div className="flex flex-row flex-wrap gap-3 items-center">

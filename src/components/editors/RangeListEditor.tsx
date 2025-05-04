@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../button/Button.js";
 import RangeEditor from "./RangeEditor.js";
 
@@ -11,6 +11,10 @@ type RangeListProps = {
 export default function RangeListEditor(props: RangeListProps) {
     const { onChange, value: listValue, minimal, ...rest } = props;
     const [currentListValue, setCurrentListValue] = useState<number[]>(listValue);
+
+    useEffect(() => {
+        setCurrentListValue(listValue);
+    }, [listValue]);
 
     const replaceList = useCallback(
         (newListValue: number[]) => {

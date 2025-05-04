@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, useState } from "react";
+import { type InputHTMLAttributes, useMemo } from "react";
 import type { AnyColor, ColorFormat } from "../../types.js";
 import Button from "../button/Button.js";
 import { toRGB } from "./index.js";
@@ -17,7 +17,7 @@ const getPalletKey = (pallet: string[]) => pallet.join("-");
 
 export default function ColorEditor(props: ColorEditorProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
     const { onChange, value = {} as AnyColor, format, minimal, ...rest } = props;
-    const [currentColor] = useState<string>(toRGB(value, format));
+    const currentColor = useMemo(() => toRGB(value, format), [value, format]);
 
     return (
         <div className="flex flex-row flex-wrap gap-2 items-center">
