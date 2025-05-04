@@ -50,6 +50,10 @@ export default function SettingsPage() {
     return (
         <>
             <div className="tabs tabs-lift">
+                <NavLink to="/settings/about" className={isTabActive}>
+                    <FontAwesomeIcon icon={faInfo} className="me-2" />
+                    {t("about")}
+                </NavLink>
                 <NavLink to="/settings/frontend" className={isTabActive}>
                     <FontAwesomeIcon icon={faDisplay} className="me-2" />
                     {t("frontend")}
@@ -61,10 +65,6 @@ export default function SettingsPage() {
                 <NavLink to="/settings/tools" className={isTabActive}>
                     <FontAwesomeIcon icon={faToolbox} className="me-2" />
                     {t("tools")}
-                </NavLink>
-                <NavLink to="/settings/about" className={isTabActive}>
-                    <FontAwesomeIcon icon={faInfo} className="me-2" />
-                    {t("about")}
                 </NavLink>
                 <NavLink to="/settings/bridge" className={isTabActive}>
                     <FontAwesomeIcon icon={faCode} className="me-2" />

@@ -1,6 +1,6 @@
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faTowerBroadcast } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useContext, useMemo, useState } from "react";
+import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import store2 from "store2";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
@@ -14,13 +14,22 @@ import Countdown from "../value-decorators/Countdown.js";
 // XXX: workaround typing
 const local = store2 as unknown as typeof store2.default;
 
-export default function PermitJoinButton({ popoverId }: { popoverId: string }) {
+export default function PermitJoinButton() {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["navbar"]);
     const [selectedRouter, setSelectedRouter] = useState<Device>();
     const devices = useAppSelector((state) => state.devices);
     const permitJoin = useAppSelector((state) => state.bridgeInfo.permit_join);
     const permitJoinEnd = useAppSelector((state) => state.bridgeInfo.permit_join_end);
+
+    const onPermitJoinClick = useCallback(
+        async () =>
+            await sendMessage("bridge/request/permit_join", {
+                time: permitJoin ? 0 : local.get(PERMIT_JOIN_TIME_KEY, 254),
+                device: selectedRouter?.ieee_address,
+            }),
+        [sendMessage, selectedRouter, permitJoin],
+    );
 
     const routers = useMemo(() => {
         const filteredDevices: JSX.Element[] = [];
@@ -46,41 +55,42 @@ export default function PermitJoinButton({ popoverId }: { popoverId: string }) {
         () => (permitJoin ? <Countdown seconds={(permitJoinEnd! - Date.now()) / 1000} hideZeroes /> : null),
         [permitJoin, permitJoinEnd],
     );
-    const buttonLabel = useMemo(
-        () => (
-            <>
-                {permitJoin ? t("disable_join") : t("permit_join")} ({selectedRouter?.friendly_name ?? t("all")}){permitJoinTimer}
-            </>
-        ),
-        [permitJoin, permitJoinTimer, selectedRouter, t],
-    );
+
+    const pjButton = useMemo(() => {
+        if (permitJoin) {
+            return (
+                <Button<void> onClick={onPermitJoinClick} className="btn btn-outline-secondary join-item" title={t("disable_join")}>
+                    <FontAwesomeIcon icon={faTowerBroadcast} className="text-success" beatFade /> {selectedRouter?.friendly_name ?? t("all")}
+                    {permitJoinTimer}
+                </Button>
+            );
+        }
+
+        return (
+            <Button<void> onClick={onPermitJoinClick} className="btn btn-outline-secondary join-item" title={t("permit_join")}>
+                <FontAwesomeIcon icon={faTowerBroadcast} className="text-error" /> {selectedRouter?.friendly_name ?? t("all")}
+            </Button>
+        );
+    }, [permitJoin, permitJoinTimer, selectedRouter, t, onPermitJoinClick]);
 
     return (
-        <div className="join join-vertical lg:join-horizontal ml-2">
-            <Button<void>
-                onClick={async () =>
-                    await sendMessage("bridge/request/permit_join", {
-                        time: permitJoin ? 0 : local.get(PERMIT_JOIN_TIME_KEY, 254),
-                        device: selectedRouter?.ieee_address,
-                    })
-                }
-                className="btn btn-outline-secondary join-item"
-            >
-                {buttonLabel}
-            </Button>
-            <PopoverDropdown
-                name={`permit-join-${popoverId}`}
-                buttonChildren={<FontAwesomeIcon icon={faAngleDown} title={t("toggle_dropdown")} />}
-                buttonStyle="join-item"
-                dropdownStyle="dropdown-end"
-            >
-                <li key="all">
-                    <Button<Device> className="dropdown-item" onClick={() => setSelectedRouter(undefined)}>
-                        {t("all")}
-                    </Button>
-                </li>
-                {routers}
-            </PopoverDropdown>
+        <div className="join join-horizontal mx-1">
+            {pjButton}
+            {!permitJoin && (
+                <PopoverDropdown
+                    name="permit-join"
+                    buttonChildren={<FontAwesomeIcon icon={faAngleDown} title={t("toggle_dropdown")} />}
+                    buttonStyle="join-item"
+                    dropdownStyle="dropdown-end"
+                >
+                    <li key="all">
+                        <Button<Device> className="dropdown-item" onClick={() => setSelectedRouter(undefined)}>
+                            {t("all")}
+                        </Button>
+                    </li>
+                    {routers}
+                </PopoverDropdown>
+            )}
         </div>
     );
 }

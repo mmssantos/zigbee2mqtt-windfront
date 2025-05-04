@@ -64,6 +64,7 @@ export default function LanguageSwitcher({ useExistingChildren }: { useExistingC
         <PopoverDropdown
             name="locale-picker"
             buttonChildren={<img src={LOCALES_MAP[currentLanguage] ?? missing} alt={localeNames[currentLanguage]} style={{ maxWidth: "80%" }} />}
+            buttonStyle="mx-1"
             dropdownStyle="dropdown-end"
         >
             {!useExistingChildren &&

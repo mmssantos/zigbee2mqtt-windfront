@@ -1,6 +1,6 @@
-import { useCallback, useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 
-import { faBars, faCog } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink } from "react-router";
@@ -42,6 +42,10 @@ const URLS = [
         href: "/logs",
         key: "logs",
     },
+    {
+        href: "/settings/about",
+        key: "settings",
+    },
 ];
 
 const CONNECTION_STATUS = {
@@ -58,8 +62,8 @@ export const NavBar = () => {
     const { sendMessage, readyState } = useContext(WebSocketApiRouterContext);
     const connectionStatus = CONNECTION_STATUS[readyState];
 
-    const renderLinks = useCallback(
-        (id: "lg" | "sm") => (
+    const links = useMemo(
+        () => (
             <>
                 {URLS.map((url) => (
                     <li key={url.href}>
@@ -68,20 +72,10 @@ export const NavBar = () => {
                         </NavLink>
                     </li>
                 ))}
-                <li key="settings">
-                    <NavLink className={({ isActive }) => `${isActive ? " menu-active" : ""}`} to="/settings/about">
-                        &nbsp;
-                        <FontAwesomeIcon icon={faCog} title={t("settings")} />
-                        &nbsp;
-                    </NavLink>
-                </li>
-                <PermitJoinButton key="permit-join" popoverId={id} />
             </>
         ),
         [t],
     );
-    const renderedLinksLg = useMemo(() => renderLinks("lg"), [renderLinks]);
-    const renderedLinksSm = useMemo(() => renderLinks("sm"), [renderLinks]);
     const showRestart = useMemo(
         () =>
             restartRequired ? (
@@ -96,20 +90,25 @@ export const NavBar = () => {
         <div className="navbar bg-base-100 shadow-sm">
             <div className="navbar-start">
                 <div className="dropdown">
-                    <div className="btn btn-ghost lg:hidden">
+                    {/* biome-ignore lint/a11y/noNoninteractiveTabindex: daisyui dropdown */}
+                    <div className="btn btn-ghost lg:hidden" tabIndex={0}>
                         <FontAwesomeIcon icon={faBars} />
                     </div>
-                    <ul className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-max p-2 shadow">{renderedLinksSm}</ul>
+                    {/* biome-ignore lint/a11y/noNoninteractiveTabindex: daisyui dropdown */}
+                    <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-max p-2 shadow">
+                        {links}
+                    </ul>
                 </div>
             </div>
             <Link to="/" className="link link-hover me-1" title={isIframe() ? `Zigbee2MQTT@${document.location.hostname}` : ""}>
                 Zigbee2MQTT
             </Link>
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">{renderedLinksLg}</ul>
+                <ul className="menu menu-horizontal px-1">{links}</ul>
             </div>
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1">
+                    <PermitJoinButton />
                     {showRestart}
                     <LanguageSwitcher />
                     <ThemeSwitcher />
