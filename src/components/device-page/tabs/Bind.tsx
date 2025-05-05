@@ -1,4 +1,4 @@
-import { type JSX, useMemo, useState } from "react";
+import { type JSX, useEffect, useMemo, useState } from "react";
 import { useAppSelector } from "../../../hooks/useApp.js";
 import type { Device } from "../../../types.js";
 import { BindRow } from "../BindRow.js";
@@ -63,13 +63,23 @@ export default function Bind(props: BindProps): JSX.Element {
     const { device } = props;
     const devices = useAppSelector((state) => state.devices);
     const groups = useAppSelector((state) => state.groups);
-    const [newBindingRule] = useState<NiceBindingRule>({
+    const [newBindingRule, setNewBindingRule] = useState<NiceBindingRule>({
         isNew: true,
         target: { type: "endpoint", ieee_address: "", endpoint: "" },
         source: { ieee_address: device.ieee_address, endpoint: "" },
         clusters: [],
     });
     const bindingRules = useMemo(() => convertBindingsIntoNiceStructure(device), [device]);
+
+    useEffect(() => {
+        // force reset of new rule when swapping device, otherwise might end up applying with wrong params
+        setNewBindingRule({
+            isNew: true,
+            target: { type: "endpoint", ieee_address: "", endpoint: "" },
+            source: { ieee_address: device.ieee_address, endpoint: "" },
+            clusters: [],
+        });
+    }, [device.ieee_address]);
 
     return (
         <div className="flex flex-col">

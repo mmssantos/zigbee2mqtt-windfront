@@ -99,7 +99,7 @@ export function BindRow(props: BindRowProps) {
 
     const onBindOrUnBindClick = useCallback(
         async (action: Action): Promise<void> => {
-            let to = "";
+            let to: string | number = "";
             let toEndpoint: string | number | undefined;
             const { target } = state.rule;
 
@@ -107,7 +107,7 @@ export function BindRow(props: BindRowProps) {
                 const targetGroup = groups.find((group) => group.id === target.id);
 
                 if (targetGroup) {
-                    to = targetGroup.friendly_name;
+                    to = targetGroup.id;
                 } else {
                     console.error("Target group does not exist:", target.id);
                     return;
@@ -116,7 +116,7 @@ export function BindRow(props: BindRowProps) {
                 const targetDevice = devices.find((device) => device.ieee_address === target.ieee_address);
 
                 if (targetDevice) {
-                    to = targetDevice.friendly_name;
+                    to = targetDevice.ieee_address;
 
                     if (targetDevice.type !== "Coordinator") {
                         toEndpoint = target.endpoint;
@@ -128,7 +128,7 @@ export function BindRow(props: BindRowProps) {
             }
 
             const bindParams = {
-                from: device.friendly_name,
+                from: device.ieee_address,
                 from_endpoint: state.rule.source.endpoint,
                 to,
                 to_endpoint: toEndpoint,
@@ -205,28 +205,31 @@ export function BindRow(props: BindRowProps) {
                 <div className="flex-grow w-128">
                     <ClusterMultiPicker label={t("clusters")} clusters={possibleClusters} value={state.rule.clusters} onChange={setClusters} />
                 </div>
-                <div className="join join-vertical lg:join-horizontal">
-                    <Button<Action>
-                        item={"Bind"}
-                        disabled={!isValidRule(state.rule)}
-                        title={t("bind")}
-                        className="btn btn-primary join-item"
-                        onClick={onBindOrUnBindClick}
-                    >
-                        <FontAwesomeIcon icon={faLink} />
-                        {t("bind")}&nbsp;
-                    </Button>
-                    <Button<Action>
-                        item={"Unbind"}
-                        disabled={!state.rule.isNew && !isValidRule(state.rule)}
-                        title={t("unbind")}
-                        className="btn btn-error join-item"
-                        onClick={onBindOrUnBindClick}
-                    >
-                        <FontAwesomeIcon icon={faUnlink} />
-                        &nbsp;{t("unbind")}
-                    </Button>
-                </div>
+                <fieldset className="fieldset">
+                    <legend className="fieldset-legend">{t("actions")}</legend>
+                    <div className="join join-vertical lg:join-horizontal">
+                        <Button<Action>
+                            item={"Bind"}
+                            disabled={!isValidRule(state.rule)}
+                            title={t("bind")}
+                            className="btn btn-primary join-item"
+                            onClick={onBindOrUnBindClick}
+                        >
+                            <FontAwesomeIcon icon={faLink} />
+                            {t("bind")}&nbsp;
+                        </Button>
+                        <Button<Action>
+                            item={"Unbind"}
+                            disabled={state.rule.isNew || !isValidRule(state.rule)}
+                            title={t("unbind")}
+                            className="btn btn-error join-item"
+                            onClick={onBindOrUnBindClick}
+                        >
+                            <FontAwesomeIcon icon={faUnlink} />
+                            &nbsp;{t("unbind")}
+                        </Button>
+                    </div>
+                </fieldset>
             </div>
             <div className="divider" />
         </>

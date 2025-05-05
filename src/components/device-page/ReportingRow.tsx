@@ -108,8 +108,8 @@ export function ReportingRow(props: ReportingRowProps) {
     }, [device.endpoints, state.rule.endpoint, state.rule.cluster]);
 
     return (
-        <tr>
-            <td>
+        <>
+            <div className="flex flex-row flex-wrap gap-2">
                 <EndpointPicker
                     label={t("endpoint")}
                     disabled={!rule.isNew}
@@ -118,8 +118,6 @@ export function ReportingRow(props: ReportingRowProps) {
                     onChange={setSourceEp}
                     required
                 />
-            </td>
-            <td>
                 <ClusterSinglePicker
                     label={t("cluster")}
                     disabled={!state.rule.endpoint}
@@ -128,8 +126,6 @@ export function ReportingRow(props: ReportingRowProps) {
                     onChange={setCluster}
                     required
                 />
-            </td>
-            <td>
                 <AttributePicker
                     label={t("attribute")}
                     disabled={!state.rule.cluster}
@@ -139,8 +135,6 @@ export function ReportingRow(props: ReportingRowProps) {
                     onChange={setAttribute}
                     required
                 />
-            </td>
-            <td>
                 <InputField
                     name="minimum_report_interval"
                     label={t("min_rep_interval")}
@@ -149,8 +143,6 @@ export function ReportingRow(props: ReportingRowProps) {
                     onChange={changeHandlerNumber}
                     required
                 />
-            </td>
-            <td>
                 <InputField
                     name="maximum_report_interval"
                     label={t("max_rep_interval")}
@@ -159,8 +151,6 @@ export function ReportingRow(props: ReportingRowProps) {
                     onChange={changeHandlerNumber}
                     required
                 />
-            </td>
-            <td>
                 <InputField
                     name="reportable_change"
                     label={t("min_rep_change")}
@@ -169,8 +159,6 @@ export function ReportingRow(props: ReportingRowProps) {
                     onChange={changeHandlerNumber}
                     required
                 />
-            </td>
-            <td>
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">{t("actions")}</legend>
                     <div className="join join-vertical lg:join-horizontal">
@@ -189,7 +177,8 @@ export function ReportingRow(props: ReportingRowProps) {
                         ) : null}
                     </div>
                 </fieldset>
-            </td>
-        </tr>
+            </div>
+            <div className="divider" />
+        </>
     );
 }

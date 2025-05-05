@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useContext, useMemo, useState } from "react";
+import { type JSX, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { Device, Endpoint } from "../../../types.js";
 
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
@@ -9,7 +9,7 @@ interface ReportingProps {
 }
 
 export type NiceReportingRule = {
-    isNew?: number;
+    isNew?: string;
     endpoint: Endpoint;
 } & Device["endpoints"][number]["configured_reportings"][number];
 
@@ -35,8 +35,8 @@ const getRuleKey = (rule: NiceReportingRule): string => `${rule.isNew}-${rule.en
 export default function Reporting(props: ReportingProps): JSX.Element {
     const { device } = props;
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const [newReportingRule] = useState<NiceReportingRule>({
-        isNew: Date.now(),
+    const [newReportingRule, setNewReportingRule] = useState<NiceReportingRule>({
+        isNew: device.ieee_address,
         reportable_change: 0,
         minimum_report_interval: 60,
         maximum_report_interval: 3600,
@@ -45,6 +45,19 @@ export default function Reporting(props: ReportingProps): JSX.Element {
         attribute: "",
     });
     const reportingRules = useMemo(() => convertBindingsIntoNiceStructure(device), [device]);
+
+    useEffect(() => {
+        // force reset of new rule when swapping device, otherwise might end up applying with wrong params
+        setNewReportingRule({
+            isNew: device.ieee_address,
+            reportable_change: 0,
+            minimum_report_interval: 60,
+            maximum_report_interval: 3600,
+            endpoint: "",
+            cluster: "",
+            attribute: "",
+        });
+    }, [device.ieee_address]);
 
     const onApply = useCallback(
         async (rule: NiceReportingRule): Promise<void> => {
@@ -65,14 +78,10 @@ export default function Reporting(props: ReportingProps): JSX.Element {
     );
 
     return (
-        <div className="overflow-x-auto">
-            <table className="table">
-                <tbody>
-                    {[...reportingRules, newReportingRule].map((rule) => (
-                        <ReportingRow key={getRuleKey(rule)} rule={rule} device={device} onApply={onApply} />
-                    ))}
-                </tbody>
-            </table>
+        <div className="flex flex-col">
+            {[...reportingRules, newReportingRule].map((rule) => (
+                <ReportingRow key={getRuleKey(rule)} rule={rule} device={device} onApply={onApply} />
+            ))}
         </div>
     );
 }
