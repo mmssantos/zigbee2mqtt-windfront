@@ -68,7 +68,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
     const selectedAttributes = useMemo(
         () =>
             attributes.length > 0 && (
-                <fieldset className="fieldset flex flex-row flex-wrap gap-2 p-3 rounded-box shadow-md" data-testid="selected-attribute">
+                <fieldset className="fieldset gap-2 p-3 rounded-box shadow-md" data-testid="selected-attribute">
                     {attributes.map(({ attribute, value = "", definition }) => (
                         <div key={attribute} className="join join-vertical lg:join-horizontal">
                             {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}

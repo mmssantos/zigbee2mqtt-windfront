@@ -56,7 +56,6 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
                         step={valueStep}
                         onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
                         onBlur={() => onChange(currentValue)}
-                        onMouseUp={() => onChange(currentValue)}
                         min={min}
                         max={max}
                         {...rest}

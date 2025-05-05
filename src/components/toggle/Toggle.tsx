@@ -34,6 +34,7 @@ export default function Toggle(props: ToggleProps) {
     const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked ? valueOn : valueOff);
     const valueExists = value != null;
     const showOnOffButtons = !minimal || (minimal && !valueExists);
+
     return (
         <div>
             {showOnOffButtons && <ControlButton value={valueOff} name={name} onClick={onChange} />}

@@ -3,3 +3,15 @@
     themes: all;
     logs: false;
 }
+
+/* Default uses grid, this does not play well with array-containing fieldsets */
+.fieldset {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+/* Always wrap text in fieldset labels to avoid weird display with settings (long descriptions) */
+.fieldset > .label {
+    white-space: normal;
+}

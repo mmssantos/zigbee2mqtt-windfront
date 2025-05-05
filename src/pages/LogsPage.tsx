@@ -1,10 +1,7 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Form from "@rjsf/core";
-import Validator from "@rjsf/validator-ajv8";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import SelectField from "../components/form-fields/SelectField.js";
@@ -13,10 +10,6 @@ import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { clearLogs as clearStateLogs, setLogsLimit } from "../store.js";
 import type { LogMessage } from "../types.js";
 import { formatDate } from "../utils.js";
-
-// XXX: workaround typing
-const FormTyped = Form as unknown as typeof Form.default;
-const ValidatorTyped = Validator as unknown as typeof Validator.default;
 
 const HIGHLIGHT_LEVEL_CMAP = {
     error: "bg-error text-error-content",
@@ -30,8 +23,6 @@ export default function LogsPage() {
     const [logLevel, setLogLevel] = useState<string>("all");
     const [highlightOnly, setHighlightOnly] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const logsLimit = useAppSelector((state) => state.logsLimit);
     const { t } = useTranslation("logs");
     const logs = useAppSelector((state) => state.logs);
@@ -61,7 +52,7 @@ export default function LogsPage() {
                         </option>
                     ))}
                 </SelectField>
-                <fieldset className="fieldset">
+                <fieldset className="fieldset mb-1">
                     <legend className="fieldset-legend">{t("filter_by_text")}</legend>
                     {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
                     <label className="input w-64">
@@ -109,14 +100,6 @@ export default function LogsPage() {
                 <Button onClick={() => dispatch(clearStateLogs())} className="btn btn-primary self-center" disabled={filteredLogs.length === 0}>
                     {t("common:clear")}
                 </Button>
-                <FormTyped
-                    schema={bridgeInfo.config_schema.properties.advanced?.properties?.log_level || {}}
-                    formData={bridgeInfo.config.advanced.log_level}
-                    onChange={async (params) =>
-                        await sendMessage("bridge/request/options", { options: { advanced: { log_level: params.formData } } })
-                    }
-                    validator={ValidatorTyped}
-                />
             </div>
             <div className="mockup-code w-full">
                 {filteredLogs.length > 0 ? (
