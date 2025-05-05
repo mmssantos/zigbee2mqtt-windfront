@@ -3,6 +3,7 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import { Provider } from "react-redux";
 import { HashRouter, Route, Routes } from "react-router";
+import { ErrorBoundary } from "./ErrorBoundary.js";
 import { WebSocketApiRouter } from "./WebSocketApiRouter.js";
 import { AuthForm } from "./components/modal/components/AuthModal.js";
 import { NavBar } from "./components/navbar/NavBar.js";
@@ -27,40 +28,39 @@ export function Main() {
     }, []);
 
     return (
-        // TODO: re-enable me on live
-        // <ErrorBoundary>
         <React.StrictMode>
             <I18nextProvider i18n={i18n}>
                 <NiceModal.Provider>
                     <AuthForm id="auth-form" onAuth={async () => {}} />
                     <Provider store={store}>
-                        <HashRouter>
-                            <WebSocketApiRouter>
-                                <NavBar />
-                                <main className="p-3">
-                                    <Suspense fallback={<div>Loading...</div>}>
-                                        <Routes>
-                                            <Route path="/ota" element={<OtaPage />} />
-                                            <Route path="/network" element={<NetworkPage />} />
-                                            <Route path="/device/:deviceId/:tab?" element={<DevicePage />} />
-                                            <Route path="/settings/:tab?" element={<SettingsPage />} />
-                                            <Route path="/groups" element={<GroupsPage />} />
-                                            <Route path="/group/:groupId?" element={<GroupPage />} />
+                        <ErrorBoundary>
+                            <HashRouter>
+                                <WebSocketApiRouter>
+                                    <NavBar />
+                                    <main className="p-3">
+                                        <Suspense fallback={<div>Loading...</div>}>
+                                            <Routes>
+                                                <Route path="/ota" element={<OtaPage />} />
+                                                <Route path="/network" element={<NetworkPage />} />
+                                                <Route path="/device/:deviceId/:tab?" element={<DevicePage />} />
+                                                <Route path="/settings/:tab?" element={<SettingsPage />} />
+                                                <Route path="/groups" element={<GroupsPage />} />
+                                                <Route path="/group/:groupId?" element={<GroupPage />} />
 
-                                            <Route path="/logs" element={<LogsPage />} />
-                                            <Route path="/touchlink" element={<TouchlinkPage />} />
-                                            <Route path="/dashboard" element={<DashboardPage />} />
-                                            <Route path="/devices" element={<DevicesPage />} />
-                                            <Route path="/" element={<HomePage />} />
-                                        </Routes>
-                                    </Suspense>
-                                </main>
-                            </WebSocketApiRouter>
-                        </HashRouter>
+                                                <Route path="/logs" element={<LogsPage />} />
+                                                <Route path="/touchlink" element={<TouchlinkPage />} />
+                                                <Route path="/dashboard" element={<DashboardPage />} />
+                                                <Route path="/devices" element={<DevicesPage />} />
+                                                <Route path="/" element={<HomePage />} />
+                                            </Routes>
+                                        </Suspense>
+                                    </main>
+                                </WebSocketApiRouter>
+                            </HashRouter>
+                        </ErrorBoundary>
                     </Provider>
                 </NiceModal.Provider>
             </I18nextProvider>
         </React.StrictMode>
-        // </ErrorBoundary>
     );
 }

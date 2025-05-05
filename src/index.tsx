@@ -5,6 +5,7 @@ import "./styles/styles.global.css";
 import { Main } from "./Main.js";
 
 const domNode = document.getElementById("root");
+
 if (domNode) {
     createRoot(domNode).render(<Main />);
 }
