@@ -230,7 +230,7 @@ export function useApiWebSocket() {
                     payload: payload === "" ? { transaction } : { ...payload, transaction },
                 });
 
-                // console.debug("Calling Request API:", topic, payload, finalPayload);
+                console.debug("Calling Request API:", topic, payload, finalPayload);
                 dispatch(store.addLog({ level: "info", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
                 sendMessageRaw(finalPayload);
 
@@ -239,7 +239,7 @@ export function useApiWebSocket() {
 
             const finalPayload = stringifyWithPreservingUndefinedAsNull({ topic, payload });
 
-            // console.debug("Calling API:", topic, payload, finalPayload);
+            console.debug("Calling API:", topic, payload, finalPayload);
             dispatch(store.addLog({ level: "info", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
             sendMessageRaw(finalPayload);
 

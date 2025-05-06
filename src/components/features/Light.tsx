@@ -1,10 +1,10 @@
-import type { LightFeature } from "../../types.js";
+import type { LightFeature, WithAnySubFeatures } from "../../types.js";
 import { scale } from "../../utils.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
-import { Composite } from "./Composite.js";
+import { FeatureSubFeatures } from "./FeatureSubFeatures.js";
 import type { BaseFeatureProps } from "./index.js";
 
-type LightProps = BaseFeatureProps<LightFeature>;
+type LightProps = BaseFeatureProps<WithAnySubFeatures<LightFeature>>;
 
 const STEPS_CONFIG = {
     brightness: [0, 25, 50, 75, 100].map<ValueWithLabelOrPrimitive>((item) => ({
@@ -18,5 +18,5 @@ const STEPS_CONFIG = {
 };
 
 export default function Light(props: LightProps) {
-    return <Composite {...props} steps={STEPS_CONFIG} />;
+    return <FeatureSubFeatures {...props} steps={STEPS_CONFIG} />;
 }

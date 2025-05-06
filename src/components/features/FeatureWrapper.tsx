@@ -4,18 +4,18 @@ import camelCase from "lodash/camelCase.js";
 import startCase from "lodash/startCase.js";
 import { type PropsWithChildren, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { type ColorFeature, type CompositeFeature, type DeviceState, FeatureAccessMode, type GenericFeature } from "../../types.js";
+import { type ColorFeature, type DeviceState, FeatureAccessMode, type FeatureWithAnySubFeatures } from "../../types.js";
 import Button from "../button/Button.js";
-import { getGenericFeatureIcon } from "./index.js";
+import { getFeatureIcon } from "./index.js";
 
 export type FeatureWrapperProps = {
-    feature: CompositeFeature | GenericFeature;
-    parentFeatures: (CompositeFeature | GenericFeature)[];
+    feature: FeatureWithAnySubFeatures;
+    parentFeatures: FeatureWithAnySubFeatures[];
     deviceState?: DeviceState;
     onRead(property: Record<string, unknown>): void;
 };
 
-function isColorFeature(feature: GenericFeature | CompositeFeature): feature is ColorFeature {
+function isColorFeature(feature: FeatureWithAnySubFeatures): feature is ColorFeature {
     return feature.type === "composite" && (feature.name === "color_xy" || feature.name === "color_hs");
 }
 
@@ -23,7 +23,7 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
     const { t } = useTranslation(["featureDescriptions", "featureNames"]);
     const { children, feature, deviceState = {}, onRead } = props;
     const fi = useMemo(
-        () => getGenericFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined),
+        () => getFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined),
         [feature, deviceState],
     );
     const isReadable = (feature.property && feature.access & FeatureAccessMode.GET) || isColorFeature(feature);
@@ -31,12 +31,12 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
     const featureName = feature.name === "state" ? feature.property : feature.name;
     let label = feature.label || t(`featureNames:${featureName}`, { defaultValue: startCase(camelCase(featureName)) });
 
-    if (parentFeature?.label && feature.name === "state" && !["light", "switch"].includes(parentFeature.type)) {
+    if (parentFeature?.label && feature.name === "state" && parentFeature.type !== "light" && parentFeature.type !== "switch") {
         label = `${parentFeature.label} ${feature.label.charAt(0).toLowerCase()}${feature.label.slice(1)}`;
     }
 
     const onSyncClick = useCallback(
-        (item: CompositeFeature | GenericFeature) => {
+        (item: FeatureWithAnySubFeatures) => {
             if (item.property) {
                 onRead({ [item.property]: "" });
             }
@@ -57,7 +57,7 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
             </div>
             <div className="list-col-wrap flex flex-col gap-2">{children}</div>
             {isReadable && (
-                <Button<CompositeFeature | GenericFeature> item={feature} onClick={onSyncClick} className="btn btn-xs btn-square btn-primary">
+                <Button<FeatureWithAnySubFeatures> item={feature} onClick={onSyncClick} className="btn btn-xs btn-square btn-primary">
                     <FontAwesomeIcon icon={faSync} />
                 </Button>
             )}

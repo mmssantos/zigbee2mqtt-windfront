@@ -1,9 +1,9 @@
-import type { SwitchFeature } from "../../types.js";
-import { Composite } from "./Composite.js";
+import type { SwitchFeature, WithAnySubFeatures } from "../../types.js";
+import { FeatureSubFeatures } from "./FeatureSubFeatures.js";
 import type { BaseFeatureProps } from "./index.js";
 
-type SwitchProps = BaseFeatureProps<SwitchFeature>;
+type SwitchProps = BaseFeatureProps<WithAnySubFeatures<SwitchFeature>>;
 
 export default function Switch(props: SwitchProps) {
-    return <Composite {...props} />;
+    return <FeatureSubFeatures {...props} />;
 }

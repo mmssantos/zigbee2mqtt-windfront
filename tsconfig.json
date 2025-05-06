@@ -14,9 +14,10 @@
         "esModuleInterop": true,
         "strictNullChecks": true,
         "resolveJsonModule": true,
-        "checkJs": true
+        "checkJs": true,
+        "skipLibCheck": true
     },
     "suppressImplicitAnyIndexErrors": true,
     "lib": ["dom", "esnext"],
-    "exclude": ["dist"]
+    "include": ["./src/**/*", "./test/**/*"]
 }

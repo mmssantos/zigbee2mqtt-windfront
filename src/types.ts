@@ -13,28 +13,17 @@ import type {
 
 export type RecursiveMutable<T> = { -readonly [K in keyof T]: RecursiveMutable<T[K]> };
 
-// biome-ignore lint/complexity/noBannedTypes: generic type
-export type OmitFunctions<T> = { [K in keyof T as T[K] extends Function ? never : K]: T[K] };
+export type OmitFunctions<T> = {
+    // biome-ignore lint/complexity/noBannedTypes: generic type
+    [K in keyof T as T[K] extends Function ? never : K]: T[K] extends Array<unknown> ? OmitFunctions<T[K][number]>[] : OmitFunctions<T[K]>;
+};
 
 // TODO remove
 export type Cluster = string | number;
 
 export type Endpoint = string | number;
 
-export type DeviceType = "Coordinator" | "Router" | "EndDevice" | "Unknown" | "GreenPower";
-
-export type SendMessageEndpoints =
-    | Zigbee2MQTTRequestEndpoints
-    | "{friendlyNameOrId}/set"
-    | "{friendlyNameOrId}/set/{attribute}"
-    | "{friendlyNameOrId}/{endpoint}/set"
-    | "{friendlyNameOrId}/{endpoint}/set/{attribute}"
-    | "{friendlyNameOrId}/get"
-    | "{friendlyNameOrId}/get/{attribute}"
-    | "{friendlyNameOrId}/{endpoint}/get"
-    | "{friendlyNameOrId}/{endpoint}/get/{attribute}";
-
-export type DeviceState = Zigbee2MQTTAPI["{friendlyName}"];
+export type EntityType = "device" | "group";
 
 export type PowerSource =
     | "Unknown"
@@ -45,23 +34,23 @@ export type PowerSource =
     | "Emergency mains constantly powered"
     | "Emergency mains and transfer switch";
 
-export type BridgeInfo = Zigbee2MQTTAPI["bridge/info"];
-
-export type EntityType = "device" | "group";
-
-export type Device = Zigbee2MQTTDevice;
+export type Device = OmitFunctions<Zigbee2MQTTDevice>;
 
 export type Group = Zigbee2MQTTGroup;
 
 export type Scene = Zigbee2MQTTScene;
+
+export type LastSeenConfig = Zigbee2MQTTSettings["advanced"]["last_seen"];
+
+export type DeviceState = Zigbee2MQTTAPI["{friendlyName}"];
+
+export type BridgeInfo = Zigbee2MQTTAPI["bridge/info"];
 
 export type TouchlinkDevice = Zigbee2MQTTAPI["bridge/response/touchlink/scan"]["found"][number];
 
 export type LogMessage = Zigbee2MQTTAPI["bridge/logging"] & { timestamp: string };
 
 export type AvailabilityState = Zigbee2MQTTAPI["{friendlyName}/availability"];
-
-export type LastSeenConfig = Zigbee2MQTTSettings["advanced"]["last_seen"];
 
 export interface Message<T = string | Record<string, unknown> | Record<string, unknown>[] | string[]> {
     topic: string;
@@ -77,6 +66,17 @@ export interface ResponseMessage<T extends Zigbee2MQTTResponseEndpoints> extends
     payload: Zigbee2MQTTResponse<T>;
 }
 
+export type SendMessageEndpoints =
+    | Zigbee2MQTTRequestEndpoints
+    | "{friendlyNameOrId}/set"
+    | "{friendlyNameOrId}/set/{attribute}"
+    | "{friendlyNameOrId}/{endpoint}/set"
+    | "{friendlyNameOrId}/{endpoint}/set/{attribute}"
+    | "{friendlyNameOrId}/get"
+    | "{friendlyNameOrId}/get/{attribute}"
+    | "{friendlyNameOrId}/{endpoint}/get"
+    | "{friendlyNameOrId}/{endpoint}/get/{attribute}";
+
 export enum InterviewState {
     Pending = "PENDING",
     InProgress = "IN_PROGRESS",
@@ -84,11 +84,11 @@ export enum InterviewState {
     Failed = "FAILED",
 }
 
-//-- ZHC
+// #region ZHC
 
-export type GenericFeatureType = "binary" | "list" | "numeric" | "enum" | "text";
+export type BasicFeatureType = "binary" | "list" | "numeric" | "enum" | "text";
 
-export type CompositeFeatureType = "switch" | "lock" | "composite" | "light" | "cover" | "fan" | "climate";
+export type FeatureWithSubFeaturesType = "switch" | "lock" | "composite" | "light" | "cover" | "fan" | "climate";
 
 export enum FeatureAccessMode {
     /**
@@ -117,59 +117,71 @@ export enum FeatureAccessMode {
     ALL = 0b111,
 }
 
-export type GenericFeature =
-    | OmitFunctions<Zigbee2MQTTFeatures["binary"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["list"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["numeric"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["enum"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["text"]>;
+type PublishedZigbee2MQTTFeatures = OmitFunctions<Zigbee2MQTTFeatures>;
 
-export type CompositeFeature =
-    | OmitFunctions<Zigbee2MQTTFeatures["switch"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["lock"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["composite"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["light"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["cover"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["fan"]>
-    | OmitFunctions<Zigbee2MQTTFeatures["climate"]>;
+// fix `.features` type that isn't properly handled by `OmitFunctions`
+type PublishedBasicFeature<T extends BasicFeatureType> = Omit<PublishedZigbee2MQTTFeatures[T], "features">;
+type PublishedFeatureWithSubFeatures<T extends FeatureWithSubFeaturesType> = Omit<PublishedZigbee2MQTTFeatures[T], "features"> &
+    Required<Pick<PublishedZigbee2MQTTFeatures[T], "features">>;
 
-export type GenericOrCompositeFeature = OmitFunctions<GenericFeature> | OmitFunctions<CompositeFeature>;
+export type BinaryFeature = PublishedBasicFeature<"binary">;
 
-export type BinaryFeature = OmitFunctions<Zigbee2MQTTFeatures["binary"]>;
+export type ListFeature = PublishedBasicFeature<"list">;
 
-export type ListFeature = OmitFunctions<Zigbee2MQTTFeatures["list"]>;
+export type NumericFeature = PublishedBasicFeature<"numeric">;
 
-export type NumericFeature = OmitFunctions<Zigbee2MQTTFeatures["numeric"]>;
+export type TextFeature = PublishedBasicFeature<"text">;
 
-export type TextFeature = OmitFunctions<Zigbee2MQTTFeatures["text"]>;
+export type EnumFeature = PublishedBasicFeature<"enum">;
 
-export type EnumFeature = OmitFunctions<Zigbee2MQTTFeatures["enum"]>;
+export type CompositeFeature = PublishedFeatureWithSubFeatures<"composite">;
 
-export type LightFeature = OmitFunctions<Zigbee2MQTTFeatures["light"]>;
+export type LightFeature = PublishedFeatureWithSubFeatures<"light">;
 
-export type SwitchFeature = OmitFunctions<Zigbee2MQTTFeatures["switch"]>;
+export type SwitchFeature = PublishedFeatureWithSubFeatures<"switch">;
 
-export type CoverFeature = OmitFunctions<Zigbee2MQTTFeatures["cover"]>;
+export type CoverFeature = PublishedFeatureWithSubFeatures<"cover">;
 
-export type LockFeature = OmitFunctions<Zigbee2MQTTFeatures["lock"]>;
+export type LockFeature = PublishedFeatureWithSubFeatures<"lock">;
 
-export type FanFeature = OmitFunctions<Zigbee2MQTTFeatures["fan"]>;
+export type FanFeature = PublishedFeatureWithSubFeatures<"fan">;
 
-export type ClimateFeature = OmitFunctions<Zigbee2MQTTFeatures["climate"]>;
+export type ClimateFeature = PublishedFeatureWithSubFeatures<"climate">;
 
-export type GradientFeature = OmitFunctions<Zigbee2MQTTFeatures["list"]> & {
+export type GradientFeature = ListFeature & {
     name: "gradient";
     item_type: "text";
     length_min: number;
     length_max: number;
 };
 
-export type ColorFeature = OmitFunctions<Zigbee2MQTTFeatures["composite"]> & {
+export type ColorFeature = CompositeFeature & {
     name: "color_xy" | "color_hs";
-    features: OmitFunctions<Zigbee2MQTTFeatures["numeric"]>[];
+    features: PublishedBasicFeature<"numeric">[];
 };
 
-//-- Utils
+export type BasicFeature = BinaryFeature | ListFeature | NumericFeature | TextFeature | EnumFeature;
+
+export type FeatureWithSubFeatures = CompositeFeature | LightFeature | SwitchFeature | CoverFeature | LockFeature | FanFeature | ClimateFeature;
+
+// fix generic assigning from e.g. device definition `exposes` & `options`
+export type WithAnySubFeatures<T> = Omit<T, "features"> & { features: (BasicFeature | WithAnySubFeatures<FeatureWithSubFeatures>)[] };
+
+export type FeatureWithAnySubFeatures =
+    | BasicFeature
+    | WithAnySubFeatures<CompositeFeature>
+    | WithAnySubFeatures<LightFeature>
+    | WithAnySubFeatures<SwitchFeature>
+    | WithAnySubFeatures<CoverFeature>
+    | WithAnySubFeatures<LockFeature>
+    | WithAnySubFeatures<FanFeature>
+    | WithAnySubFeatures<ClimateFeature>;
+
+export type AnySubFeature = BasicFeature | WithAnySubFeatures<FeatureWithSubFeatures>;
+
+// #endregion
+
+// #region Utils
 
 export type RGBColor = {
     r: number;
@@ -190,3 +202,5 @@ export type XYColor = {
 export type AnyColor = RGBColor | XYColor | HueSaturationColor;
 
 export type ColorFormat = "color_rgb" | "color_xy" | "color_hs";
+
+// #endregion

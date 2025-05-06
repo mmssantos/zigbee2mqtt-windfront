@@ -1,34 +1,41 @@
 import { useCallback, useContext } from "react";
-import type { CompositeFeature, Device } from "../../../types.js";
+import { type Device, FeatureAccessMode } from "../../../types.js";
 
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
-import { Composite } from "../../features/Composite.js";
+import { FeatureSubFeatures } from "../../features/FeatureSubFeatures.js";
 import FeatureWrapper from "../../features/FeatureWrapper.js";
 
 type DeviceSpecificSettingsProps = {
     device: Device;
 };
 
-export default function DeviceSpecificSettings(props: DeviceSpecificSettingsProps) {
+export default function DeviceSpecificSettings({ device }: DeviceSpecificSettingsProps) {
     const { t } = useTranslation(["exposes"]);
     const bridgeInfo = useAppSelector((state) => state.bridgeInfo);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const setDeviceOptions = useCallback(
         async (options: Record<string, unknown>) => {
-            await sendMessage("bridge/request/device/options", { id: props.device.ieee_address, options });
+            await sendMessage("bridge/request/device/options", { id: device.ieee_address, options });
         },
-        [sendMessage, props.device.ieee_address],
+        [sendMessage, device.ieee_address],
     );
 
-    return props.device.definition?.options?.length ? (
+    return device.definition?.options?.length ? (
         <div className="list bg-base-100">
-            <Composite
+            <FeatureSubFeatures
                 showEndpointLabels={true}
-                feature={{ features: props.device.definition.options, type: "composite" } as CompositeFeature}
-                device={props.device}
-                deviceState={(bridgeInfo.config.devices[props.device.ieee_address] ?? {}) as unknown as Record<string, unknown>}
+                feature={{
+                    features: device.definition.options,
+                    type: "composite",
+                    name: "device_options",
+                    label: "device_options",
+                    property: "",
+                    access: FeatureAccessMode.GET,
+                }}
+                device={device}
+                deviceState={(bridgeInfo.config.devices[device.ieee_address] ?? {}) as unknown as Record<string, unknown>}
                 onChange={setDeviceOptions}
                 featureWrapperClass={FeatureWrapper}
             />

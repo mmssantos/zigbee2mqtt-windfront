@@ -1,8 +1,8 @@
-import type { GenericFeature } from "../../types.js";
+import type { BasicFeature } from "../../types.js";
 import { DisplayValue } from "../value-decorators/DisplayValue.js";
 import type { BaseFeatureProps } from "./index.js";
 
-export default function BaseViewer(props: BaseFeatureProps<GenericFeature>) {
+export default function BaseViewer(props: BaseFeatureProps<BasicFeature>) {
     return (
         <div>
             {props.feature.property && (

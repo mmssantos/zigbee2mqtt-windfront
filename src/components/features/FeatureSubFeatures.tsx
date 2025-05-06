@@ -1,13 +1,13 @@
 import groupBy from "lodash/groupBy.js";
 import { type JSX, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { CompositeFeature, GenericFeature, OmitFunctions } from "../../types.js";
+import type { FeatureWithAnySubFeatures } from "../../types.js";
 import Button from "../button/Button.js";
 import { Feature } from "./Feature.js";
 import type { BaseFeatureProps } from "./index.js";
 
-interface CompositeProps extends BaseFeatureProps<CompositeFeature> {
-    parentFeatures?: (CompositeFeature | GenericFeature)[];
+interface FeatureSubFeaturesProps extends BaseFeatureProps<FeatureWithAnySubFeatures> {
+    parentFeatures?: FeatureWithAnySubFeatures[];
     steps?: Record<string, unknown>;
     minimal?: boolean;
     showEndpointLabels?: boolean;
@@ -19,56 +19,63 @@ interface CompositeState {
 
 const MAGIC_NO_ENDPOINT = "MAGIC_NO_ENDPOINT";
 
-const isCompositeRoot = (feature: CompositeFeature, parentFeatures: (CompositeFeature | GenericFeature)[] | undefined): boolean => {
-    return (
-        feature.type === "composite" &&
-        parentFeatures !== undefined &&
-        (parentFeatures.length === 1 ||
-            // When parent is e.g. climate
-            (parentFeatures.length === 2 && ![null, undefined, "composite", "list"].includes(parentFeatures[1].type)))
-    );
-};
-
-const getFeatureKey = (feature: OmitFunctions<CompositeFeature["features"][number]>) =>
+const getFeatureKey = (feature: FeatureSubFeaturesProps["feature"]) =>
     `${feature.type}-${feature.name}-${feature.label}-${feature.property}-${feature.access}-${feature.category}-${feature.endpoint}`;
 
-export function Composite(props: CompositeProps) {
+export function FeatureSubFeatures(props: FeatureSubFeaturesProps) {
     const { feature, onChange, parentFeatures, onRead, device, deviceState, featureWrapperClass, minimal, showEndpointLabels = false } = props;
-    const { features = [] } = feature;
+    const { type, property } = feature;
     const [state, setState] = useState<CompositeState>({});
     const { t } = useTranslation(["composite", "common"]);
     const combinedState = useMemo(() => ({ ...deviceState, ...state }), [deviceState, state]);
+    const features = ("features" in feature && feature.features) || [];
+    const isRoot = useMemo(() => {
+        if (type === "composite" && parentFeatures !== undefined) {
+            if (parentFeatures.length === 1) {
+                return true;
+            }
+
+            if (parentFeatures.length === 2) {
+                // When parent is e.g. climate
+                const type = parentFeatures[1].type;
+
+                return type != null && type !== "composite" && type !== "list";
+            }
+        }
+
+        return false;
+    }, [type, parentFeatures]);
 
     const onFeatureChange = useCallback(
         (value: Record<string, unknown>): void => {
             setState({ ...state, ...value });
 
-            if (!isCompositeRoot(feature, parentFeatures)) {
-                if (feature.type === "composite") {
-                    onChange(feature.property ? { [feature.property]: { ...state, ...value } } : value);
+            if (!isRoot) {
+                if (type === "composite") {
+                    onChange(property ? { [property]: { ...state, ...value } } : value);
                 } else {
                     onChange(value);
                 }
             }
         },
-        [state, feature, parentFeatures, onChange],
+        [state, type, property, isRoot, onChange],
     );
 
-    const onCompositeFeatureApply = useCallback((): void => {
+    const onRootApply = useCallback((): void => {
         const newState = { ...deviceState, ...state };
 
-        onChange(feature.property ? { [feature.property]: newState } : newState);
-    }, [feature.property, onChange, state, deviceState]);
+        onChange(property ? { [property]: newState } : newState);
+    }, [property, onChange, state, deviceState]);
 
     const onFeatureRead = useCallback(
-        (property: Record<string, unknown>): void => {
-            if (feature.type === "composite") {
-                onRead?.(feature.property ? { [feature.property]: property } : property);
+        (prop: Record<string, unknown>): void => {
+            if (type === "composite") {
+                onRead?.(property ? { [property]: prop } : prop);
             } else {
-                onRead?.(property);
+                onRead?.(prop);
             }
         },
-        [onRead, feature],
+        [onRead, type, property],
     );
 
     const parentFeaturesOrEmpty = parentFeatures ?? [];
@@ -81,7 +88,9 @@ export function Composite(props: CompositeProps) {
             renderedFeatures.push(
                 ...groupedFeatures[MAGIC_NO_ENDPOINT].map((f) => (
                     <Feature
+                        // @ts-expect-error typing failure
                         key={getFeatureKey(f)}
+                        // @ts-expect-error typing failure
                         feature={f}
                         parentFeatures={[...parentFeaturesOrEmpty, feature]}
                         device={device}
@@ -93,10 +102,13 @@ export function Composite(props: CompositeProps) {
                     />
                 )),
             );
-            delete groupedFeatures[MAGIC_NO_ENDPOINT];
         }
 
         for (const epName in groupedFeatures) {
+            if (epName === MAGIC_NO_ENDPOINT) {
+                continue;
+            }
+
             const featuresGroup = groupedFeatures[epName];
             // do not indent groups with one element inside
             const noNeedIndent = featuresGroup.length === 1;
@@ -107,7 +119,9 @@ export function Composite(props: CompositeProps) {
                     <div className={noNeedIndent ? "" : "ps-4"}>
                         {featuresGroup.map((featureGroup) => (
                             <Feature
-                                key={featureGroup.name + featureGroup.endpoint}
+                                // @ts-expect-error typing failure
+                                key={getFeatureKey(featureGroup)}
+                                // @ts-expect-error typing failure
                                 feature={featureGroup}
                                 parentFeatures={parentFeaturesOrEmpty}
                                 device={device}
@@ -126,7 +140,9 @@ export function Composite(props: CompositeProps) {
         for (const subFeature of features) {
             renderedFeatures.push(
                 <Feature
+                    // @ts-expect-error typing failure
                     key={getFeatureKey(subFeature)}
+                    // @ts-expect-error typing failure
                     feature={subFeature}
                     parentFeatures={parentFeaturesOrEmpty}
                     device={device}
@@ -143,9 +159,9 @@ export function Composite(props: CompositeProps) {
     return (
         <>
             {renderedFeatures}
-            {isCompositeRoot(feature, parentFeatures) && (
+            {isRoot && (
                 <div>
-                    <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onCompositeFeatureApply}>
+                    <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onRootApply}>
                         {t("common:apply")}
                     </Button>
                 </div>

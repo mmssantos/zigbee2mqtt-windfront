@@ -136,9 +136,17 @@ export function BindRow(props: BindRowProps) {
             };
 
             if (action === "Bind") {
-                await sendMessage("bridge/request/device/bind", bindParams);
+                await sendMessage(
+                    "bridge/request/device/bind",
+                    // @ts-expect-error bad typing TODO: remove me once fixed
+                    bindParams,
+                );
             } else {
-                await sendMessage("bridge/request/device/unbind", bindParams);
+                await sendMessage(
+                    "bridge/request/device/unbind",
+                    // @ts-expect-error bad typing TODO: remove me once fixed
+                    bindParams,
+                );
             }
         },
         [device, state.rule, sendMessage, devices, groups],

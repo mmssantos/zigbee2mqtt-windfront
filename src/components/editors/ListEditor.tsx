@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { CompositeFeature, Device, DeviceState, GenericFeature, GenericOrCompositeFeature } from "../../types.js";
+import type { BasicFeature, Device, DeviceState, FeatureWithAnySubFeatures, FeatureWithSubFeatures } from "../../types.js";
 import Button from "../button/Button.js";
 import { Feature } from "../features/Feature.js";
 import FeatureWrapper from "../features/FeatureWrapper.js";
@@ -9,8 +9,8 @@ type ListEditorProps = {
     value: any[];
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     onChange(value: any[]): void;
-    feature: GenericOrCompositeFeature;
-    parentFeatures: (CompositeFeature | GenericFeature)[];
+    feature: BasicFeature | FeatureWithSubFeatures;
+    parentFeatures: FeatureWithAnySubFeatures[];
 };
 
 export default function ListEditor(props: ListEditorProps) {
@@ -70,7 +70,7 @@ export default function ListEditor(props: ListEditorProps) {
                 // biome-ignore lint/suspicious/noArrayIndexKey: don't have a fixed value type
                 <div className="flex flex-row flex-wrap gap-2" key={itemIndex}>
                     <Feature
-                        feature={feature as CompositeFeature}
+                        feature={feature as FeatureWithSubFeatures}
                         device={{} as Device}
                         deviceState={itemValue as DeviceState}
                         onChange={(value) => onItemChange(value, itemIndex)}

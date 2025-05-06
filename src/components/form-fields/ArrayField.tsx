@@ -52,7 +52,6 @@ export default function ArrayField(props: ArrayFieldProps) {
                             onClick={() => {
                                 const newValues = Array.from(currentValues);
                                 newValues.splice(idx, 1);
-                                console.log(value, idx, currentValues, newValues);
 
                                 setCurrentValues(newValues);
                             }}

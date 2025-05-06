@@ -4,21 +4,22 @@ import { DialogConfirmationModal } from "../modal/components/DialogConfirmationM
 
 interface ButtonProps<T> extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
     item?: T;
-    onClick?(entity: T): void;
+    onClick?(entity: T): Promise<void> | void;
     prompt?: boolean | string;
 }
 
 export default function Button<T>(props: ButtonProps<T>): JSX.Element {
     const { children, item, onClick, prompt, ...rest } = props;
 
-    const onConfirmHandler = (): void => {
-        onClick?.(item as T);
+    const onConfirmHandler = async (): Promise<void> => {
+        await onClick?.(item as T);
     };
-    const onClickHandler = (): void => {
+
+    const onClickHandler = async (): Promise<void> => {
         if (prompt) {
             NiceModal.show(DialogConfirmationModal, { onConfirmHandler });
         } else {
-            onClick?.(item as T);
+            await onClick?.(item as T);
         }
     };
 

@@ -1,14 +1,14 @@
 import type React from "react";
 import type { FunctionComponent, JSX, PropsWithChildren } from "react";
-import type { ColorFeature, CompositeFeature, Device, DeviceState, GenericFeature, GradientFeature } from "../../types.js";
+import type { ColorFeature, Device, DeviceState, FeatureWithAnySubFeatures, GradientFeature } from "../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import Binary from "./Binary.js";
 import Climate from "./Climate.js";
 import Color from "./Color.js";
-import { Composite } from "./Composite.js";
 import Cover from "./Cover.js";
 import Enum from "./Enum.js";
 import Fan from "./Fan.js";
+import { FeatureSubFeatures } from "./FeatureSubFeatures.js";
 import type { FeatureWrapperProps } from "./FeatureWrapper.js";
 import { Gradient } from "./Gradient.js";
 import Light from "./Light.js";
@@ -19,8 +19,8 @@ import Switch from "./Switch.js";
 import Text from "./Text.js";
 
 interface FeatureProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
-    feature: CompositeFeature | GenericFeature;
-    parentFeatures: (CompositeFeature | GenericFeature)[];
+    feature: FeatureWithAnySubFeatures;
+    parentFeatures: FeatureWithAnySubFeatures[];
     deviceState: DeviceState;
     device: Device;
     steps?: ValueWithLabelOrPrimitive[];
@@ -30,9 +30,12 @@ interface FeatureProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onCha
     minimal?: boolean;
 }
 
+const featureToKey = (feature: FeatureProps["feature"]): string =>
+    `${feature.type}-${feature.name}-${feature.label}-${feature.access}-${feature.category}-${feature.property}-${feature.endpoint}`;
+
 export const Feature = (props: FeatureProps): JSX.Element => {
     const { feature, device, deviceState, steps, onRead, onChange, featureWrapperClass: FeatureWrapper, minimal, parentFeatures } = props;
-    const key = JSON.stringify(feature);
+    const key = featureToKey(feature);
     const genericParams = {
         device,
         deviceState,
@@ -121,7 +124,7 @@ export const Feature = (props: FeatureProps): JSX.Element => {
 
             return (
                 // <FeatureWrapper key={key} {...wrapperParams}>
-                <Composite feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
+                <FeatureSubFeatures feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
                 // </FeatureWrapper>
             );
         }

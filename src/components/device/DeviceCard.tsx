@@ -1,17 +1,19 @@
 import type { PropsWithChildren } from "react";
-import type { CompositeFeature, Endpoint, LastSeenConfig } from "../../types.js";
+import type { Endpoint, FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
 import type { BaseFeatureProps } from "../features/index.js";
 
 import { Link } from "react-router";
 
+import { faCircleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
-import { Composite } from "../features/Composite.js";
+import { FeatureSubFeatures } from "../features/FeatureSubFeatures.js";
 import { LastSeen } from "../value-decorators/LastSeen.js";
 import { Lqi } from "../value-decorators/Lqi.js";
 import PowerSource from "../value-decorators/PowerSource.js";
 import { DeviceImage } from "./DeviceImage.js";
 
-type Props = BaseFeatureProps<CompositeFeature> &
+type Props = BaseFeatureProps<FeatureWithAnySubFeatures> &
     PropsWithChildren<{
         lastSeenConfig: LastSeenConfig;
         endpoint?: Endpoint;
@@ -28,7 +30,7 @@ export default function DeviceCard({
     featureWrapperClass,
     children,
 }: Props) {
-    const { t } = useTranslation("zigbee");
+    const { t } = useTranslation(["zigbee", "devicePage"]);
 
     return (
         <>
@@ -45,7 +47,7 @@ export default function DeviceCard({
                     <div className="text-xs opacity-50">{device.description || ""}</div>
                 </div>
                 <div className="list-col-wrap text-sm w-full">
-                    <Composite
+                    <FeatureSubFeatures
                         feature={feature}
                         className="row"
                         device={device}
@@ -55,6 +57,12 @@ export default function DeviceCard({
                         featureWrapperClass={featureWrapperClass}
                         minimal={true}
                     />
+                    <div className="flex flex-row items-center gap-1 mt-3">
+                        <div className="flex-grow-1" />
+                        <Link to={`/device/${device.ieee_address}/exposes`} className="link link-secondary" title={t("devicePage:exposes")}>
+                            <FontAwesomeIcon icon={faCircleRight} size="xl" />
+                        </Link>
+                    </div>
                 </div>
             </li>
             <li className="flex flex-row flex-wrap gap-1 m-4 justify-around items-center">

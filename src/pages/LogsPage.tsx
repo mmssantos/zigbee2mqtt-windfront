@@ -97,7 +97,13 @@ export default function LogsPage() {
                         </option>
                     ))}
                 </SelectField>
-                <Button onClick={() => dispatch(clearStateLogs())} className="btn btn-primary self-center" disabled={filteredLogs.length === 0}>
+                <Button<void>
+                    onClick={() => {
+                        dispatch(clearStateLogs());
+                    }}
+                    className="btn btn-primary self-center"
+                    disabled={filteredLogs.length === 0}
+                >
                     {t("common:clear")}
                 </Button>
             </div>

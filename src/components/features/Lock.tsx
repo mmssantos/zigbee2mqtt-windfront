@@ -1,9 +1,9 @@
-import type { LockFeature } from "../../types.js";
-import { Composite } from "./Composite.js";
+import type { LockFeature, WithAnySubFeatures } from "../../types.js";
+import { FeatureSubFeatures } from "./FeatureSubFeatures.js";
 import type { BaseFeatureProps } from "./index.js";
 
-type LockProps = BaseFeatureProps<LockFeature>;
+type LockProps = BaseFeatureProps<WithAnySubFeatures<LockFeature>>;
 
 export default function Lock(props: LockProps) {
-    return <Composite {...props} />;
+    return <FeatureSubFeatures {...props} />;
 }

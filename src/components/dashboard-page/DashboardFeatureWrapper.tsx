@@ -4,12 +4,12 @@ import startCase from "lodash/startCase.js";
 import { type PropsWithChildren, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { FeatureWrapperProps } from "../features/FeatureWrapper.js";
-import { getGenericFeatureIcon } from "../features/index.js";
+import { getFeatureIcon } from "../features/index.js";
 
 export default function DashboardFeatureWrapper(props: PropsWithChildren<FeatureWrapperProps>) {
     const { children, feature, deviceState = {} } = props;
     const fi = useMemo(
-        () => getGenericFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined),
+        () => getFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined),
         [feature, deviceState],
     );
     const { t } = useTranslation(["featureNames"]);

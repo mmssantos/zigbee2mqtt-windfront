@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { type CompositeFeature, FeatureAccessMode, type GenericFeature, type ListFeature } from "../../types.js";
+import { FeatureAccessMode, type FeatureWithAnySubFeatures, type ListFeature } from "../../types.js";
 import Button from "../button/Button.js";
 import ListEditor from "../editors/ListEditor.js";
 import BaseViewer from "./BaseViewer.js";
@@ -13,16 +13,7 @@ interface State {
 }
 
 type Props = BaseFeatureProps<ListFeature> & {
-    parentFeatures: (CompositeFeature | GenericFeature)[];
-};
-
-const isListRoot = (parentFeatures: (CompositeFeature | GenericFeature)[]): boolean => {
-    return (
-        parentFeatures !== undefined &&
-        (parentFeatures.length === 1 ||
-            // When parent is e.g. climate
-            (parentFeatures.length === 2 && ![null, undefined, "composite", "list"].includes(parentFeatures[1].type)))
-    );
+    parentFeatures: FeatureWithAnySubFeatures[];
 };
 
 export default function List(props: Props) {
@@ -30,20 +21,36 @@ export default function List(props: Props) {
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const [state, setState] = useState<State>({ value: feature.property ? ((deviceState[feature.property] as any[]) ?? []) : [] });
     const { t } = useTranslation(["list", "common"]);
+    const isRoot = useMemo(() => {
+        if (parentFeatures !== undefined) {
+            if (parentFeatures.length === 1) {
+                return true;
+            }
+
+            if (parentFeatures.length === 2) {
+                // When parent is e.g. climate
+                const type = parentFeatures[1].type;
+
+                return type != null && type !== "composite" && type !== "list";
+            }
+        }
+
+        return false;
+    }, [parentFeatures]);
 
     const onEditorChange = useCallback(
         // biome-ignore lint/suspicious/noExplicitAny: tmp
         (value: any[]): void => {
             setState({ value });
 
-            if (!isListRoot(parentFeatures)) {
+            if (!isRoot) {
                 onChange(feature.property ? { [feature.property]: value } : value);
             }
         },
-        [feature.property, onChange, parentFeatures],
+        [feature.property, onChange, isRoot],
     );
 
-    const onApply = useCallback(() => {
+    const onRootApply = useCallback(() => {
         onChange(feature.property ? { [feature.property]: state.value } : state.value);
     }, [feature.property, onChange, state.value]);
 
@@ -53,9 +60,9 @@ export default function List(props: Props) {
         return (
             <>
                 <ListEditor feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onEditorChange} value={state.value} />
-                {isListRoot(parentFeatures) && (
+                {isRoot && (
                     <div>
-                        <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onApply} disabled={state.value.length === 0}>
+                        <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onRootApply} disabled={state.value.length === 0}>
                             {t("common:apply")}
                         </Button>
                     </div>

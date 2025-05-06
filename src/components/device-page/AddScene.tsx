@@ -2,11 +2,11 @@ import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import type { CompositeFeature, Device, DeviceState, GenericFeature, Group } from "../../types.js";
+import { type Device, type DeviceState, FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
 import { isDevice } from "../../utils.js";
 import Button from "../button/Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
-import { Composite } from "../features/Composite.js";
+import { FeatureSubFeatures } from "../features/FeatureSubFeatures.js";
 import InputField from "../form-fields/InputField.js";
 import { getScenes, getScenesFeatures, isValidSceneId } from "./index.js";
 
@@ -23,7 +23,7 @@ export default function AddScene(props: AddSceneProps): JSX.Element {
     const [sceneName, setSceneName] = useState<string>("");
     const scenes = useMemo(() => getScenes(target), [target]);
     const filteredFeatures = useMemo(() => {
-        const filtered: (GenericFeature | CompositeFeature)[] = [];
+        const filtered: FeatureWithAnySubFeatures[] = [];
 
         if (isDevice(target)) {
             for (const feature of target.definition?.exposes ?? []) {
@@ -83,8 +83,15 @@ export default function AddScene(props: AddSceneProps): JSX.Element {
                 {filteredFeatures.length > 0 && (
                     <div className="card card-border bg-base-100 shadow my-2">
                         <div className="card-body">
-                            <Composite
-                                feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
+                            <FeatureSubFeatures
+                                feature={{
+                                    features: filteredFeatures,
+                                    type: "composite",
+                                    name: "scene_features",
+                                    label: "scene_features",
+                                    property: "",
+                                    access: FeatureAccessMode.GET,
+                                }}
                                 className="row"
                                 device={target as Device}
                                 deviceState={deviceState}

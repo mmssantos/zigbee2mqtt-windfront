@@ -1,6 +1,6 @@
-import type { CoverFeature } from "../../types.js";
+import type { CoverFeature, WithAnySubFeatures } from "../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
-import { Composite } from "./Composite.js";
+import { FeatureSubFeatures } from "./FeatureSubFeatures.js";
 import type { BaseFeatureProps } from "./index.js";
 
 const STEPS_CONFIG = {
@@ -8,8 +8,8 @@ const STEPS_CONFIG = {
     tilt: [0, 25, 50, 75, 100].map<ValueWithLabelOrPrimitive>((item) => ({ value: item, name: `${item}` })),
 };
 
-type CoverProps = BaseFeatureProps<CoverFeature>;
+type CoverProps = BaseFeatureProps<WithAnySubFeatures<CoverFeature>>;
 
 export default function Cover(props: CoverProps) {
-    return <Composite {...props} steps={STEPS_CONFIG} />;
+    return <FeatureSubFeatures {...props} steps={STEPS_CONFIG} />;
 }

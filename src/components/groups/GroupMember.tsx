@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
-import type { CompositeFeature, Endpoint, GenericFeature, Group } from "../../types.js";
+import { type Endpoint, FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
 import Button from "../button/Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { getScenesFeatures } from "../device-page/index.js";
@@ -25,7 +25,7 @@ export default function GroupMember(props: GroupMemberProps): JSX.Element {
     const { t } = useTranslation("groups");
 
     const filteredFeatures = useMemo(() => {
-        const features: (GenericFeature | CompositeFeature)[] = [];
+        const features: FeatureWithAnySubFeatures[] = [];
 
         for (const feature of device.definition?.exposes ?? []) {
             const validFeature = getScenesFeatures(feature, deviceState);
@@ -40,7 +40,14 @@ export default function GroupMember(props: GroupMemberProps): JSX.Element {
 
     return (
         <DeviceCard
-            feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
+            feature={{
+                features: filteredFeatures,
+                type: "composite",
+                name: "group_member_features",
+                label: "group_member_features",
+                property: "",
+                access: FeatureAccessMode.GET,
+            }}
             device={device}
             endpoint={endpoint}
             deviceState={deviceState}

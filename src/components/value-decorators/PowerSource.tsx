@@ -27,7 +27,7 @@ export default function PowerSource(props: PowerSourceProps) {
     let source: TPowerSource | undefined = undefined;
 
     if (device?.power_source) {
-        source = device.power_source;
+        source = device.power_source as TPowerSource;
     }
 
     switch (source) {

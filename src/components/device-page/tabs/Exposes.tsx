@@ -1,5 +1,5 @@
 import { useCallback, useContext } from "react";
-import type { CompositeFeature, Device, DeviceState } from "../../../types.js";
+import { type Device, type DeviceState, FeatureAccessMode } from "../../../types.js";
 
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
@@ -42,7 +42,14 @@ export default function Exposes(props: ExposesProps) {
     return device.definition?.exposes?.length ? (
         <div className="list bg-base-100">
             <Feature
-                feature={{ features: device.definition.exposes, type: "composite" } as CompositeFeature}
+                feature={{
+                    features: device.definition.exposes,
+                    type: "composite",
+                    name: "device_exposes",
+                    label: "device_exposes",
+                    property: "",
+                    access: FeatureAccessMode.GET,
+                }}
                 device={device}
                 deviceState={deviceStates[device.friendly_name] ?? ({} as DeviceState)}
                 onChange={onChange}

@@ -1,9 +1,9 @@
-import type { FanFeature } from "../../types.js";
-import { Composite } from "./Composite.js";
+import type { FanFeature, WithAnySubFeatures } from "../../types.js";
+import { FeatureSubFeatures } from "./FeatureSubFeatures.js";
 import type { BaseFeatureProps } from "./index.js";
 
-type FanProps = BaseFeatureProps<FanFeature>;
+type FanProps = BaseFeatureProps<WithAnySubFeatures<FanFeature>>;
 
 export default function Fan(props: FanProps) {
-    return <Composite {...props} />;
+    return <FeatureSubFeatures {...props} />;
 }

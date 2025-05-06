@@ -59,10 +59,10 @@ import {
     faZ,
 } from "@fortawesome/free-solid-svg-icons";
 import type { FunctionComponent, HTMLAttributes, PropsWithChildren } from "react";
-import type { Device } from "../../types.js";
+import type { Device, FeatureWithAnySubFeatures } from "../../types.js";
 import type { FeatureWrapperProps } from "./FeatureWrapper.js";
 
-export interface BaseFeatureProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface BaseFeatureProps<T extends FeatureWithAnySubFeatures> extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
     feature: T;
     /** Can be `DeviceState` or `Zigbee2MQTTDeviceOptions` */
     deviceState: Record<string, unknown>;
@@ -213,7 +213,7 @@ const getTemperatureIcon = (temperature: number | undefined, unit: TemperatureUn
     return icon;
 };
 
-export const getGenericFeatureIcon = (name: string, value: unknown, unit?: unknown): [IconDefinition, string, Record<string, unknown>] => {
+export const getFeatureIcon = (name: string, value: unknown, unit?: unknown): [IconDefinition, string, Record<string, unknown>] => {
     let icon: IconDefinition | undefined;
     const classes: string[] = [];
     const spec: Record<string, unknown> = {};

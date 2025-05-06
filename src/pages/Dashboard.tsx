@@ -12,13 +12,7 @@ import { DeviceControlEditName } from "../components/device/DeviceControlEditNam
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
 import { useAppSelector } from "../hooks/useApp.js";
-import type { CompositeFeature, Device, DeviceState, GenericFeature } from "../types.js";
-
-type DeviceStateAndFilteredFeatures = {
-    device: Device;
-    deviceState: DeviceState;
-    filteredFeatures: GenericFeature[];
-};
+import { FeatureAccessMode, type FeatureWithAnySubFeatures } from "../types.js";
 
 export default function Dashboard() {
     const deviceStates = useAppSelector((state) => state.deviceStates);
@@ -53,7 +47,7 @@ export default function Dashboard() {
         for (const device of devices) {
             if (!device.disabled && device.supported && (!filterValue || device.friendly_name.toLowerCase().includes(filterValue.toLowerCase()))) {
                 const deviceState = deviceStates[device.friendly_name] ?? {};
-                const filteredFeatures: DeviceStateAndFilteredFeatures["filteredFeatures"] = [];
+                const filteredFeatures: FeatureWithAnySubFeatures[] = [];
 
                 if (device.definition?.exposes) {
                     for (const feature of device.definition.exposes) {
@@ -69,7 +63,14 @@ export default function Dashboard() {
                     filteredDevices.push(
                         <ul className="list rounded-box shadow-md" key={device.ieee_address}>
                             <DeviceCard
-                                feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
+                                feature={{
+                                    features: filteredFeatures,
+                                    type: "composite",
+                                    name: "device_features",
+                                    label: "device_features",
+                                    property: "",
+                                    access: FeatureAccessMode.GET,
+                                }}
                                 device={device}
                                 deviceState={deviceState}
                                 onChange={async (value) =>

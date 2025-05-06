@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactElement } from "react";
+import type { CSSProperties, HTMLAttributes, ReactElement } from "react";
 import Button from "../button/Button.js";
 
 interface PopoverDropdownProps extends HTMLAttributes<HTMLUListElement> {
@@ -19,14 +19,14 @@ export function PopoverDropdown(props: PopoverDropdownProps) {
                 className={`dropdown menu w-52 rounded-box bg-base-100 shadow-sm${dropdownStyle ? ` ${dropdownStyle}` : ""}`}
                 popover=""
                 id={popoverId}
-                style={{ positionAnchor: anchorName, maxHeight: "95vh" }}
+                style={{ positionAnchor: anchorName, maxHeight: "95vh" } as CSSProperties}
             >
                 {children}
             </ul>
             <Button
                 className={`btn${typeof buttonChildren !== "string" && (buttonChildren.type === "i" || buttonChildren.type === "img") ? " btn-square" : ""}${buttonStyle ? ` ${buttonStyle}` : ""}`}
                 popoverTarget={popoverId}
-                style={{ anchorName: anchorName }}
+                style={{ anchorName: anchorName } as CSSProperties}
             >
                 {buttonChildren}
             </Button>
