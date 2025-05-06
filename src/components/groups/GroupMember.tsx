@@ -1,12 +1,13 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
 import type { CompositeFeature, Endpoint, GenericFeature, Group } from "../../types.js";
 import Button from "../button/Button.js";
-import DashboardDevice from "../dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { getScenesFeatures } from "../device-page/index.js";
+import DeviceCard from "../device/DeviceCard.js";
 
 interface GroupMemberProps {
     device: RootState["devices"][number];
@@ -21,6 +22,7 @@ interface GroupMemberProps {
 export default function GroupMember(props: GroupMemberProps): JSX.Element {
     const { removeDeviceFromGroup, groupMember, device, deviceState, lastSeenConfig, setDeviceState, getDeviceState } = props;
     const { endpoint } = groupMember;
+    const { t } = useTranslation("groups");
 
     const filteredFeatures = useMemo(() => {
         const features: (GenericFeature | CompositeFeature)[] = [];
@@ -37,7 +39,7 @@ export default function GroupMember(props: GroupMemberProps): JSX.Element {
     }, [device, deviceState]);
 
     return (
-        <DashboardDevice
+        <DeviceCard
             feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
             device={device}
             endpoint={endpoint}
@@ -46,15 +48,15 @@ export default function GroupMember(props: GroupMemberProps): JSX.Element {
             onRead={async (value) => await getDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
             featureWrapperClass={DashboardFeatureWrapper}
             lastSeenConfig={lastSeenConfig}
-            controls={
-                <Button<string>
-                    prompt
-                    onClick={async () => await removeDeviceFromGroup(device.ieee_address, endpoint)}
-                    className="btn btn-square btn-error btn-sm"
-                >
-                    <FontAwesomeIcon icon={faTrash} />
-                </Button>
-            }
-        />
+        >
+            <Button<string>
+                prompt
+                onClick={async () => await removeDeviceFromGroup(device.ieee_address, endpoint)}
+                className="btn btn-square btn-error btn-sm"
+                title={t("remove_from_group")}
+            >
+                <FontAwesomeIcon icon={faTrash} />
+            </Button>
+        </DeviceCard>
     );
 }

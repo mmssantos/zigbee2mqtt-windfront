@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
-import { DeviceImage } from "../components/device-image/DeviceImage.js";
+import { DeviceImage } from "../components/device/DeviceImage.js";
 import OtaControlGroup from "../components/ota-page/OtaControlGroup.js";
 import OtaFileVersion from "../components/ota-page/OtaFileVersion.js";
 import Table from "../components/table/Table.js";

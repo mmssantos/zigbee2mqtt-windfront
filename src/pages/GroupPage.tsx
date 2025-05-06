@@ -26,10 +26,10 @@ export default function GroupPage() {
 
     return (
         <>
-            <div className="collapse collapse-arrow bg-base-100 border-base-300 border mb-3">
+            <div className="collapse collapse-arrow bg-base-100 shadow mb-3">
                 <input type="checkbox" />
                 <div className="collapse-title text-lg font-semibold text-center">
-                    {group.friendly_name} (#{group.id})
+                    #{group.id} - {group.friendly_name}
                 </div>
                 <div className="collapse-content">
                     <div className="flex flex-row flex-wrap justify-evenly gap-4">

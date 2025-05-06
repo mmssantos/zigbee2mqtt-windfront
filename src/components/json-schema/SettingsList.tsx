@@ -168,6 +168,7 @@ const groupProperties = (
     rootOnly = false,
 ): JSX.Element[] => {
     const elements: JSX.Element[] = [];
+    const nestedElements: JSX.Element[] = [];
 
     for (const key in properties) {
         const property = properties[key];
@@ -175,7 +176,7 @@ const groupProperties = (
         if (typeof property !== "boolean") {
             if (property.properties) {
                 if (!rootOnly) {
-                    elements.push(
+                    nestedElements.push(
                         <div className="list" key={`${depth}-${key}`}>
                             <h3 className="list-row text-lg">{property.title || key}</h3>
                             {groupProperties(
@@ -202,6 +203,7 @@ const groupProperties = (
                 );
 
                 if (feature) {
+                    // XXX: enforce tailwind class presence: ps-4 ps-8 ps-12
                     elements.push(
                         <div className={`list-row${depth !== 0 ? ` ps-${4 + depth * 4}` : ""}`} key={`${depth}-${key}`}>
                             {feature}
@@ -212,15 +214,13 @@ const groupProperties = (
         }
     }
 
-    return elements;
+    return nestedElements.length > 0 ? elements.concat(nestedElements) : elements;
 };
 
 export default function SettingsList({ schema, data, set, rootOnly }: SettingsListProps) {
     const { t } = useTranslation("settingsSchemaDescriptions");
 
     return (
-        <div className="list bg-base-100 rounded-box shadow-md">
-            {schema.properties && groupProperties(t, schema.properties, data, set, 0, schema.required, rootOnly)}
-        </div>
+        <div className="list bg-base-100">{schema.properties && groupProperties(t, schema.properties, data, set, 0, schema.required, rootOnly)}</div>
     );
 }

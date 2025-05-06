@@ -61,5 +61,5 @@ export default function Clusters({ device }: ClustersProps) {
         return clusters;
     }, [device.endpoints, t]);
 
-    return <ul className="menu bg-base-200 rounded-box w-full">{clustersByEndpoint}</ul>;
+    return <ul className="menu bg-base-100 w-full">{clustersByEndpoint}</ul>;
 }

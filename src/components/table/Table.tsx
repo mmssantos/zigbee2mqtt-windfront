@@ -117,7 +117,7 @@ export default function Table<T>(props: Props<T>) {
                 </tbody>
             </table>
             <div className="divider" />
-            <div className="navbar bg-base-100 shadow-sm">
+            <div className="navbar bg-base-100">
                 <div className="navbar-start" />
                 <div className="navbar-center join">
                     <Button className="btn btn-square join-item" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>

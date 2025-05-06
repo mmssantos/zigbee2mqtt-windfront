@@ -23,7 +23,7 @@ export default function DeviceSpecificSettings(props: DeviceSpecificSettingsProp
     );
 
     return props.device.definition?.options?.length ? (
-        <div className="list bg-base-100 rounded-box shadow-md">
+        <div className="list bg-base-100">
             <Composite
                 showEndpointLabels={true}
                 feature={{ features: props.device.definition.options, type: "composite" } as CompositeFeature}

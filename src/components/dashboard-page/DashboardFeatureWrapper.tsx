@@ -18,7 +18,7 @@ export default function DashboardFeatureWrapper(props: PropsWithChildren<Feature
 
     return (
         <div className="flex flex-row items-center gap-1 mb-2">
-            {fi && <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} />}
+            <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} />
             <div className="flex-grow-1">
                 {t(featureName!, { defaultValue: fallbackFeatureName })}
                 {feature.endpoint ? ` (${feature.endpoint})` : null}

@@ -37,7 +37,7 @@ export default function Settings() {
                     {t("common:read_the_docs_info")}
                 </a>
             </div>
-            <div className="tabs tabs-lift">
+            <div className="tabs tabs-border">
                 {TABS.map((tab) => (
                     <Link
                         key={tab}
@@ -52,17 +52,23 @@ export default function Settings() {
                         {t(tab)}
                     </Link>
                 ))}
+                <div className="tab-content block h-full bg-base-100 p-3">
+                    {currentTab === ROOT_TAB ? (
+                        <SettingsList
+                            schema={bridgeInfo.config_schema as unknown as JSONSchema7}
+                            data={bridgeInfo.config as unknown as Record<string, unknown>}
+                            set={setSettings}
+                            rootOnly
+                        />
+                    ) : (
+                        <SettingsList
+                            schema={bridgeInfo.config_schema.properties[currentTab]}
+                            data={bridgeInfo.config[currentTab]}
+                            set={setSettings}
+                        />
+                    )}
+                </div>
             </div>
-            {currentTab === ROOT_TAB ? (
-                <SettingsList
-                    schema={bridgeInfo.config_schema as unknown as JSONSchema7}
-                    data={bridgeInfo.config as unknown as Record<string, unknown>}
-                    set={setSettings}
-                    rootOnly
-                />
-            ) : (
-                <SettingsList schema={bridgeInfo.config_schema.properties[currentTab]} data={bridgeInfo.config[currentTab]} set={setSettings} />
-            )}
         </>
     );
 }

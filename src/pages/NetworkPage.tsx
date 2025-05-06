@@ -7,7 +7,7 @@ import { Link } from "react-router";
 import type { Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
-import { DeviceImage } from "../components/device-image/DeviceImage.js";
+import { DeviceImage } from "../components/device/DeviceImage.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { Lqi } from "../components/value-decorators/Lqi.js";
 import PowerSource from "../components/value-decorators/PowerSource.js";
@@ -125,7 +125,7 @@ export default function NetworkPage() {
             if (device) {
                 if (!filterValue || node.friendlyName.toLowerCase().includes(filterValue.toLowerCase())) {
                     sortedNodes.push(
-                        <ul className="menu bg-base-200 rounded-box w-full" key={node.friendlyName}>
+                        <ul className="menu bg-base-100 rounded-box shadow w-full" key={node.friendlyName}>
                             <li
                                 title={`${t("zigbee:ieee_address")}: ${node.ieeeAddr} | ${t("zigbee:network_address")}: ${toHex(node.networkAddress, 4)} (${node.networkAddress})`}
                             >

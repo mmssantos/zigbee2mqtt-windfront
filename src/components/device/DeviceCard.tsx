@@ -1,23 +1,23 @@
-import type { JSX } from "react";
+import type { PropsWithChildren } from "react";
 import type { CompositeFeature, Endpoint, LastSeenConfig } from "../../types.js";
 import type { BaseFeatureProps } from "../features/index.js";
 
 import { Link } from "react-router";
 
 import { useTranslation } from "react-i18next";
-import { DeviceImage } from "../device-image/DeviceImage.js";
 import { Composite } from "../features/Composite.js";
 import { LastSeen } from "../value-decorators/LastSeen.js";
 import { Lqi } from "../value-decorators/Lqi.js";
 import PowerSource from "../value-decorators/PowerSource.js";
+import { DeviceImage } from "./DeviceImage.js";
 
-type Props = BaseFeatureProps<CompositeFeature> & {
-    lastSeenConfig: LastSeenConfig;
-    controls?: JSX.Element;
-    endpoint?: Endpoint;
-};
+type Props = BaseFeatureProps<CompositeFeature> &
+    PropsWithChildren<{
+        lastSeenConfig: LastSeenConfig;
+        endpoint?: Endpoint;
+    }>;
 
-export default function DashboardDevice({
+export default function DeviceCard({
     onChange,
     onRead,
     device,
@@ -26,7 +26,7 @@ export default function DashboardDevice({
     lastSeenConfig,
     feature,
     featureWrapperClass,
-    controls,
+    children,
 }: Props) {
     const { t } = useTranslation("zigbee");
 
@@ -67,7 +67,7 @@ export default function DashboardDevice({
                 <span className="badge badge-soft badge-ghost cursor-default" title={t("power")}>
                     <PowerSource device={device} deviceState={deviceState} />
                 </span>
-                {controls}
+                {children}
             </li>
         </>
     );

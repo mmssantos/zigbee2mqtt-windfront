@@ -9,10 +9,10 @@ import { SUPPORT_NEW_DEVICES_DOCS_URL } from "../../../consts.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
 import type { Device, DeviceState } from "../../../types.js";
 import { toHex } from "../../../utils.js";
-import { DeviceControlEditName } from "../../device-control/DeviceControlEditName.js";
-import DeviceControlGroup from "../../device-control/DeviceControlGroup.js";
-import { DeviceControlUpdateDesc } from "../../device-control/DeviceControlUpdateDesc.js";
-import { DeviceImage } from "../../device-image/DeviceImage.js";
+import { DeviceControlEditName } from "../../device/DeviceControlEditName.js";
+import DeviceControlGroup from "../../device/DeviceControlGroup.js";
+import { DeviceControlUpdateDesc } from "../../device/DeviceControlUpdateDesc.js";
+import { DeviceImage } from "../../device/DeviceImage.js";
 import { Availability } from "../../value-decorators/Availability.js";
 import { DisplayValue } from "../../value-decorators/DisplayValue.js";
 import { LastSeen } from "../../value-decorators/LastSeen.js";
@@ -90,7 +90,7 @@ export default function DeviceInfo(props: DeviceInfoProps) {
     }, [device.definition]);
 
     return (
-        <div className="card lg:card-side bg-base-100 shadow-sm">
+        <div className="card lg:card-side bg-base-100">
             <figure style={{ overflow: "visible" }}>
                 <div>
                     <DeviceImage device={device} deviceState={deviceState} disabled={device.disabled} className="self-start max-w-xs" />

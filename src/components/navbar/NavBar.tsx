@@ -43,7 +43,7 @@ const URLS = [
         key: "logs",
     },
     {
-        href: "/settings/about",
+        href: "/settings",
         key: "settings",
     },
 ];
@@ -87,7 +87,7 @@ export const NavBar = () => {
     );
 
     return (
-        <div className="navbar bg-base-100 shadow-sm">
+        <div className="navbar bg-base-200 shadow">
             <div className="navbar-start">
                 <div className="dropdown">
                     {/* biome-ignore lint/a11y/noNoninteractiveTabindex: daisyui dropdown */}
@@ -95,7 +95,7 @@ export const NavBar = () => {
                         <FontAwesomeIcon icon={faBars} />
                     </div>
                     {/* biome-ignore lint/a11y/noNoninteractiveTabindex: daisyui dropdown */}
-                    <ul tabIndex={0} className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-max p-2 shadow">
+                    <ul tabIndex={0} className="menu dropdown-content bg-base-200 rounded-box z-1 mt-3 w-max p-2 shadow">
                         {links}
                     </ul>
                 </div>

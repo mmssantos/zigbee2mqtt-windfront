@@ -46,7 +46,9 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
 
     return (
         <div className="list-row">
-            <div>{fi && <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} size="2xl" />}</div>
+            <div>
+                <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} size="2xl" />
+            </div>
             <div>
                 <div>{label}</div>
                 <div className="text-xs font-semibold opacity-60">

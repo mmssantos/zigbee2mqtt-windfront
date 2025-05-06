@@ -97,7 +97,7 @@ export default function DevicePage(): JSX.Element {
     return (
         <>
             <HeaderDeviceSelector devices={devices} currentDevice={device} tab={tab} />
-            <div className="tabs tabs-lift mt-2">
+            <div className="tabs tabs-border mt-2">
                 <NavLink to={`/device/${deviceId!}/info`} className={isTabActive}>
                     <FontAwesomeIcon icon={faInfo} className="me-2" />
                     {t("about")}
@@ -142,8 +142,8 @@ export default function DevicePage(): JSX.Element {
                     <FontAwesomeIcon icon={faBug} className="me-2" />
                     {t("dev_console")}
                 </NavLink>
+                <div className="tab-content block h-full bg-base-100 p-3">{content}</div>
             </div>
-            <div className="block p-6">{content}</div>
         </>
     );
 }

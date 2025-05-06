@@ -93,7 +93,7 @@ export default function Groups({ device }: GroupsProps) {
                         <li className="list-row flex-grow">
                             <div>
                                 <Link to={`/group/${group.id}`} className="link link-hover link-primary">
-                                    {group.friendly_name}
+                                    #{group.id} - {group.friendly_name}
                                     {endpoint ? ` (${t("endpoint")}: ${endpoint})` : ""}
                                 </Link>
                                 <div className="text-xs opacity-50">{group.description || ""}</div>

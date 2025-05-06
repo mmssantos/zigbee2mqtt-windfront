@@ -1,5 +1,5 @@
 import convertColors from "color-convert";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GradientFeature, RGBColor } from "../../types.js";
 import Button from "../button/Button.js";
@@ -23,7 +23,6 @@ const rgbToHex = (rgb: RGBColor): string => {
 type GradientProps = BaseFeatureProps<GradientFeature>;
 
 export function Gradient(props: GradientProps) {
-    const gradientColors = 5;
     const {
         minimal,
         onChange,
@@ -31,25 +30,7 @@ export function Gradient(props: GradientProps) {
         deviceState,
     } = props;
     const { t } = useTranslation(["gradient", "common"]);
-    const [colors, setColors] = useState<Array<RGBColor>>(Array(gradientColors).fill({ r: 0, g: 0, b: 0 }));
-
-    const setColor = (idx: number, hex: string) => {
-        const c = [...colors];
-        c[idx] = hexToRGB(hex);
-        setColors(c);
-    };
-
-    const addColor = () => {
-        const c = [...colors];
-        c.push({ r: 255, g: 255, b: 255 });
-        setColors(c);
-    };
-
-    const removeColor = (idx: number) => {
-        const c = [...colors];
-        c.splice(idx, 1);
-        setColors(c);
-    };
+    const [colors, setColors] = useState<Array<RGBColor>>(length_min > 0 ? Array(length_min).fill({ r: 255, g: 255, b: 255 }) : []);
 
     useEffect(() => {
         const { gradient: inputGradient } = deviceState as { gradient: string[] };
@@ -58,6 +39,30 @@ export function Gradient(props: GradientProps) {
             setColors(inputGradient.map(hexToRGB));
         }
     }, [deviceState]);
+
+    const setColor = useCallback(
+        (idx: number, hex: string) => {
+            const c = [...colors];
+            c[idx] = hexToRGB(hex);
+            setColors(c);
+        },
+        [colors],
+    );
+
+    const addColor = useCallback(() => {
+        const c = [...colors];
+        c.push({ r: 255, g: 255, b: 255 });
+        setColors(c);
+    }, [colors]);
+
+    const removeColor = useCallback(
+        (idx: number) => {
+            const c = [...colors];
+            c.splice(idx, 1);
+            setColors(c);
+        },
+        [colors],
+    );
 
     const [canAdd, setCanAdd] = useState(false);
     const [canRemove, setCanRemove] = useState(false);
@@ -86,9 +91,11 @@ export function Gradient(props: GradientProps) {
                 </div>
             ))}
             {canAdd && (
-                <Button<void> className="btn btn-success" onClick={addColor}>
-                    +
-                </Button>
+                <div className="flex flex-row flex-wrap gap-2">
+                    <Button<void> className="btn btn-success" onClick={addColor}>
+                        +
+                    </Button>
+                </div>
             )}
             <div>
                 <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={() => onChange({ gradient: colors.map(rgbToHex) })}>

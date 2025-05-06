@@ -49,7 +49,7 @@ export default function SettingsPage() {
 
     return (
         <>
-            <div className="tabs tabs-lift">
+            <div className="tabs tabs-border">
                 <NavLink to="/settings/about" className={isTabActive}>
                     <FontAwesomeIcon icon={faInfo} className="me-2" />
                     {t("about")}
@@ -74,8 +74,8 @@ export default function SettingsPage() {
                     <FontAwesomeIcon icon={faThumbsUp} className="me-2" />
                     {t("donate")}
                 </NavLink>
+                <div className="tab-content block h-full bg-base-100 p-3">{content}</div>
             </div>
-            <div className="block bg-base-100 border-base-300 p-3">{content}</div>
         </>
     );
 }

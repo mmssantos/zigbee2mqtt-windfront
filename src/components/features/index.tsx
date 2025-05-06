@@ -12,6 +12,7 @@ import {
     faCalendarDay,
     faCalendarWeek,
     faCheck,
+    faCircle,
     faCloudDownloadAlt,
     faCog,
     faCopyright,
@@ -212,11 +213,7 @@ const getTemperatureIcon = (temperature: number | undefined, unit: TemperatureUn
     return icon;
 };
 
-export const getGenericFeatureIcon = (
-    name: string,
-    value: unknown,
-    unit?: unknown,
-): [IconDefinition, string, Record<string, unknown>] | undefined => {
+export const getGenericFeatureIcon = (name: string, value: unknown, unit?: unknown): [IconDefinition, string, Record<string, unknown>] => {
     let icon: IconDefinition | undefined;
     const classes: string[] = [];
     const spec: Record<string, unknown> = {};
@@ -307,9 +304,5 @@ export const getGenericFeatureIcon = (
         classes.push(mappedSpec.className);
     }
 
-    if (!icon) {
-        classes.push("invisible");
-    }
-
-    return icon ? [icon, classes.join(" "), { flip: mappedSpec.flip, rotate: mappedSpec.rotate, ...spec }] : undefined;
+    return icon ? [icon, classes.join(" "), { flip: mappedSpec.flip, rotate: mappedSpec.rotate, ...spec }] : [faCircle, "opacity-0", {}];
 };

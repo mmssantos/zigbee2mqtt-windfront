@@ -40,7 +40,7 @@ export default function Exposes(props: ExposesProps) {
     );
 
     return device.definition?.exposes?.length ? (
-        <div className="list bg-base-100 rounded-box shadow-md">
+        <div className="list bg-base-100">
             <Feature
                 feature={{ features: device.definition.exposes, type: "composite" } as CompositeFeature}
                 device={device}

@@ -104,7 +104,7 @@ export default function About() {
                     </div>
                 </div>
             </div>
-            <ul className="menu bg-base-200 rounded-box min-w-sm">
+            <ul className="menu bg-base-100 rounded-box shadow min-w-sm">
                 <li>
                     <details open>
                         <summary>{t("stats")}</summary>

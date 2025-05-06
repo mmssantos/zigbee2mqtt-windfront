@@ -117,7 +117,7 @@ export default function GroupsPage() {
 
     return (
         <>
-            <div className="collapse collapse-arrow bg-base-100 border-base-300 border mb-3">
+            <div className="collapse collapse-arrow bg-base-100 shadow mb-3">
                 <input type="checkbox" />
                 <div className="collapse-title text-lg font-semibold text-center">{t("create_group")}</div>
                 <div className="collapse-content">

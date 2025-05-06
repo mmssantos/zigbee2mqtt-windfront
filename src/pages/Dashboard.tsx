@@ -5,10 +5,10 @@ import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/button/Button.js";
-import DashboardDevice from "../components/dashboard-page/DashboardDevice.js";
 import DashboardFeatureWrapper from "../components/dashboard-page/DashboardFeatureWrapper.js";
 import { getDashboardFeatures } from "../components/dashboard-page/index.js";
-import { DeviceControlEditName } from "../components/device-control/DeviceControlEditName.js";
+import DeviceCard from "../components/device/DeviceCard.js";
+import { DeviceControlEditName } from "../components/device/DeviceControlEditName.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
 import { useAppSelector } from "../hooks/useApp.js";
@@ -68,7 +68,7 @@ export default function Dashboard() {
                 if (filteredFeatures.length > 0) {
                     filteredDevices.push(
                         <ul className="list rounded-box shadow-md" key={device.ieee_address}>
-                            <DashboardDevice
+                            <DeviceCard
                                 feature={{ features: filteredFeatures, type: "composite" } as CompositeFeature}
                                 device={device}
                                 deviceState={deviceState}
@@ -88,24 +88,23 @@ export default function Dashboard() {
                                 }
                                 featureWrapperClass={DashboardFeatureWrapper}
                                 lastSeenConfig={bridgeConfig.advanced.last_seen}
-                                controls={
-                                    <div className="join join-vertical lg:join-horizontal">
-                                        <DeviceControlEditName
-                                            device={device}
-                                            renameDevice={renameDevice}
-                                            homeassistantEnabled={bridgeConfig.homeassistant.enabled}
-                                            style="btn-primary btn-square btn-sm join-item"
-                                        />
-                                        <Button<void>
-                                            onClick={() => NiceModal.show(RemoveDeviceModal, { device, removeDevice })}
-                                            className="btn btn-error btn-square btn-sm join-item"
-                                            title={t("remove_device")}
-                                        >
-                                            <FontAwesomeIcon icon={faTrash} />
-                                        </Button>
-                                    </div>
-                                }
-                            />
+                            >
+                                <div className="join join-vertical lg:join-horizontal">
+                                    <DeviceControlEditName
+                                        device={device}
+                                        renameDevice={renameDevice}
+                                        homeassistantEnabled={bridgeConfig.homeassistant.enabled}
+                                        style="btn-primary btn-square btn-sm join-item"
+                                    />
+                                    <Button<void>
+                                        onClick={() => NiceModal.show(RemoveDeviceModal, { device, removeDevice })}
+                                        className="btn btn-error btn-square btn-sm join-item"
+                                        title={t("remove_device")}
+                                    >
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </Button>
+                                </div>
+                            </DeviceCard>
                         </ul>,
                     );
                 }
