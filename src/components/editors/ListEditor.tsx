@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { BasicFeature, Device, DeviceState, FeatureWithAnySubFeatures, FeatureWithSubFeatures } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import { Feature } from "../features/Feature.js";
 import FeatureWrapper from "../features/FeatureWrapper.js";
 

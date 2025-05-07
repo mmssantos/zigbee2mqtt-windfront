@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import Button from "../components/button/Button.js";
+import Button from "../components/Button.js";
 import { DeviceImage } from "../components/device/DeviceImage.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { Lqi } from "../components/value-decorators/Lqi.js";

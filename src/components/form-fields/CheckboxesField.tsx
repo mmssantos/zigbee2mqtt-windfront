@@ -1,7 +1,7 @@
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type ChangeEvent, useCallback, useEffect, useState } from "react";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 
 export type CheckboxFieldProps = {
     names: string[];

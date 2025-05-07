@@ -1,5 +1,5 @@
 import type { CSSProperties, HTMLAttributes, ReactElement } from "react";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 
 interface PopoverDropdownProps extends HTMLAttributes<HTMLUListElement> {
     name: string;

@@ -1,5 +1,10 @@
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { type ChangeEvent, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { type BinaryFeature, FeatureAccessMode } from "../../types.js";
-import Toggle from "../toggle/Toggle.js";
+import Button from "../Button.js";
+import { DisplayValue } from "../value-decorators/DisplayValue.js";
 import BaseViewer from "./BaseViewer.js";
 import NoAccessError from "./NoAccessError.js";
 import type { BaseFeatureProps } from "./index.js";
@@ -13,17 +18,36 @@ export default function Binary(props: BinaryProps) {
         onChange,
         minimal,
     } = props;
+    const { t } = useTranslation("zigbee");
+    const onButtonClick = useCallback((value: string | boolean) => onChange({ [property]: value }), [property, onChange]);
+    const onCheckboxChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => onChange({ [property]: e.target.checked ? valueOn : valueOff }),
+        [valueOn, valueOff, property, onChange],
+    );
 
     if (access & FeatureAccessMode.SET) {
+        const value = deviceState[property];
+        const valueExists = value != null;
+        const showOnOffButtons = !minimal || (minimal && !valueExists);
+
         return (
-            <Toggle
-                onChange={(value) => onChange({ [property]: value })}
-                value={deviceState[property]}
-                valueOn={valueOn}
-                valueOff={valueOff}
-                minimal={minimal}
-                name={name}
-            />
+            <div>
+                {showOnOffButtons && (
+                    <Button<string | boolean> className="btn btn-link" item={valueOff} onClick={onButtonClick}>
+                        <DisplayValue value={valueOff} name={name} />
+                    </Button>
+                )}
+                {valueExists ? (
+                    <input className="toggle" type="checkbox" checked={value === valueOn} onChange={onCheckboxChange} />
+                ) : (
+                    <FontAwesomeIcon icon={faQuestion} title={t("unknown")} />
+                )}
+                {showOnOffButtons && (
+                    <Button<string | boolean> className="btn btn-link" item={valueOn} onClick={onButtonClick}>
+                        <DisplayValue value={valueOn} name={name} />
+                    </Button>
+                )}
+            </div>
         );
     }
 

@@ -7,7 +7,7 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
 import { PERMIT_JOIN_TIME_KEY } from "../../localStoreConsts.js";
 import type { Device } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import { PopoverDropdown } from "../dropdown/PopoverDropdown.js";
 import Countdown from "../value-decorators/Countdown.js";
 

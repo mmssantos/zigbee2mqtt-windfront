@@ -4,7 +4,7 @@ import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { type Device, type DeviceState, FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
 import { isDevice } from "../../utils.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { FeatureSubFeatures } from "../features/FeatureSubFeatures.js";
 import InputField from "../form-fields/InputField.js";

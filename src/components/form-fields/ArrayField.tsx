@@ -1,7 +1,7 @@
 import { faCheck, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type FocusEvent, useCallback, useEffect, useState } from "react";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 
 export type ArrayFieldProps = {
     defaultValues: (string | number)[];

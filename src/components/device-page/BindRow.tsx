@@ -6,7 +6,7 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import type { RootState } from "../../store.js";
 import type { Device, Group } from "../../types.js";
 import { getEndpoints, isDevice } from "../../utils.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import ClusterMultiPicker from "../pickers/ClusterMultiPicker.js";
 import DevicePicker from "../pickers/DevicePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";

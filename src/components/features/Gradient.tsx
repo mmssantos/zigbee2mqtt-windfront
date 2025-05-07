@@ -2,7 +2,7 @@ import convertColors from "color-convert";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GradientFeature, RGBColor } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import ColorEditor from "../editors/ColorEditor.js";
 import type { BaseFeatureProps } from "./index.js";
 

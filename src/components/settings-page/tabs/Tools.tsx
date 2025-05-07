@@ -5,7 +5,7 @@ import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js
 import { useAppDispatch, useAppSelector } from "../../../hooks/useApp.js";
 import store, { setBackupPreparing } from "../../../store.js";
 import { download, formatDate } from "../../../utils.js";
-import Button from "../../button/Button.js";
+import Button from "../../Button.js";
 import { ImageLocaliser } from "../ImageLocaliser.js";
 
 export default function Tools() {

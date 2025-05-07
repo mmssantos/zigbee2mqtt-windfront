@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import type { Device } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 
 import NiceModal from "@ebay/nice-modal-react";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";

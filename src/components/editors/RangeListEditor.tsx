@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import RangeEditor from "./RangeEditor.js";
 
 type RangeListProps = {

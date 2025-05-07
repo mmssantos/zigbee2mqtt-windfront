@@ -2,7 +2,7 @@ import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import type { Device, DeviceState, Group, Scene } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import { ScenePicker } from "./ScenePicker.js";
 import { getScenes } from "./index.js";
 

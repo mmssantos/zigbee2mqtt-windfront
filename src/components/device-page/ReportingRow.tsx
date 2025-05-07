@@ -5,7 +5,7 @@ import type { ClusterGroup } from "../pickers/index.js";
 
 import { useTranslation } from "react-i18next";
 import { getEndpoints } from "../../utils.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import InputField from "../form-fields/InputField.js";
 import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import type { RootState } from "../../store.js";
 import type { Device } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import { getZ2MDeviceImage } from "../device/index.js";
 
 type LocaliserState = "none" | "start" | "inprogress" | "done";

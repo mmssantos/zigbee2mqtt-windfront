@@ -2,7 +2,7 @@ import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
 import type { Device, DeviceState } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 
 type OtaControlGroup = {
     device: Device;

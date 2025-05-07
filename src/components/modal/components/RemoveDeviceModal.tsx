@@ -3,7 +3,7 @@ import { type ChangeEvent, type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Device } from "../../../types.js";
 
-import Button from "../../button/Button.js";
+import Button from "../../Button.js";
 import CheckboxField from "../../form-fields/CheckboxField.js";
 import Modal from "../Modal.js";
 

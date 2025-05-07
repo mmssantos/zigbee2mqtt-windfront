@@ -2,7 +2,7 @@ import groupBy from "lodash/groupBy.js";
 import { type JSX, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { FeatureWithAnySubFeatures } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import { Feature } from "./Feature.js";
 import type { BaseFeatureProps } from "./index.js";
 

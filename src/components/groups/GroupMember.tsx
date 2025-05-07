@@ -4,7 +4,7 @@ import { type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
 import { FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { getScenesFeatures } from "../device-page/index.js";
 import DeviceCard from "../device/DeviceCard.js";

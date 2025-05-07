@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import Button from "../components/button/Button.js";
+import Button from "../components/Button.js";
 import InputField from "../components/form-fields/InputField.js";
 import { RenameGroupForm } from "../components/modal/components/RenameGroupModal.js";
 import Table from "../components/table/Table.js";

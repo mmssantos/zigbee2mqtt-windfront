@@ -1,6 +1,6 @@
 import { type InputHTMLAttributes, useMemo } from "react";
 import type { AnyColor, ColorFormat } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import { toRGB } from "./index.js";
 
 type ColorEditorProps = {

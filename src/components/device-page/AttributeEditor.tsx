@@ -4,7 +4,7 @@ import { type ChangeEvent, type JSX, useCallback, useMemo, useState } from "reac
 import { useTranslation } from "react-i18next";
 import type { AttributeDefinition, Device, LogMessage } from "../../types.js";
 import { getEndpoints, getObjectFirstKey } from "../../utils.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import InputField from "../form-fields/InputField.js";
 import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";

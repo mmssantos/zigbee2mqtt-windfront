@@ -4,7 +4,7 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
 import type { Device, Group } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import DevicePicker from "../pickers/DevicePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
 

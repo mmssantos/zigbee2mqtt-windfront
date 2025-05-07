@@ -9,8 +9,8 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
 import LanguageSwitcher from "../../i18n/LanguageSwitcher.js";
 import { isIframe } from "../../utils.js";
+import Button from "../Button.js";
 import { ThemeSwitcher } from "../ThemeSwitcher.js";
-import Button from "../button/Button.js";
 import PermitJoinButton from "./PermitJoinButton.js";
 
 const URLS = [

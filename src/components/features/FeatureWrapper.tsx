@@ -5,7 +5,7 @@ import startCase from "lodash/startCase.js";
 import { type PropsWithChildren, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { type ColorFeature, type DeviceState, FeatureAccessMode, type FeatureWithAnySubFeatures } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import { getFeatureIcon } from "./index.js";
 
 export type FeatureWrapperProps = {

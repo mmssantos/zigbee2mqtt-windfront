@@ -2,7 +2,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Button from "../components/button/Button.js";
+import Button from "../components/Button.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import SelectField from "../components/form-fields/SelectField.js";
 import { LEVEL_CMAP, LOG_LEVELS, LOG_LIMITS } from "../consts.js";

@@ -13,7 +13,7 @@ import {
 import { type ChangeEvent, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import store2 from "store2";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import TextFilter from "./TextFilter.js";
 
 interface Props<T> {

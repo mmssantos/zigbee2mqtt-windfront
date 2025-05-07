@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FeatureAccessMode, type FeatureWithAnySubFeatures, type ListFeature } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import ListEditor from "../editors/ListEditor.js";
 import BaseViewer from "./BaseViewer.js";
 import NoAccessError from "./NoAccessError.js";

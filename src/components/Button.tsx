@@ -1,6 +1,6 @@
 import NiceModal from "@ebay/nice-modal-react";
 import type { ButtonHTMLAttributes, JSX } from "react";
-import { DialogConfirmationModal } from "../modal/components/DialogConfirmationModal.js";
+import { DialogConfirmationModal } from "./modal/components/DialogConfirmationModal.js";
 
 interface ButtonProps<T> extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
     item?: T;

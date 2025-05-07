@@ -2,7 +2,7 @@ import { type JSX, useState } from "react";
 
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { useTranslation } from "react-i18next";
-import Button from "../../button/Button.js";
+import Button from "../../Button.js";
 import Modal from "../Modal.js";
 
 type AuthFormProps = {

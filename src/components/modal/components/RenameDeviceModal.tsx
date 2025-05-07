@@ -5,7 +5,7 @@ import type { Device } from "../../../types.js";
 
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 
-import Button from "../../button/Button.js";
+import Button from "../../Button.js";
 import CheckboxField from "../../form-fields/CheckboxField.js";
 import InputField from "../../form-fields/InputField.js";
 import Modal from "../Modal.js";

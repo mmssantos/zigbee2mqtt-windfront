@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
 import type { Device, LogMessage } from "../../types.js";
-import Button from "../button/Button.js";
+import Button from "../Button.js";
 import InputField from "../form-fields/InputField.js";
 import TextareaField from "../form-fields/TextareaField.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import Button from "../components/button/Button.js";
+import Button from "../components/Button.js";
 import DashboardFeatureWrapper from "../components/dashboard-page/DashboardFeatureWrapper.js";
 import { getDashboardFeatures } from "../components/dashboard-page/index.js";
 import DeviceCard from "../components/device/DeviceCard.js";
