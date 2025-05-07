@@ -2,8 +2,9 @@ import { faBan, faExclamationTriangle, faQuestionCircle, faSpinner, faSync } fro
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Suspense, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { InterviewState } from "../../consts.js";
 import genericDevice from "../../images/generic-zigbee-device.png";
-import { type Device, type DeviceState, InterviewState } from "../../types.js";
+import type { Device, DeviceState } from "../../types.js";
 import { ErrorBoundary } from "./ErrorBoundary.js";
 import { LazyImage } from "./LazyImage.js";
 

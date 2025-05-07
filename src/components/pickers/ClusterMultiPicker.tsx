@@ -1,5 +1,4 @@
 import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, type JSX, useCallback, useMemo } from "react";
-import { isClusterGroup } from "./index.js";
 
 export interface ClusterMultiPickerProps extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onChange"> {
     label?: string;
@@ -9,7 +8,7 @@ export interface ClusterMultiPickerProps extends Omit<DetailedHTMLProps<InputHTM
 }
 
 export default function ClusterMultiPicker(props: ClusterMultiPickerProps): JSX.Element {
-    const { clusters = [], onChange, label, value, disabled } = props;
+    const { clusters, onChange, label, value, disabled } = props;
 
     const onChangeHandler = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,29 +26,26 @@ export default function ClusterMultiPicker(props: ClusterMultiPickerProps): JSX.
         [onChange, value],
     );
 
-    const options = useMemo(() => {
-        if (isClusterGroup(clusters)) {
-            console.warn("Not implemented");
-            return [];
-        }
-
-        return Array.from(clusters)
-            .sort((a, b) => a.toString().localeCompare(b.toString()))
-            .map((cluster) => (
-                <label key={cluster} className="label" title={cluster as string}>
-                    <input
-                        className="checkbox"
-                        type="checkbox"
-                        checked={value.includes(cluster)}
-                        name={cluster as string}
-                        value={cluster}
-                        onChange={onChangeHandler}
-                        disabled={disabled}
-                    />
-                    {cluster}
-                </label>
-            ));
-    }, [clusters, onChangeHandler, value, disabled]);
+    const options = useMemo(
+        () =>
+            Array.from(clusters)
+                .sort((a, b) => a.toString().localeCompare(b.toString()))
+                .map((cluster) => (
+                    <label key={cluster} className="label" title={cluster as string}>
+                        <input
+                            className="checkbox"
+                            type="checkbox"
+                            checked={value.includes(cluster)}
+                            name={cluster as string}
+                            value={cluster}
+                            onChange={onChangeHandler}
+                            disabled={disabled}
+                        />
+                        {cluster}
+                    </label>
+                )),
+        [clusters, onChangeHandler, value, disabled],
+    );
 
     return (
         <fieldset className="fieldset">

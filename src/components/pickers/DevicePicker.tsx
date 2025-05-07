@@ -2,7 +2,6 @@ import { type ChangeEvent, type JSX, type SelectHTMLAttributes, useMemo } from "
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
 import type { Device, Group } from "../../types.js";
-import { getDeviceDisplayName } from "../../utils.js";
 import SelectField from "../form-fields/SelectField.js";
 
 interface DevicePickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "onChange">, Pick<RootState, "devices"> {
@@ -32,7 +31,7 @@ export default function DevicePicker(props: DevicePickerProps) {
         const options: JSX.Element[] = [];
         const devicesOptions = devices.map((device) => (
             <option title={device.definition?.description} key={device.ieee_address} value={device.ieee_address}>
-                {getDeviceDisplayName(device)}
+                {device.friendly_name} {device.definition?.model ? `(${device.definition?.model})` : ""}
             </option>
         ));
 

@@ -107,7 +107,6 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
                     required
                 />
                 <ClusterSinglePicker
-                    data-testid="cluster-picker"
                     label={t("cluster")}
                     clusters={clusters}
                     value={cluster}

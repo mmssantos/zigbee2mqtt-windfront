@@ -1,7 +1,7 @@
 import { type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import SelectField, { type SelectFieldProps } from "../form-fields/SelectField.js";
-import { type ClusterGroup, isClusterGroup } from "./index.js";
+import type { ClusterGroup } from "./index.js";
 
 export interface ClusterSinglePickerProps extends Omit<SelectFieldProps, "onChange" | "name"> {
     clusters: Set<string> | ClusterGroup[];
@@ -10,13 +10,13 @@ export interface ClusterSinglePickerProps extends Omit<SelectFieldProps, "onChan
 }
 
 export default function ClusterSinglePicker(props: ClusterSinglePickerProps): JSX.Element {
-    const { clusters = [], onChange, value, label, disabled, ...rest } = props;
+    const { clusters, onChange, value, label, disabled, ...rest } = props;
     const { t } = useTranslation(["zigbee", "common"]);
 
     const options = useMemo(() => {
         const options: JSX.Element[] = [];
 
-        if (isClusterGroup(clusters)) {
+        if (Array.isArray(clusters)) {
             for (const group of clusters) {
                 const groupOptions: JSX.Element[] = [];
 

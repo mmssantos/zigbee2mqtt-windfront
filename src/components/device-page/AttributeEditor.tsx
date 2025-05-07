@@ -1,13 +1,12 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useMemo, useState } from "react";
+import { type ChangeEvent, type JSX, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DataType } from "../../ZCLenums.js";
-import type { Cluster, Device, Endpoint, LogMessage } from "../../types.js";
+import type { AttributeDefinition, Device, LogMessage } from "../../types.js";
 import { getEndpoints, getObjectFirstKey } from "../../utils.js";
 import Button from "../button/Button.js";
 import InputField from "../form-fields/InputField.js";
-import AttributePicker, { type AttributeDefinition } from "../pickers/AttributePicker.js";
+import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
 import { LastLogResult } from "./LastLogResult.js";
@@ -15,8 +14,8 @@ import { LastLogResult } from "./LastLogResult.js";
 export interface AttributeEditorProps {
     device: Device;
     lastLog?: LogMessage;
-    readDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], stateProperty?: string): Promise<void>;
-    writeDeviceAttributes(id: string, endpoint: Endpoint, cluster: Cluster, attributes: AttributeInfo[]): Promise<void>;
+    readDeviceAttributes(id: string, endpoint: string, cluster: string, attributes: string[], stateProperty?: string): Promise<void>;
+    writeDeviceAttributes(id: string, endpoint: string, cluster: string, attributes: AttributeInfo[]): Promise<void>;
 }
 
 export type AttributeInfo = {
@@ -32,16 +31,11 @@ export type AttributeValueInputProps = {
     value?: string | number;
 };
 
-const TYPES_MAP = {
-    [DataType.CHAR_STR]: "string",
-    [DataType.LONG_CHAR_STR]: "string",
-    [DataType.OCTET_STR]: "string",
-    [DataType.LONG_OCTET_STR]: "string",
-};
+const TEXT_DATA_TYPES = [65 /* DataType.OCTET_STR */, 66 /* DataType.CHAR_STR */, 67 /* DataType.LONG_OCTET_STR */, 68 /* DataType.LONG_CHAR_STR */];
 
 function AttributeValueInput(props: Readonly<AttributeValueInputProps>): JSX.Element {
     const { value, onChange, attribute, definition, ...rest } = props;
-    const type = TYPES_MAP[definition.type] ?? "number";
+    const type = TEXT_DATA_TYPES.includes(definition.type) ? "text" : "number";
 
     return (
         <input
@@ -65,10 +59,52 @@ export function AttributeEditor(props: AttributeEditorProps) {
     const [stateProperty, setStateProperty] = useState<string>();
     const { t } = useTranslation(["common", "zigbee"]);
 
+    const onEndpointChange = useCallback((endpoint: string | number) => {
+        setCluster("");
+        setAttributes([]);
+        setEndpoint(endpoint.toString());
+    }, []);
+
+    const onClusterChange = useCallback((cluster: string) => {
+        setAttributes([]);
+        setCluster(cluster);
+    }, []);
+
+    const onAttributeChange = useCallback(
+        (attribute: string, definition: AttributeDefinition): void => {
+            if (!attributes.find((info) => info.attribute === attribute)) {
+                const newAttributes = attributes.concat([{ attribute, definition }]);
+
+                setAttributes(newAttributes);
+            }
+        },
+        [attributes],
+    );
+
+    const onStatePropertyChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value) {
+            setStateProperty(event.target.value);
+        }
+    }, []);
+
+    const onReadClick = useCallback(async () => {
+        await readDeviceAttributes(
+            device.ieee_address,
+            endpoint,
+            cluster,
+            attributes.map((info) => info.attribute),
+            stateProperty,
+        );
+    }, [device.ieee_address, endpoint, cluster, attributes, stateProperty, readDeviceAttributes]);
+
+    const onWriteClick = useCallback(async () => {
+        await writeDeviceAttributes(device.ieee_address, endpoint, cluster, attributes);
+    }, [device.ieee_address, endpoint, cluster, attributes, writeDeviceAttributes]);
+
     const selectedAttributes = useMemo(
         () =>
             attributes.length > 0 && (
-                <fieldset className="fieldset gap-2 p-3 rounded-box shadow-md" data-testid="selected-attribute">
+                <fieldset className="fieldset gap-2 p-3 rounded-box shadow-md">
                     {attributes.map(({ attribute, value = "", definition }) => (
                         <div key={attribute} className="join join-vertical lg:join-horizontal">
                             {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
@@ -88,13 +124,11 @@ export function AttributeEditor(props: AttributeEditorProps) {
 
                                         setAttributes(newAttributes);
                                     }}
-                                    data-testid="attribute-value-input"
                                 />
                             </label>
                             <Button<string>
                                 className="btn btn-error btn-outline join-item"
                                 item={attribute}
-                                data-testid="remove-attribute"
                                 onClick={(attribute): void => {
                                     const newAttributes = attributes.filter((info) => info.attribute !== attribute);
 
@@ -132,54 +166,16 @@ export function AttributeEditor(props: AttributeEditorProps) {
         <div className="flex-1 flex flex-col gap-3">
             <h2 className="text-lg">{t("zigbee:read_write_attributes")}</h2>
             <div className="flex flex-row flex-wrap gap-2">
-                <EndpointPicker
-                    data-testid="endpoint-picker"
-                    label={t("zigbee:endpoint")}
-                    values={endpoints}
-                    value={endpoint}
-                    onChange={(endpoint) => {
-                        setCluster("");
-                        setAttributes([]);
-                        setEndpoint(endpoint.toString());
-                    }}
-                    required
-                />
-                <ClusterSinglePicker
-                    data-testid="cluster-picker"
-                    label={t("cluster")}
-                    clusters={availableClusters}
-                    value={cluster}
-                    onChange={(cluster) => {
-                        setAttributes([]);
-                        setCluster(cluster);
-                    }}
-                    required
-                />
-                <AttributePicker
-                    data-testid="attribute-picker"
-                    label={t("attribute")}
-                    value={""}
-                    cluster={cluster}
-                    device={device}
-                    onChange={(attribute, definition): void => {
-                        if (!attributes.find((info) => info.attribute === attribute)) {
-                            const newAttributes = attributes.concat([{ attribute, definition }]);
-
-                            setAttributes(newAttributes);
-                        }
-                    }}
-                />
+                <EndpointPicker label={t("zigbee:endpoint")} values={endpoints} value={endpoint} onChange={onEndpointChange} required />
+                <ClusterSinglePicker label={t("cluster")} clusters={availableClusters} value={cluster} onChange={onClusterChange} required />
+                <AttributePicker label={t("attribute")} value={""} cluster={cluster} device={device} onChange={onAttributeChange} />
                 <InputField
                     type="text"
                     name="state_property"
                     label={t("devConsole:state_property")}
                     defaultValue={""}
                     detail={`${t("optional")}. ${t("devConsole:state_property_detail")}`}
-                    onChange={(e) => {
-                        if (e.target.value) {
-                            setStateProperty(e.target.value);
-                        }
-                    }}
+                    onChange={onStatePropertyChange}
                 />
             </div>
             {selectedAttributes}
@@ -187,27 +183,11 @@ export function AttributeEditor(props: AttributeEditorProps) {
                 <Button<void>
                     disabled={disableButtons || attributes.some((attr) => !!attr.value)}
                     className="btn btn-success join-item"
-                    data-testid="read-attribute"
-                    onClick={async () => {
-                        await readDeviceAttributes(
-                            device.ieee_address,
-                            endpoint,
-                            cluster,
-                            attributes.map((info) => info.attribute),
-                            stateProperty,
-                        );
-                    }}
+                    onClick={onReadClick}
                 >
                     {t("read")}
                 </Button>
-                <Button<void>
-                    disabled={disableButtons}
-                    className="btn btn-error join-item"
-                    data-testid="write-attribute"
-                    onClick={async () => {
-                        await writeDeviceAttributes(device.ieee_address, endpoint, cluster, attributes);
-                    }}
-                >
+                <Button<void> disabled={disableButtons} className="btn btn-error join-item" onClick={onWriteClick}>
                     {t("write")}
                 </Button>
             </div>

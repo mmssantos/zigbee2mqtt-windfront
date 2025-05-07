@@ -1,5 +1,5 @@
 import { type JSX, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import type { Device, Endpoint } from "../../../types.js";
+import type { Device } from "../../../types.js";
 
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import { ReportingRow } from "../ReportingRow.js";
@@ -10,7 +10,7 @@ interface ReportingProps {
 
 export type NiceReportingRule = {
     isNew?: string;
-    endpoint: Endpoint;
+    endpoint: string;
 } & Device["endpoints"][number]["configured_reportings"][number];
 
 const convertBindingsIntoNiceStructure = (device: Device): NiceReportingRule[] => {

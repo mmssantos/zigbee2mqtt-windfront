@@ -1,25 +1,25 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
+import { SUPPORT_NEW_DEVICES_DOCS_URL } from "../../consts.js";
 import type { Device } from "../../types.js";
 
-export type VendorProps = {
+type VendorLinkProps = {
     device: Device;
-    anchor?: string;
 };
 
-export default function VendorLink(props: VendorProps) {
+export default function VendorLink({ device }: VendorLinkProps) {
     const { t } = useTranslation("zigbee");
-    const { device } = props;
+    let label = t("unsupported");
+    let url = SUPPORT_NEW_DEVICES_DOCS_URL;
 
     if (device.supported && device.definition) {
-        const url = `https://www.zigbee2mqtt.io/supported-devices/#v=${encodeURIComponent(device.definition.vendor)}`;
-
-        return (
-            <Link target="_blank" rel="noopener noreferrer" to={url} className="link link-hover">
-                {device.definition.vendor}
-            </Link>
-        );
+        url = `https://www.zigbee2mqtt.io/supported-devices/#v=${encodeURIComponent(device.definition.vendor)}`;
+        label = device.definition.vendor;
     }
 
-    return <>{t("unsupported")}</>;
+    return (
+        <Link target="_blank" rel="noopener noreferrer" to={url} className="link link-hover">
+            {label}
+        </Link>
+    );
 }

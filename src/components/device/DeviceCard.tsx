@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import type { Endpoint, FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
+import type { FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
 import type { BaseFeatureProps } from "../features/index.js";
 
 import { Link } from "react-router";
@@ -16,7 +16,7 @@ import { DeviceImage } from "./DeviceImage.js";
 type Props = BaseFeatureProps<FeatureWithAnySubFeatures> &
     PropsWithChildren<{
         lastSeenConfig: LastSeenConfig;
-        endpoint?: Endpoint;
+        endpoint?: string | number;
     }>;
 
 export default function DeviceCard({

@@ -2,7 +2,11 @@ import { faSignal } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DisplayValue } from "./DisplayValue.js";
 
-export function Lqi({ value }: { value?: number }) {
+type LqiProps = {
+    value: number | undefined;
+};
+
+export function Lqi({ value }: LqiProps) {
     let className = "";
 
     if (value) {

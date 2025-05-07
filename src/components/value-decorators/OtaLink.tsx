@@ -1,8 +1,11 @@
 import { useTranslation } from "react-i18next";
-import type { VendorProps } from "./VendorLink.js";
+import type { Device } from "../../types.js";
 
-export default function OtaLink(props: VendorProps) {
-    const { device } = props;
+type OtaLinkProps = {
+    device: Device;
+};
+
+export default function OtaLink({ device }: OtaLinkProps) {
     const { t } = useTranslation("zigbee");
     let url = "https://github.com/Koenkk/zigbee-OTA/releases";
     const title = device.software_build_id || t("unknown");

@@ -1,4 +1,3 @@
-import { diff } from "deep-object-diff";
 import { saveAs } from "file-saver";
 import type { Device, DeviceState, Group, LastSeenConfig } from "./types.js";
 
@@ -12,40 +11,10 @@ export const scale = (inputY: number, yRange: Array<number>, xRange: Array<numbe
     return percent * (xMax - xMin) + xMin;
 };
 
-export const isOnlyOneBitIsSet = (b: number): number | boolean => {
-    return b && !(b & (b - 1));
-};
-
 export const randomString = (len: number): string =>
     Math.random()
         .toString(36)
         .slice(2, 2 + len);
-
-// TODO: revamp this whole logic (SettingsPage)
-export const computeSettingsDiff = (before: Record<string, unknown>, after: Record<string, unknown>) => {
-    let diffObj = diff(before, after);
-
-    // diff converts arrays to objects, set original array back here
-    const setArrays = (localAfter: object, localDiff: object): void => {
-        for (const [key, value] of Object.entries(localDiff)) {
-            if (typeof value === "object") {
-                if (Array.isArray(localAfter[key])) {
-                    localDiff[key] = localAfter[key];
-                } else {
-                    setArrays(localAfter[key], value);
-                }
-            }
-        }
-    };
-
-    if (Array.isArray(after)) {
-        diffObj = after;
-    } else {
-        setArrays(after, diffObj);
-    }
-
-    return diffObj;
-};
 
 export const getObjectFirstKey = <T>(object: T): string | undefined => {
     for (const key in object) {
@@ -82,6 +51,10 @@ export const lastSeen = (state: DeviceState, lastSeenConfig: LastSeenConfig): Da
     }
 };
 
+function padTo2Digits(num: number): string {
+    return num.toString().padStart(2, "0");
+}
+
 export function formatDate(date: Date): string {
     return `${[date.getFullYear(), padTo2Digits(date.getMonth() + 1), padTo2Digits(date.getDate())].join("-")} ${[padTo2Digits(date.getHours()), padTo2Digits(date.getMinutes()), padTo2Digits(date.getSeconds())].join(":")}`;
 }
@@ -91,16 +64,7 @@ export const toHex = (input: number, padding = 4): string => {
     return `0x${(padStr + input.toString(16)).slice(-1 * padding).toUpperCase()}`;
 };
 
-export function padTo2Digits(num: number): string {
-    return num.toString().padStart(2, "0");
-}
-
 export const sanitizeZ2MDeviceName = (deviceName?: string): string | "NA" => (deviceName ? deviceName.replace(/:|\s|\//g, "-") : "NA");
-
-export const getDeviceDisplayName = (device: Device): string => {
-    const model = device.definition?.model ? `(${device.definition?.model})` : "";
-    return `${device.friendly_name} ${model}`;
-};
 
 // #endregion
 

@@ -13,9 +13,10 @@ type Props = Pick<RootState, "devices">;
 
 type LStatus = "init" | "error" | "done";
 
-function blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
+async function blobToBase64(blob: Blob): Promise<string> {
+    return await new Promise((resolve, reject) => {
         const reader = new FileReader();
+
         reader.onloadend = () => resolve(reader.result as string);
         reader.onerror = (err) => reject(err);
         reader.readAsDataURL(blob);
@@ -24,10 +25,13 @@ function blobToBase64(blob: Blob): Promise<string> {
 
 async function downloadImage(imageSrc: string): Promise<string> {
     const image = await fetch(imageSrc);
+
     if (image.ok) {
         const blob = await image.blob();
-        return blobToBase64(blob);
+
+        return await blobToBase64(blob);
     }
+
     return Promise.reject(image.status);
 }
 
@@ -48,9 +52,7 @@ export function ImageLocaliser(props: Props): JSX.Element {
             const imageContent = await downloadImage(imageUrl);
 
             await sendMessage("bridge/request/device/options", { id: device.ieee_address, options: { icon: imageContent } });
-            setLocalisationStatus((curr) => {
-                return { ...curr, [device.ieee_address]: "done" };
-            });
+            setLocalisationStatus((curr) => ({ ...curr, [device.ieee_address]: "done" }));
 
             return true;
         },
@@ -64,13 +66,12 @@ export function ImageLocaliser(props: Props): JSX.Element {
                     localiseImage(device)
                         .catch((err) => {
                             console.error("Error localising image", err);
-                            setLocalisationStatus((curr) => {
-                                return { ...curr, [device.ieee_address]: "error" };
-                            });
+                            setLocalisationStatus((curr) => ({ ...curr, [device.ieee_address]: "error" }));
                         })
                         .then();
                 }
             }
+
             setCurrentState("inprogress");
         }
     }, [currentState, devices, localiseImage]);

@@ -1,11 +1,12 @@
 import type { JSX } from "react";
-import { type Device, type DeviceState, InterviewState } from "../../types.js";
+import type { Device, DeviceState } from "../../types.js";
 import Button from "../button/Button.js";
 
 import NiceModal from "@ebay/nice-modal-react";
 import { faInfo, faRetweet, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
+import { InterviewState } from "../../consts.js";
 import { RemoveDeviceModal } from "../modal/components/RemoveDeviceModal.js";
 import { DeviceControlEditName } from "./DeviceControlEditName.js";
 

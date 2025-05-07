@@ -3,7 +3,6 @@ import type {
     Zigbee2MQTTDevice,
     Zigbee2MQTTFeatures,
     Zigbee2MQTTGroup,
-    Zigbee2MQTTRequest,
     Zigbee2MQTTRequestEndpoints,
     Zigbee2MQTTResponse,
     Zigbee2MQTTResponseEndpoints,
@@ -18,12 +17,7 @@ export type OmitFunctions<T> = {
     [K in keyof T as T[K] extends Function ? never : K]: T[K] extends Array<unknown> ? OmitFunctions<T[K][number]>[] : OmitFunctions<T[K]>;
 };
 
-// TODO remove
-export type Cluster = string | number;
-
-export type Endpoint = string | number;
-
-export type EntityType = "device" | "group";
+// #region Z2M
 
 export type PowerSource =
     | "Unknown"
@@ -52,14 +46,15 @@ export type LogMessage = Zigbee2MQTTAPI["bridge/logging"] & { timestamp: string 
 
 export type AvailabilityState = Zigbee2MQTTAPI["{friendlyName}/availability"];
 
+export type ClusterDefinition = RecursiveMutable<
+    Zigbee2MQTTAPI["bridge/definitions"]["clusters"][keyof Zigbee2MQTTAPI["bridge/definitions"]["clusters"]]
+>;
+
+export type AttributeDefinition = RecursiveMutable<ClusterDefinition["attributes"][number]>;
+
 export interface Message<T = string | Record<string, unknown> | Record<string, unknown>[] | string[]> {
     topic: string;
     payload: T;
-}
-
-export interface RequestMessage<T extends Zigbee2MQTTRequestEndpoints> {
-    topic: string;
-    payload: Zigbee2MQTTRequest<T>;
 }
 
 export interface ResponseMessage<T extends Zigbee2MQTTResponseEndpoints> extends Message {
@@ -77,12 +72,7 @@ export type SendMessageEndpoints =
     | "{friendlyNameOrId}/{endpoint}/get"
     | "{friendlyNameOrId}/{endpoint}/get/{attribute}";
 
-export enum InterviewState {
-    Pending = "PENDING",
-    InProgress = "IN_PROGRESS",
-    Successful = "SUCCESSFUL",
-    Failed = "FAILED",
-}
+// #endregion
 
 // #region ZHC
 

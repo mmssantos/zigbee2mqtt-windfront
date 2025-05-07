@@ -1,7 +1,7 @@
 import { type JSX, useCallback, useContext, useMemo } from "react";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
-import type { Endpoint, Group } from "../../types.js";
+import type { Group } from "../../types.js";
 import GroupMember from "./GroupMember.js";
 
 interface GroupMembersProps {
@@ -15,7 +15,7 @@ export default function GroupMembers(props: GroupMembersProps): JSX.Element {
     const lastSeenConfig = useAppSelector((state) => state.bridgeInfo.config.advanced.last_seen);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const removeMember = useCallback(
-        async (deviceIeee: string, endpoint: Endpoint): Promise<void> =>
+        async (deviceIeee: string, endpoint: number): Promise<void> =>
             await sendMessage("bridge/request/group/members/remove", { device: deviceIeee, endpoint, group: group.id.toString() }),
         [sendMessage, group.id],
     );

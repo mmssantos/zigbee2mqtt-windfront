@@ -1,5 +1,5 @@
 import { type ChangeEvent, useCallback, useMemo, useState } from "react";
-import type { Device, Endpoint } from "../../types.js";
+import type { Device } from "../../types.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
 import type { ClusterGroup } from "../pickers/index.js";
 
@@ -16,6 +16,7 @@ interface ReportingRowProps {
     device: Device;
     onApply(rule: NiceReportingRule): void;
 }
+
 interface ReportingRowState {
     rule: NiceReportingRule;
 }
@@ -32,7 +33,7 @@ export function ReportingRow(props: ReportingRowProps) {
     const { t } = useTranslation(["zigbee", "common"]);
 
     const setSourceEp = useCallback(
-        (sourceEp: Endpoint): void => {
+        (sourceEp: string): void => {
             state.rule.endpoint = sourceEp;
 
             setState({ rule: state.rule });

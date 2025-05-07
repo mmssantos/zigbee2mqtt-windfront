@@ -27,6 +27,8 @@ interface Props<T> {
 // XXX: workaround typing
 const local = store2 as unknown as typeof store2.default;
 
+const PAGE_SIZES = [10, 30, 50, 100];
+
 export default function Table<T>(props: Props<T>) {
     const { id, columns, data, pageSizeStoreKey, visibleColumns } = props;
     const { t } = useTranslation("common");
@@ -142,7 +144,7 @@ export default function Table<T>(props: Props<T>) {
                 </div>
                 <div className="navbar-end">
                     <select value={table.getState().pagination.pageSize} onChange={onPageSizeChange} className="select w-32 mx-1">
-                        {[10, 30, 50, 100].map((pageSize) => (
+                        {PAGE_SIZES.map((pageSize) => (
                             <option key={pageSize} value={pageSize}>
                                 {t("show")} {pageSize}
                             </option>

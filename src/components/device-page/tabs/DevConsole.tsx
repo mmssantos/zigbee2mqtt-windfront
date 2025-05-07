@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
-import type { Cluster, Device, Endpoint, LogMessage } from "../../../types.js";
+import type { Device, LogMessage } from "../../../types.js";
 import { AttributeEditor, type AttributeInfo } from "../AttributeEditor.js";
 import { CommandExecutor } from "../CommandExecutor.js";
 import { ExternalDefinition } from "../ExternalDefinition.js";
@@ -31,7 +31,7 @@ export default function DevConsole(props: DevConsoleProps) {
     }, [logs]);
 
     const readDeviceAttributes = useCallback(
-        async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: string[], stateProperty?: string) => {
+        async (ieee: string, endpoint: string, cluster: string, attributes: string[], stateProperty?: string) => {
             const payload = { read: { cluster, attributes } };
 
             if (stateProperty) {
@@ -48,7 +48,7 @@ export default function DevConsole(props: DevConsoleProps) {
     );
 
     const writeDeviceAttributes = useCallback(
-        async (ieee: string, endpoint: Endpoint, cluster: Cluster, attributes: AttributeInfo[]) => {
+        async (ieee: string, endpoint: string, cluster: string, attributes: AttributeInfo[]) => {
             const payload = { write: { cluster, payload: {} } };
 
             for (const attrInfo of attributes) {

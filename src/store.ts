@@ -27,7 +27,6 @@ interface State {
     preparingBackup: boolean;
     /** base64 */
     backup: string;
-    missingTranslations: Record<string, unknown>;
 }
 
 export const AVAILABILITY_FEATURE_TOPIC_ENDING = "/availability";
@@ -161,7 +160,6 @@ const initialState: State = {
     networkGraphIsLoading: false,
     preparingBackup: false,
     backup: "",
-    missingTranslations: {},
 };
 
 export const storeSlice = createSlice({

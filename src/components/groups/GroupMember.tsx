@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
-import { type Endpoint, FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
+import { FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
 import Button from "../button/Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { getScenesFeatures } from "../device-page/index.js";
@@ -14,7 +14,7 @@ interface GroupMemberProps {
     deviceState: RootState["deviceStates"][string];
     groupMember: Group["members"][number];
     lastSeenConfig: RootState["bridgeInfo"]["config"]["advanced"]["last_seen"];
-    removeDeviceFromGroup(deviceIeee: string, endpoint: Endpoint): Promise<void>;
+    removeDeviceFromGroup(deviceIeee: string, endpoint: number): Promise<void>;
     setDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
     getDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
 }

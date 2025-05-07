@@ -9,9 +9,8 @@ type LastSeenProps = {
     config: LastSeenConfig;
 };
 
-export function LastSeen(props: LastSeenProps): JSX.Element {
+export function LastSeen({ state, config }: LastSeenProps): JSX.Element {
     const { i18n } = useTranslation();
-    const { state, config } = props;
     const lastSeenDate = lastSeen(state, config);
 
     return lastSeenDate ? <span title={formatDate(lastSeenDate)}>{format(lastSeenDate, i18n.language)}</span> : <>N/A</>;

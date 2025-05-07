@@ -2,6 +2,7 @@ import type { ChangeEvent } from "react";
 
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from "react-i18next";
 import Button from "../button/Button.js";
 import { DisplayValue } from "../value-decorators/DisplayValue.js";
 
@@ -13,23 +14,10 @@ type ToggleProps = {
     valueOff: unknown;
     minimal?: boolean;
 };
-type ControlButtonProps = {
-    value: unknown;
-    onClick(value: unknown): void;
-    name: string;
-};
-
-function ControlButton(props: ControlButtonProps) {
-    const { value, onClick, name } = props;
-    return (
-        <Button<unknown> className="btn btn-link" item={value} onClick={onClick}>
-            <DisplayValue value={value} name={name} />
-        </Button>
-    );
-}
 
 export default function Toggle(props: ToggleProps) {
     const { onChange, value, valueOn, valueOff, minimal, name } = props;
+    const { t } = useTranslation("zigbee");
 
     const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked ? valueOn : valueOff);
     const valueExists = value != null;
@@ -37,13 +25,21 @@ export default function Toggle(props: ToggleProps) {
 
     return (
         <div>
-            {showOnOffButtons && <ControlButton value={valueOff} name={name} onClick={onChange} />}
+            {showOnOffButtons && (
+                <Button<unknown> className="btn btn-link" item={valueOff} onClick={onChange}>
+                    <DisplayValue value={valueOff} name={name} />
+                </Button>
+            )}
             {valueExists ? (
                 <input className="toggle" type="checkbox" checked={value === valueOn} onChange={onCheckboxChange} />
             ) : (
-                <FontAwesomeIcon icon={faQuestion} title="Current value unknown" />
+                <FontAwesomeIcon icon={faQuestion} title={t("unknown")} />
             )}
-            {showOnOffButtons && <ControlButton value={valueOn} name={name} onClick={onChange} />}
+            {showOnOffButtons && (
+                <Button<unknown> className="btn btn-link" item={valueOn} onClick={onChange}>
+                    <DisplayValue value={valueOn} name={name} />
+                </Button>
+            )}
         </div>
     );
 }
