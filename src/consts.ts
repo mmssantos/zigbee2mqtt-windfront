@@ -1,6 +1,6 @@
 export const LOG_LEVELS = ["all", "debug", "info", "warning", "error"];
 export const LOG_LIMITS = [100, 200, 500, 1000];
-export const LEVEL_CMAP = {
+export const LOG_LEVELS_CMAP = {
     error: "text-error",
     warning: "text-warning",
     info: "text-info",

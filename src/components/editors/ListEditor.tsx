@@ -47,7 +47,7 @@ export default function ListEditor(props: ListEditorProps) {
     );
 
     const handleRemoveClick = useCallback(
-        (itemIndex: number) => () => {
+        (itemIndex: number) => {
             const newListValue = Array.from(currentValue);
 
             newListValue.splice(itemIndex, 1);
@@ -79,7 +79,7 @@ export default function ListEditor(props: ListEditorProps) {
                         parentFeatures={parentFeatures}
                     />
                     <div className="join join-vertical lg:join-horizontal">
-                        <Button<void> className="btn btn-error btn-square join-item" onClick={handleRemoveClick(itemIndex)}>
+                        <Button<number> item={itemIndex} className="btn btn-error btn-square join-item" onClick={handleRemoveClick}>
                             -
                         </Button>
                         {currentValue.length - 1 === itemIndex && (

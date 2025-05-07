@@ -35,7 +35,7 @@ export default function RangeListEditor(props: RangeListProps) {
     );
 
     const handleRemoveClick = useCallback(
-        (itemIndex: number) => () => {
+        (itemIndex: number) => {
             const newListValue = Array.from(currentListValue);
             newListValue.splice(itemIndex, 1);
 
@@ -61,7 +61,7 @@ export default function RangeListEditor(props: RangeListProps) {
                         <RangeEditor onChange={(newValue) => onItemChange(newValue, itemIndex)} value={itemValue} minimal={minimal} {...rest} />
                     </div>
                     <div className="join join-vertical lg:join-horizontal">
-                        <Button<void> className="btn btn-error btn-square join-item" onClick={handleRemoveClick(itemIndex)}>
+                        <Button<number> item={itemIndex} className="btn btn-error btn-square join-item" onClick={handleRemoveClick}>
                             -
                         </Button>
                         {currentListValue.length - 1 === itemIndex && (

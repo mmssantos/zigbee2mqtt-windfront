@@ -42,7 +42,7 @@ export function Gradient(props: GradientProps) {
 
     const setColor = useCallback(
         (idx: number, hex: string) => {
-            const c = [...colors];
+            const c = Array.from(colors);
             c[idx] = hexToRGB(hex);
             setColors(c);
         },
@@ -50,14 +50,14 @@ export function Gradient(props: GradientProps) {
     );
 
     const addColor = useCallback(() => {
-        const c = [...colors];
+        const c = Array.from(colors);
         c.push({ r: 255, g: 255, b: 255 });
         setColors(c);
     }, [colors]);
 
     const removeColor = useCallback(
         (idx: number) => {
-            const c = [...colors];
+            const c = Array.from(colors);
             c.splice(idx, 1);
             setColors(c);
         },

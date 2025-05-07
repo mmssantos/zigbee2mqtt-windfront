@@ -13,14 +13,12 @@ interface DevConsoleProps {
 const ATTRIBUTE_LOG_REGEX = /^(zhc:tz: Read result of |z2m: Publish 'set' 'read' to |z2m: Publish 'set' 'write' to |zhc:tz: Wrote )/;
 
 export default function DevConsole(props: DevConsoleProps) {
-    const logs = useAppSelector((state) => state.logs);
+    const lastLog = useAppSelector((state) => state.lastNonDebugLog);
     const [lastAttributeLog, setLastAttributeLog] = useState<LogMessage>();
     const [lastCommandLog, setLastCommandLog] = useState<LogMessage>();
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
     useEffect(() => {
-        const lastLog = logs[logs.length - 1];
-
         if (lastLog) {
             if (lastLog.message.startsWith("zhc:tz: Invoked ")) {
                 setLastCommandLog(lastLog);
@@ -28,7 +26,7 @@ export default function DevConsole(props: DevConsoleProps) {
                 setLastAttributeLog(lastLog);
             }
         }
-    }, [logs]);
+    }, [lastLog]);
 
     const readDeviceAttributes = useCallback(
         async (ieee: string, endpoint: string, cluster: string, attributes: string[], stateProperty?: string) => {

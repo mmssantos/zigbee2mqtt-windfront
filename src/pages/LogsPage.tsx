@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import Button from "../components/Button.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import SelectField from "../components/form-fields/SelectField.js";
-import { LEVEL_CMAP, LOG_LEVELS, LOG_LIMITS } from "../consts.js";
+import { LOG_LEVELS, LOG_LEVELS_CMAP, LOG_LIMITS } from "../consts.js";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { clearLogs as clearStateLogs, setLogsLimit } from "../store.js";
 import type { LogMessage } from "../types.js";
@@ -38,7 +38,7 @@ export default function LogsPage() {
 
     const colorLog = useCallback(
         (message: LogMessage["message"], level: LogMessage["level"]) =>
-            filterValue && message.toLowerCase().includes(filterValue.toLowerCase()) ? HIGHLIGHT_LEVEL_CMAP[level] : LEVEL_CMAP[level],
+            filterValue && message.toLowerCase().includes(filterValue.toLowerCase()) ? HIGHLIGHT_LEVEL_CMAP[level] : LOG_LEVELS_CMAP[level],
         [filterValue],
     );
 

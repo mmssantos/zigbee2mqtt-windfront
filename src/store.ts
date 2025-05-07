@@ -16,6 +16,7 @@ interface State {
     generatedExternalDefinitions: Record<string, string>;
     logs: LogMessage[];
     logsLimit: number;
+    lastNonDebugLog: LogMessage | undefined;
     extensions: Zigbee2MQTTAPI["bridge/extensions"];
     converters: Zigbee2MQTTAPI["bridge/converters"];
     touchlinkDevices: TouchlinkDevice[];
@@ -147,6 +148,7 @@ const initialState: State = {
     generatedExternalDefinitions: {},
     logs: [],
     logsLimit: 100,
+    lastNonDebugLog: undefined,
     extensions: [],
     converters: [],
     touchlinkDevices: [],
@@ -187,6 +189,7 @@ export const storeSlice = createSlice({
         },
         clearLogs: (state) => {
             state.logs = [];
+            state.lastNonDebugLog = undefined;
         },
         setLogsLimit: (state, action: PayloadAction<number>) => {
             state.logsLimit = action.payload;
@@ -197,7 +200,13 @@ export const storeSlice = createSlice({
                 state.logs.pop();
             }
 
-            state.logs.push({ ...action.payload, timestamp: formatDate(new Date()) });
+            const log = { ...action.payload, timestamp: formatDate(new Date()) };
+
+            state.logs.push(log);
+
+            if (log.level !== "debug") {
+                state.lastNonDebugLog = log;
+            }
         },
         updateDeviceStateMessage: (state, action: PayloadAction<Message<Zigbee2MQTTAPI["{friendlyName}"]>>) => {
             state.deviceStates[action.payload.topic] = Object.assign(state.deviceStates[action.payload.topic] ?? {}, action.payload.payload);
