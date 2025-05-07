@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import type { Message } from "../src/types.js";
+import type { Message, ResponseMessage } from "../src/types.js";
 import { BRIDGE_DEFINITION } from "./bridgeDefinitions.js";
 import { BRIDGE_DEVICES } from "./bridgeDevices.js";
 import { BRIDGE_EXTENSIONS } from "./bridgeExtensions.js";
@@ -49,6 +49,38 @@ export function startServer() {
             // biome-ignore lint/suspicious/noExplicitAny: debug
             const msg: Message<any> = JSON.parse(message.data as string);
 
+            if (msg.topic === "bridge/request/permit_join" && msg.payload.time > 0 && msg.payload.device === "0x0017880103d55d65") {
+                setTimeout(() => {
+                    ws.send(
+                        JSON.stringify({
+                            payload: {
+                                status: "error",
+                                error: "Failed permit join",
+                                data: {},
+                                transaction: msg.payload.transaction,
+                            },
+                            topic: msg.topic.replace("bridge/request/", "bridge/response/"),
+                        } satisfies ResponseMessage<"bridge/response/permit_join">),
+                    );
+                }, 25);
+
+                return;
+            }
+
+            const sendResponseOK = () => {
+                ws.send(
+                    JSON.stringify({
+                        payload: {
+                            status: "ok",
+                            data: {},
+                            transaction: msg.payload.transaction,
+                        },
+                        topic: msg.topic.replace("bridge/request/", "bridge/response/"),
+                        // biome-ignore lint/suspicious/noExplicitAny: generic
+                    } satisfies ResponseMessage<any>),
+                );
+            };
+
             switch (msg.topic) {
                 case "bridge/request/networkmap": {
                     setTimeout(() => {
@@ -83,12 +115,15 @@ export function startServer() {
                                 ws.send(JSON.stringify(BRIDGE_INFO));
                             }, msg.payload.time * 1000);
                         } else {
+                            sendResponseOK();
                             ws.send(JSON.stringify(BRIDGE_INFO));
                         }
                     }, 50);
                     break;
                 }
                 case "bridge/request/device/ota_update/update": {
+                    sendResponseOK();
+
                     const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
 
                     if (deviceState) {
@@ -112,9 +147,12 @@ export function startServer() {
                             clearInterval(interval);
                         }, 25000);
                     }
+
                     break;
                 }
                 case "bridge/request/device/ota_update/schedule": {
+                    sendResponseOK();
+
                     const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
 
                     if (deviceState) {
@@ -132,6 +170,8 @@ export function startServer() {
                     break;
                 }
                 case "bridge/request/device/ota_update/unschedule": {
+                    sendResponseOK();
+
                     const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
 
                     if (deviceState) {
@@ -159,7 +199,10 @@ export function startServer() {
                                 ws.send(JSON.stringify(BRIDGE_LOGGING_READ_ATTR));
                             }, 500);
                         }
+                    } else if (msg.topic.startsWith("bridge/request/")) {
+                        sendResponseOK();
                     }
+
                     break;
                 }
             }

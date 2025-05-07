@@ -49,16 +49,18 @@ const websocketUrlProvider = async (): Promise<string> => {
 
 // biome-ignore lint/suspicious/noExplicitAny: tmp
 const resolvePendingRequests = (message: Zigbee2MQTTResponse<any>): void => {
-    if (message.transaction != null && pendingRequests.has(message.transaction)) {
-        const [resolve, reject] = pendingRequests.get(message.transaction)!;
+    if (message.transaction != null) {
+        const pendingRequest = pendingRequests.get(message.transaction);
 
-        if (message.status === "ok" || message.status == null) {
-            resolve();
-        } else {
-            reject(message.error);
+        if (pendingRequest) {
+            if (message.status === "ok" || message.status == null) {
+                pendingRequest[0]();
+            } else {
+                pendingRequest[1](new Error(message.error ?? "Unknown error", { cause: message.transaction }));
+            }
+
+            pendingRequests.delete(message.transaction);
         }
-
-        pendingRequests.delete(message.transaction);
     }
 };
 
@@ -222,28 +224,33 @@ export function useApiWebSocket() {
                 }
 
                 const transaction = `${transactionRndPrefix}-${transactionNumber++}`;
-                const promise = new Promise<void>((resolve, reject) => {
-                    pendingRequests.set(transaction, [resolve, reject]);
-                });
-                const finalPayload = stringifyWithPreservingUndefinedAsNull({
-                    topic,
-                    payload: payload === "" ? { transaction } : { ...payload, transaction },
-                });
 
-                console.debug("Calling Request API:", topic, payload, finalPayload);
-                dispatch(store.addLog({ level: "info", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
+                try {
+                    const promise = new Promise<void>((resolve, reject) => {
+                        pendingRequests.set(transaction, [resolve, reject]);
+                    });
+                    const finalPayload = stringifyWithPreservingUndefinedAsNull({
+                        topic,
+                        payload: payload === "" ? { transaction } : { ...payload, transaction },
+                    });
+
+                    console.debug("Calling Request API:", topic, payload, finalPayload);
+                    dispatch(store.addLog({ level: "debug", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
+                    sendMessageRaw(finalPayload);
+
+                    await promise;
+                } catch (error) {
+                    dispatch(
+                        store.addLog({ level: "error", message: `frontend:api: ${error} (transaction: ${error.cause})`, namespace: "frontend:api" }),
+                    );
+                }
+            } else {
+                const finalPayload = stringifyWithPreservingUndefinedAsNull({ topic, payload });
+
+                console.debug("Calling API:", topic, payload, finalPayload);
+                dispatch(store.addLog({ level: "debug", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
                 sendMessageRaw(finalPayload);
-
-                return await promise;
             }
-
-            const finalPayload = stringifyWithPreservingUndefinedAsNull({ topic, payload });
-
-            console.debug("Calling API:", topic, payload, finalPayload);
-            dispatch(store.addLog({ level: "info", message: `frontend:api: Sending ${finalPayload}`, namespace: "frontend:api" }));
-            sendMessageRaw(finalPayload);
-
-            return await Promise.resolve();
         },
         [sendMessageRaw, dispatch],
     );

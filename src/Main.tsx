@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { HashRouter, Route, Routes } from "react-router";
 import { ErrorBoundary } from "./ErrorBoundary.js";
 import { WebSocketApiRouter } from "./WebSocketApiRouter.js";
+import Toasts from "./components/Toasts.js";
 import { AuthForm } from "./components/modal/components/AuthModal.js";
 import { NavBar } from "./components/navbar/NavBar.js";
 import i18n from "./i18n/index.js";
@@ -55,6 +56,7 @@ export function Main() {
                                             </Routes>
                                         </Suspense>
                                     </main>
+                                    <Toasts />
                                 </WebSocketApiRouter>
                             </HashRouter>
                         </ErrorBoundary>
