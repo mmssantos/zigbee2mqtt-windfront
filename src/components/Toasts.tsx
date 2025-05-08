@@ -35,7 +35,7 @@ export default function Toasts() {
     );
 
     return (
-        <div className="toast">
+        <div className="toast max-w-prose">
             {logs.slice(0, 4).map((log, idx) => (
                 <Toast key={`${log.timestamp}-${log.message}`} idx={idx} log={log} expiry={TOAST_EXPIRY_TIME} remove={removeLog} />
             ))}
