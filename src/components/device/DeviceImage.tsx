@@ -20,7 +20,6 @@ export function DeviceImage(props: Readonly<DeviceImageProps>) {
     const { t } = useTranslation("zigbee");
     const { device = {} as Device, disabled, deviceState, className, noIndicator } = props;
 
-    const otaState = deviceState?.update;
     const interviewState = useMemo(
         () =>
             device.interview_state === InterviewState.InProgress ? (
@@ -55,7 +54,7 @@ export function DeviceImage(props: Readonly<DeviceImageProps>) {
                     <LazyImage device={device} className={`grid place-items-center${className ? ` ${className}` : ""}`} />
                 ) : (
                     <div className="indicator w-full">
-                        {otaState?.state === "updating" && (
+                        {deviceState?.update?.state === "updating" && (
                             <FontAwesomeIcon
                                 icon={faSync}
                                 spin

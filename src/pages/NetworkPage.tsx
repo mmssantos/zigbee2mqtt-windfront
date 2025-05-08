@@ -44,7 +44,9 @@ export default function NetworkPage() {
 
     const highlighted = useCallback(
         (friendlyName: string) => {
-            return highlightValue && friendlyName.toLowerCase().includes(highlightValue.toLowerCase()) ? "bg-accent text-accent-content" : "";
+            return highlightValue && friendlyName.toLowerCase().includes(highlightValue.toLowerCase())
+                ? "bg-accent text-accent-content rounded-sm"
+                : "";
         },
         [highlightValue],
     );
@@ -63,8 +65,15 @@ export default function NetworkPage() {
                             title={`${t("zigbee:ieee_address")}: ${device.ieee_address} | ${t("zigbee:network_address")}: ${toHex(device.network_address, 4)} (${device.network_address})`}
                             className={highlighted(device.friendly_name)}
                         >
-                            <Link to="#">
-                                <DeviceImage disabled={false} device={device} className="size-8" noIndicator={true} />
+                            {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                            <div
+                                onClick={() =>
+                                    highlightValue === device.friendly_name ? setHighlightValue("") : setHighlightValue(device.friendly_name)
+                                }
+                            >
+                                <div className="w-8 h-8">
+                                    <DeviceImage disabled={false} device={device} noIndicator={true} />
+                                </div>
                                 {device.friendly_name}
                                 <span className="badge badge-ghost">
                                     <Lqi value={relation.linkquality} />
@@ -73,7 +82,7 @@ export default function NetworkPage() {
                                     <FontAwesomeIcon icon={faRoute} />
                                     {relation.depth === 255 ? "N/A" : relation.depth}
                                 </span>
-                            </Link>
+                            </div>
                         </li>,
                     );
                 } else {
@@ -87,7 +96,7 @@ export default function NetworkPage() {
 
             return listedRelations;
         },
-        [devices, t, highlighted],
+        [devices, t, highlightValue, highlighted],
     );
 
     const groupRelations = useCallback(
@@ -104,7 +113,9 @@ export default function NetworkPage() {
                 groupedRelations.push(
                     <li key={key}>
                         <details>
-                            <summary>{t(RELATION_TMAP[key])}</summary>
+                            <summary>
+                                {t(RELATION_TMAP[key])} ({relations.length})
+                            </summary>
                             <ul>{listRelations(relations)}</ul>
                         </details>
                     </li>,
@@ -131,12 +142,16 @@ export default function NetworkPage() {
                             >
                                 {node.type === "Coordinator" ? (
                                     <Link to="/settings/about" className="link link-hover">
-                                        <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
+                                        <span className="w-10 h-10">
+                                            <DeviceImage disabled={false} device={device} noIndicator={true} />
+                                        </span>
                                         {node.friendlyName}
                                     </Link>
                                 ) : (
                                     <Link to={`/device/${node.ieeeAddr}`} className="link link-hover">
-                                        <DeviceImage disabled={false} device={device} className="size-10" noIndicator={true} />
+                                        <span className="w-10 h-10">
+                                            <DeviceImage disabled={false} device={device} noIndicator={true} />
+                                        </span>
                                         {node.friendlyName}
                                         <span className="badge badge-ghost">
                                             <PowerSource device={device} showLevel={false} />

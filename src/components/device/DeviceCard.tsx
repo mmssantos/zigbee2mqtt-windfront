@@ -35,9 +35,9 @@ export default function DeviceCard({
     return (
         <>
             <li className="list-row flex-grow">
-                <div>
+                <div className="h-12 w-12" style={{ overflow: "visible" }}>
                     {/* disabled always false because dashboard does not contain disabled devices */}
-                    <DeviceImage disabled={false} device={device} deviceState={deviceState} className="size-10" />
+                    <DeviceImage disabled={false} device={device} deviceState={deviceState} />
                 </div>
                 <div>
                     <Link to={`/device/${device.ieee_address}`} className="link link-hover">

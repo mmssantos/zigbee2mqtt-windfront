@@ -91,10 +91,8 @@ export default function DeviceInfo(props: DeviceInfoProps) {
 
     return (
         <div className="card lg:card-side bg-base-100">
-            <figure style={{ overflow: "visible" }}>
-                <div>
-                    <DeviceImage device={device} deviceState={deviceState} disabled={device.disabled} className="self-start max-w-xs" />
-                </div>
+            <figure className="w-64 h-64" style={{ overflow: "visible" }}>
+                <DeviceImage device={device} deviceState={deviceState} disabled={device.disabled} className="" />
             </figure>
             <div className="card-body">
                 <h2 className="card-title">
