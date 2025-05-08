@@ -1,19 +1,20 @@
-import { faCode, faCogs, faDisplay, faInfo, faThumbsUp, faToolbox } from "@fortawesome/free-solid-svg-icons";
+import { faBug, faCode, faCogs, faDisplay, faInfo, faThumbsUp, faToolbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, lazy, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, type NavLinkRenderProps, useNavigate, useParams } from "react-router";
 
 type UrlParams = {
-    tab?: "frontend" | "settings" | "bridge" | "about" | "tools" | "donate";
+    tab?: "about" | "frontend" | "settings" | "tools" | "bridge" | "dev-console" | "donate";
 };
 
 const AboutTab = lazy(async () => await import("../components/settings-page/tabs/About.js"));
-const BridgeTab = lazy(async () => await import("../components/settings-page/tabs/Bridge.js"));
-const DonateTab = lazy(async () => await import("../components/settings-page/tabs/Donate.js"));
 const FrontendTab = lazy(async () => await import("../components/settings-page/tabs/Frontend.js"));
 const SettingsTab = lazy(async () => await import("../components/settings-page/tabs/Settings.js"));
 const ToolsTab = lazy(async () => await import("../components/settings-page/tabs/Tools.js"));
+const BridgeTab = lazy(async () => await import("../components/settings-page/tabs/Bridge.js"));
+const DevConsoleTab = lazy(async () => await import("../components/settings-page/tabs/DevConsole.js"));
+const DonateTab = lazy(async () => await import("../components/settings-page/tabs/Donate.js"));
 
 export default function SettingsPage() {
     const navigate = useNavigate();
@@ -28,16 +29,18 @@ export default function SettingsPage() {
 
     const content = useMemo((): JSX.Element => {
         switch (tab) {
+            case "about":
+                return <AboutTab />;
             case "frontend":
                 return <FrontendTab />;
             case "settings":
                 return <SettingsTab />;
             case "tools":
                 return <ToolsTab />;
-            case "about":
-                return <AboutTab />;
             case "bridge":
                 return <BridgeTab />;
+            case "dev-console":
+                return <DevConsoleTab />;
             case "donate":
                 return <DonateTab />;
         }
@@ -69,6 +72,10 @@ export default function SettingsPage() {
                 <NavLink to="/settings/bridge" className={isTabActive}>
                     <FontAwesomeIcon icon={faCode} className="me-2" />
                     {t("bridge")}
+                </NavLink>
+                <NavLink to="/settings/dev-console" className={isTabActive}>
+                    <FontAwesomeIcon icon={faBug} className="me-2" />
+                    {t("dev_console")}
                 </NavLink>
                 <NavLink to="/settings/donate" className={isTabActive}>
                     <FontAwesomeIcon icon={faThumbsUp} className="me-2" />

@@ -2648,7 +2648,8 @@
         "language": "Language",
         "theme": "Theme",
         "homepage": "Homepage",
-        "permit_join_time": "Permit join time"
+        "permit_join_time": "Permit join time",
+        "dev_console": "Dev console"
     },
     "touchlink": {
         "detected_devices_message": "Detected {{count}} touchlink devices.",
@@ -2776,7 +2777,10 @@
         "generate_external_definition": "Generate external definition",
         "generated_external_definition": "Generated external definition",
         "state_property": "State property",
-        "state_property_detail": "Set the result into the device's state (only for read)"
+        "state_property_detail": "Set the result into the device's state (only for read)",
+        "topic": "Topic",
+        "send_mqtt": "Send MQTT message",
+        "mqtt_topic_info": "Omit the 'base_topic', frontend messages are sent over WebSocket directly to Zigbee2MQTT."
     },
     "settingsSchemaDescriptions": {
         "Home Assistant integration (MQTT discovery)": "Home Assistant integration (MQTT discovery)",
