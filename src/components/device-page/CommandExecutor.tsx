@@ -1,4 +1,4 @@
-import { type JSX, useContext, useMemo, useState } from "react";
+import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
@@ -21,13 +21,21 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
     const [endpoint, setEndpoint] = useState<number>(1);
     const [cluster, setCluster] = useState<string>("");
     const [command, setCommand] = useState<string>("");
-    const [payload, setPayload] = useState(JSON.stringify({}, null, 2));
+    const [payload, setPayload] = useState("{}");
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const bridgeDefinitions = useAppSelector((state) => state.bridgeDefinitions);
 
     const formIsValid = useMemo(() => {
         try {
-            JSON.parse(payload);
+            const parsedPayload = JSON.parse(payload);
+
+            if (typeof parsedPayload !== "object") {
+                return false;
+            }
+
+            if (Array.isArray(parsedPayload) && parsedPayload.length > 0 && typeof parsedPayload[0] !== "object") {
+                return false;
+            }
         } catch {
             return false;
         }
@@ -92,6 +100,22 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
         ];
     }, [device.friendly_name, device.endpoints, endpoint, bridgeDefinitions]);
 
+    const onExecute = useCallback(async () => {
+        let commandKey: string | number = Number.parseInt(command, 10);
+
+        if (Number.isNaN(commandKey)) {
+            commandKey = command;
+        }
+
+        await sendMessage(
+            // @ts-expect-error templated API endpoint
+            `${device.ieee_address}/${endpoint}/set`,
+            {
+                command: { cluster, command: commandKey, payload: JSON.parse(payload) },
+            },
+        );
+    }, [cluster, device.ieee_address, command, payload, endpoint, sendMessage]);
+
     return (
         <div className="flex-1 flex flex-col gap-3">
             <h2 className="text-lg">{t("zigbee:execute_command")}</h2>
@@ -130,31 +154,13 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
                 name="payload"
                 label={t("payload")}
                 rows={3}
-                value={payload}
+                defaultValue={payload}
                 onChange={(e) => setPayload(e.target.value)}
                 className="textarea validator w-full"
                 required
             />
             <div className="join join-vertical lg:join-horizontal">
-                <Button
-                    onClick={async () => {
-                        let commandKey: string | number = Number.parseInt(command, 10);
-
-                        if (Number.isNaN(commandKey)) {
-                            commandKey = command;
-                        }
-
-                        await sendMessage(
-                            // @ts-expect-error templated API endpoint
-                            `${device.ieee_address}/${endpoint}/set`,
-                            {
-                                command: { cluster, command: commandKey, payload: JSON.parse(payload) },
-                            },
-                        );
-                    }}
-                    disabled={!formIsValid}
-                    className="btn btn-success"
-                >
+                <Button<void> onClick={onExecute} disabled={!formIsValid} className="btn btn-success">
                     {t("execute")}
                 </Button>
             </div>
