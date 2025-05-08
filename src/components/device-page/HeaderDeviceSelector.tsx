@@ -17,7 +17,7 @@ interface HeaderDeviceSelectorProps {
 export function HeaderDeviceSelector(props: HeaderDeviceSelectorProps): JSX.Element {
     const { devices, currentDevice, tab = "info" } = props;
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const { t } = useTranslation("devicePage");
+    const { t } = useTranslation("common");
     const items = useMemo(
         () =>
             devices
@@ -40,7 +40,7 @@ export function HeaderDeviceSelector(props: HeaderDeviceSelectorProps): JSX.Elem
     return (
         <PopoverDropdown
             name="header-device-selector"
-            buttonChildren={`${currentDevice?.friendly_name || t("unknown_device")}`}
+            buttonChildren={`${currentDevice ? `${currentDevice.friendly_name} (${currentDevice.ieee_address})` : t("unknown_device")}`}
             dropdownStyle="dropdown-start"
         >
             <label className="input" key="search">

@@ -88,7 +88,7 @@ export default function DevicesPage(): JSX.Element {
         () => [
             {
                 id: "friendly_name",
-                header: t("friendly_name"),
+                header: t("common:friendly_name"),
                 accessorFn: ({ device }) => [device.friendly_name, device.description].join(" "),
                 cell: ({
                     row: {
@@ -128,7 +128,11 @@ export default function DevicesPage(): JSX.Element {
                     },
                 }) => (
                     <>
-                        <div>{device.ieee_address}</div>
+                        <div>
+                            <Link to={`/device/${device.ieee_address}`} className="link link-hover">
+                                {device.ieee_address}
+                            </Link>
+                        </div>
                         <div className="flex flex-row gap-1 mt-2">
                             <span className="badge badge-ghost badge-sm cursor-default" title={t("network_address_hex")}>
                                 {toHex(device.network_address, 4)}

@@ -45,6 +45,7 @@ const propertyToField = (
                     label={key}
                     detail={description}
                     onChange={(e) => set({ [key]: e.target.checked })}
+                    required={required}
                     defaultChecked={(value as boolean) || false}
                 />
             );
@@ -60,6 +61,7 @@ const propertyToField = (
                         label={key}
                         detail={description}
                         onChange={(e) => set({ [key]: Number.parseInt(e.target.value, 10) })}
+                        required={required}
                         defaultValue={(value as number) || ""}
                     >
                         <option value="" disabled>
@@ -98,6 +100,7 @@ const propertyToField = (
                         label={key}
                         detail={description}
                         onChange={(e) => set({ [key]: e.target.value })}
+                        required={required}
                         defaultValue={(value as string) || ""}
                     >
                         <option value="" disabled>
@@ -171,6 +174,10 @@ const groupProperties = (
     const nestedElements: JSX.Element[] = [];
 
     for (const key in properties) {
+        if (key === "friendly_name") {
+            continue; // not supported in direct assignment through options
+        }
+
         const property = properties[key];
 
         if (typeof property !== "boolean") {

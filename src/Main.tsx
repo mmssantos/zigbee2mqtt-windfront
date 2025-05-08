@@ -46,7 +46,7 @@ export function Main() {
                                                 <Route path="/device/:deviceId/:tab?" element={<DevicePage />} />
                                                 <Route path="/settings/:tab?" element={<SettingsPage />} />
                                                 <Route path="/groups" element={<GroupsPage />} />
-                                                <Route path="/group/:groupId?" element={<GroupPage />} />
+                                                <Route path="/group/:groupId/:tab?" element={<GroupPage />} />
 
                                                 <Route path="/logs" element={<LogsPage />} />
                                                 <Route path="/touchlink" element={<TouchlinkPage />} />

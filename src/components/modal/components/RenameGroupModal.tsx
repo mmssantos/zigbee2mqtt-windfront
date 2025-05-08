@@ -41,7 +41,7 @@ export const RenameGroupForm = NiceModal.create((props: RenameGroupFormProps): J
             <div className="flex flex-col gap-2">
                 <InputField
                     name="friendly_name"
-                    label={t("zigbee:friendly_name")}
+                    label={t("common:friendly_name")}
                     onChange={(e) => setFriendlyName(e.target.value)}
                     defaultValue={friendlyName}
                     type="text"

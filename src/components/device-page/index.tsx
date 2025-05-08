@@ -34,6 +34,8 @@ export function getScenes(target: Group | Device): Scene[] {
     return (target as Group).scenes as Scene[];
 }
 
+const BLACKLISTED_PARTIAL_FEATURE_NAMES = ["schedule_", "_mode", "_options", "_startup"];
+
 const BLACKLISTED_FEATURE_NAMES = ["effect"];
 
 const WHITELIST_FEATURE_NAMES = ["state", "color_temp", "color", "transition", "brightness"];
@@ -42,6 +44,12 @@ const isValid = (name: string | undefined, access: FeatureAccessMode): boolean =
     if (name) {
         if (WHITELIST_FEATURE_NAMES.includes(name)) {
             return true;
+        }
+
+        for (const bName of BLACKLISTED_PARTIAL_FEATURE_NAMES) {
+            if (name.includes(bName)) {
+                return false;
+            }
         }
 
         if (BLACKLISTED_FEATURE_NAMES.includes(name)) {

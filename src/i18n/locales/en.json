@@ -45,7 +45,11 @@
         "documentation": "Documentation",
         "optional": "Optional",
         "init": "Init",
-        "undefined": "Undefined"
+        "undefined": "Undefined",
+        "type_to_filter": "Type to filter...",
+        "friendly_name": "Friendly name",
+        "unknown_device": "Unknown device",
+        "unknown_group": "Unknown group"
     },
     "devicePage": {
         "about": "About",
@@ -58,9 +62,7 @@
         "state": "State",
         "groups": "Groups",
         "scene": "Scene",
-        "unknown_device": "Unknown device",
         "exposes": "Exposes",
-        "type_to_filter": "Type to filter...",
         "select_a_device": "Select a device"
     },
     "exposes": {
@@ -2545,17 +2547,15 @@
         "self_checking": "Self Checking"
     },
     "groups": {
+        "settings": "Settings",
         "add_to_group_header": "Add a device to the group",
         "add_to_group": "Add to group",
         "create_group": "Create group",
-        "new_group_id": "New group ID",
-        "new_group_name": "New group name",
-        "new_group_name_placeholder": "bedroom_lights, garden...",
+        "friendly_name_placeholder": "bedroom_lights, garden...",
         "remove_group": "Remove group",
         "group_id": "Group ID",
-        "group_name": "Group Name",
         "group_members": "Group members",
-        "group_scenes": "Group scenes",
+        "scenes": "Scenes",
         "rename_group": "Rename group",
         "remove_from_group": "Remove from group"
     },
@@ -2695,7 +2695,6 @@
         "firmware_build_date": "Firmware build date",
         "force_remove": "Force remove",
         "force_remove_notice": "Use only as last resort (will not propagate to the network)",
-        "friendly_name": "Friendly name",
         "ieee_address": "IEEE Address",
         "interview": "Interview",
         "interview_failed": "Interview failed",

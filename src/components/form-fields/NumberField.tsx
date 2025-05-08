@@ -19,7 +19,7 @@ export default function NumberField(props: NumberFieldProps) {
     const onValidChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
             if (!e.target.validationMessage) {
-                setCurrentValue(e.target.valueAsNumber);
+                setCurrentValue(e.target.value ? e.target.valueAsNumber : "");
                 onChange?.(e);
             }
         },
@@ -64,6 +64,7 @@ export default function NumberField(props: NumberFieldProps) {
                 onChange={onValidChange}
                 onBlur={onValidBlur}
                 {...rest}
+                type="number"
                 value={currentValue}
             />
             {detail && <p className="label whitespace-normal">{detail}</p>}

@@ -1,51 +1,64 @@
-import { useParams } from "react-router";
-import AddScene from "../components/device-page/AddScene.js";
-import RecallRemove from "../components/device-page/RecallRemove.js";
-import AddDeviceToGroup from "../components/groups/AddDeviceToGroup.js";
-import GroupMembers from "../components/groups/GroupMembers.js";
+import { faCogs, faObjectGroup } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { lazy, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { NavLink, type NavLinkRenderProps, useNavigate, useParams } from "react-router";
+import { HeaderGroupSelector } from "../components/group-page/HeaderGroupSelector.js";
 import { useAppSelector } from "../hooks/useApp.js";
-import type { DeviceState } from "../types.js";
 
-type UrlParams = {
-    groupId?: string;
+export type TabName = "devices" | "settings";
+
+type GroupPageUrlParams = {
+    groupId: string;
+    tab?: TabName;
 };
 
+const DevicesTab = lazy(async () => await import("../components/group-page/tabs/Devices.js"));
+const GroupSettingsTab = lazy(async () => await import("../components/group-page/tabs/GroupSettings.js"));
+
 export default function GroupPage() {
-    const params = useParams<UrlParams>();
-    const groupId = Number.parseInt(params.groupId!, 10);
-    const group = useAppSelector(
-        (state) =>
-            state.groups.find((g) => g.id === groupId) || {
-                id: groupId,
-                friendly_name: "Unknown group",
-                members: [],
-                scenes: [],
-                description: undefined,
-            },
-    );
+    const navigate = useNavigate();
+    const { t } = useTranslation(["groups", "common"]);
+    const { groupId, tab } = useParams<GroupPageUrlParams>();
+    const groups = useAppSelector((state) => state.groups);
+    const groupIdNum = Number.parseInt(groupId!, 10);
+    const group = groupId ? groups.find((group) => group.id === groupIdNum) : undefined;
+
+    useEffect(() => {
+        if (!tab && group) {
+            navigate(`/group/${group.id}/devices`);
+        }
+    }, [tab, group, navigate]);
+
+    const isTabActive = ({ isActive }: NavLinkRenderProps) => (isActive ? "tab tab-active" : "tab");
+
+    const content = useMemo(() => {
+        if (!group) {
+            return <div className="flex-auto justify-center items-center">{t("common:unknown_group")}</div>;
+        }
+
+        switch (tab) {
+            case "devices":
+                return <DevicesTab group={group} />;
+            case "settings":
+                return <GroupSettingsTab group={group} />;
+        }
+    }, [tab, group, t]);
 
     return (
         <>
-            <div className="collapse collapse-arrow bg-base-100 shadow mb-3">
-                <input type="checkbox" />
-                <div className="collapse-title text-lg font-semibold text-center">
-                    #{group.id} - {group.friendly_name}
-                </div>
-                <div className="collapse-content">
-                    <div className="flex flex-row flex-wrap justify-evenly gap-4">
-                        <div className="flex-1">
-                            <AddDeviceToGroup group={group} />
-                        </div>
-                        <div className="flex-1">
-                            <RecallRemove target={group} deviceState={{} as DeviceState} />
-                        </div>
-                        <div className="flex-1">
-                            <AddScene target={group} deviceState={{} as DeviceState} />
-                        </div>
-                    </div>
-                </div>
+            <HeaderGroupSelector groups={groups} currentGroup={group} tab={tab} />
+            <div className="tabs tabs-border mt-2">
+                <NavLink to={`/group/${groupId!}/devices`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faObjectGroup} className="me-2" />
+                    {t("common:devices")}
+                </NavLink>
+                <NavLink to={`/group/${groupId!}/settings`} className={isTabActive}>
+                    <FontAwesomeIcon icon={faCogs} className="me-2" />
+                    {t("settings")}
+                </NavLink>
             </div>
-            <GroupMembers group={group} />
+            <div className="tab-content block h-full bg-base-100 p-3">{content}</div>
         </>
     );
 }

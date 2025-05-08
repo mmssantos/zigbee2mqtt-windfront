@@ -49,7 +49,7 @@ const SceneTab = lazy(async () => await import("../components/device-page/tabs/S
 const StateTab = lazy(async () => await import("../components/device-page/tabs/State.js"));
 
 export default function DevicePage(): JSX.Element {
-    const { t } = useTranslation("devicePage");
+    const { t } = useTranslation(["devicePage", "common"]);
     const devices = useAppSelector((state) => state.devices);
     const { deviceId, tab } = useParams<DevicePageUrlParams>();
     const navigate = useNavigate();
@@ -65,7 +65,7 @@ export default function DevicePage(): JSX.Element {
 
     const content = useMemo(() => {
         if (!device) {
-            return <div className="flex-auto justify-center items-center">{t("unknown_device")}</div>;
+            return <div className="flex-auto justify-center items-center">{t("common:unknown_device")}</div>;
         }
 
         switch (tab) {

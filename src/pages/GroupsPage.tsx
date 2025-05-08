@@ -16,21 +16,21 @@ import { GROUP_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { Group } from "../types.js";
 
 export default function GroupsPage() {
-    const [newGroupName, setNewGroupName] = useState<string>("");
+    const [newGroupFriendlyName, setNewGroupFriendlyName] = useState<string>("");
     const [newGroupId, setNewGroupId] = useState<string>();
     const groups = useAppSelector((state) => state.groups);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["groups", "common"]);
 
     const onGroupCreateSubmit = useCallback(async (): Promise<void> => {
-        const payload: Zigbee2MQTTAPI["bridge/request/group/add"] = { friendly_name: newGroupName };
+        const payload: Zigbee2MQTTAPI["bridge/request/group/add"] = { friendly_name: newGroupFriendlyName };
 
         if (newGroupId !== undefined) {
             payload.id = newGroupId;
         }
 
         await sendMessage("bridge/request/group/add", payload);
-    }, [newGroupName, newGroupId, sendMessage]);
+    }, [newGroupFriendlyName, newGroupId, sendMessage]);
 
     const onRenameClick = useCallback(
         async (from: string, to: string) => await sendMessage("bridge/request/group/rename", { from, to }),
@@ -38,6 +38,14 @@ export default function GroupsPage() {
     );
 
     const onRemoveClick = useCallback(async (id: string) => await sendMessage("bridge/request/group/remove", { id }), [sendMessage]);
+
+    const isValidNewGroup = useMemo(() => {
+        if (newGroupFriendlyName) {
+            return !groups.find((group) => group.id.toString() === newGroupId);
+        }
+
+        return false;
+    }, [newGroupFriendlyName, newGroupId, groups]);
 
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const columns = useMemo<ColumnDef<Group, any>[]>(
@@ -47,14 +55,27 @@ export default function GroupsPage() {
                 header: t("group_id"),
                 accessorFn: (group) => group.id,
                 cell: ({ row: { original: group } }) => (
-                    <Link to={`/group/${group.id}`} className="link link-hover">
-                        {group.id}
-                    </Link>
+                    <div className="flex items-center gap-3">
+                        <div className="avatar" />
+                        <div className="flex flex-col">
+                            <Link to={`/group/${group.id}`} className="link link-hover">
+                                {group.id}
+                            </Link>
+                            {group.description && <div className="text-xs opacity-50">{group.description}</div>}
+                            <div className="flex flex-row gap-1 mt-2">
+                                <span className="badge badge-soft badge-ghost cursor-default">
+                                    {t("scenes")}
+                                    {": "}
+                                    {group.scenes?.length ?? 0}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 ),
             },
             {
                 id: "friendly_name",
-                header: t("group_name"),
+                header: t("common:friendly_name"),
                 accessorFn: (group) => group.friendly_name,
                 cell: ({ row: { original: group } }) => (
                     <Link to={`/group/${group.id}`} className="link link-hover">
@@ -66,18 +87,6 @@ export default function GroupsPage() {
                 id: "members",
                 header: t("group_members"),
                 accessorFn: (group) => group.members.length ?? 0,
-                cell: ({ row: { original: group } }) => (
-                    <div className="flex flex-col items-center gap-3">
-                        {group.members.length ?? 0}
-                        <div className="flex flex-row gap-1 mt-2">
-                            <span className="badge badge-soft badge-ghost cursor-default">
-                                {t("group_scenes")}
-                                {": "}
-                                {group.scenes?.length ?? 0}
-                            </span>
-                        </div>
-                    </div>
-                ),
                 enableColumnFilter: false,
             },
             {
@@ -86,7 +95,7 @@ export default function GroupsPage() {
                 cell: ({ row: { original: group } }) => (
                     <div className="join join-vertical lg:join-horizontal">
                         <Button<void>
-                            className="btn btn-primary join-item"
+                            className="btn btn-primary btn-sm join-item"
                             onClick={() =>
                                 NiceModal.show(RenameGroupForm, {
                                     name: group.friendly_name,
@@ -94,6 +103,7 @@ export default function GroupsPage() {
                                 })
                             }
                             title={t("rename_group")}
+                            disabled={group.friendly_name === "default_bind_group"}
                         >
                             <FontAwesomeIcon icon={faEdit} />
                         </Button>
@@ -102,7 +112,7 @@ export default function GroupsPage() {
                             title={t("remove_group")}
                             item={group.id.toString()}
                             onClick={onRemoveClick}
-                            className="btn btn-error join-item"
+                            className="btn btn-error btn-sm join-item"
                         >
                             <FontAwesomeIcon icon={faTrash} />
                         </Button>
@@ -124,24 +134,24 @@ export default function GroupsPage() {
                     <div className="flex flex-row flex-wrap justify-center gap-2">
                         <InputField
                             type="text"
-                            name="group_name"
-                            label={t("new_group_name")}
-                            defaultValue={newGroupName}
-                            placeholder={t("new_group_name_placeholder")}
-                            onChange={(e) => setNewGroupName(e.target.value)}
+                            name="friendly_name"
+                            label={t("common:friendly_name")}
+                            defaultValue={newGroupFriendlyName}
+                            placeholder={t("friendly_name_placeholder")}
+                            onChange={(e) => setNewGroupFriendlyName(e.target.value)}
                             required
                         />
                         <InputField
                             type="number"
                             name="group_id"
-                            label={t("new_group_id")}
+                            label={t("group_id")}
                             defaultValue={newGroupId}
                             detail={t("common:optional")}
                             min={0}
                             max={255}
-                            onChange={(e) => setNewGroupId(e.target.value ? undefined : e.target.value)}
+                            onChange={(e) => setNewGroupId(e.target.value)}
                         />
-                        <Button<void> onClick={onGroupCreateSubmit} className="btn btn-primary self-center" disabled={!newGroupName}>
+                        <Button<void> onClick={onGroupCreateSubmit} className="btn btn-primary self-center" disabled={!isValidNewGroup}>
                             {t("create_group")}
                         </Button>
                     </div>

@@ -20,7 +20,7 @@ export default function TouchlinkPage() {
     const touchlinkResetInProgress = useAppSelector((state) => state.touchlinkResetInProgress);
     const touchlinkScanInProgress = useAppSelector((state) => state.touchlinkScanInProgress);
     const touchlinkInProgress = touchlinkIdentifyInProgress || touchlinkResetInProgress;
-    const { t } = useTranslation("touchlink");
+    const { t } = useTranslation(["touchlink", "common", "zigbee"]);
 
     const onScanClick = useCallback(async () => {
         dispatch(setTouchlinkScan({ inProgress: true, devices: [] }));
@@ -59,7 +59,7 @@ export default function TouchlinkPage() {
                     ),
             },
             {
-                header: t("zigbee:friendly_name") as string,
+                header: t("common:friendly_name") as string,
                 accessorFn: (touchlinkDevice) => devices.find((device) => device.ieee_address === touchlinkDevice.ieee_address)?.friendly_name,
             },
             {

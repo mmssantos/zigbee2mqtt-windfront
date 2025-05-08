@@ -38,7 +38,7 @@ export const RenameDeviceModal = NiceModal.create((props: RenameActionProps): JS
                             await renameDevice(device.friendly_name, friendlyName, isHASSRename);
                         }}
                     >
-                        {t("zigbee:rename_device")}
+                        {t("rename_device")}
                     </Button>
                 </>
             }
@@ -46,7 +46,7 @@ export const RenameDeviceModal = NiceModal.create((props: RenameActionProps): JS
             <div className="flex flex-col gap-2">
                 <InputField
                     name="friendly_name"
-                    label={t("friendly_name")}
+                    label={t("common:friendly_name")}
                     onChange={(e) => setFriendlyName(e.target.value)}
                     defaultValue={friendlyName}
                     type="text"

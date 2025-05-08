@@ -27,7 +27,7 @@ export default function OtaPage() {
     const devices = useAppSelector((state) => state.devices);
     const deviceStates = useAppSelector((state) => state.deviceStates);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const { t } = useTranslation("zigbee");
+    const { t } = useTranslation(["zigbee", "common"]);
 
     const otaDevices = useMemo(() => {
         const filteredDevices: OtaTableData[] = [];
@@ -73,7 +73,7 @@ export default function OtaPage() {
     const columns = useMemo<ColumnDef<OtaTableData, any>[]>(
         () => [
             {
-                header: t("friendly_name"),
+                header: t("common:friendly_name"),
                 accessorFn: ({ device }) => [device.friendly_name, device.description].join(" "),
                 cell: ({
                     row: {
