@@ -109,6 +109,8 @@ const ColorEditor = memo((props: ColorEditorProps) => {
     const onHueChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
             const colorHs = Array.from(color.color_hs) as ZigbeeColor["color_hs"];
+            const sat = colorHs[1];
+            colorHs[1] = sat === 0 ? 100.0 : sat; // allow click on hue when sat is zero to be applied (otherwise reset)
             colorHs[0] = e.target.valueAsNumber;
             const colorHsString = convertHsvToString(colorHs);
 
