@@ -2,11 +2,12 @@ import { type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import { type Device, type DeviceState, FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
+import type { Device, DeviceState, FeatureWithAnySubFeatures, Group } from "../../types.js";
 import { isDevice } from "../../utils.js";
 import Button from "../Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
-import { FeatureSubFeatures } from "../features/FeatureSubFeatures.js";
+import { Feature } from "../features/Feature.js";
+import { getFeatureKey } from "../features/index.js";
 import InputField from "../form-fields/InputField.js";
 import { getScenes, getScenesFeatures, isValidSceneId } from "./index.js";
 
@@ -83,22 +84,18 @@ export default function AddScene(props: AddSceneProps): JSX.Element {
                 {filteredFeatures.length > 0 && (
                     <div className="card card-border bg-base-100 shadow my-2">
                         <div className="card-body">
-                            <FeatureSubFeatures
-                                feature={{
-                                    features: filteredFeatures,
-                                    type: "composite",
-                                    name: "scene_features",
-                                    label: "scene_features",
-                                    property: "",
-                                    access: FeatureAccessMode.GET,
-                                }}
-                                className="row"
-                                device={target as Device}
-                                deviceState={deviceState}
-                                onChange={onCompositeChange}
-                                featureWrapperClass={DashboardFeatureWrapper}
-                                minimal={true}
-                            />
+                            {filteredFeatures.map((feature) => (
+                                <Feature
+                                    key={getFeatureKey(feature)}
+                                    feature={feature}
+                                    device={target as Device}
+                                    deviceState={deviceState}
+                                    onChange={onCompositeChange}
+                                    featureWrapperClass={DashboardFeatureWrapper}
+                                    minimal={true}
+                                    parentFeatures={[]}
+                                />
+                            ))}
                         </div>
                     </div>
                 )}

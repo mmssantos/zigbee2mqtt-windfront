@@ -1,3 +1,4 @@
+import merge from "lodash/merge.js";
 import { WebSocketServer } from "ws";
 import type { Message, ResponseMessage } from "../src/types.js";
 import { BRIDGE_DEFINITION } from "./bridgeDefinitions.js";
@@ -13,6 +14,16 @@ import { GENERATE_EXTERNAL_DEFINITION_RESPONSE } from "./generateExternalDefinit
 import { NETWORK_MAP_RESPONSE } from "./networkMapResponse.js";
 import { PERMIT_JOIN_RESPONSE } from "./permitJoinResponse.js";
 import { TOUCHLINK_RESPONSE } from "./touchlinkResponse.js";
+
+const cloneDeviceState = (ieee: string) => {
+    const device = BRIDGE_DEVICES.payload.find((d) => d.ieee_address === ieee);
+
+    if (device) {
+        const deviceState = DEVICE_STATES.find((state) => state.topic === device.friendly_name || state.topic === device.ieee_address);
+
+        return merge({}, deviceState);
+    }
+};
 
 export function startServer() {
     const wss = new WebSocketServer({
@@ -105,7 +116,7 @@ export function startServer() {
                         if (msg.payload.time > 0) {
                             ws.send(JSON.stringify(PERMIT_JOIN_RESPONSE));
 
-                            const permitBridgeInfo = structuredClone(BRIDGE_INFO);
+                            const permitBridgeInfo = merge({}, BRIDGE_INFO);
                             permitBridgeInfo.payload.permit_join = true;
                             permitBridgeInfo.payload.permit_join_end = Date.now() + msg.payload.time * 1000;
 
@@ -124,10 +135,9 @@ export function startServer() {
                 case "bridge/request/device/ota_update/update": {
                     sendResponseOK();
 
-                    const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
+                    const updatedDeviceState = cloneDeviceState(msg.payload.id);
 
-                    if (deviceState) {
-                        const updatedDeviceState = structuredClone(deviceState);
+                    if (updatedDeviceState) {
                         updatedDeviceState.payload.update = {
                             progress: 0,
                             remaining: 600,
@@ -153,11 +163,9 @@ export function startServer() {
                 case "bridge/request/device/ota_update/schedule": {
                     sendResponseOK();
 
-                    const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
+                    const updatedDeviceState = cloneDeviceState(msg.payload.id);
 
-                    if (deviceState) {
-                        const updatedDeviceState = structuredClone(deviceState);
-
+                    if (updatedDeviceState) {
                         if (!updatedDeviceState.payload.update) {
                             updatedDeviceState.payload.update = { state: "scheduled", installed_version: null, latest_version: null };
                         } else {
@@ -172,14 +180,12 @@ export function startServer() {
                 case "bridge/request/device/ota_update/unschedule": {
                     sendResponseOK();
 
-                    const deviceState = DEVICE_STATES.find((state) => state.topic === msg.payload.id);
+                    const updatedDeviceState = cloneDeviceState(msg.payload.id);
 
-                    if (deviceState) {
-                        const updatedDeviceState = structuredClone(deviceState);
-
+                    if (updatedDeviceState) {
                         if (!updatedDeviceState.payload.update) {
                             updatedDeviceState.payload.update = { state: "idle", installed_version: null, latest_version: null };
-                        } else if (deviceState.payload.update?.state === "scheduled") {
+                        } else if (updatedDeviceState.payload.update?.state === "scheduled") {
                             updatedDeviceState.payload.update.state = "idle"; // simpler
                         }
 

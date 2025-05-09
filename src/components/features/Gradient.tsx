@@ -1,24 +1,9 @@
-import convertColors from "color-convert";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { GradientFeature, RGBColor } from "../../types.js";
+import type { GradientFeature } from "../../types.js";
 import Button from "../Button.js";
 import ColorEditor from "../editors/ColorEditor.js";
 import type { BaseFeatureProps } from "./index.js";
-
-const hexToRGB = (hex: string): RGBColor => {
-    hex = hex.replace("#", "");
-    const bigint = Number.parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return { r, g, b };
-};
-
-const rgbToHex = (rgb: RGBColor): string => {
-    const { r, g, b } = rgb;
-    return `#${convertColors.rgb.hex([r, g, b])}`;
-};
 
 type GradientProps = BaseFeatureProps<GradientFeature>;
 
@@ -30,20 +15,20 @@ export function Gradient(props: GradientProps) {
         deviceState,
     } = props;
     const { t } = useTranslation(["gradient", "common"]);
-    const [colors, setColors] = useState<Array<RGBColor>>(length_min > 0 ? Array(length_min).fill({ r: 255, g: 255, b: 255 }) : []);
+    const [colors, setColors] = useState<Array<string>>(length_min > 0 ? Array(length_min).fill("#ffffff") : []);
 
     useEffect(() => {
         const { gradient: inputGradient } = deviceState as { gradient: string[] };
 
         if (inputGradient && inputGradient.length > 0) {
-            setColors(inputGradient.map(hexToRGB));
+            setColors(inputGradient);
         }
     }, [deviceState]);
 
     const setColor = useCallback(
         (idx: number, hex: string) => {
             const c = Array.from(colors);
-            c[idx] = hexToRGB(hex);
+            c[idx] = hex;
             setColors(c);
         },
         [colors],
@@ -51,7 +36,7 @@ export function Gradient(props: GradientProps) {
 
     const addColor = useCallback(() => {
         const c = Array.from(colors);
-        c.push({ r: 255, g: 255, b: 255 });
+        c.push("#ffffff");
         setColors(c);
     }, [colors]);
 
@@ -75,13 +60,14 @@ export function Gradient(props: GradientProps) {
     return (
         <div className="flex flex-col gap-2">
             {colors.map((color, idx) => (
-                <div key={`${color.r}${color.g}${color.b}-${idx}`} className="flex flex-row flex-wrap gap-2 items-center">
+                // biome-ignore lint/suspicious/noArrayIndexKey: not much data
+                <div key={`${color}-${idx}`} className="flex flex-row flex-wrap gap-2 items-center">
                     <ColorEditor
-                        onChange={(ch) => {
-                            setColor(idx, ch.hex);
+                        onChange={(color: { hex: string }) => {
+                            setColor(idx, color.hex);
                         }}
                         value={color}
-                        format="color_rgb"
+                        format="hex"
                     />
                     {canRemove && (
                         <Button<void> className="btn btn-error" onClick={() => removeColor(idx)}>
@@ -98,7 +84,7 @@ export function Gradient(props: GradientProps) {
                 </div>
             )}
             <div>
-                <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={() => onChange({ gradient: colors.map(rgbToHex) })}>
+                <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={() => onChange({ gradient: colors })}>
                     {t("common:apply")}
                 </Button>
             </div>

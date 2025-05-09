@@ -1,11 +1,12 @@
 import { useCallback, useContext } from "react";
-import { type Device, FeatureAccessMode } from "../../../types.js";
+import type { Device } from "../../../types.js";
 
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
-import { FeatureSubFeatures } from "../../features/FeatureSubFeatures.js";
+import { Feature } from "../../features/Feature.js";
 import FeatureWrapper from "../../features/FeatureWrapper.js";
+import { getFeatureKey } from "../../features/index.js";
 
 type DeviceSpecificSettingsProps = {
     device: Device;
@@ -24,21 +25,17 @@ export default function DeviceSpecificSettings({ device }: DeviceSpecificSetting
 
     return device.definition?.options?.length ? (
         <div className="list bg-base-100">
-            <FeatureSubFeatures
-                showEndpointLabels={true}
-                feature={{
-                    features: device.definition.options,
-                    type: "composite",
-                    name: "device_options",
-                    label: "device_options",
-                    property: "",
-                    access: FeatureAccessMode.GET,
-                }}
-                device={device}
-                deviceState={(bridgeInfo.config.devices[device.ieee_address] ?? {}) as unknown as Record<string, unknown>}
-                onChange={setDeviceOptions}
-                featureWrapperClass={FeatureWrapper}
-            />
+            {device.definition.options.map((option) => (
+                <Feature
+                    key={getFeatureKey(option)}
+                    feature={option}
+                    device={device}
+                    deviceState={(bridgeInfo.config.devices[device.ieee_address] ?? {}) as unknown as Record<string, unknown>}
+                    onChange={setDeviceOptions}
+                    featureWrapperClass={FeatureWrapper}
+                    parentFeatures={[]}
+                />
+            ))}
         </div>
     ) : (
         t("empty_exposes_definition")

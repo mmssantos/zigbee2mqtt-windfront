@@ -25,7 +25,7 @@ interface FeatureProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onCha
     device: Device;
     steps?: ValueWithLabelOrPrimitive[];
     onChange(value: Record<string, unknown>): void;
-    onRead(value: Record<string, unknown>): void;
+    onRead?(value: Record<string, unknown>): void;
     featureWrapperClass: FunctionComponent<PropsWithChildren<FeatureWrapperProps>>;
     minimal?: boolean;
 }

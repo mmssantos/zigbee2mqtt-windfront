@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 // biome-ignore lint/suspicious/noExplicitAny: debug
-export default function useReRenderTracer(props: any) {
+export default function useReRenderTracer(props: any, label = "useReRenderTracer") {
     const prev = useRef(props);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ export default function useReRenderTracer(props: any) {
         }, {});
 
         if (Object.keys(changedProps).length > 0) {
-            console.log("Changed props:", changedProps);
+            console.log(label, "Changed props:", changedProps);
         }
 
         prev.current = props;

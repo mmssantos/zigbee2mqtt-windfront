@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
-import { FeatureAccessMode, type FeatureWithAnySubFeatures, type Group } from "../../types.js";
+import type { FeatureWithAnySubFeatures, Group } from "../../types.js";
 import Button from "../Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { getScenesFeatures } from "../device-page/index.js";
@@ -40,14 +40,7 @@ export default function GroupMember(props: GroupMemberProps): JSX.Element {
 
     return (
         <DeviceCard
-            feature={{
-                features: filteredFeatures,
-                type: "composite",
-                name: "group_member_features",
-                label: "group_member_features",
-                property: "",
-                access: FeatureAccessMode.GET,
-            }}
+            features={filteredFeatures}
             device={device}
             endpoint={endpoint}
             deviceState={deviceState}

@@ -34,7 +34,7 @@ export default function OtaPage() {
 
         for (const device of devices) {
             if (device.definition?.supports_ota && !device.disabled) {
-                const state = deviceStates[device.friendly_name] ?? ({} as DeviceState);
+                const state = deviceStates[device.friendly_name] ?? {};
 
                 filteredDevices.push({ id: device.friendly_name, device, state });
             }

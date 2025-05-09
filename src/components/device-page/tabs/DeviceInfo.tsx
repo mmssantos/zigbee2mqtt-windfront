@@ -7,7 +7,7 @@ import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import { SUPPORT_NEW_DEVICES_DOCS_URL } from "../../../consts.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
-import type { Device, DeviceState } from "../../../types.js";
+import type { Device } from "../../../types.js";
 import { toHex } from "../../../utils.js";
 import { DeviceControlEditName } from "../../device/DeviceControlEditName.js";
 import DeviceControlGroup from "../../device/DeviceControlGroup.js";
@@ -33,7 +33,7 @@ export default function DeviceInfo(props: DeviceInfoProps) {
     const bridgeConfig = useAppSelector((state) => state.bridgeInfo.config);
     const availability = useAppSelector((state) => state.availability);
     const homeassistantEnabled = bridgeConfig.homeassistant.enabled;
-    const deviceState = useMemo(() => deviceStates[device.friendly_name] ?? ({} as DeviceState), [device.friendly_name, deviceStates]);
+    const deviceState = useMemo(() => deviceStates[device.friendly_name] ?? {}, [device.friendly_name, deviceStates]);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
 
     const renameDevice = useCallback(

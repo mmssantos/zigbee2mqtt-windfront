@@ -1,33 +1,28 @@
-import groupBy from "lodash/groupBy.js";
-import { type JSX, useCallback, useMemo, useState } from "react";
+import merge from "lodash/merge.js";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { FeatureWithAnySubFeatures } from "../../types.js";
 import Button from "../Button.js";
+import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import { Feature } from "./Feature.js";
-import type { BaseFeatureProps } from "./index.js";
+import { type BaseFeatureProps, getFeatureKey } from "./index.js";
 
 interface FeatureSubFeaturesProps extends BaseFeatureProps<FeatureWithAnySubFeatures> {
     parentFeatures?: FeatureWithAnySubFeatures[];
-    steps?: Record<string, unknown>;
+    steps?: Record<string, ValueWithLabelOrPrimitive[]>;
     minimal?: boolean;
-    showEndpointLabels?: boolean;
 }
 
 interface CompositeState {
     [key: string]: unknown;
 }
 
-const MAGIC_NO_ENDPOINT = "MAGIC_NO_ENDPOINT";
-
-const getFeatureKey = (feature: FeatureSubFeaturesProps["feature"]) =>
-    `${feature.type}-${feature.name}-${feature.label}-${feature.property}-${feature.access}-${feature.category}-${feature.endpoint}`;
-
 export function FeatureSubFeatures(props: FeatureSubFeaturesProps) {
-    const { feature, onChange, parentFeatures, onRead, device, deviceState, featureWrapperClass, minimal, showEndpointLabels = false } = props;
+    const { feature, onChange, parentFeatures, onRead, device, deviceState, featureWrapperClass, minimal, steps } = props;
     const { type, property } = feature;
     const [state, setState] = useState<CompositeState>({});
     const { t } = useTranslation(["composite", "common"]);
-    const combinedState = useMemo(() => ({ ...deviceState, ...state }), [deviceState, state]);
+    const combinedState = useMemo(() => merge({}, deviceState, state), [deviceState, state]);
     const features = ("features" in feature && feature.features) || [];
     const isRoot = useMemo(() => {
         if (type === "composite" && parentFeatures !== undefined) {
@@ -45,6 +40,11 @@ export function FeatureSubFeatures(props: FeatureSubFeaturesProps) {
 
         return false;
     }, [type, parentFeatures]);
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: specific trigger
+    useEffect(() => {
+        setState({});
+    }, [device.ieee_address]);
 
     const onFeatureChange = useCallback(
         (value: Record<string, unknown>): void => {
@@ -78,87 +78,24 @@ export function FeatureSubFeatures(props: FeatureSubFeaturesProps) {
         [onRead, type, property],
     );
 
-    const parentFeaturesOrEmpty = parentFeatures ?? [];
-    const renderedFeatures: JSX.Element[] = [];
-
-    if (!minimal) {
-        const groupedFeatures = groupBy(features, (f) => f.endpoint ?? MAGIC_NO_ENDPOINT);
-
-        if (groupedFeatures[MAGIC_NO_ENDPOINT]) {
-            renderedFeatures.push(
-                ...groupedFeatures[MAGIC_NO_ENDPOINT].map((f) => (
-                    <Feature
-                        // @ts-expect-error typing failure
-                        key={getFeatureKey(f)}
-                        // @ts-expect-error typing failure
-                        feature={f}
-                        parentFeatures={[...parentFeaturesOrEmpty, feature]}
-                        device={device}
-                        deviceState={combinedState}
-                        onChange={onFeatureChange}
-                        onRead={onFeatureRead}
-                        featureWrapperClass={featureWrapperClass}
-                        minimal={minimal}
-                    />
-                )),
-            );
-        }
-
-        for (const epName in groupedFeatures) {
-            if (epName === MAGIC_NO_ENDPOINT) {
-                continue;
-            }
-
-            const featuresGroup = groupedFeatures[epName];
-            // do not indent groups with one element inside
-            const noNeedIndent = featuresGroup.length === 1;
-
-            renderedFeatures.push(
-                <div key={epName}>
-                    {showEndpointLabels ? `Endpoint: ${epName}` : null}
-                    <div className={noNeedIndent ? "" : "ps-4"}>
-                        {featuresGroup.map((featureGroup) => (
-                            <Feature
-                                // @ts-expect-error typing failure
-                                key={getFeatureKey(featureGroup)}
-                                // @ts-expect-error typing failure
-                                feature={featureGroup}
-                                parentFeatures={parentFeaturesOrEmpty}
-                                device={device}
-                                deviceState={combinedState}
-                                onChange={onFeatureChange}
-                                onRead={onFeatureRead}
-                                featureWrapperClass={featureWrapperClass}
-                                minimal={minimal}
-                            />
-                        ))}
-                    </div>
-                </div>,
-            );
-        }
-    } else {
-        for (const subFeature of features) {
-            renderedFeatures.push(
+    return (
+        <>
+            {features.map((feature) => (
                 <Feature
                     // @ts-expect-error typing failure
-                    key={getFeatureKey(subFeature)}
+                    key={getFeatureKey(feature)}
                     // @ts-expect-error typing failure
-                    feature={subFeature}
-                    parentFeatures={parentFeaturesOrEmpty}
+                    feature={feature}
+                    parentFeatures={parentFeatures ?? []}
                     device={device}
                     deviceState={combinedState}
                     onChange={onFeatureChange}
                     onRead={onFeatureRead}
                     featureWrapperClass={featureWrapperClass}
                     minimal={minimal}
-                />,
-            );
-        }
-    }
-
-    return (
-        <>
-            {renderedFeatures}
+                    steps={steps?.[feature.name]}
+                />
+            ))}
             {isRoot && (
                 <div>
                     <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onRootApply}>

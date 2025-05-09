@@ -36,7 +36,7 @@ export default function DevicesPage(): JSX.Element {
 
         for (const device of devices) {
             if (device.type !== "Coordinator") {
-                const state = deviceStates[device.friendly_name] ?? ({} as DeviceState);
+                const state = deviceStates[device.friendly_name] ?? {};
                 const deviceAvailability = bridgeConfig.devices[device.ieee_address]?.availability;
 
                 renderDevices.push({

@@ -12,7 +12,7 @@ export type FeatureWrapperProps = {
     feature: FeatureWithAnySubFeatures;
     parentFeatures: FeatureWithAnySubFeatures[];
     deviceState?: DeviceState;
-    onRead(property: Record<string, unknown>): void;
+    onRead?(property: Record<string, unknown>): void;
 };
 
 function isColorFeature(feature: FeatureWithAnySubFeatures): feature is ColorFeature {
@@ -20,7 +20,7 @@ function isColorFeature(feature: FeatureWithAnySubFeatures): feature is ColorFea
 }
 
 export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperProps>) {
-    const { t } = useTranslation(["featureDescriptions", "featureNames"]);
+    const { t } = useTranslation(["featureDescriptions", "featureNames", "zigbee"]);
     const { children, feature, deviceState = {}, onRead } = props;
     const fi = useMemo(
         () => getFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined),
@@ -38,7 +38,7 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
     const onSyncClick = useCallback(
         (item: FeatureWithAnySubFeatures) => {
             if (item.property) {
-                onRead({ [item.property]: "" });
+                onRead?.({ [item.property]: "" });
             }
         },
         [onRead],
@@ -50,10 +50,11 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
                 <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} size="2xl" />
             </div>
             <div>
-                <div>{label}</div>
-                <div className="text-xs font-semibold opacity-60">
-                    {feature.description && <div className="stat-desc">{t(feature.description)}</div>}
+                <div>
+                    {label}
+                    {feature.endpoint ? ` (${t("zigbee:endpoint")}: ${feature.endpoint})` : ""}
                 </div>
+                <div className="text-xs font-semibold opacity-60">{feature.description && t(feature.description)}</div>
             </div>
             <div className="list-col-wrap flex flex-col gap-2">{children}</div>
             {isReadable && (

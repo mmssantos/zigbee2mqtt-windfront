@@ -1,20 +1,21 @@
 import type { PropsWithChildren } from "react";
 import type { FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
-import type { BaseFeatureProps } from "../features/index.js";
+import { type BaseFeatureProps, getFeatureKey } from "../features/index.js";
 
 import { Link } from "react-router";
 
 import { faCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
-import { FeatureSubFeatures } from "../features/FeatureSubFeatures.js";
+import { Feature } from "../features/Feature.js";
 import { LastSeen } from "../value-decorators/LastSeen.js";
 import { Lqi } from "../value-decorators/Lqi.js";
 import PowerSource from "../value-decorators/PowerSource.js";
 import { DeviceImage } from "./DeviceImage.js";
 
-type Props = BaseFeatureProps<FeatureWithAnySubFeatures> &
+type Props = Omit<BaseFeatureProps<FeatureWithAnySubFeatures>, "feature"> &
     PropsWithChildren<{
+        features: FeatureWithAnySubFeatures[];
         lastSeenConfig: LastSeenConfig;
         endpoint?: string | number;
     }>;
@@ -26,7 +27,7 @@ export default function DeviceCard({
     endpoint,
     deviceState,
     lastSeenConfig,
-    feature,
+    features,
     featureWrapperClass,
     children,
 }: Props) {
@@ -47,16 +48,22 @@ export default function DeviceCard({
                     <div className="text-xs opacity-50">{device.description || ""}</div>
                 </div>
                 <div className="list-col-wrap text-sm w-full">
-                    <FeatureSubFeatures
-                        feature={feature}
-                        className="row"
-                        device={device}
-                        deviceState={deviceState}
-                        onChange={onChange}
-                        onRead={onRead}
-                        featureWrapperClass={featureWrapperClass}
-                        minimal={true}
-                    />
+                    {features.map(
+                        (feature) =>
+                            (!endpoint || !feature.endpoint || feature.endpoint === endpoint) && (
+                                <Feature
+                                    key={getFeatureKey(feature)}
+                                    feature={feature}
+                                    device={device}
+                                    deviceState={deviceState}
+                                    onChange={onChange}
+                                    onRead={onRead}
+                                    featureWrapperClass={featureWrapperClass}
+                                    minimal={true}
+                                    parentFeatures={[]}
+                                />
+                            ),
+                    )}
                     <div className="flex flex-row items-center gap-1 mt-3">
                         <div className="flex-grow-1" />
                         <Link to={`/device/${device.ieee_address}/exposes`} className="link link-secondary" title={t("devicePage:exposes")}>

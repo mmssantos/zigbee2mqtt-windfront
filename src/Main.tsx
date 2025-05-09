@@ -1,10 +1,11 @@
 import NiceModal from "@ebay/nice-modal-react";
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense } from "react";
 import { I18nextProvider } from "react-i18next";
 import { Provider } from "react-redux";
 import { HashRouter, Route, Routes } from "react-router";
 import { ErrorBoundary } from "./ErrorBoundary.js";
 import { WebSocketApiRouter } from "./WebSocketApiRouter.js";
+import ScrollToTop from "./components/ScrollToTop.js";
 import Toasts from "./components/Toasts.js";
 import { AuthForm } from "./components/modal/components/AuthModal.js";
 import { NavBar } from "./components/navbar/NavBar.js";
@@ -24,10 +25,6 @@ const LogsPage = lazy(async () => await import("./pages/LogsPage.js"));
 const SettingsPage = lazy(async () => await import("./pages/SettingsPage.js"));
 
 export function Main() {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
     return (
         <React.StrictMode>
             <I18nextProvider i18n={i18n}>
@@ -36,6 +33,7 @@ export function Main() {
                     <Provider store={store}>
                         <ErrorBoundary>
                             <HashRouter>
+                                <ScrollToTop />
                                 <WebSocketApiRouter>
                                     <NavBar />
                                     <main className="p-3">

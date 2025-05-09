@@ -21,6 +21,7 @@ import {
     faDoorOpen,
     faExclamationCircle,
     faExclamationTriangle,
+    faFeather,
     faFillDrip,
     faGear,
     faIndustry,
@@ -129,6 +130,7 @@ export const TYPE_TO_CLASS_MAP: Record<string, [IconDefinition, { className?: st
     linkquality: [faSignal, {}],
     system_mode: [faCog, {}],
     gradient: [faRainbow, {}],
+    sensitivity: [faFeather, {}],
     test: [faCheck, { className: "text-success" }],
 };
 
@@ -306,3 +308,6 @@ export const getFeatureIcon = (name: string, value: unknown, unit?: unknown): [I
 
     return icon ? [icon, classes.join(" "), { flip: mappedSpec.flip, rotate: mappedSpec.rotate, ...spec }] : [faCircle, "opacity-0", {}];
 };
+
+export const getFeatureKey = (feature: FeatureWithAnySubFeatures) =>
+    `${feature.type}-${feature.name}-${feature.label}-${feature.property}-${feature.access}-${feature.category}-${feature.endpoint}`;

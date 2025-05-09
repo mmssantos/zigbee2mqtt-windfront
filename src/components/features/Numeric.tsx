@@ -26,7 +26,7 @@ export default function Numeric(props: NumericProps) {
                 min={valueMin}
                 max={valueMax}
                 step={valueStep}
-                steps={presets?.length ? (presets as ValueWithLabelOrPrimitive[]) : steps}
+                steps={presets?.length ? (presets as ValueWithLabelOrPrimitive[]) /* typing failure */ : steps}
                 unit={unit}
                 minimal={minimal}
             />

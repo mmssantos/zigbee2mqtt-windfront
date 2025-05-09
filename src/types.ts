@@ -187,10 +187,11 @@ export type HueSaturationColor = {
 export type XYColor = {
     x: number;
     y: number;
+    Y?: number;
 };
 
-export type AnyColor = RGBColor | XYColor | HueSaturationColor;
+export type AnyColor = RGBColor | XYColor | HueSaturationColor | string;
 
-export type ColorFormat = "color_rgb" | "color_xy" | "color_hs";
+export type ColorFormat = "color_rgb" | "color_xy" | "color_hs" | "hex";
 
 // #endregion

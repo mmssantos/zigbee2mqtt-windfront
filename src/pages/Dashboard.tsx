@@ -12,7 +12,7 @@ import { DeviceControlEditName } from "../components/device/DeviceControlEditNam
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
 import { useAppSelector } from "../hooks/useApp.js";
-import { FeatureAccessMode, type FeatureWithAnySubFeatures } from "../types.js";
+import type { FeatureWithAnySubFeatures } from "../types.js";
 
 export default function Dashboard() {
     const deviceStates = useAppSelector((state) => state.deviceStates);
@@ -63,14 +63,7 @@ export default function Dashboard() {
                     filteredDevices.push(
                         <ul className="list rounded-box shadow-md" key={device.ieee_address}>
                             <DeviceCard
-                                feature={{
-                                    features: filteredFeatures,
-                                    type: "composite",
-                                    name: "device_features",
-                                    label: "device_features",
-                                    property: "",
-                                    access: FeatureAccessMode.GET,
-                                }}
+                                features={filteredFeatures}
                                 device={device}
                                 deviceState={deviceState}
                                 onChange={async (value) =>
