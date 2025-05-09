@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
-import type { FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
-import { type BaseFeatureProps, getFeatureKey } from "../features/index.js";
+import type { DeviceState, FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
+import { type BaseWithSubFeaturesProps, getFeatureKey } from "../features/index.js";
 
 import { Link } from "react-router";
 
@@ -13,8 +13,9 @@ import { Lqi } from "../value-decorators/Lqi.js";
 import PowerSource from "../value-decorators/PowerSource.js";
 import { DeviceImage } from "./DeviceImage.js";
 
-type Props = Omit<BaseFeatureProps<FeatureWithAnySubFeatures>, "feature"> &
+type Props = Omit<BaseWithSubFeaturesProps<FeatureWithAnySubFeatures>, "feature" | "deviceState"> &
     PropsWithChildren<{
+        deviceState: DeviceState;
         features: FeatureWithAnySubFeatures[];
         lastSeenConfig: LastSeenConfig;
         endpoint?: string | number;
@@ -38,7 +39,7 @@ export default function DeviceCard({
             <li className="list-row flex-grow">
                 <div className="h-12 w-12" style={{ overflow: "visible" }}>
                     {/* disabled always false because dashboard does not contain disabled devices */}
-                    <DeviceImage disabled={false} device={device} deviceState={deviceState} />
+                    <DeviceImage disabled={false} device={device} otaState={deviceState.update} />
                 </div>
                 <div>
                     <Link to={`/device/${device.ieee_address}`} className="link link-hover">
@@ -74,7 +75,7 @@ export default function DeviceCard({
             </li>
             <li className="flex flex-row flex-wrap gap-1 m-4 justify-around items-center">
                 <span className="badge badge-soft badge-ghost cursor-default" title={t("last_seen")}>
-                    <LastSeen state={deviceState} config={lastSeenConfig} />
+                    <LastSeen lastSeen={deviceState.last_seen} config={lastSeenConfig} />
                 </span>
                 <span className="badge badge-soft badge-ghost cursor-default" title={t("lqi")}>
                     <Lqi value={deviceState.linkquality as number | undefined} />

@@ -13,7 +13,7 @@ interface NumericProps extends BaseFeatureProps<NumericFeature> {
 const Numeric = memo((props: NumericProps) => {
     const {
         feature: { presets, access = FeatureAccessMode.SET, property, unit, value_max: valueMax, value_min: valueMin, value_step: valueStep },
-        deviceState,
+        deviceValue,
         steps,
         onChange,
         minimal,
@@ -23,7 +23,7 @@ const Numeric = memo((props: NumericProps) => {
         return (
             <RangeEditor
                 onChange={(value) => onChange({ [property]: value })}
-                value={(deviceState[property] ?? "") as number}
+                value={(deviceValue ?? "") as number}
                 min={valueMin}
                 max={valueMax}
                 step={valueStep}

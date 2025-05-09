@@ -14,7 +14,7 @@ type BinaryProps = BaseFeatureProps<BinaryFeature>;
 const Binary = memo((props: BinaryProps) => {
     const {
         feature: { access = FeatureAccessMode.SET, name, property, value_off: valueOff, value_on: valueOn },
-        deviceState,
+        deviceValue,
         onChange,
         minimal,
     } = props;
@@ -26,8 +26,7 @@ const Binary = memo((props: BinaryProps) => {
     );
 
     if (access & FeatureAccessMode.SET) {
-        const value = deviceState[property];
-        const valueExists = value != null;
+        const valueExists = deviceValue != null;
         const showOnOffButtons = !minimal || (minimal && !valueExists);
 
         return (
@@ -38,7 +37,7 @@ const Binary = memo((props: BinaryProps) => {
                     </Button>
                 )}
                 {valueExists ? (
-                    <input className="toggle" type="checkbox" checked={value === valueOn} onChange={onCheckboxChange} />
+                    <input className="toggle" type="checkbox" checked={deviceValue === valueOn} onChange={onCheckboxChange} />
                 ) : (
                     <FontAwesomeIcon icon={faQuestion} title={t("unknown")} />
                 )}

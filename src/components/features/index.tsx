@@ -60,18 +60,22 @@ import {
     faZ,
 } from "@fortawesome/free-solid-svg-icons";
 import type { FunctionComponent, HTMLAttributes, PropsWithChildren } from "react";
-import type { Device, FeatureWithAnySubFeatures } from "../../types.js";
+import type { Zigbee2MQTTDeviceOptions } from "zigbee2mqtt";
+import type { Device, DeviceState, FeatureWithAnySubFeatures } from "../../types.js";
 import type { FeatureWrapperProps } from "./FeatureWrapper.js";
 
 export interface BaseFeatureProps<T extends FeatureWithAnySubFeatures> extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
     feature: T;
-    /** Can be `DeviceState` or `Zigbee2MQTTDeviceOptions` */
-    deviceState: Record<string, unknown>;
+    deviceValue: unknown;
     device: Device;
     onChange(value: Record<string, unknown> | unknown): void;
     onRead?(value: Record<string, unknown> | unknown): void;
     featureWrapperClass: FunctionComponent<PropsWithChildren<FeatureWrapperProps>>;
     minimal?: boolean;
+}
+
+export interface BaseWithSubFeaturesProps<T extends FeatureWithAnySubFeatures> extends Omit<BaseFeatureProps<T>, "deviceValue"> {
+    deviceState: DeviceState | Zigbee2MQTTDeviceOptions;
 }
 
 export type FaIconFlip = "horizontal" | "vertical" | "both";

@@ -92,7 +92,7 @@ export default function DeviceInfo(props: DeviceInfoProps) {
     return (
         <div className="card lg:card-side bg-base-100">
             <figure className="w-64 h-64" style={{ overflow: "visible" }}>
-                <DeviceImage device={device} deviceState={deviceState} disabled={device.disabled} className="" />
+                <DeviceImage device={device} otaState={deviceState.update} disabled={device.disabled} className="" />
             </figure>
             <div className="card-body">
                 <h2 className="card-title">
@@ -134,7 +134,7 @@ export default function DeviceInfo(props: DeviceInfoProps) {
                     <div className="stat">
                         <div className="stat-title">{t("last_seen")}</div>
                         <div className="stat-value">
-                            <LastSeen config={bridgeConfig.advanced.last_seen} state={deviceState} />
+                            <LastSeen config={bridgeConfig.advanced.last_seen} lastSeen={deviceState.last_seen} />
                         </div>
                         <div className="stat-desc">
                             {t("availability:availability")}

@@ -3,15 +3,15 @@ import type { BasicFeature } from "../../types.js";
 import { DisplayValue } from "../value-decorators/DisplayValue.js";
 import type { BaseFeatureProps } from "./index.js";
 
-const BaseViewer = memo((props: BaseFeatureProps<BasicFeature>) => {
+const BaseViewer = memo(({ feature, deviceValue }: BaseFeatureProps<BasicFeature>) => {
     return (
         <div>
-            {props.feature.property && (
+            {feature.property && (
                 <span className="font-bold">
-                    <DisplayValue value={props.deviceState[props.feature.property]} name={props.feature.name} />
+                    <DisplayValue value={deviceValue} name={feature.name} />
                 </span>
             )}
-            {"unit" in props.feature && <span className="text-xs ms-1">{props.feature.unit}</span>}
+            {"unit" in feature && <span className="text-xs ms-1">{feature.unit}</span>}
         </div>
     );
 });

@@ -1,16 +1,18 @@
 import merge from "lodash/merge.js";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { FeatureWithAnySubFeatures } from "../../types.js";
+import type { Zigbee2MQTTDeviceOptions } from "zigbee2mqtt";
+import type { DeviceState, FeatureWithAnySubFeatures } from "../../types.js";
 import Button from "../Button.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import Feature from "./Feature.js";
 import { type BaseFeatureProps, getFeatureKey } from "./index.js";
 
-interface FeatureSubFeaturesProps extends BaseFeatureProps<FeatureWithAnySubFeatures> {
-    parentFeatures?: FeatureWithAnySubFeatures[];
-    steps?: Record<string, ValueWithLabelOrPrimitive[]>;
+interface FeatureSubFeaturesProps extends Omit<BaseFeatureProps<FeatureWithAnySubFeatures>, "deviceValue"> {
     minimal?: boolean;
+    steps?: Record<string, ValueWithLabelOrPrimitive[]>;
+    parentFeatures?: FeatureWithAnySubFeatures[];
+    deviceState: DeviceState | Zigbee2MQTTDeviceOptions;
 }
 
 interface CompositeState {

@@ -5,12 +5,12 @@ import { useTranslation } from "react-i18next";
 import { InterviewState } from "../../consts.js";
 import genericDevice from "../../images/generic-zigbee-device.png";
 import type { Device, DeviceState } from "../../types.js";
-import { ErrorBoundary } from "./ErrorBoundary.js";
-import { LazyImage } from "./LazyImage.js";
+import ErrorBoundary from "./ErrorBoundary.js";
+import LazyImage from "./LazyImage.js";
 
 type DeviceImageProps = {
     device: Device;
-    deviceState?: DeviceState;
+    otaState?: DeviceState["update"];
     disabled: boolean;
     className?: string;
     noIndicator?: boolean;
@@ -18,7 +18,7 @@ type DeviceImageProps = {
 
 export function DeviceImage(props: Readonly<DeviceImageProps>) {
     const { t } = useTranslation("zigbee");
-    const { device = {} as Device, disabled, deviceState, className, noIndicator } = props;
+    const { device = {} as Device, disabled, otaState, className, noIndicator } = props;
 
     const interviewState = useMemo(
         () =>
@@ -54,7 +54,7 @@ export function DeviceImage(props: Readonly<DeviceImageProps>) {
                     <LazyImage device={device} className={`grid place-items-center${className ? ` ${className}` : ""}`} />
                 ) : (
                     <div className="indicator w-full">
-                        {deviceState?.update?.state === "updating" && (
+                        {otaState?.state === "updating" && (
                             <FontAwesomeIcon
                                 icon={faSync}
                                 spin

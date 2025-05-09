@@ -1,5 +1,5 @@
 import { saveAs } from "file-saver";
-import type { Device, DeviceState, Group, LastSeenConfig } from "./types.js";
+import type { Device, Group, LastSeenConfig } from "./types.js";
 
 // #region Compute
 
@@ -29,18 +29,18 @@ export const getObjectFirstKey = <T>(object: T): string | undefined => {
 export const stringifyWithPreservingUndefinedAsNull = (data: Record<string, unknown>): string =>
     JSON.stringify(data, (_k, v) => (v === undefined ? null : v));
 
-export const lastSeen = (state: DeviceState, lastSeenConfig: LastSeenConfig): Date | undefined => {
-    if (!state.last_seen) {
+export const convertLastSeenToDate = (lastSeen: unknown, lastSeenConfig: LastSeenConfig): Date | undefined => {
+    if (!lastSeen) {
         return undefined;
     }
 
     switch (lastSeenConfig) {
         case "ISO_8601":
         case "ISO_8601_local":
-            return new Date(Date.parse(state.last_seen as string));
+            return new Date(Date.parse(lastSeen as string));
 
         case "epoch":
-            return new Date(state.last_seen as number);
+            return new Date(lastSeen as number);
 
         case "disable":
             return undefined;

@@ -12,7 +12,7 @@ const Enum = memo((props: EnumProps) => {
     const {
         onChange,
         feature: { access = FeatureAccessMode.SET, values, property },
-        deviceState,
+        deviceValue,
         minimal,
     } = props;
 
@@ -21,7 +21,7 @@ const Enum = memo((props: EnumProps) => {
             <EnumEditor
                 onChange={(value) => onChange({ [property]: value })}
                 values={values}
-                value={(deviceState[property] as ValueWithLabelOrPrimitive) || ""}
+                value={(deviceValue as ValueWithLabelOrPrimitive) || ""}
                 minimal={minimal || values.length > BIG_ENUM_SIZE}
             />
         );

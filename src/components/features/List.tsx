@@ -17,9 +17,9 @@ type Props = BaseFeatureProps<ListFeature> & {
 };
 
 const List = memo((props: Props) => {
-    const { feature, minimal, parentFeatures, onChange, deviceState } = props;
+    const { feature, minimal, parentFeatures, onChange, deviceValue } = props;
     // biome-ignore lint/suspicious/noExplicitAny: tmp
-    const [state, setState] = useState<State>({ value: feature.property ? ((deviceState[feature.property] as any[]) ?? []) : [] });
+    const [state, setState] = useState<State>({ value: feature.property ? ((deviceValue?.[feature.property] as any[]) ?? []) : [] });
     const { t } = useTranslation(["list", "common"]);
     const isRoot = useMemo(() => {
         if (parentFeatures !== undefined) {

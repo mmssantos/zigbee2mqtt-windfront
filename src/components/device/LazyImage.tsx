@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useImage } from "react-image";
 import genericDevice from "../../images/generic-zigbee-device.png";
 import type { Device } from "../../types.js";
@@ -8,8 +9,7 @@ type LazyImageProps = {
     className?: string;
 };
 
-export function LazyImage(props: Readonly<LazyImageProps>) {
-    const { device, ...rest } = props;
+const LazyImage = memo(({ device, className }: Readonly<LazyImageProps>) => {
     const fromDefinition = device.definition?.icon;
     const fromZ2MDocs = getZ2MDeviceImage(device);
     const srcList: string[] = [];
@@ -28,6 +28,7 @@ export function LazyImage(props: Readonly<LazyImageProps>) {
 
     const { src } = useImage({ srcList });
 
-    // biome-ignore lint/a11y/useAltText: bad detection
-    return <img alt={device.ieee_address} crossOrigin={"anonymous"} src={src} {...rest} />;
-}
+    return <img alt={device.ieee_address} crossOrigin={"anonymous"} src={src} className={className} />;
+});
+
+export default LazyImage;

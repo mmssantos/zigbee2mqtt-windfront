@@ -7,6 +7,6 @@ type ErrorBoundaryProps = {
     children: JSX.Element | JSX.Element[];
 };
 
-export function ErrorBoundary({ error, children }: ErrorBoundaryProps) {
+export default function ErrorBoundary({ error, children }: ErrorBoundaryProps) {
     return error ? <FontAwesomeIcon icon={faExclamationTriangle} size="3x" className="text-error" title="Missing image" /> : children;
 }

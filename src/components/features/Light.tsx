@@ -3,9 +3,9 @@ import type { LightFeature, WithAnySubFeatures } from "../../types.js";
 import { scale } from "../../utils.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import FeatureSubFeatures from "./FeatureSubFeatures.js";
-import type { BaseFeatureProps } from "./index.js";
+import type { BaseWithSubFeaturesProps } from "./index.js";
 
-type LightProps = BaseFeatureProps<WithAnySubFeatures<LightFeature>>;
+type LightProps = BaseWithSubFeaturesProps<WithAnySubFeatures<LightFeature>>;
 
 const STEPS_CONFIG = {
     brightness: [0, 25, 50, 75, 100].map<ValueWithLabelOrPrimitive>((item) => ({

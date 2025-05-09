@@ -83,7 +83,7 @@ export default function OtaPage() {
                     <div className="flex items-center gap-3">
                         <div className="avatar">
                             <div className="h-12 w-12" style={{ overflow: "visible" }}>
-                                <DeviceImage device={device} deviceState={state} disabled={false} />
+                                <DeviceImage device={device} otaState={state.update} disabled={false} />
                             </div>
                         </div>
                         <div className="flex flex-col">

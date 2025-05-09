@@ -7,11 +7,10 @@ import type { FeatureWrapperProps } from "../features/FeatureWrapper.js";
 import { getFeatureIcon } from "../features/index.js";
 
 const DashboardFeatureWrapper = memo((props: PropsWithChildren<FeatureWrapperProps>) => {
-    const { children, feature, deviceState = {} } = props;
-    const fi = useMemo(
-        () => getFeatureIcon(feature.name, deviceState[feature.property!], "unit" in feature ? feature.unit : undefined),
-        [feature, deviceState],
-    );
+    const { children, feature, deviceValue } = props;
+    // @ts-expect-error `undefined` is fine
+    const unit = feature.unit as string | undefined;
+    const fi = useMemo(() => getFeatureIcon(feature.name, deviceValue, unit), [unit, feature.name, deviceValue]);
     const { t } = useTranslation(["featureNames", "zigbee"]);
     const featureName = feature.name === "state" ? feature.property : feature.name;
     const fallbackFeatureName = startCase(camelCase(featureName));

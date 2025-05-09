@@ -15,7 +15,7 @@ import VendorLink from "../components/value-decorators/VendorLink.js";
 import { useAppSelector } from "../hooks/useApp.js";
 import { DEVICE_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { AvailabilityState, Device, DeviceState } from "../types.js";
-import { lastSeen, toHex } from "../utils.js";
+import { convertLastSeenToDate, toHex } from "../utils.js";
 
 type DeviceTableData = {
     device: Device;
@@ -98,7 +98,7 @@ export default function DevicesPage(): JSX.Element {
                     <div className="flex items-center gap-3">
                         <div className="avatar">
                             <div className="h-12 w-12" style={{ overflow: "visible" }}>
-                                <DeviceImage device={device} deviceState={state} disabled={device.disabled} />
+                                <DeviceImage device={device} otaState={state.update} disabled={device.disabled} />
                             </div>
                         </div>
                         <div className="flex flex-col">
@@ -166,12 +166,12 @@ export default function DevicesPage(): JSX.Element {
             {
                 id: "last_seen",
                 header: t("last_seen"),
-                accessorFn: ({ state }) => lastSeen(state, bridgeConfig.advanced.last_seen)?.getTime(),
+                accessorFn: ({ state }) => convertLastSeenToDate(state.last_seen, bridgeConfig.advanced.last_seen)?.getTime(),
                 cell: ({
                     row: {
                         original: { state },
                     },
-                }) => <LastSeen state={state} config={bridgeConfig.advanced.last_seen} />,
+                }) => <LastSeen lastSeen={state.last_seen} config={bridgeConfig.advanced.last_seen} />,
                 enableColumnFilter: false,
             },
             {

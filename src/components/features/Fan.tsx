@@ -1,9 +1,9 @@
 import { memo } from "react";
 import type { FanFeature, WithAnySubFeatures } from "../../types.js";
 import FeatureSubFeatures from "./FeatureSubFeatures.js";
-import type { BaseFeatureProps } from "./index.js";
+import type { BaseWithSubFeaturesProps } from "./index.js";
 
-type FanProps = BaseFeatureProps<WithAnySubFeatures<FanFeature>>;
+type FanProps = BaseWithSubFeaturesProps<WithAnySubFeatures<FanFeature>>;
 
 const Fan = memo((props: FanProps) => {
     return <FeatureSubFeatures {...props} />;

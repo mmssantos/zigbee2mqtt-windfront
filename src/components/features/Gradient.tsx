@@ -12,18 +12,16 @@ export const Gradient = memo((props: GradientProps) => {
         minimal,
         onChange,
         feature: { length_min, length_max },
-        deviceState,
+        deviceValue,
     } = props;
     const { t } = useTranslation(["gradient", "common"]);
     const [colors, setColors] = useState<Array<string>>(length_min > 0 ? Array(length_min).fill("#ffffff") : []);
 
     useEffect(() => {
-        const { gradient: inputGradient } = deviceState as { gradient: string[] };
-
-        if (inputGradient && inputGradient.length > 0) {
-            setColors(inputGradient);
+        if (deviceValue && Array.isArray(deviceValue) && deviceValue.length > 0) {
+            setColors(deviceValue);
         }
-    }, [deviceState]);
+    }, [deviceValue]);
 
     const setColor = useCallback(
         (idx: number, hex: string) => {

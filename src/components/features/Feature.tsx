@@ -1,5 +1,6 @@
 import type React from "react";
 import { type FunctionComponent, type JSX, type PropsWithChildren, memo, useMemo } from "react";
+import type { Zigbee2MQTTDeviceOptions } from "zigbee2mqtt";
 import type { ColorFeature, Device, DeviceState, FeatureWithAnySubFeatures, GradientFeature } from "../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import Binary from "./Binary.js";
@@ -20,14 +21,14 @@ import Text from "./Text.js";
 
 interface FeatureProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
     feature: FeatureWithAnySubFeatures;
-    parentFeatures: FeatureWithAnySubFeatures[];
-    deviceState: DeviceState;
     device: Device;
-    steps?: ValueWithLabelOrPrimitive[];
     onChange(value: Record<string, unknown>): void;
     onRead?(value: Record<string, unknown>): void;
     featureWrapperClass: FunctionComponent<PropsWithChildren<FeatureWrapperProps>>;
     minimal?: boolean;
+    steps?: ValueWithLabelOrPrimitive[];
+    parentFeatures: FeatureWithAnySubFeatures[];
+    deviceState: DeviceState | Zigbee2MQTTDeviceOptions;
 }
 
 const featureToKey = (feature: FeatureProps["feature"]): string =>
@@ -35,21 +36,24 @@ const featureToKey = (feature: FeatureProps["feature"]): string =>
 
 const Feature = memo((props: FeatureProps): JSX.Element => {
     const { feature, device, deviceState, steps, onRead, onChange, featureWrapperClass: FeatureWrapper, minimal, parentFeatures } = props;
-
+    const deviceValue = useMemo(
+        () => (feature.property ? deviceState[feature.property] : undefined),
+        [feature.property, deviceState[feature.property!]],
+    );
     const key = useMemo(() => featureToKey(feature), [feature]);
     const genericParams = useMemo(
         () => ({
             device,
-            deviceState,
+            deviceValue,
             onChange,
             onRead,
             featureWrapperClass: FeatureWrapper,
             minimal,
             parentFeatures,
         }),
-        [device, deviceState, onChange, onRead, FeatureWrapper, minimal, parentFeatures],
+        [device, deviceValue, onChange, onRead, FeatureWrapper, minimal, parentFeatures],
     );
-    const wrapperParams = useMemo(() => ({ feature, onRead, deviceState, parentFeatures }), [feature, onRead, deviceState, parentFeatures]);
+    const wrapperParams = useMemo(() => ({ feature, onRead, deviceValue, parentFeatures }), [feature, onRead, deviceValue, parentFeatures]);
 
     switch (feature.type) {
         case "binary": {
@@ -96,22 +100,22 @@ const Feature = memo((props: FeatureProps): JSX.Element => {
             );
         }
         case "light": {
-            return <Light feature={feature} key={key} {...genericParams} />;
+            return <Light feature={feature} key={key} {...genericParams} deviceState={deviceState} />;
         }
         case "switch": {
-            return <Switch feature={feature} key={key} {...genericParams} />;
+            return <Switch feature={feature} key={key} {...genericParams} deviceState={deviceState} />;
         }
         case "cover": {
-            return <Cover feature={feature} key={key} {...genericParams} />;
+            return <Cover feature={feature} key={key} {...genericParams} deviceState={deviceState} />;
         }
         case "lock": {
-            return <Lock feature={feature} key={key} {...genericParams} />;
+            return <Lock feature={feature} key={key} {...genericParams} deviceState={deviceState} />;
         }
         case "climate": {
-            return <Climate feature={feature} key={key} {...genericParams} />;
+            return <Climate feature={feature} key={key} {...genericParams} deviceState={deviceState} />;
         }
         case "fan": {
-            return <Fan feature={feature} key={key} {...genericParams} />;
+            return <Fan feature={feature} key={key} {...genericParams} deviceState={deviceState} />;
         }
         case "composite": {
             if (feature.name === "color_xy" || feature.name === "color_hs") {
