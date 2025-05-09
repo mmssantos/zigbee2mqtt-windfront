@@ -27,7 +27,7 @@ import zh from "./flags/tw.png";
 import ua from "./flags/ua.png";
 import en from "./flags/uk.png";
 
-import { PopoverDropdown } from "../components/dropdown/PopoverDropdown.js";
+import PopoverDropdown from "../components/dropdown/PopoverDropdown.js";
 import localeNames from "./locales/localeNames.json" with { type: "json" };
 
 const LOCALES_MAP = {

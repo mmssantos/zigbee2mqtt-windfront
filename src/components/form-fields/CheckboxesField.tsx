@@ -1,9 +1,9 @@
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type ChangeEvent, useCallback, useEffect, useState } from "react";
+import { type ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 import Button from "../Button.js";
 
-export type CheckboxFieldProps = {
+type CheckboxFieldProps = {
     names: string[];
     defaultsChecked: string[];
     label?: string;
@@ -11,7 +11,7 @@ export type CheckboxFieldProps = {
     onSubmit(values: string[]): void;
 };
 
-export default function CheckboxesField(props: CheckboxFieldProps) {
+const CheckboxesField = memo((props: CheckboxFieldProps) => {
     const { names, label, detail, defaultsChecked, onSubmit } = props;
     const [currentValues, setCurrentValues] = useState<string[]>(defaultsChecked || []);
 
@@ -61,4 +61,6 @@ export default function CheckboxesField(props: CheckboxFieldProps) {
             </div>
         </fieldset>
     );
-}
+});
+
+export default CheckboxesField;

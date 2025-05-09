@@ -1,16 +1,13 @@
-import { type InputHTMLAttributes, useEffect, useState } from "react";
+import { type InputHTMLAttributes, memo, useEffect, useState } from "react";
 
-/** A typical debounced input react component */
-export default function DebouncedInput({
-    value: initialValue,
-    onChange,
-    debounce = 500,
-    ...props
-}: {
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
     value: string | number;
     onChange: (value: string | number) => void;
     debounce?: number;
-} & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange">) {
+};
+
+/** A typical debounced input react component */
+const DebouncedInput = memo(({ value: initialValue, onChange, debounce = 500, ...props }: Props) => {
     const [value, setValue] = useState(initialValue);
 
     useEffect(() => {
@@ -26,4 +23,6 @@ export default function DebouncedInput({
     }, [value, debounce, onChange]);
 
     return <input {...props} value={value} onChange={(e) => setValue(e.target.value)} />;
-}
+});
+
+export default DebouncedInput;

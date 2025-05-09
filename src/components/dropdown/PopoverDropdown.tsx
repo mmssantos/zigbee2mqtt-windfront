@@ -1,4 +1,4 @@
-import type { CSSProperties, HTMLAttributes, ReactElement } from "react";
+import { type CSSProperties, type HTMLAttributes, type ReactElement, memo } from "react";
 import Button from "../Button.js";
 
 interface PopoverDropdownProps extends HTMLAttributes<HTMLUListElement> {
@@ -8,7 +8,7 @@ interface PopoverDropdownProps extends HTMLAttributes<HTMLUListElement> {
     dropdownStyle?: string;
 }
 
-export function PopoverDropdown(props: PopoverDropdownProps) {
+const PopoverDropdown = memo((props: PopoverDropdownProps) => {
     const { buttonChildren, children, name, buttonStyle, dropdownStyle } = props;
     const popoverId = `popover-${name}`;
     const anchorName = `--anchor-${name}`;
@@ -32,4 +32,6 @@ export function PopoverDropdown(props: PopoverDropdownProps) {
             </Button>
         </>
     );
-}
+});
+
+export default PopoverDropdown;

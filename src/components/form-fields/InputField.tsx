@@ -1,15 +1,15 @@
-import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type InputHTMLAttributes, useCallback } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type InputHTMLAttributes, memo, useCallback } from "react";
 
-export type InputFieldProps<T> = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
+type InputFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     name: string;
     label?: string;
     detail?: string;
-    type: T;
+    type: "text" | "number";
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
     onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 };
 
-export default function InputField<T>(props: InputFieldProps<T>) {
+const InputField = memo((props: InputFieldProps) => {
     const { label, detail, onChange, onBlur, ...rest } = props;
 
     const onValidChange = useCallback(
@@ -42,4 +42,6 @@ export default function InputField<T>(props: InputFieldProps<T>) {
             {detail && <p className="label">{detail}</p>}
         </fieldset>
     );
-}
+});
+
+export default InputField;

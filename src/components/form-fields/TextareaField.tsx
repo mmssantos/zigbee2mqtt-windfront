@@ -1,6 +1,6 @@
-import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type TextareaHTMLAttributes, useCallback } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type TextareaHTMLAttributes, memo, useCallback } from "react";
 
-export type TextAreaFieldProps = DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> & {
+type TextAreaFieldProps = DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> & {
     name: string;
     label?: string;
     detail?: string;
@@ -8,7 +8,7 @@ export type TextAreaFieldProps = DetailedHTMLProps<TextareaHTMLAttributes<HTMLTe
     onBlur?: (event: FocusEvent<HTMLTextAreaElement>) => void;
 };
 
-export default function TextareaField(props: TextAreaFieldProps) {
+const TextareaField = memo((props: TextAreaFieldProps) => {
     const { label, detail, onChange, onBlur, ...rest } = props;
 
     const onValidChange = useCallback(
@@ -36,4 +36,6 @@ export default function TextareaField(props: TextAreaFieldProps) {
             {detail && <div className="label">{detail}</div>}
         </fieldset>
     );
-}
+});
+
+export default TextareaField;

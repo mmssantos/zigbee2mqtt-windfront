@@ -1,9 +1,9 @@
 import { faCheck, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type FocusEvent, useCallback, useEffect, useState } from "react";
+import { type FocusEvent, memo, useCallback, useEffect, useState } from "react";
 import Button from "../Button.js";
 
-export type ArrayFieldProps = {
+type ArrayFieldProps = {
     defaultValues: (string | number)[];
     label?: string;
     detail?: string;
@@ -11,7 +11,7 @@ export type ArrayFieldProps = {
     onSubmit(values: (string | number)[]): void;
 };
 
-export default function ArrayField(props: ArrayFieldProps) {
+const ArrayField = memo((props: ArrayFieldProps) => {
     const { defaultValues, label, detail, type, onSubmit } = props;
     const [currentValues, setCurrentValues] = useState<(string | number)[]>(defaultValues || []);
 
@@ -77,4 +77,6 @@ export default function ArrayField(props: ArrayFieldProps) {
             </div>
         </fieldset>
     );
-}
+});
+
+export default ArrayField;

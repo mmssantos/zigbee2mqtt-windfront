@@ -1,4 +1,4 @@
-import { type ChangeEvent, type DetailedHTMLProps, type SelectHTMLAttributes, useCallback } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type SelectHTMLAttributes, memo, useCallback } from "react";
 
 export type SelectFieldProps = DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> & {
     name: string;
@@ -7,7 +7,7 @@ export type SelectFieldProps = DetailedHTMLProps<SelectHTMLAttributes<HTMLSelect
     onChange(event: ChangeEvent<HTMLSelectElement>): void;
 };
 
-export default function SelectField(props: SelectFieldProps) {
+const SelectField = memo((props: SelectFieldProps) => {
     const { label, detail, onChange, children, ...rest } = props;
 
     const onValidChange = useCallback(
@@ -28,4 +28,6 @@ export default function SelectField(props: SelectFieldProps) {
             {detail && <span className="label">{detail}</span>}
         </fieldset>
     );
-}
+});
+
+export default SelectField;

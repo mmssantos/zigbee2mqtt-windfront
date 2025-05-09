@@ -1,13 +1,13 @@
-import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, useCallback } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, memo, useCallback } from "react";
 
-export type CheckboxFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
+type CheckboxFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     name: string;
     label?: string;
     detail?: string;
     onChange(event: ChangeEvent<HTMLInputElement>): void;
 };
 
-export default function CheckboxField(props: CheckboxFieldProps) {
+const CheckboxField = memo((props: CheckboxFieldProps) => {
     const { type, label, detail, onChange, ...rest } = props;
 
     const onValidChange = useCallback(
@@ -32,4 +32,6 @@ export default function CheckboxField(props: CheckboxFieldProps) {
             )}
         </fieldset>
     );
-}
+});
+
+export default CheckboxField;

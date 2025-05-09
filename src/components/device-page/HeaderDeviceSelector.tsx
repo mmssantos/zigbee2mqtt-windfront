@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import type { TabName } from "../../pages/DevicePage.js";
 import type { RootState } from "../../store.js";
 import type { Device } from "../../types.js";
-import { PopoverDropdown } from "../dropdown/PopoverDropdown.js";
+import PopoverDropdown from "../dropdown/PopoverDropdown.js";
 
 interface HeaderDeviceSelectorProps {
     devices: RootState["devices"];

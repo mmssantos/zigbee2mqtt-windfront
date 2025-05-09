@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import type { TabName } from "../../pages/GroupPage.js";
 import type { RootState } from "../../store.js";
 import type { Group } from "../../types.js";
-import { PopoverDropdown } from "../dropdown/PopoverDropdown.js";
+import PopoverDropdown from "../dropdown/PopoverDropdown.js";
 
 interface HeaderGroupSelectorProps {
     groups: RootState["groups"];

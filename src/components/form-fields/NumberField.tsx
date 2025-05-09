@@ -1,6 +1,6 @@
-import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type InputHTMLAttributes, useCallback, useEffect, useState } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type InputHTMLAttributes, memo, useCallback, useEffect, useState } from "react";
 
-export type NumberFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
+type NumberFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     name: string;
     label?: string;
     detail?: string;
@@ -8,7 +8,7 @@ export type NumberFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputEl
     onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
 };
 
-export default function NumberField(props: NumberFieldProps) {
+const NumberField = memo((props: NumberFieldProps) => {
     const { label, detail, onChange, onBlur, defaultValue, ...rest } = props;
     const [currentValue, setCurrentValue] = useState(defaultValue || props.min || "");
 
@@ -70,4 +70,6 @@ export default function NumberField(props: NumberFieldProps) {
             {detail && <p className="label whitespace-normal">{detail}</p>}
         </fieldset>
     );
-}
+});
+
+export default NumberField;

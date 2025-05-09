@@ -76,7 +76,7 @@ export default function AddScene(props: AddSceneProps): JSX.Element {
                 <InputField
                     name="scene_name"
                     label={t("scene_name")}
-                    type="string"
+                    type="text"
                     value={sceneName}
                     placeholder={`Scene ${sceneId}`}
                     onChange={(e) => setSceneName(e.target.value)}

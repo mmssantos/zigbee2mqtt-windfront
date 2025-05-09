@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, useEffect, useState } from "react";
 import store2 from "store2";
 import { THEME_KEY } from "../localStoreConsts.js";
-import { PopoverDropdown } from "./dropdown/PopoverDropdown.js";
+import PopoverDropdown from "./dropdown/PopoverDropdown.js";
 
 const ALL_THEMES = [
     "", // "Default"
