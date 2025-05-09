@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FeatureAccessMode, type FeatureWithAnySubFeatures, type ListFeature } from "../../types.js";
 import Button from "../Button.js";
@@ -16,7 +16,7 @@ type Props = BaseFeatureProps<ListFeature> & {
     parentFeatures: FeatureWithAnySubFeatures[];
 };
 
-export default function List(props: Props) {
+const List = memo((props: Props) => {
     const { feature, minimal, parentFeatures, onChange, deviceState } = props;
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const [state, setState] = useState<State>({ value: feature.property ? ((deviceState[feature.property] as any[]) ?? []) : [] });
@@ -76,4 +76,6 @@ export default function List(props: Props) {
     }
 
     return <NoAccessError {...props} />;
-}
+});
+
+export default List;

@@ -1,8 +1,9 @@
+import { memo } from "react";
 import type { BasicFeature } from "../../types.js";
 import { DisplayValue } from "../value-decorators/DisplayValue.js";
 import type { BaseFeatureProps } from "./index.js";
 
-export default function BaseViewer(props: BaseFeatureProps<BasicFeature>) {
+const BaseViewer = memo((props: BaseFeatureProps<BasicFeature>) => {
     return (
         <div>
             {props.feature.property && (
@@ -13,4 +14,6 @@ export default function BaseViewer(props: BaseFeatureProps<BasicFeature>) {
             {"unit" in props.feature && <span className="text-xs ms-1">{props.feature.unit}</span>}
         </div>
     );
-}
+});
+
+export default BaseViewer;

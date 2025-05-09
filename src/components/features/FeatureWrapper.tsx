@@ -2,7 +2,7 @@ import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import camelCase from "lodash/camelCase.js";
 import startCase from "lodash/startCase.js";
-import { type PropsWithChildren, useCallback, useMemo } from "react";
+import { type PropsWithChildren, memo, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { type ColorFeature, type DeviceState, FeatureAccessMode, type FeatureWithAnySubFeatures } from "../../types.js";
 import Button from "../Button.js";
@@ -19,7 +19,7 @@ function isColorFeature(feature: FeatureWithAnySubFeatures): feature is ColorFea
     return feature.type === "composite" && (feature.name === "color_xy" || feature.name === "color_hs");
 }
 
-export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperProps>) {
+const FeatureWrapper = memo((props: PropsWithChildren<FeatureWrapperProps>) => {
     const { t } = useTranslation(["featureDescriptions", "featureNames", "zigbee"]);
     const { children, feature, deviceState = {}, onRead } = props;
     const fi = useMemo(
@@ -64,4 +64,6 @@ export default function FeatureWrapper(props: PropsWithChildren<FeatureWrapperPr
             )}
         </div>
     );
-}
+});
+
+export default FeatureWrapper;

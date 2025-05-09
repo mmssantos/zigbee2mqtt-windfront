@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { type EnumFeature, FeatureAccessMode } from "../../types.js";
 import EnumEditor, { type ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import BaseViewer from "./BaseViewer.js";
@@ -7,7 +8,7 @@ import type { BaseFeatureProps } from "./index.js";
 type EnumProps = BaseFeatureProps<EnumFeature>;
 const BIG_ENUM_SIZE = 6;
 
-export default function Enum(props: EnumProps) {
+const Enum = memo((props: EnumProps) => {
     const {
         onChange,
         feature: { access = FeatureAccessMode.SET, values, property },
@@ -31,4 +32,6 @@ export default function Enum(props: EnumProps) {
     }
 
     return <NoAccessError {...props} />;
-}
+});
+
+export default Enum;

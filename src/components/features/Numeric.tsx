@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { FeatureAccessMode, type NumericFeature } from "../../types.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
 import RangeEditor from "../editors/RangeEditor.js";
@@ -9,7 +10,7 @@ interface NumericProps extends BaseFeatureProps<NumericFeature> {
     steps?: ValueWithLabelOrPrimitive[];
 }
 
-export default function Numeric(props: NumericProps) {
+const Numeric = memo((props: NumericProps) => {
     const {
         feature: { presets, access = FeatureAccessMode.SET, property, unit, value_max: valueMax, value_min: valueMin, value_step: valueStep },
         deviceState,
@@ -38,4 +39,6 @@ export default function Numeric(props: NumericProps) {
     }
 
     return <NoAccessError {...props} />;
-}
+});
+
+export default Numeric;

@@ -1,6 +1,6 @@
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type ChangeEvent, useCallback } from "react";
+import { type ChangeEvent, memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { type BinaryFeature, FeatureAccessMode } from "../../types.js";
 import Button from "../Button.js";
@@ -11,7 +11,7 @@ import type { BaseFeatureProps } from "./index.js";
 
 type BinaryProps = BaseFeatureProps<BinaryFeature>;
 
-export default function Binary(props: BinaryProps) {
+const Binary = memo((props: BinaryProps) => {
     const {
         feature: { access = FeatureAccessMode.SET, name, property, value_off: valueOff, value_on: valueOn },
         deviceState,
@@ -56,4 +56,6 @@ export default function Binary(props: BinaryProps) {
     }
 
     return <NoAccessError {...props} />;
-}
+});
+
+export default Binary;

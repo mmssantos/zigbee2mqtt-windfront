@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { GradientFeature } from "../../types.js";
 import Button from "../Button.js";
@@ -7,7 +7,7 @@ import type { BaseFeatureProps } from "./index.js";
 
 type GradientProps = BaseFeatureProps<GradientFeature>;
 
-export function Gradient(props: GradientProps) {
+export const Gradient = memo((props: GradientProps) => {
     const {
         minimal,
         onChange,
@@ -90,4 +90,4 @@ export function Gradient(props: GradientProps) {
             </div>
         </div>
     );
-}
+});

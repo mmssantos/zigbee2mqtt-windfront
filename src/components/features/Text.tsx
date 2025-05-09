@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { FeatureAccessMode, type TextFeature } from "../../types.js";
 import TextEditor from "../editors/TextEditor.js";
 import BaseViewer from "./BaseViewer.js";
@@ -6,7 +7,7 @@ import type { BaseFeatureProps } from "./index.js";
 
 type TextProps = BaseFeatureProps<TextFeature>;
 
-export default function Text(props: TextProps) {
+const Text = memo((props: TextProps) => {
     const {
         feature: { access = FeatureAccessMode.SET, property },
         deviceState,
@@ -22,4 +23,6 @@ export default function Text(props: TextProps) {
     }
 
     return <NoAccessError {...props} />;
-}
+});
+
+export default Text;

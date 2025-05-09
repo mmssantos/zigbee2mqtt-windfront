@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import Button from "../Button.js";
 import RangeEditor from "./RangeEditor.js";
 
@@ -8,7 +8,7 @@ type RangeListProps = {
     minimal?: boolean;
 };
 
-export default function RangeListEditor(props: RangeListProps) {
+const RangeListEditor = memo((props: RangeListProps) => {
     const { onChange, value: listValue, minimal, ...rest } = props;
     const [currentListValue, setCurrentListValue] = useState<number[]>(listValue);
 
@@ -74,4 +74,6 @@ export default function RangeListEditor(props: RangeListProps) {
             ))}
         </>
     );
-}
+});
+
+export default RangeListEditor;

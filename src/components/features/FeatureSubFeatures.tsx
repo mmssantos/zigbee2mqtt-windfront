@@ -1,10 +1,10 @@
 import merge from "lodash/merge.js";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { FeatureWithAnySubFeatures } from "../../types.js";
 import Button from "../Button.js";
 import type { ValueWithLabelOrPrimitive } from "../editors/EnumEditor.js";
-import { Feature } from "./Feature.js";
+import Feature from "./Feature.js";
 import { type BaseFeatureProps, getFeatureKey } from "./index.js";
 
 interface FeatureSubFeaturesProps extends BaseFeatureProps<FeatureWithAnySubFeatures> {
@@ -17,7 +17,7 @@ interface CompositeState {
     [key: string]: unknown;
 }
 
-export function FeatureSubFeatures(props: FeatureSubFeaturesProps) {
+const FeatureSubFeatures = memo((props: FeatureSubFeaturesProps) => {
     const { feature, onChange, parentFeatures, onRead, device, deviceState, featureWrapperClass, minimal, steps } = props;
     const { type, property } = feature;
     const [state, setState] = useState<CompositeState>({});
@@ -105,4 +105,6 @@ export function FeatureSubFeatures(props: FeatureSubFeaturesProps) {
             )}
         </>
     );
-}
+});
+
+export default FeatureSubFeatures;

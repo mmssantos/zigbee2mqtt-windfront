@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import type { BasicFeature, Device, DeviceState, FeatureWithAnySubFeatures, FeatureWithSubFeatures } from "../../types.js";
 import Button from "../Button.js";
-import { Feature } from "../features/Feature.js";
+import Feature from "../features/Feature.js";
 import FeatureWrapper from "../features/FeatureWrapper.js";
 
 type ListEditorProps = {
@@ -13,7 +13,7 @@ type ListEditorProps = {
     parentFeatures: FeatureWithAnySubFeatures[];
 };
 
-export default function ListEditor(props: ListEditorProps) {
+const ListEditor = memo((props: ListEditorProps) => {
     const { onChange, value, feature, parentFeatures } = props;
     // biome-ignore lint/suspicious/noExplicitAny: tmp
     const [currentValue, setCurrentValue] = useState<any[]>(value);
@@ -92,4 +92,6 @@ export default function ListEditor(props: ListEditorProps) {
             ))}
         </>
     );
-}
+});
+
+export default ListEditor;

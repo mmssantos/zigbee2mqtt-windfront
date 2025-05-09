@@ -1,11 +1,11 @@
-import { type InputHTMLAttributes, useEffect, useState } from "react";
+import { type InputHTMLAttributes, memo, useEffect, useState } from "react";
 
-type TextProps = {
+type TextProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
     value: string;
     onChange(value: string): void;
 };
 
-export default function TextEditor(props: TextProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange">) {
+const TextEditor = memo((props: TextProps) => {
     const { onChange, value, ...rest } = props;
     const [currentValue, setCurrentValue] = useState<string>(value);
 
@@ -23,4 +23,6 @@ export default function TextEditor(props: TextProps & Omit<InputHTMLAttributes<H
             {...rest}
         />
     );
-}
+});
+
+export default TextEditor;

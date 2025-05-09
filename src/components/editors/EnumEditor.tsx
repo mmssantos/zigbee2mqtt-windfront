@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback } from "react";
+import { type ChangeEvent, memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import Button from "../Button.js";
 import { DisplayValue } from "../value-decorators/DisplayValue.js";
@@ -22,7 +22,7 @@ function isPrimitive(step?: ValueWithLabelOrPrimitive | null): step is number | 
     return typeof step !== "object";
 }
 
-export default function EnumEditor(props: EnumProps) {
+const EnumEditor = memo((props: EnumProps) => {
     const { onChange, values, value, minimal } = props;
     const { t } = useTranslation("common");
 
@@ -61,4 +61,6 @@ export default function EnumEditor(props: EnumProps) {
             ))}
         </div>
     );
-}
+});
+
+export default EnumEditor;

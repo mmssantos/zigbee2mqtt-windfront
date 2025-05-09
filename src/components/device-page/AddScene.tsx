@@ -6,7 +6,7 @@ import type { Device, DeviceState, FeatureWithAnySubFeatures, Group } from "../.
 import { isDevice } from "../../utils.js";
 import Button from "../Button.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
-import { Feature } from "../features/Feature.js";
+import Feature from "../features/Feature.js";
 import { getFeatureKey } from "../features/index.js";
 import InputField from "../form-fields/InputField.js";
 import { getScenes, getScenesFeatures, isValidSceneId } from "./index.js";

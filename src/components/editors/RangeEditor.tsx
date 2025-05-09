@@ -1,7 +1,7 @@
-import { type InputHTMLAttributes, useEffect, useState } from "react";
+import { type InputHTMLAttributes, memo, useEffect, useState } from "react";
 import EnumEditor, { type ValueWithLabelOrPrimitive } from "./EnumEditor.js";
 
-type RangeProps = {
+type RangeProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
     value: number;
     valueStep?: number;
     unit?: string;
@@ -10,7 +10,7 @@ type RangeProps = {
     minimal?: boolean;
 };
 
-export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
+const RangeEditor = memo((props: RangeProps) => {
     const { onChange, value, valueStep, min, max, unit, steps, minimal, ...rest } = props;
     const [currentValue, setCurrentValue] = useState<number>(value);
     const showRange = min != null && max != null;
@@ -64,4 +64,6 @@ export default function RangeEditor(props: RangeProps & Omit<InputHTMLAttributes
             )}
         </div>
     );
-}
+});
+
+export default RangeEditor;
