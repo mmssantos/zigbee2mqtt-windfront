@@ -30,7 +30,7 @@ export const RemoveDeviceModal = NiceModal.create((props: DeviceRemovalButtonPro
             footer={
                 <>
                     <Button className="btn btn-secondary" onClick={modal.remove}>
-                        {t("common:close")}
+                        {t("common:cancel")}
                     </Button>
                     <Button
                         className="btn btn-error ms-1"

@@ -22,8 +22,8 @@ export const DeviceControlEditName = (props: DeviceControlEditNameProps): JSX.El
     return (
         <Button<undefined>
             className={`btn ${style}`}
-            onClick={() =>
-                NiceModal.show(RenameDeviceModal, {
+            onClick={async () =>
+                await NiceModal.show(RenameDeviceModal, {
                     device,
                     renameDevice,
                     homeassistantEnabled,

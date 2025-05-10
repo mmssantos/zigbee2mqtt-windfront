@@ -1,44 +1,61 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { JSX } from "react";
-import { useTranslation } from "react-i18next";
+import { type JSX, useCallback, useEffect } from "react";
 import Button from "../../Button.js";
 import Modal from "../Modal.js";
 
-type DialogConfirmationModalProps = {
+export type DialogConfirmationModalProps = {
     onConfirmHandler(): Promise<void>;
+    modalTitle: string;
+    modalDescription: string;
+    modalCancelLabel: string;
+    modalConfirmLabel?: string;
 };
 
 export const DialogConfirmationModal = NiceModal.create((props: DialogConfirmationModalProps): JSX.Element => {
-    const { onConfirmHandler } = props;
+    const { onConfirmHandler, modalTitle, modalDescription, modalCancelLabel, modalConfirmLabel } = props;
     const modal = useModal();
-    const { t } = useTranslation("common");
+
+    const onConfirm = useCallback(async () => {
+        modal.remove();
+        await onConfirmHandler();
+    }, [modal, onConfirmHandler]);
+
+    useEffect(() => {
+        const close = async (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                modal.remove();
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                await onConfirm();
+            }
+        };
+
+        window.addEventListener("keydown", close);
+
+        return () => window.removeEventListener("keydown", close);
+    }, [modal, onConfirm]);
 
     return (
         <Modal
             isOpen={modal.visible}
-            title={t("confirmation")}
+            title={modalTitle}
             footer={
                 <>
                     <Button className="btn btn-secondary" onClick={modal.remove}>
-                        {t("common:close")}
+                        {modalCancelLabel}
                     </Button>
-                    <Button
-                        className="btn btn-primary ms-1"
-                        onClick={async () => {
-                            modal.remove();
-                            await onConfirmHandler();
-                        }}
-                    >
-                        {t("common:ok")}
+                    <Button className="btn btn-primary ms-1" onClick={onConfirm}>
+                        {modalConfirmLabel || modalTitle}
                     </Button>
                 </>
             }
         >
             <div className="flex flex-row justify-center items-center gap-2">
                 <FontAwesomeIcon icon={faExclamationTriangle} size="3x" className="text-error" />
-                {t("dialog_confirmation_prompt")}
+                {modalDescription}
             </div>
         </Modal>
     );

@@ -5,7 +5,7 @@ import { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
-import Button from "../components/Button.js";
+import ConfirmButton from "../components/ConfirmButton.js";
 import { DeviceImage } from "../components/device/DeviceImage.js";
 import OtaControlGroup from "../components/ota-page/OtaControlGroup.js";
 import OtaFileVersion from "../components/ota-page/OtaFileVersion.js";
@@ -142,9 +142,15 @@ export default function OtaPage() {
             },
             {
                 header: () => (
-                    <Button className="btn btn-error btn-sm" onClick={checkAllOTA} prompt>
+                    <ConfirmButton
+                        className="btn btn-error btn-sm"
+                        onClick={checkAllOTA}
+                        title={t("ota:check_all")}
+                        modalDescription={t("common:dialog_confirmation_prompt")}
+                        modalCancelLabel={t("common:cancel")}
+                    >
                         {t("ota:check_all")}
-                    </Button>
+                    </ConfirmButton>
                 ),
                 accessorFn: ({ state }) => state?.update?.state,
                 id: "check_all",

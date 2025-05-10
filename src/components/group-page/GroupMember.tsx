@@ -1,10 +1,10 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useMemo } from "react";
+import { type JSX, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
 import type { FeatureWithAnySubFeatures, Group } from "../../types.js";
-import Button from "../Button.js";
+import ConfirmButton from "../ConfirmButton.js";
 import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.js";
 import { getScenesFeatures } from "../device-page/index.js";
 import DeviceCard from "../device/DeviceCard.js";
@@ -22,7 +22,7 @@ interface GroupMemberProps {
 export default function GroupMember(props: GroupMemberProps): JSX.Element {
     const { removeDeviceFromGroup, groupMember, device, deviceState, lastSeenConfig, setDeviceState, getDeviceState } = props;
     const { endpoint } = groupMember;
-    const { t } = useTranslation("groups");
+    const { t } = useTranslation(["groups", "common"]);
 
     const filteredFeatures = useMemo(() => {
         const features: FeatureWithAnySubFeatures[] = [];
@@ -38,25 +38,41 @@ export default function GroupMember(props: GroupMemberProps): JSX.Element {
         return features;
     }, [device, deviceState]);
 
+    const onCardChange = useCallback(
+        async (value: Record<string, unknown>) => await setDeviceState(device.ieee_address, value),
+        [device.ieee_address, setDeviceState],
+    );
+
+    const onCardRead = useCallback(
+        async (value: Record<string, unknown>) => await getDeviceState(device.ieee_address, value),
+        [device.ieee_address, getDeviceState],
+    );
+
+    const onCardRemove = useCallback(
+        async () => await removeDeviceFromGroup(device.ieee_address, endpoint),
+        [device.ieee_address, endpoint, removeDeviceFromGroup],
+    );
+
     return (
         <DeviceCard
             features={filteredFeatures}
             device={device}
             endpoint={endpoint}
             deviceState={deviceState}
-            onChange={async (value) => await setDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
-            onRead={async (value) => await getDeviceState(device.ieee_address, value as Record<string, unknown>)} // TODO: check this casting
+            onChange={onCardChange}
+            onRead={onCardRead}
             featureWrapperClass={DashboardFeatureWrapper}
             lastSeenConfig={lastSeenConfig}
         >
-            <Button<string>
-                prompt
-                onClick={async () => await removeDeviceFromGroup(device.ieee_address, endpoint)}
+            <ConfirmButton<string>
+                onClick={onCardRemove}
                 className="btn btn-square btn-error btn-sm"
                 title={t("remove_from_group")}
+                modalDescription={t("common:dialog_confirmation_prompt")}
+                modalCancelLabel={t("common:cancel")}
             >
                 <FontAwesomeIcon icon={faTrash} />
-            </Button>
+            </ConfirmButton>
         </DeviceCard>
     );
 }

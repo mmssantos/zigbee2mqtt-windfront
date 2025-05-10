@@ -9,7 +9,7 @@ import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
 import LanguageSwitcher from "../../i18n/LanguageSwitcher.js";
 import { isIframe } from "../../utils.js";
-import Button from "../Button.js";
+import ConfirmButton from "../ConfirmButton.js";
 import { ThemeSwitcher } from "../ThemeSwitcher.js";
 import PermitJoinButton from "./PermitJoinButton.js";
 
@@ -57,7 +57,7 @@ const CONNECTION_STATUS = {
 };
 
 export const NavBar = () => {
-    const { t } = useTranslation("navbar");
+    const { t } = useTranslation(["navbar", "common"]);
     const restartRequired = useAppSelector((state) => state.bridgeInfo.restart_required);
     const { sendMessage, readyState } = useContext(WebSocketApiRouterContext);
     const connectionStatus = CONNECTION_STATUS[readyState];
@@ -79,9 +79,15 @@ export const NavBar = () => {
     const showRestart = useMemo(
         () =>
             restartRequired ? (
-                <Button className="btn btn-error me-1 animate-pulse" onClick={async () => await sendMessage("bridge/request/restart", "")} prompt>
+                <ConfirmButton
+                    className="btn btn-error me-1 animate-pulse"
+                    onClick={async () => await sendMessage("bridge/request/restart", "")}
+                    title={t("restart")}
+                    modalDescription={t("common:dialog_confirmation_prompt")}
+                    modalCancelLabel={t("common:cancel")}
+                >
                     {t("restart")}
-                </Button>
+                </ConfirmButton>
             ) : null,
         [restartRequired, sendMessage, t],
     );

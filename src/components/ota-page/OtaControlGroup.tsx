@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
 import type { Device, DeviceState } from "../../types.js";
 import Button from "../Button.js";
+import ConfirmButton from "../ConfirmButton.js";
 
 type OtaControlGroup = {
     device: Device;
@@ -14,7 +15,7 @@ type OtaControlGroup = {
 };
 
 export default function OtaControlGroup(props: OtaControlGroup) {
-    const { t } = useTranslation("ota");
+    const { t } = useTranslation(["ota", "common"]);
     const { device, state, onCheckClick, onUpdateClick, onScheduleClick, onUnscheduleClick } = props;
     const otaState = state?.update;
 
@@ -24,15 +25,16 @@ export default function OtaControlGroup(props: OtaControlGroup) {
                 <Button<string> className="btn btn-primary btn-sm join-item" onClick={onCheckClick} item={device.ieee_address}>
                     {t("check")}
                 </Button>
-                <Button<string>
+                <ConfirmButton<string>
                     className="btn btn-info btn-sm join-item"
                     onClick={onScheduleClick}
                     item={device.ieee_address}
                     title={t("schedule")}
-                    prompt
+                    modalDescription={t("schedule_info")}
+                    modalCancelLabel={t("common:cancel")}
                 >
                     <FontAwesomeIcon icon={faClock} />
-                </Button>
+                </ConfirmButton>
             </div>
         );
     }
@@ -62,37 +64,53 @@ export default function OtaControlGroup(props: OtaControlGroup) {
         <div className="join join-vertical lg:join-horizontal">
             {otaState.state === "available" ? (
                 <>
-                    <Button<string> className="btn btn-error btn-sm join-item" onClick={onUpdateClick} item={device.ieee_address} prompt>
+                    <ConfirmButton<string>
+                        className="btn btn-error btn-sm join-item"
+                        onClick={onUpdateClick}
+                        item={device.ieee_address}
+                        title={t("update")}
+                        modalDescription={t("common:dialog_confirmation_prompt")}
+                        modalCancelLabel={t("common:cancel")}
+                    >
                         {t("update")}
-                    </Button>
-                    <Button<string>
+                    </ConfirmButton>
+                    <ConfirmButton<string>
                         className="btn btn-info btn-sm join-item"
                         onClick={onScheduleClick}
                         item={device.ieee_address}
                         title={t("schedule")}
-                        prompt
+                        modalDescription={t("schedule_info")}
+                        modalCancelLabel={t("common:cancel")}
                     >
                         <FontAwesomeIcon icon={faClock} />
-                    </Button>
+                    </ConfirmButton>
                 </>
             ) : otaState.state === "scheduled" ? (
-                <Button<string> className="btn btn-sm btn-error join-item" onClick={onUnscheduleClick} item={device.ieee_address} prompt>
+                <ConfirmButton<string>
+                    className="btn btn-sm btn-error join-item"
+                    onClick={onUnscheduleClick}
+                    item={device.ieee_address}
+                    title={t("unschedule")}
+                    modalDescription={t("common:dialog_confirmation_prompt")}
+                    modalCancelLabel={t("common:cancel")}
+                >
                     {t("unschedule")}
-                </Button>
+                </ConfirmButton>
             ) : (
                 <>
                     <Button<string> className="btn btn-primary btn-sm join-item" onClick={onCheckClick} item={device.ieee_address}>
                         {t("check")}
                     </Button>
-                    <Button<string>
+                    <ConfirmButton<string>
                         className="btn btn-info btn-sm join-item"
                         onClick={onScheduleClick}
                         item={device.ieee_address}
                         title={t("schedule")}
-                        prompt
+                        modalDescription={t("schedule_info")}
+                        modalCancelLabel={t("common:cancel")}
                     >
                         <FontAwesomeIcon icon={faClock} />
-                    </Button>
+                    </ConfirmButton>
                 </>
             )}
         </div>

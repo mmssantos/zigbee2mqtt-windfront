@@ -91,7 +91,7 @@ export default function Dashboard() {
                                         style="btn-primary btn-square btn-sm join-item"
                                     />
                                     <Button<void>
-                                        onClick={() => NiceModal.show(RemoveDeviceModal, { device, removeDevice })}
+                                        onClick={async () => await NiceModal.show(RemoveDeviceModal, { device, removeDevice })}
                                         className="btn btn-error btn-square btn-sm join-item"
                                         title={t("remove_device")}
                                     >

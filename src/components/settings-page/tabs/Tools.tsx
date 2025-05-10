@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/useApp.js";
 import store, { setBackupPreparing } from "../../../store.js";
 import { download, formatDate } from "../../../utils.js";
 import Button from "../../Button.js";
+import ConfirmButton from "../../ConfirmButton.js";
 import { ImageLocaliser } from "../ImageLocaliser.js";
 
 export default function Tools() {
@@ -15,7 +16,7 @@ export default function Tools() {
     const backup = useAppSelector((state) => state.backup);
     const preparingBackup = useAppSelector((state) => state.preparingBackup);
     const devices = useAppSelector((state) => state.devices);
-    const { t } = useTranslation("settings");
+    const { t } = useTranslation(["settings", "common"]);
 
     const downloadBackup = useCallback((): void => {
         const ts = formatDate(new Date()).replace(/[\s_:]/g, "-");
@@ -34,9 +35,15 @@ export default function Tools() {
 
     return (
         <div className="join join-vertical">
-            <Button className="btn btn-error join-item mb-2" onClick={async () => await sendMessage("bridge/request/restart", "")} prompt>
+            <ConfirmButton
+                className="btn btn-error join-item mb-2"
+                onClick={async () => await sendMessage("bridge/request/restart", "")}
+                title={t("restart_zigbee2mqtt")}
+                modalDescription={t("common:dialog_confirmation_prompt")}
+                modalCancelLabel={t("common:cancel")}
+            >
                 {t("restart_zigbee2mqtt")}
-            </Button>
+            </ConfirmButton>
             <Button
                 className="btn btn-primary join-item"
                 onClick={async () => await download(store.getState() as unknown as Record<string, unknown>, "state.json")}

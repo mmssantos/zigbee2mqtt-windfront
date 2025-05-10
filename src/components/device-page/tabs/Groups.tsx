@@ -8,6 +8,7 @@ import { useAppSelector } from "../../../hooks/useApp.js";
 import type { Device, Group } from "../../../types.js";
 import { getEndpoints } from "../../../utils.js";
 import Button from "../../Button.js";
+import ConfirmButton from "../../ConfirmButton.js";
 import EndpointPicker from "../../pickers/EndpointPicker.js";
 import GroupPicker from "../../pickers/GroupPicker.js";
 
@@ -16,7 +17,7 @@ type GroupsProps = {
 };
 
 export default function Groups({ device }: GroupsProps) {
-    const { t } = useTranslation(["groups", "zigbee"]);
+    const { t } = useTranslation(["groups", "zigbee", "common"]);
     const groups = useAppSelector((state) => state.groups);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const [endpoint, setEndpoint] = useState<string | number>("");
@@ -108,15 +109,16 @@ export default function Groups({ device }: GroupsProps) {
                             </div>
                         </li>
                         <li className="flex flex-row flex-wrap gap-1 m-4 justify-around items-center">
-                            <Button<[Group, number]>
-                                prompt
+                            <ConfirmButton<[Group, number]>
                                 item={[group, endpoint]}
                                 onClick={removeFromGroup}
                                 className="btn btn-square btn-error btn-sm"
                                 title={t("remove_from_group")}
+                                modalDescription={t("common:dialog_confirmation_prompt")}
+                                modalCancelLabel={t("common:cancel")}
                             >
                                 <FontAwesomeIcon icon={faTrash} />
-                            </Button>
+                            </ConfirmButton>
                         </li>
                     </ul>
                 ))}

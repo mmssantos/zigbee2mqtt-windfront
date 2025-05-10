@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import type { Device, DeviceState, Group, Scene } from "../../types.js";
 import Button from "../Button.js";
+import ConfirmButton from "../ConfirmButton.js";
 import { ScenePicker } from "./ScenePicker.js";
 import { getScenes } from "./index.js";
 
@@ -14,7 +15,7 @@ interface RecallRemoveProps {
 export default function RecallRemove(props: RecallRemoveProps): JSX.Element {
     const { target } = props;
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const { t } = useTranslation("scene");
+    const { t } = useTranslation(["scene", "common"]);
     const [scene, setScene] = useState<Scene>({ id: 0, name: "Scene 0" });
     const [sceneIsNotSelected, setsceneIsNotSelected] = useState<boolean>(true);
     const scenes = useMemo(() => getScenes(target), [target]);
@@ -74,12 +75,25 @@ export default function RecallRemove(props: RecallRemoveProps): JSX.Element {
                 <Button disabled={sceneIsNotSelected} onClick={onRecallClick} className="btn btn-success join-item">
                     {t("recall")}
                 </Button>
-                <Button disabled={sceneIsNotSelected} prompt onClick={onRemoveClick} className="btn btn-error join-item">
+                <ConfirmButton
+                    disabled={sceneIsNotSelected}
+                    onClick={onRemoveClick}
+                    className="btn btn-error join-item"
+                    title={t("remove")}
+                    modalDescription={t("common:dialog_confirmation_prompt")}
+                    modalCancelLabel={t("common:cancel")}
+                >
                     {t("remove")}
-                </Button>
-                <Button prompt onClick={onRemoveAllClick} className="btn btn-error btn-outline join-item">
+                </ConfirmButton>
+                <ConfirmButton
+                    onClick={onRemoveAllClick}
+                    className="btn btn-error btn-outline join-item"
+                    title={t("remove_all")}
+                    modalDescription={t("common:dialog_confirmation_prompt")}
+                    modalCancelLabel={t("common:cancel")}
+                >
                     {t("remove_all")}
-                </Button>
+                </ConfirmButton>
             </div>
         </>
     );

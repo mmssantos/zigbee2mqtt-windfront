@@ -8,6 +8,7 @@ import { Link } from "react-router";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/Button.js";
+import ConfirmButton from "../components/ConfirmButton.js";
 import InputField from "../components/form-fields/InputField.js";
 import { RenameGroupForm } from "../components/modal/components/RenameGroupModal.js";
 import Table from "../components/table/Table.js";
@@ -96,8 +97,8 @@ export default function GroupsPage() {
                     <div className="join join-vertical lg:join-horizontal">
                         <Button<void>
                             className="btn btn-primary btn-sm join-item"
-                            onClick={() =>
-                                NiceModal.show(RenameGroupForm, {
+                            onClick={async () =>
+                                await NiceModal.show(RenameGroupForm, {
                                     name: group.friendly_name,
                                     onRename: onRenameClick,
                                 })
@@ -107,15 +108,16 @@ export default function GroupsPage() {
                         >
                             <FontAwesomeIcon icon={faEdit} />
                         </Button>
-                        <Button<string>
-                            prompt
+                        <ConfirmButton<string>
                             title={t("remove_group")}
                             item={group.id.toString()}
                             onClick={onRemoveClick}
                             className="btn btn-error btn-sm join-item"
+                            modalDescription={t("common:dialog_confirmation_prompt")}
+                            modalCancelLabel={t("common:cancel")}
                         >
                             <FontAwesomeIcon icon={faTrash} />
-                        </Button>
+                        </ConfirmButton>
                     </div>
                 ),
                 enableSorting: false,

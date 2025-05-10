@@ -20,8 +20,8 @@ export const DeviceControlUpdateDesc = (props: DeviceControlUpdateDescProps): JS
     return (
         <Button<void>
             className={`btn btn-link btn-sm${device.description ? " btn-square" : ""}`}
-            onClick={() =>
-                NiceModal.show(UpdateDeviceDescModal, {
+            onClick={async () =>
+                await NiceModal.show(UpdateDeviceDescModal, {
                     device,
                     setDeviceDescription,
                 })

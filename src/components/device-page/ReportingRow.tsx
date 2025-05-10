@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { Device } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import Button from "../Button.js";
+import ConfirmButton from "../ConfirmButton.js";
 import InputField from "../form-fields/InputField.js";
 import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
@@ -171,9 +172,15 @@ export function ReportingRow(props: ReportingRowProps) {
                             {t("common:apply")}
                         </Button>
                         {!state.rule.isNew ? (
-                            <Button<void> prompt className="btn btn-error join-item" onClick={disableRule}>
+                            <ConfirmButton<void>
+                                title={t("common:disable")}
+                                className="btn btn-error join-item"
+                                onClick={disableRule}
+                                modalDescription={t("common:dialog_confirmation_prompt")}
+                                modalCancelLabel={t("common:cancel")}
+                            >
                                 {t("common:disable")}
-                            </Button>
+                            </ConfirmButton>
                         ) : null}
                     </div>
                 </fieldset>
