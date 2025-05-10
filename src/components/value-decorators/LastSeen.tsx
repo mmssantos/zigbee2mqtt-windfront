@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { type JSX, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { format } from "timeago.js";
 import type { LastSeenConfig } from "../../types.js";
@@ -9,9 +9,11 @@ type LastSeenProps = {
     config: LastSeenConfig;
 };
 
-export function LastSeen({ lastSeen, config }: LastSeenProps): JSX.Element {
+const LastSeen = memo(({ lastSeen, config }: LastSeenProps): JSX.Element => {
     const { i18n } = useTranslation();
     const lastSeenDate = convertLastSeenToDate(lastSeen, config);
 
     return lastSeenDate ? <span title={formatDate(lastSeenDate)}>{format(lastSeenDate, i18n.language)}</span> : <>N/A</>;
-}
+});
+
+export default LastSeen;

@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { type JSX, memo } from "react";
 import { useTranslation } from "react-i18next";
 
 type DisplayValueProps = {
@@ -6,7 +6,7 @@ type DisplayValueProps = {
     value: unknown;
 };
 
-function BooleanValueView(props: DisplayValueProps) {
+const BooleanValueView = memo((props: DisplayValueProps) => {
     const { value, name } = props;
     const { t } = useTranslation("values");
 
@@ -30,9 +30,9 @@ function BooleanValueView(props: DisplayValueProps) {
             return value ? t("true") : t("false");
         }
     }
-}
+});
 
-export function DisplayValue(props: DisplayValueProps): JSX.Element {
+const DisplayValue = memo((props: DisplayValueProps): JSX.Element => {
     const { t } = useTranslation("values");
     const { value } = props;
 
@@ -48,4 +48,6 @@ export function DisplayValue(props: DisplayValueProps): JSX.Element {
         default:
             return <>{JSON.stringify(value)}</>;
     }
-}
+});
+
+export default DisplayValue;

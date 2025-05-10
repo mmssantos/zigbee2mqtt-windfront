@@ -1,33 +1,45 @@
 import { faMicrochip } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useCallback, useContext, useMemo } from "react";
+import { type ChangeEvent, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import ConfirmButton from "../components/ConfirmButton.js";
-import { DeviceImage } from "../components/device/DeviceImage.js";
+import DeviceImage from "../components/device/DeviceImage.js";
 import OtaControlGroup from "../components/ota-page/OtaControlGroup.js";
 import OtaFileVersion from "../components/ota-page/OtaFileVersion.js";
 import Table from "../components/table/Table.js";
 import ModelLink from "../components/value-decorators/ModelLink.js";
 import OtaLink from "../components/value-decorators/OtaLink.js";
+import PowerSource from "../components/value-decorators/PowerSource.js";
 import VendorLink from "../components/value-decorators/VendorLink.js";
 import { useAppSelector } from "../hooks/useApp.js";
 import { OTA_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { Device, DeviceState } from "../types.js";
 
 type OtaTableData = {
-    id: string;
     device: Device;
-    state: DeviceState;
+    state: DeviceState["update"];
+    batteryState?: {
+        batteryPercent?: number | null;
+        batteryState?: string | null;
+        batteryLow?: boolean | null;
+    };
+    selected: boolean;
 };
 
 export default function OtaPage() {
     const devices = useAppSelector((state) => state.devices);
     const deviceStates = useAppSelector((state) => state.deviceStates);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const { t } = useTranslation(["zigbee", "common"]);
+    const { t } = useTranslation(["ota", "zigbee", "common"]);
+    const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: specific trigger
+    useEffect(() => {
+        setSelectedDevices([]);
+    }, [devices]);
 
     const otaDevices = useMemo(() => {
         const filteredDevices: OtaTableData[] = [];
@@ -36,18 +48,54 @@ export default function OtaPage() {
             if (device.definition?.supports_ota && !device.disabled) {
                 const state = deviceStates[device.friendly_name] ?? {};
 
-                filteredDevices.push({ id: device.friendly_name, device, state });
+                filteredDevices.push({
+                    device,
+                    state: state.update,
+                    batteryState:
+                        device.power_source === "Battery"
+                            ? {
+                                  batteryPercent: state.battery as number,
+                                  batteryState: state.battery_state as string,
+                                  batteryLow: state.battery_low as boolean,
+                              }
+                            : undefined,
+                    selected: selectedDevices.includes(device.ieee_address),
+                });
             }
         }
 
         return filteredDevices;
-    }, [deviceStates, devices]);
+    }, [deviceStates, devices, selectedDevices]);
 
-    const checkAllOTA = useCallback(async () => {
-        for (const otaDevice of otaDevices) {
-            await sendMessage("bridge/request/device/ota_update/check", { id: otaDevice.device.friendly_name });
-        }
-    }, [sendMessage, otaDevices]);
+    const onSelectAllChange = useCallback(
+        (e: ChangeEvent<HTMLInputElement>) => {
+            if (e.target.checked) {
+                setSelectedDevices(otaDevices.map(({ device }) => device.ieee_address));
+            } else {
+                setSelectedDevices([]);
+            }
+        },
+        [otaDevices],
+    );
+
+    const onSelectChange = useCallback(
+        (device: Device, select: boolean) => {
+            if (select) {
+                setSelectedDevices([...selectedDevices, device.ieee_address]);
+            } else {
+                setSelectedDevices(selectedDevices.filter((ieee) => ieee !== device.ieee_address));
+            }
+        },
+        [selectedDevices],
+    );
+
+    const checkSelected = useCallback(async () => {
+        await Promise.allSettled(selectedDevices.map((ieee) => sendMessage("bridge/request/device/ota_update/check", { id: ieee })));
+    }, [sendMessage, selectedDevices]);
+
+    const updateSelected = useCallback(async () => {
+        await Promise.allSettled(selectedDevices.map((ieee) => sendMessage("bridge/request/device/ota_update/update", { id: ieee })));
+    }, [sendMessage, selectedDevices]);
 
     const onCheckClick = useCallback(
         async (ieee: string) => await sendMessage("bridge/request/device/ota_update/check", { id: ieee }),
@@ -73,36 +121,78 @@ export default function OtaPage() {
     const columns = useMemo<ColumnDef<OtaTableData, any>[]>(
         () => [
             {
-                header: t("common:friendly_name"),
-                accessorFn: ({ device }) => [device.friendly_name, device.description].join(" "),
+                id: "select",
+                header: () => (
+                    <label>
+                        <input
+                            type="checkbox"
+                            className="checkbox"
+                            onChange={onSelectAllChange}
+                            defaultChecked={selectedDevices.length === otaDevices.length}
+                        />
+                    </label>
+                ),
+                accessorFn: () => "",
                 cell: ({
                     row: {
-                        original: { device, state },
+                        original: { device, selected },
+                    },
+                }) => (
+                    <label>
+                        <input
+                            type="checkbox"
+                            className="checkbox"
+                            onChange={(e) => onSelectChange(device, e.target.checked)}
+                            defaultChecked={selected}
+                        />
+                    </label>
+                ),
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
+                header: t("common:friendly_name"),
+                accessorFn: ({ device }) => [device.friendly_name, device.description, device.ieee_address].join(" "),
+                cell: ({
+                    row: {
+                        original: { device, state, batteryState },
                     },
                 }) => (
                     <div className="flex items-center gap-3">
                         <div className="avatar">
                             <div className="h-12 w-12" style={{ overflow: "visible" }}>
-                                <DeviceImage device={device} otaState={state.update} disabled={false} />
+                                <DeviceImage device={device} otaState={state?.state} disabled={false} />
                             </div>
                         </div>
                         <div className="flex flex-col">
                             <Link to={`/device/${device.ieee_address}`} className="link link-hover">
                                 {device.friendly_name}
                             </Link>
+                            {device.friendly_name !== device.ieee_address && (
+                                <div className="text-xs opacity-80" title={t("zigbee:ieee_address")}>
+                                    {device.ieee_address}
+                                </div>
+                            )}
                             {device.description && <div className="text-xs opacity-50">{device.description}</div>}
-                            <span className="badge badge-soft badge-ghost cursor-default my-1" title={t("firmware_id")}>
-                                {/** TODO: use releaseNotes from manifest instead of links (need API change in Z2M) */}
-                                <FontAwesomeIcon icon={faMicrochip} />
-                                <OtaLink device={device} />
-                                {device.date_code ? <span title={t("firmware_build_date")}> ({device.date_code})</span> : undefined}
-                            </span>
+                            <div className="flex flex-row gap-1 mt-2 my-1 items-center">
+                                <span className="badge badge-soft badge-ghost cursor-default" title={t("zigbee:firmware_id")}>
+                                    {/** TODO: use releaseNotes from manifest instead of links (need API change in Z2M) */}
+                                    <FontAwesomeIcon icon={faMicrochip} />
+                                    <OtaLink device={device} />
+                                    {device.date_code ? <span title={t("zigbee:firmware_build_date")}> ({device.date_code})</span> : undefined}
+                                </span>
+                                {batteryState && (
+                                    <span className="badge badge-soft badge-ghost cursor-default">
+                                        <PowerSource device={device} {...batteryState} />
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ),
             },
             {
-                header: t("model"),
+                header: t("zigbee:model"),
                 accessorFn: ({ device }) => [device.definition?.model, device.model_id, device.definition?.vendor, device.manufacturer].join(" "),
                 cell: ({
                     row: {
@@ -113,7 +203,7 @@ export default function OtaPage() {
                         <ModelLink device={device} />
                         <div>
                             <br />
-                            <span className="badge badge-ghost" title={t("manufacturer")}>
+                            <span className="badge badge-ghost" title={t("zigbee:manufacturer")}>
                                 <VendorLink device={device} />
                             </span>
                         </div>
@@ -121,38 +211,51 @@ export default function OtaPage() {
                 ),
             },
             {
-                header: t("ota:firmware_version"),
-                accessorFn: ({ state }) => state.update?.installed_version,
+                header: t("firmware_version"),
+                accessorFn: ({ state }) => state?.installed_version,
                 cell: ({
                     row: {
                         original: { state },
                     },
-                }) => <OtaFileVersion version={state.update?.installed_version} />,
+                }) => <OtaFileVersion version={state?.installed_version} />,
                 enableColumnFilter: false,
             },
             {
-                header: t("ota:available_firmware_version"),
-                accessorFn: ({ state }) => state.update?.latest_version,
+                header: t("available_firmware_version"),
+                accessorFn: ({ state }) => state?.latest_version,
                 cell: ({
                     row: {
                         original: { state },
                     },
-                }) => <OtaFileVersion version={state.update?.latest_version} />,
+                }) => <OtaFileVersion version={state?.latest_version} />,
                 enableColumnFilter: false,
             },
             {
                 header: () => (
-                    <ConfirmButton
-                        className="btn btn-error btn-sm"
-                        onClick={checkAllOTA}
-                        title={t("ota:check_all")}
-                        modalDescription={t("common:dialog_confirmation_prompt")}
-                        modalCancelLabel={t("common:cancel")}
-                    >
-                        {t("ota:check_all")}
-                    </ConfirmButton>
+                    <div className="join join-vertical">
+                        <ConfirmButton
+                            className="btn btn-error btn-xs join-item"
+                            onClick={checkSelected}
+                            title={t("check_selected")}
+                            modalDescription={t("common:dialog_confirmation_prompt")}
+                            modalCancelLabel={t("common:cancel")}
+                            disabled={selectedDevices.length === 0}
+                        >
+                            {t("check_selected")}
+                        </ConfirmButton>
+                        <ConfirmButton
+                            className="btn btn-error btn-xs join-item"
+                            onClick={updateSelected}
+                            title={t("update_selected")}
+                            modalDescription={t("update_selected_info")}
+                            modalCancelLabel={t("common:cancel")}
+                            disabled={selectedDevices.length === 0}
+                        >
+                            {t("update_selected")}
+                        </ConfirmButton>
+                    </div>
                 ),
-                accessorFn: ({ state }) => state?.update?.state,
+                accessorFn: ({ state }) => state?.state,
                 id: "check_all",
                 cell: ({
                     row: {
@@ -172,7 +275,19 @@ export default function OtaPage() {
                 enableColumnFilter: false,
             },
         ],
-        [checkAllOTA, onCheckClick, onUpdateClick, onScheduleClick, onUnscheduleClick, t],
+        [
+            selectedDevices.length,
+            otaDevices.length,
+            onSelectAllChange,
+            onSelectChange,
+            checkSelected,
+            updateSelected,
+            onCheckClick,
+            onUpdateClick,
+            onScheduleClick,
+            onUnscheduleClick,
+            t,
+        ],
     );
 
     return <Table id="ota-devices" columns={columns} data={otaDevices} pageSizeStoreKey={OTA_TABLE_PAGE_SIZE_KEY} />;

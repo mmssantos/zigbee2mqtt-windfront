@@ -11,18 +11,21 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import snakeCase from "lodash/snakeCase.js";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import type { Device, DeviceState } from "../../types.js";
+import type { Device } from "../../types.js";
 import type { PowerSource as TPowerSource } from "../../types.js";
 
 interface PowerSourceProps {
     device?: Device;
-    deviceState?: DeviceState;
+    batteryPercent?: number | null;
+    batteryState?: string | null;
+    batteryLow?: boolean | null;
     showLevel?: boolean;
 }
 
-export default function PowerSource(props: PowerSourceProps) {
-    const { device, deviceState, showLevel, ...rest } = props;
+const PowerSource = memo((props: PowerSourceProps) => {
+    const { device, batteryPercent, batteryState, batteryLow, showLevel, ...rest } = props;
     const { t } = useTranslation("zigbee");
     let source: TPowerSource | undefined = undefined;
 
@@ -35,25 +38,10 @@ export default function PowerSource(props: PowerSourceProps) {
             let title = t("battery");
             let batteryFormatted = "";
             let batteryIcon = faBatteryFull;
-            let batteryPercent: number | undefined = undefined;
-            let batteryState: string | undefined = undefined;
-            let batteryLow: boolean | undefined = undefined;
             let fade = false;
 
-            if (deviceState !== undefined) {
-                if (deviceState?.battery != null) {
-                    batteryPercent = deviceState.battery as number;
-                }
-                if (deviceState?.battery_state != null) {
-                    batteryState = deviceState.battery_state as string;
-                }
-                if (deviceState?.battery_low != null) {
-                    batteryLow = deviceState.battery_low as boolean;
-                }
-            }
-
             // Some devices do not use the standardized feature `battery` to report power level.
-            if (batteryPercent !== undefined) {
+            if (batteryPercent != null) {
                 batteryFormatted = `${batteryPercent}%`;
 
                 if (batteryPercent >= 85) {
@@ -74,7 +62,7 @@ export default function PowerSource(props: PowerSourceProps) {
                         </span>
                     );
                 }
-            } else if (batteryState !== undefined) {
+            } else if (batteryState != null) {
                 batteryFormatted = batteryState;
 
                 switch (batteryState) {
@@ -89,8 +77,8 @@ export default function PowerSource(props: PowerSourceProps) {
                         fade = true;
                         break;
                 }
-            } else if (batteryLow !== undefined) {
-                batteryFormatted = batteryLow ? "LOW" : "OK";
+            } else if (batteryLow != null) {
+                batteryFormatted = batteryLow ? "low" : "ok";
                 batteryIcon = batteryLow ? faBatteryEmpty : faBatteryFull;
             }
 
@@ -127,4 +115,6 @@ export default function PowerSource(props: PowerSourceProps) {
             return <FontAwesomeIcon icon={faQuestion} title={source ? t(snakeCase(source)) : undefined} {...rest} />;
         }
     }
-}
+});
+
+export default PowerSource;

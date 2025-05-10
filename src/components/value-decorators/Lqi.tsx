@@ -1,12 +1,13 @@
 import { faSignal } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DisplayValue } from "./DisplayValue.js";
+import { memo } from "react";
+import DisplayValue from "./DisplayValue.js";
 
 type LqiProps = {
     value: number | undefined;
 };
 
-export function Lqi({ value }: LqiProps) {
+const Lqi = memo(({ value }: LqiProps) => {
     let className = "";
 
     if (value) {
@@ -27,4 +28,6 @@ export function Lqi({ value }: LqiProps) {
             </span>
         </>
     );
-}
+});
+
+export default Lqi;

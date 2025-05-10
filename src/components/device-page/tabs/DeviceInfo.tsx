@@ -12,10 +12,10 @@ import { toHex } from "../../../utils.js";
 import { DeviceControlEditName } from "../../device/DeviceControlEditName.js";
 import DeviceControlGroup from "../../device/DeviceControlGroup.js";
 import { DeviceControlUpdateDesc } from "../../device/DeviceControlUpdateDesc.js";
-import { DeviceImage } from "../../device/DeviceImage.js";
-import { Availability } from "../../value-decorators/Availability.js";
-import { DisplayValue } from "../../value-decorators/DisplayValue.js";
-import { LastSeen } from "../../value-decorators/LastSeen.js";
+import DeviceImage from "../../device/DeviceImage.js";
+import Availability from "../../value-decorators/Availability.js";
+import DisplayValue from "../../value-decorators/DisplayValue.js";
+import LastSeen from "../../value-decorators/LastSeen.js";
 import ModelLink from "../../value-decorators/ModelLink.js";
 import PowerSource from "../../value-decorators/PowerSource.js";
 import VendorLink from "../../value-decorators/VendorLink.js";
@@ -92,7 +92,7 @@ export default function DeviceInfo(props: DeviceInfoProps) {
     return (
         <div className="card lg:card-side bg-base-100">
             <figure className="w-64 h-64" style={{ overflow: "visible" }}>
-                <DeviceImage device={device} otaState={deviceState.update} disabled={device.disabled} className="" />
+                <DeviceImage device={device} otaState={deviceState.update?.state} disabled={device.disabled} className="" />
             </figure>
             <div className="card-body">
                 <h2 className="card-title">
@@ -150,7 +150,13 @@ export default function DeviceInfo(props: DeviceInfoProps) {
                     <div className="stat">
                         <div className="stat-title">{t("power")}</div>
                         <div className="stat-value">
-                            <PowerSource showLevel={true} device={device} deviceState={deviceState} />
+                            <PowerSource
+                                showLevel={true}
+                                device={device}
+                                batteryPercent={deviceState.battery as number}
+                                batteryState={deviceState.battery_state as string}
+                                batteryLow={deviceState.battery_low as boolean}
+                            />
                         </div>
                         <div className="stat-desc">{t(snakeCase(device.power_source) || "unknown")}</div>
                     </div>

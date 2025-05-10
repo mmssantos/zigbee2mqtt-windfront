@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { type JSX, memo } from "react";
 import { useTranslation } from "react-i18next";
 import type { AvailabilityState } from "../../types.js";
 
@@ -9,7 +9,7 @@ export type AvailabilityStateProps = {
     disabled: boolean;
 };
 
-export function Availability(props: AvailabilityStateProps): JSX.Element {
+const Availability = memo((props: AvailabilityStateProps): JSX.Element => {
     const { t } = useTranslation(["availability"]);
     const { availability, availabilityFeatureEnabled, availabilityEnabledForDevice, disabled } = props;
 
@@ -29,4 +29,6 @@ export function Availability(props: AvailabilityStateProps): JSX.Element {
             {t("disabled")}
         </a>
     );
-}
+});
+
+export default Availability;

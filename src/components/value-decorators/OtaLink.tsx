@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import type { Device } from "../../types.js";
 
@@ -5,7 +6,7 @@ type OtaLinkProps = {
     device: Device;
 };
 
-export default function OtaLink({ device }: OtaLinkProps) {
+const OtaLink = memo(({ device }: OtaLinkProps) => {
     const { t } = useTranslation("zigbee");
     let url = "https://github.com/Koenkk/zigbee-OTA/releases";
     const title = device.software_build_id || t("unknown");
@@ -35,4 +36,6 @@ export default function OtaLink({ device }: OtaLinkProps) {
             {title}
         </a>
     );
-}
+});
+
+export default OtaLink;

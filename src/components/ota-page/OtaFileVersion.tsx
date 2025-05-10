@@ -1,11 +1,11 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 type OtaFileVersionProps = {
     version?: number | null;
 };
 
-export default function OtaFileVersion(props: OtaFileVersionProps) {
+const OtaFileVersion = memo((props: OtaFileVersionProps) => {
     const { t } = useTranslation("ota");
     const versions = useMemo(() => {
         if (props.version == null) {
@@ -33,4 +33,6 @@ export default function OtaFileVersion(props: OtaFileVersionProps) {
             </span>
         </div>
     );
-}
+});
+
+export default OtaFileVersion;

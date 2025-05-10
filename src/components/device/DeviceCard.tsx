@@ -8,10 +8,10 @@ import { faCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
 import Feature from "../features/Feature.js";
-import { LastSeen } from "../value-decorators/LastSeen.js";
-import { Lqi } from "../value-decorators/Lqi.js";
+import LastSeen from "../value-decorators/LastSeen.js";
+import Lqi from "../value-decorators/Lqi.js";
 import PowerSource from "../value-decorators/PowerSource.js";
-import { DeviceImage } from "./DeviceImage.js";
+import DeviceImage from "./DeviceImage.js";
 
 type Props = Omit<BaseWithSubFeaturesProps<FeatureWithAnySubFeatures>, "feature" | "deviceState"> &
     PropsWithChildren<{
@@ -39,7 +39,7 @@ export default function DeviceCard({
             <li className="list-row flex-grow">
                 <div className="h-12 w-12" style={{ overflow: "visible" }}>
                     {/* disabled always false because dashboard does not contain disabled devices */}
-                    <DeviceImage disabled={false} device={device} otaState={deviceState.update} />
+                    <DeviceImage disabled={false} device={device} otaState={deviceState.update?.state} />
                 </div>
                 <div>
                     <Link to={`/device/${device.ieee_address}`} className="link link-hover">
@@ -81,7 +81,12 @@ export default function DeviceCard({
                     <Lqi value={deviceState.linkquality as number | undefined} />
                 </span>
                 <span className="badge badge-soft badge-ghost cursor-default" title={t("power")}>
-                    <PowerSource device={device} deviceState={deviceState} />
+                    <PowerSource
+                        device={device}
+                        batteryPercent={deviceState.battery as number}
+                        batteryState={deviceState.battery_state as string}
+                        batteryLow={deviceState.battery_low as boolean}
+                    />
                 </span>
                 {children}
             </li>

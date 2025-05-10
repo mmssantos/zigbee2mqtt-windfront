@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import DeviceControlGroup from "../components/device/DeviceControlGroup.js";
-import { DeviceImage } from "../components/device/DeviceImage.js";
+import DeviceImage from "../components/device/DeviceImage.js";
 import Table from "../components/table/Table.js";
-import { Availability } from "../components/value-decorators/Availability.js";
-import { LastSeen } from "../components/value-decorators/LastSeen.js";
-import { Lqi } from "../components/value-decorators/Lqi.js";
+import Availability from "../components/value-decorators/Availability.js";
+import LastSeen from "../components/value-decorators/LastSeen.js";
+import Lqi from "../components/value-decorators/Lqi.js";
 import ModelLink from "../components/value-decorators/ModelLink.js";
 import PowerSource from "../components/value-decorators/PowerSource.js";
 import VendorLink from "../components/value-decorators/VendorLink.js";
@@ -98,7 +98,7 @@ export default function DevicesPage(): JSX.Element {
                     <div className="flex items-center gap-3">
                         <div className="avatar">
                             <div className="h-12 w-12" style={{ overflow: "visible" }}>
-                                <DeviceImage device={device} otaState={state.update} disabled={device.disabled} />
+                                <DeviceImage device={device} otaState={state.update?.state} disabled={device.disabled} />
                             </div>
                         </div>
                         <div className="flex flex-col">
@@ -106,9 +106,14 @@ export default function DevicesPage(): JSX.Element {
                                 {device.friendly_name}
                             </Link>
                             {device.description && <div className="text-xs opacity-50">{device.description}</div>}
-                            <div className="flex flex-row gap-1 mt-2">
+                            <div className="flex flex-row gap-1 mt-2 items-center">
                                 <span className="badge badge-soft badge-ghost cursor-default" title={t("power")}>
-                                    <PowerSource device={device} deviceState={state} />
+                                    <PowerSource
+                                        device={device}
+                                        batteryPercent={state.battery as number}
+                                        batteryState={state.battery_state as string}
+                                        batteryLow={state.battery_low as boolean}
+                                    />
                                 </span>
                                 <span className="badge badge-soft badge-ghost cursor-default" title={t("lqi")}>
                                     <Lqi value={state.linkquality as number | undefined} />

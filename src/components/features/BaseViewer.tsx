@@ -1,6 +1,6 @@
 import { memo } from "react";
 import type { BasicFeature } from "../../types.js";
-import { DisplayValue } from "../value-decorators/DisplayValue.js";
+import DisplayValue from "../value-decorators/DisplayValue.js";
 import type { BaseFeatureProps } from "./index.js";
 
 const BaseViewer = memo(({ feature, deviceValue }: BaseFeatureProps<BasicFeature>) => {

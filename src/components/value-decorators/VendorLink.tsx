@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { SUPPORT_NEW_DEVICES_DOCS_URL } from "../../consts.js";
@@ -7,7 +8,7 @@ type VendorLinkProps = {
     device: Device;
 };
 
-export default function VendorLink({ device }: VendorLinkProps) {
+const VendorLink = memo(({ device }: VendorLinkProps) => {
     const { t } = useTranslation("zigbee");
     let label = t("unsupported");
     let url = SUPPORT_NEW_DEVICES_DOCS_URL;
@@ -22,4 +23,6 @@ export default function VendorLink({ device }: VendorLinkProps) {
             {label}
         </Link>
     );
-}
+});
+
+export default VendorLink;

@@ -4,7 +4,7 @@ import { type ChangeEvent, memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { type BinaryFeature, FeatureAccessMode } from "../../types.js";
 import Button from "../Button.js";
-import { DisplayValue } from "../value-decorators/DisplayValue.js";
+import DisplayValue from "../value-decorators/DisplayValue.js";
 import BaseViewer from "./BaseViewer.js";
 import NoAccessError from "./NoAccessError.js";
 import type { BaseFeatureProps } from "./index.js";

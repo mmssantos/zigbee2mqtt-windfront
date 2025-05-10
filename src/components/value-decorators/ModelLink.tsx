@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { SUPPORT_NEW_DEVICES_DOCS_URL } from "../../consts.js";
@@ -14,7 +15,7 @@ const normalizeModel = (model: string): string => {
     return model.replace(re, "_");
 };
 
-export default function ModelLink({ device }: ModelLinkProps) {
+const ModelLink = memo(({ device }: ModelLinkProps) => {
     const { t } = useTranslation("zigbee");
     let label = device.model_id || t("unknown");
     let url = SUPPORT_NEW_DEVICES_DOCS_URL;
@@ -35,4 +36,6 @@ export default function ModelLink({ device }: ModelLinkProps) {
             {label}
         </Link>
     );
-}
+});
+
+export default ModelLink;

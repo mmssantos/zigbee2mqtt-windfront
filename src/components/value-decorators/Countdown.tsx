@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 type CountdownProps = {
     seconds: number;
     hideZeroes: boolean;
 };
 
-export default function Countdown(props: CountdownProps) {
+const Countdown = memo((props: CountdownProps) => {
     const [remaining, setRemaining] = useState(props.seconds);
 
     useEffect(() => {
@@ -41,4 +41,6 @@ export default function Countdown(props: CountdownProps) {
             </span>
         </span>
     );
-}
+});
+
+export default Countdown;

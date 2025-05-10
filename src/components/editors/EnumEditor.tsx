@@ -1,7 +1,7 @@
 import { type ChangeEvent, memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import Button from "../Button.js";
-import { DisplayValue } from "../value-decorators/DisplayValue.js";
+import DisplayValue from "../value-decorators/DisplayValue.js";
 
 export type ValueWithLabel = {
     value: number;
