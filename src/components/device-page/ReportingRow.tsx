@@ -1,14 +1,13 @@
 import { type ChangeEvent, useCallback, useMemo, useState } from "react";
-import type { Device } from "../../types.js";
-import EndpointPicker from "../pickers/EndpointPicker.js";
-import type { ClusterGroup } from "../pickers/index.js";
-
 import { useTranslation } from "react-i18next";
+import type { Device } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import Button from "../Button.js";
 import InputField from "../form-fields/InputField.js";
 import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
+import EndpointPicker from "../pickers/EndpointPicker.js";
+import type { ClusterGroup } from "../pickers/index.js";
 import type { NiceReportingRule } from "./tabs/Reporting.js";
 
 interface ReportingRowProps {
@@ -82,7 +81,7 @@ export function ReportingRow(props: ReportingRowProps) {
             availableClusters.add(state.rule.cluster);
         }
 
-        const ep = device.endpoints[state.rule.endpoint];
+        const ep = device.endpoints[Number.parseInt(state.rule.endpoint, 10)];
 
         if (ep) {
             for (const outputCluster of ep.clusters.output) {

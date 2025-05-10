@@ -30,7 +30,7 @@ const propertyToField = (
         propertyType = propertyType.find((type) => type !== "null");
         // XXX: support other cases (not needed atm)
     } else if (property.oneOf) {
-        // XXX: purposely not supported (currently: advanced.network_key, advanced.pan_id, advanced.ext_pan_id, advanced.syslog)
+        // purposely not supported (currently: advanced.network_key, advanced.pan_id, advanced.ext_pan_id, all set via onboarding)
         return;
     }
 
@@ -199,23 +199,45 @@ const groupProperties = (
                     );
                 }
             } else {
-                const feature = propertyToField(
-                    key,
-                    property,
-                    data[key],
-                    set,
-                    depth,
-                    required.includes(key),
-                    property.description ? t(property.description, { defaultValue: property.description }) : undefined,
-                );
+                const oneOf = property.oneOf?.find((one) => typeof one === "object" && one.properties) as JSONSchema7 | undefined;
 
-                if (feature) {
-                    // XXX: enforce tailwind class presence: ps-4 ps-8 ps-12
-                    elements.push(
-                        <div className={`list-row${depth !== 0 ? ` ps-${4 + depth * 4}` : ""}`} key={`${depth}-${key}`}>
-                            {feature}
-                        </div>,
+                if (oneOf) {
+                    // special case for syslog, only show if log output has syslog (i.e. enabled)
+                    if (key !== "log_syslog" || (data.log_output as string[]).includes("syslog")) {
+                        nestedElements.push(
+                            <div className="list" key={`${depth}-${key}`}>
+                                <h3 className="list-row text-lg">{oneOf.title || property.title || key}</h3>
+                                {groupProperties(
+                                    t,
+                                    oneOf.properties,
+                                    (data[key] as Record<string, unknown>) || {},
+                                    // wrap options payload with the parent key
+                                    async (options) => set({ [key]: options }),
+                                    depth + 1,
+                                    oneOf.required,
+                                )}
+                            </div>,
+                        );
+                    }
+                } else {
+                    const feature = propertyToField(
+                        key,
+                        property,
+                        data[key],
+                        set,
+                        depth,
+                        required.includes(key),
+                        property.description ? t(property.description, { defaultValue: property.description }) : undefined,
                     );
+
+                    if (feature) {
+                        // XXX: enforce tailwind class presence: ps-4 ps-8 ps-12
+                        elements.push(
+                            <div className={`list-row${depth !== 0 ? ` ps-${4 + depth * 4}` : ""}`} key={`${depth}-${key}`}>
+                                {feature}
+                            </div>,
+                        );
+                    }
                 }
             }
         }
