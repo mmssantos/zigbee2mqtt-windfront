@@ -139,6 +139,7 @@ export default function NetworkPage() {
                         <ul className="menu bg-base-100 rounded-box shadow w-full" key={node.friendlyName}>
                             <li
                                 title={`${t("zigbee:ieee_address")}: ${node.ieeeAddr} | ${t("zigbee:network_address")}: ${toHex(node.networkAddress, 4)} (${node.networkAddress})`}
+                                className={highlighted(node.friendlyName)}
                             >
                                 {node.type === "Coordinator" ? (
                                     <Link to="/settings/about" className="link link-hover">
@@ -175,7 +176,7 @@ export default function NetworkPage() {
         sortedNodes.sort((a, b) => (a.key === "Coordinator" ? -1 : a.key!.localeCompare(b.key!)));
 
         return sortedNodes;
-    }, [devices, filterValue, graph, groupRelations, t]);
+    }, [devices, filterValue, graph, groupRelations, highlighted, t]);
 
     return isLoading ? (
         <>
