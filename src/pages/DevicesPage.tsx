@@ -102,7 +102,7 @@ export default function DevicesPage(): JSX.Element {
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <Link to={`/device/${device.ieee_address}`} className="link link-hover">
+                            <Link to={`/device/${device.ieee_address}/info`} className="link link-hover">
                                 {device.friendly_name}
                             </Link>
                             {device.description && <div className="text-xs opacity-50">{device.description}</div>}
@@ -134,7 +134,7 @@ export default function DevicesPage(): JSX.Element {
                 }) => (
                     <>
                         <div>
-                            <Link to={`/device/${device.ieee_address}`} className="link link-hover">
+                            <Link to={`/device/${device.ieee_address}/info`} className="link link-hover">
                                 {device.ieee_address}
                             </Link>
                         </div>

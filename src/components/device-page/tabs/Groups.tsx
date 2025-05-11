@@ -93,7 +93,7 @@ export default function Groups({ device }: GroupsProps) {
                     <ul className="list rounded-box shadow-md" key={`${group.id}-${endpoint}`}>
                         <li className="list-row flex-grow">
                             <div>
-                                <Link to={`/group/${group.id}`} className="link link-hover link-primary">
+                                <Link to={`/group/${group.id}/devices`} className="link link-hover link-primary">
                                     #{group.id} - {group.friendly_name}
                                     {endpoint ? ` (${t("endpoint")}: ${endpoint})` : ""}
                                 </Link>

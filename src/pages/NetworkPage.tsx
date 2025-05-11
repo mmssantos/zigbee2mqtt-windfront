@@ -148,7 +148,7 @@ export default function NetworkPage() {
                                         {node.friendlyName}
                                     </Link>
                                 ) : (
-                                    <Link to={`/device/${node.ieeeAddr}`} className="link link-hover">
+                                    <Link to={`/device/${node.ieeeAddr}/info`} className="link link-hover">
                                         <span className="w-10 h-10">
                                             <DeviceImage disabled={false} device={device} noIndicator={true} />
                                         </span>

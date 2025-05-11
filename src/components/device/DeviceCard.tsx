@@ -42,7 +42,7 @@ export default function DeviceCard({
                     <DeviceImage disabled={false} device={device} otaState={deviceState.update?.state} />
                 </div>
                 <div>
-                    <Link to={`/device/${device.ieee_address}`} className="link link-hover">
+                    <Link to={`/device/${device.ieee_address}/info`} className="link link-hover">
                         {device.friendly_name}
                         {endpoint ? ` (${t("endpoint")}: ${endpoint})` : ""}
                     </Link>

@@ -59,7 +59,7 @@ export default function GroupsPage() {
                     <div className="flex items-center gap-3">
                         <div className="avatar" />
                         <div className="flex flex-col">
-                            <Link to={`/group/${group.id}`} className="link link-hover">
+                            <Link to={`/group/${group.id}/devices`} className="link link-hover">
                                 {group.id}
                             </Link>
                             {group.description && <div className="text-xs opacity-50">{group.description}</div>}
@@ -79,7 +79,7 @@ export default function GroupsPage() {
                 header: t("common:friendly_name"),
                 accessorFn: (group) => group.friendly_name,
                 cell: ({ row: { original: group } }) => (
-                    <Link to={`/group/${group.id}`} className="link link-hover">
+                    <Link to={`/group/${group.id}/devices`} className="link link-hover">
                         {group.friendly_name}
                     </Link>
                 ),

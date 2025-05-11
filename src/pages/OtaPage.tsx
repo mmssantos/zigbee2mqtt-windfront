@@ -165,7 +165,7 @@ export default function OtaPage() {
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <Link to={`/device/${device.ieee_address}`} className="link link-hover">
+                            <Link to={`/device/${device.ieee_address}/info`} className="link link-hover">
                                 {device.friendly_name}
                             </Link>
                             {device.friendly_name !== device.ieee_address && (

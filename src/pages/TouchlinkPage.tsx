@@ -51,7 +51,7 @@ export default function TouchlinkPage() {
                 accessorFn: (touchlinkDevice) => touchlinkDevice.ieee_address,
                 cell: ({ row: { original: touchlinkDevice } }) =>
                     devices.find((device) => device.ieee_address === touchlinkDevice.ieee_address) ? (
-                        <Link to={`/device/${touchlinkDevice.ieee_address}`} className="link link-hover">
+                        <Link to={`/device/${touchlinkDevice.ieee_address}/info`} className="link link-hover">
                             {touchlinkDevice.ieee_address}
                         </Link>
                     ) : (
