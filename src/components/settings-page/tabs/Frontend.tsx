@@ -61,7 +61,13 @@ export default function Frontend() {
                 {t("theme")} <ThemeSwitcher useExistingChildren />
             </div>
             <div>
-                <SelectField name="homepage" label={t("homepage")} onChange={(e) => setHomepage(e.target.value)} defaultValue={homepage}>
+                <SelectField
+                    name="homepage"
+                    label={t("homepage")}
+                    onChange={(e) => !e.target.validationMessage && setHomepage(e.target.value)}
+                    value={homepage}
+                    required
+                >
                     <option value="devices">{t("navbar:devices")}</option>
                     <option value="dashboard">{t("navbar:dashboard")}</option>
                 </SelectField>
@@ -71,10 +77,11 @@ export default function Frontend() {
                     type="number"
                     name="permit_join_time"
                     label={t("permit_join_time")}
-                    min={1}
+                    min={10}
                     max={254}
-                    defaultValue={permitJoinTime}
-                    onChange={(e) => setPermitJoinTime(e.target.valueAsNumber)}
+                    required
+                    value={permitJoinTime}
+                    onChange={(e) => !e.target.validationMessage && !!e.target.value && setPermitJoinTime(e.target.valueAsNumber)}
                 />
             </div>
         </div>

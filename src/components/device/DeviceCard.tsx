@@ -1,13 +1,11 @@
-import type { PropsWithChildren } from "react";
-import type { DeviceState, FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
-import { type BaseWithSubFeaturesProps, getFeatureKey } from "../features/index.js";
-
-import { Link } from "react-router";
-
 import { faCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { PropsWithChildren } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
+import type { DeviceState, FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
 import Feature from "../features/Feature.js";
+import { type BaseWithSubFeaturesProps, getFeatureKey } from "../features/index.js";
 import LastSeen from "../value-decorators/LastSeen.js";
 import Lqi from "../value-decorators/Lqi.js";
 import PowerSource from "../value-decorators/PowerSource.js";

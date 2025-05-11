@@ -18,7 +18,7 @@ import type { Group } from "../types.js";
 
 export default function GroupsPage() {
     const [newGroupFriendlyName, setNewGroupFriendlyName] = useState<string>("");
-    const [newGroupId, setNewGroupId] = useState<string>();
+    const [newGroupId, setNewGroupId] = useState<string>("");
     const groups = useAppSelector((state) => state.groups);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["groups", "common"]);
@@ -42,7 +42,7 @@ export default function GroupsPage() {
 
     const isValidNewGroup = useMemo(() => {
         if (newGroupFriendlyName) {
-            return !groups.find((group) => group.id.toString() === newGroupId);
+            return !newGroupId || !groups.find((group) => group.id.toString() === newGroupId);
         }
 
         return false;
@@ -138,7 +138,7 @@ export default function GroupsPage() {
                             type="text"
                             name="friendly_name"
                             label={t("common:friendly_name")}
-                            defaultValue={newGroupFriendlyName}
+                            value={newGroupFriendlyName}
                             placeholder={t("friendly_name_placeholder")}
                             onChange={(e) => setNewGroupFriendlyName(e.target.value)}
                             required
@@ -147,7 +147,7 @@ export default function GroupsPage() {
                             type="number"
                             name="group_id"
                             label={t("group_id")}
-                            defaultValue={newGroupId}
+                            value={newGroupId}
                             detail={t("common:optional")}
                             min={0}
                             max={255}

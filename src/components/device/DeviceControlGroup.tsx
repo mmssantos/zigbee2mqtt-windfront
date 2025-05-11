@@ -1,12 +1,11 @@
-import type { JSX } from "react";
-import type { Device, DeviceState } from "../../types.js";
-import Button from "../Button.js";
-
 import NiceModal from "@ebay/nice-modal-react";
 import { faInfo, faRetweet, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { InterviewState } from "../../consts.js";
+import type { Device, DeviceState } from "../../types.js";
+import Button from "../Button.js";
 import ConfirmButton from "../ConfirmButton.js";
 import { RemoveDeviceModal } from "../modal/components/RemoveDeviceModal.js";
 import DeviceControlEditName from "./DeviceControlEditName.js";
@@ -32,7 +31,7 @@ export default function DeviceControlGroup(props: DeviceControlGroupProps): JSX.
     return (
         <div className="join join-vertical lg:join-horizontal">
             <DeviceControlEditName
-                device={device}
+                name={device.friendly_name}
                 renameDevice={renameDevice}
                 homeassistantEnabled={props.homeassistantEnabled}
                 style="btn-primary join-item btn-square"

@@ -98,7 +98,7 @@ export default function DeviceInfo(props: DeviceInfoProps) {
                 <h2 className="card-title">
                     {device.friendly_name} ({device.ieee_address})
                     <DeviceControlEditName
-                        device={device}
+                        name={device.friendly_name}
                         renameDevice={renameDevice}
                         homeassistantEnabled={homeassistantEnabled}
                         style="btn-link btn-sm btn-square"

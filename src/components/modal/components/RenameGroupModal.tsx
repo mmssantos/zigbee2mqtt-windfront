@@ -1,6 +1,5 @@
-import { type JSX, useState } from "react";
-
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
+import { type JSX, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Button from "../../Button.js";
 import InputField from "../../form-fields/InputField.js";
@@ -17,6 +16,10 @@ export const RenameGroupForm = NiceModal.create((props: RenameGroupFormProps): J
     const { t } = useTranslation(["groups", "common"]);
     const [friendlyName, setFriendlyName] = useState(name);
 
+    useEffect(() => {
+        setFriendlyName(name);
+    }, [name]);
+
     return (
         <Modal
             isOpen={modal.visible}
@@ -29,8 +32,10 @@ export const RenameGroupForm = NiceModal.create((props: RenameGroupFormProps): J
                     <Button
                         className="btn btn-primary ms-1"
                         onClick={async (): Promise<void> => {
-                            modal.remove();
-                            await onRename(name, friendlyName);
+                            if (friendlyName) {
+                                modal.remove();
+                                await onRename(name, friendlyName);
+                            }
                         }}
                     >
                         {t("rename_group")}
@@ -43,7 +48,7 @@ export const RenameGroupForm = NiceModal.create((props: RenameGroupFormProps): J
                     name="friendly_name"
                     label={t("common:friendly_name")}
                     onChange={(e) => setFriendlyName(e.target.value)}
-                    defaultValue={friendlyName}
+                    value={friendlyName}
                     type="text"
                     required
                 />

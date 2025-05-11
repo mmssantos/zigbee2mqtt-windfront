@@ -96,26 +96,30 @@ const ColorEditor = memo((props: ColorEditorProps) => {
 
     const onSaturationChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            const colorHs = Array.from(color.color_hs) as ZigbeeColor["color_hs"];
-            colorHs[1] = e.target.valueAsNumber;
-            const colorHsString = convertHsvToString(colorHs);
+            if (e.target.value) {
+                const colorHs = Array.from(color.color_hs) as ZigbeeColor["color_hs"];
+                colorHs[1] = e.target.valueAsNumber;
+                const colorHsString = convertHsvToString(colorHs);
 
-            setColorString((currentColorString) => ({ ...currentColorString, color_hs: colorHsString }));
-            setColor(convertStringToColor(colorHsString, "color_hs"));
+                setColorString((currentColorString) => ({ ...currentColorString, color_hs: colorHsString }));
+                setColor(convertStringToColor(colorHsString, "color_hs"));
+            }
         },
         [color.color_hs],
     );
 
     const onHueChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            const colorHs = Array.from(color.color_hs) as ZigbeeColor["color_hs"];
-            const sat = colorHs[1];
-            colorHs[1] = sat === 0 ? 100.0 : sat; // allow click on hue when sat is zero to be applied (otherwise reset)
-            colorHs[0] = e.target.valueAsNumber;
-            const colorHsString = convertHsvToString(colorHs);
+            if (e.target.value) {
+                const colorHs = Array.from(color.color_hs) as ZigbeeColor["color_hs"];
+                const sat = colorHs[1];
+                colorHs[1] = sat === 0 ? 100.0 : sat; // allow click on hue when sat is zero to be applied (otherwise reset)
+                colorHs[0] = e.target.valueAsNumber;
+                const colorHsString = convertHsvToString(colorHs);
 
-            setColorString((currentColorString) => ({ ...currentColorString, color_hs: colorHsString }));
-            setColor(convertStringToColor(colorHsString, "color_hs"));
+                setColorString((currentColorString) => ({ ...currentColorString, color_hs: colorHsString }));
+                setColor(convertStringToColor(colorHsString, "color_hs"));
+            }
         },
         [color.color_hs],
     );

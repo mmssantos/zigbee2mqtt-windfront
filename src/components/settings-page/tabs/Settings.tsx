@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { JSONSchema7 } from "json-schema";
 import { useCallback, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import { CONFIGURATION_DOCS_URL } from "../../../consts.js";
 import { useAppSelector } from "../../../hooks/useApp.js";
+import Button from "../../Button.js";
 import SettingsList from "../../json-schema/SettingsList.js";
 
 const ROOT_TAB = "main";
@@ -39,18 +39,15 @@ export default function Settings() {
             </div>
             <div className="tabs tabs-border">
                 {TABS.map((tab) => (
-                    <Link
+                    <Button
                         key={tab}
                         className={`tab${currentTab === tab ? " tab-active" : ""}`}
                         aria-current="page"
-                        to="#"
-                        onClick={(e) => {
-                            setCurrentTab(tab);
-                            e.preventDefault();
-                        }}
+                        item={tab}
+                        onClick={setCurrentTab}
                     >
                         {t(tab)}
-                    </Link>
+                    </Button>
                 ))}
                 <div className="tab-content block h-full bg-base-100 p-3">
                     {currentTab === ROOT_TAB ? (

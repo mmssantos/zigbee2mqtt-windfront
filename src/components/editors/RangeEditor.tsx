@@ -1,4 +1,4 @@
-import { type InputHTMLAttributes, memo, useEffect, useState } from "react";
+import { type ChangeEvent, type InputHTMLAttributes, memo, useCallback, useEffect, useState } from "react";
 import EnumEditor, { type ValueWithLabelOrPrimitive } from "./EnumEditor.js";
 
 type RangeProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
@@ -19,6 +19,10 @@ const RangeEditor = memo((props: RangeProps) => {
         setCurrentValue(value);
     }, [value]);
 
+    const onInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => !!e.target.value && setCurrentValue(e.target.valueAsNumber), []);
+
+    const onSubmit = useCallback((e) => !e.target.validationMessage && onChange(currentValue), [currentValue, onChange]);
+
     return (
         <div className="flex flex-row flex-wrap gap-3 items-center">
             {!minimal && steps ? <EnumEditor values={steps} onChange={onChange} value={currentValue} /> : null}
@@ -29,11 +33,11 @@ const RangeEditor = memo((props: RangeProps) => {
                         max={max}
                         step={valueStep}
                         type="range"
-                        className="range range-xs range-primary"
+                        className="range range-xs range-primary validator"
                         value={currentValue}
-                        onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
-                        onTouchEnd={() => onChange(currentValue)}
-                        onMouseUp={() => onChange(currentValue)}
+                        onChange={onInputChange}
+                        onTouchEnd={onSubmit}
+                        onMouseUp={onSubmit}
                         {...rest}
                     />
                     <div className="flex justify-between px-1 mt-1 text-xs">
@@ -51,11 +55,11 @@ const RangeEditor = memo((props: RangeProps) => {
                     {unit}
                     <input
                         type="number"
-                        className="grow"
+                        className="grow validator"
                         value={currentValue}
                         step={valueStep}
-                        onChange={(e) => setCurrentValue(e.target.valueAsNumber)}
-                        onBlur={() => onChange(currentValue)}
+                        onChange={onInputChange}
+                        onBlur={onSubmit}
                         min={min}
                         max={max}
                         {...rest}

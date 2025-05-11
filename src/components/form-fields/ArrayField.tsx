@@ -27,6 +27,11 @@ const ArrayField = memo((props: ArrayFieldProps) => {
         }
     }, [currentValues]);
 
+    const onApply = useCallback(
+        () => onSubmit(type === "number" ? currentValues.filter((v) => typeof v === "number") : currentValues.filter((v) => !!v)),
+        [type, currentValues, onSubmit],
+    );
+
     return (
         <fieldset className="fieldset gap-2">
             {label && <legend className="fieldset-legend">{label}</legend>}
@@ -37,12 +42,10 @@ const ArrayField = memo((props: ArrayFieldProps) => {
                         <input
                             className="input join-item"
                             onBlur={(e: FocusEvent<HTMLInputElement>) => {
-                                if (!e.target.validationMessage) {
-                                    const newValues = Array.from(currentValues);
-                                    newValues[idx] = type === "number" ? e.target.valueAsNumber : e.target.value;
+                                const newValues = Array.from(currentValues);
+                                newValues[idx] = type === "number" ? (e.target.value ? e.target.valueAsNumber : "") : e.target.value;
 
-                                    setCurrentValues(newValues);
-                                }
+                                setCurrentValues(newValues);
                             }}
                             type={type}
                             defaultValue={Number.isNaN(value) ? "" : value}
@@ -65,12 +68,7 @@ const ArrayField = memo((props: ArrayFieldProps) => {
                 <Button<void> onClick={onAddClick} className="btn btn-sm btn-square btn-success ms-2">
                     <FontAwesomeIcon icon={faPlus} />
                 </Button>
-                <Button<void>
-                    onClick={() =>
-                        onSubmit(type === "number" ? currentValues.filter((v) => typeof v === "number") : currentValues.filter((v) => !!v))
-                    }
-                    className="btn btn-sm btn-square btn-primary"
-                >
+                <Button<void> onClick={onApply} className="btn btn-sm btn-square btn-primary">
                     <FontAwesomeIcon icon={faCheck} />
                 </Button>
                 {detail && <p className="label">{detail}</p>}

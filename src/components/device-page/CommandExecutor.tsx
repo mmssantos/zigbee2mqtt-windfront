@@ -17,7 +17,7 @@ interface CommandExecutorProps {
 
 export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
     const { device, lastLog } = props;
-    const { t } = useTranslation("zigbee");
+    const { t } = useTranslation(["common", "zigbee"]);
     const [endpoint, setEndpoint] = useState<number>(1);
     const [cluster, setCluster] = useState<string>("");
     const [command, setCommand] = useState<string>("");
@@ -25,7 +25,11 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const bridgeDefinitions = useAppSelector((state) => state.bridgeDefinitions);
 
-    const formIsValid = useMemo(() => {
+    const canExecute = useMemo(() => {
+        if (!cluster || !command) {
+            return false;
+        }
+
         try {
             const parsedPayload = JSON.parse(payload);
 
@@ -40,7 +44,7 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
             return false;
         }
 
-        return !!cluster && !!command;
+        return true;
     }, [payload, cluster, command]);
 
     const clusters = useMemo((): ClusterGroup[] => {
@@ -118,20 +122,20 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
 
     return (
         <div className="flex-1 flex flex-col gap-3">
-            <h2 className="text-lg">{t("zigbee:execute_command")}</h2>
+            <h2 className="text-lg">{t("execute_command")}</h2>
             <div className="flex flex-row flex-wrap gap-2">
                 <InputField
                     type="number"
                     name="endpoint"
-                    label={t("endpoint")}
+                    label={t("zigbee:endpoint")}
                     min={1}
                     max={255}
                     value={endpoint}
-                    onChange={(e) => setEndpoint(e.target.valueAsNumber)}
+                    onChange={(e) => !!e.target.value && setEndpoint(e.target.valueAsNumber)}
                     required
                 />
                 <ClusterSinglePicker
-                    label={t("cluster")}
+                    label={t("zigbee:cluster")}
                     clusters={clusters}
                     value={cluster}
                     onChange={(cluster) => {
@@ -143,7 +147,7 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
                     type="text"
                     name="command"
                     label={t("command")}
-                    defaultValue={command}
+                    value={command}
                     placeholder={"state, color..."}
                     onChange={(e) => setCommand(e.target.value)}
                     pattern="^\d+|^\w+"
@@ -154,13 +158,13 @@ export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
                 name="payload"
                 label={t("payload")}
                 rows={3}
-                defaultValue={payload}
+                value={payload}
                 onChange={(e) => setPayload(e.target.value)}
                 className="textarea validator w-full"
                 required
             />
             <div className="join join-vertical lg:join-horizontal">
-                <Button<void> onClick={onExecute} disabled={!formIsValid} className="btn btn-success">
+                <Button<void> onClick={onExecute} disabled={!canExecute} className="btn btn-success">
                     {t("execute")}
                 </Button>
             </div>

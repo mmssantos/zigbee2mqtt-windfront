@@ -1,4 +1,4 @@
-import { type ChangeEvent, memo, useCallback, useMemo, useState } from "react";
+import { type ChangeEvent, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Device } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
@@ -23,16 +23,16 @@ interface ReportingRowState {
 
 const REQUIRED_RULE_FIELDS = ["maximum_report_interval", "minimum_report_interval", "reportable_change", "endpoint", "cluster", "attribute"];
 
-const isValidRule = (rule: NiceReportingRule): boolean => {
-    return REQUIRED_RULE_FIELDS.every((field) => rule[field] !== undefined && rule[field] !== "");
-};
-
 const ReportingRow = memo((props: ReportingRowProps) => {
     const { rule, device, onApply } = props;
     const [state, setState] = useState<ReportingRowState>({ rule });
     const { t } = useTranslation(["zigbee", "common"]);
 
-    const setSourceEp = useCallback(
+    useEffect(() => {
+        setState({ rule });
+    }, [rule]);
+
+    const onSourceEndpointChange = useCallback(
         (sourceEp: string): void => {
             state.rule.endpoint = sourceEp;
 
@@ -41,7 +41,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
         [state],
     );
 
-    const setCluster = useCallback(
+    const onClusterChange = useCallback(
         (cluster: string): void => {
             state.rule.cluster = cluster;
 
@@ -50,7 +50,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
         [state],
     );
 
-    const setAttribute = useCallback(
+    const onAttributeChange = useCallback(
         (attr: string): void => {
             state.rule.attribute = attr;
 
@@ -59,7 +59,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
         [state],
     );
 
-    const changeHandlerNumber = useCallback(
+    const onReportNumberChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>): void => {
             const { name, valueAsNumber } = event.target;
             state.rule[name] = valueAsNumber;
@@ -69,11 +69,12 @@ const ReportingRow = memo((props: ReportingRowProps) => {
         [state],
     );
 
-    const disableRule = useCallback((): void => {
+    const onDisableRuleClick = useCallback((): void => {
         onApply({ ...state.rule, maximum_report_interval: 0xffff });
     }, [state, onApply]);
 
     const sourceEndpoints = useMemo(() => getEndpoints(device), [device]);
+
     const clusters = useMemo((): ClusterGroup[] => {
         const possibleClusters = new Set<string>();
         const availableClusters = new Set<string>();
@@ -108,6 +109,10 @@ const ReportingRow = memo((props: ReportingRowProps) => {
         ];
     }, [device.endpoints, state.rule.endpoint, state.rule.cluster]);
 
+    const isValidRule = useMemo(() => {
+        return REQUIRED_RULE_FIELDS.every((field) => state.rule[field] !== undefined && state.rule[field] !== "");
+    }, [state]);
+
     return (
         <>
             <div className="flex flex-row flex-wrap gap-2">
@@ -116,7 +121,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
                     disabled={!rule.isNew}
                     values={sourceEndpoints}
                     value={state.rule.endpoint}
-                    onChange={setSourceEp}
+                    onChange={onSourceEndpointChange}
                     required
                 />
                 <ClusterSinglePicker
@@ -124,7 +129,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
                     disabled={!state.rule.endpoint}
                     clusters={clusters}
                     value={state.rule.cluster}
-                    onChange={setCluster}
+                    onChange={onClusterChange}
                     required
                 />
                 <AttributePicker
@@ -133,7 +138,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
                     value={state.rule.attribute}
                     cluster={state.rule.cluster}
                     device={device}
-                    onChange={setAttribute}
+                    onChange={onAttributeChange}
                     required
                 />
                 <InputField
@@ -141,7 +146,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
                     label={t("min_rep_interval")}
                     type="number"
                     value={state.rule.minimum_report_interval}
-                    onChange={changeHandlerNumber}
+                    onChange={onReportNumberChange}
                     required
                 />
                 <InputField
@@ -149,7 +154,7 @@ const ReportingRow = memo((props: ReportingRowProps) => {
                     label={t("max_rep_interval")}
                     type="number"
                     value={state.rule.maximum_report_interval}
-                    onChange={changeHandlerNumber}
+                    onChange={onReportNumberChange}
                     required
                 />
                 <InputField
@@ -157,25 +162,20 @@ const ReportingRow = memo((props: ReportingRowProps) => {
                     label={t("min_rep_change")}
                     type="number"
                     value={state.rule.reportable_change}
-                    onChange={changeHandlerNumber}
+                    onChange={onReportNumberChange}
                     required
                 />
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">{t("actions")}</legend>
                     <div className="join join-vertical lg:join-horizontal">
-                        <Button<NiceReportingRule>
-                            className="btn btn-primary join-item"
-                            item={state.rule}
-                            onClick={onApply}
-                            disabled={!isValidRule(state.rule)}
-                        >
+                        <Button<NiceReportingRule> className="btn btn-primary join-item" item={state.rule} onClick={onApply} disabled={!isValidRule}>
                             {t("common:apply")}
                         </Button>
                         {!state.rule.isNew ? (
                             <ConfirmButton<void>
                                 title={t("common:disable")}
                                 className="btn btn-error join-item"
-                                onClick={disableRule}
+                                onClick={onDisableRuleClick}
                                 modalDescription={t("common:dialog_confirmation_prompt")}
                                 modalCancelLabel={t("common:cancel")}
                             >

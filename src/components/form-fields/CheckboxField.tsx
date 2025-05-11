@@ -1,4 +1,4 @@
-import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, memo, useCallback } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, memo } from "react";
 
 type CheckboxFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     name: string;
@@ -10,25 +10,16 @@ type CheckboxFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement
 const CheckboxField = memo((props: CheckboxFieldProps) => {
     const { type, label, detail, onChange, ...rest } = props;
 
-    const onValidChange = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => {
-            if (!e.target.validationMessage) {
-                onChange(e);
-            }
-        },
-        [onChange],
-    );
-
     return (
         <fieldset className="fieldset">
             {label && <legend className="fieldset-legend">{label}</legend>}
             {detail ? (
                 <label className="label">
-                    <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onValidChange} {...rest} />
+                    <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onChange} {...rest} />
                     {detail}
                 </label>
             ) : (
-                <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onValidChange} {...rest} />
+                <input className={`checkbox${props.required ? " validator" : ""}`} type="checkbox" onChange={onChange} {...rest} />
             )}
         </fieldset>
     );

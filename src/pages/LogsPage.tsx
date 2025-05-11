@@ -80,7 +80,7 @@ export default function LogsPage() {
                     </label>
                 </fieldset>
                 <label className="label text-xs">
-                    <input type="checkbox" className="checkbox" defaultChecked={highlightOnly} onChange={(e) => setHighlightOnly(e.target.checked)} />
+                    <input type="checkbox" className="checkbox" checked={highlightOnly} onChange={(e) => setHighlightOnly(e.target.checked)} />
                     {t("highlight_only")}
                 </label>
                 <SelectField

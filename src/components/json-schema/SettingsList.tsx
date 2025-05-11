@@ -44,7 +44,7 @@ const propertyToField = (
                     name={key}
                     label={key}
                     detail={description}
-                    onChange={(e) => set({ [key]: e.target.checked })}
+                    onChange={(e) => !e.target.validationMessage && set({ [key]: e.target.checked })}
                     required={required}
                     defaultChecked={(value as boolean) || false}
                 />
@@ -60,7 +60,7 @@ const propertyToField = (
                         name={key}
                         label={key}
                         detail={description}
-                        onChange={(e) => set({ [key]: Number.parseInt(e.target.value, 10) })}
+                        onChange={(e) => !e.target.validationMessage && set({ [key]: Number.parseInt(e.target.value, 10) })}
                         required={required}
                         defaultValue={(value as number) || ""}
                     >
@@ -82,7 +82,7 @@ const propertyToField = (
                     name={key}
                     label={key}
                     detail={description}
-                    onBlur={(e) => set({ [key]: e.target.valueAsNumber })}
+                    onSubmit={(value, valid) => valid && set({ [key]: value })}
                     min={property.minimum}
                     max={property.maximum}
                     required={required}
@@ -99,7 +99,7 @@ const propertyToField = (
                         name={key}
                         label={key}
                         detail={description}
-                        onChange={(e) => set({ [key]: e.target.value })}
+                        onChange={(e) => !e.target.validationMessage && set({ [key]: e.target.value })}
                         required={required}
                         defaultValue={(value as string) || ""}
                     >
@@ -122,7 +122,7 @@ const propertyToField = (
                     label={key}
                     detail={description}
                     type="text"
-                    onBlur={(e) => set({ [key]: e.target.value })}
+                    onBlur={(e) => !e.target.validationMessage && set({ [key]: e.target.value })}
                     required={required}
                     defaultValue={(value as string) || ""}
                 />

@@ -85,7 +85,7 @@ export default function Dashboard() {
                             >
                                 <div className="join join-vertical lg:join-horizontal">
                                     <DeviceControlEditName
-                                        device={device}
+                                        name={device.friendly_name}
                                         renameDevice={renameDevice}
                                         homeassistantEnabled={bridgeConfig.homeassistant.enabled}
                                         style="btn-primary btn-square btn-sm join-item"

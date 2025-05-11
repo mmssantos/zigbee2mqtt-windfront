@@ -9,7 +9,7 @@ import DashboardFeatureWrapper from "../dashboard-page/DashboardFeatureWrapper.j
 import Feature from "../features/Feature.js";
 import { getFeatureKey } from "../features/index.js";
 import InputField from "../form-fields/InputField.js";
-import { getScenes, getScenesFeatures, isValidSceneId } from "./index.js";
+import { getScenes, getScenesFeatures } from "./index.js";
 
 type AddSceneProps = {
     target: Device | Group;
@@ -60,6 +60,10 @@ const AddScene = memo((props: AddSceneProps) => {
         );
     }, [sendMessage, target, sceneId, sceneName]);
 
+    const isValidSceneId = useMemo(() => {
+        return sceneId >= 0 && sceneId <= 255 && !scenes.find((s) => s.id === sceneId);
+    }, [sceneId, scenes]);
+
     return (
         <>
             <h2 className="text-lg font-semibold">{t("add_update_header")}</h2>
@@ -69,7 +73,7 @@ const AddScene = memo((props: AddSceneProps) => {
                     label={t("scene_id")}
                     type="number"
                     value={sceneId}
-                    onChange={(e) => setSceneId(e.target.valueAsNumber)}
+                    onChange={(e) => !!e.target.value && setSceneId(e.target.valueAsNumber)}
                     min={0}
                     max={255}
                 />
@@ -100,7 +104,7 @@ const AddScene = memo((props: AddSceneProps) => {
                     </div>
                 )}
             </div>
-            <Button disabled={!isValidSceneId(sceneId, scenes)} onClick={onStoreClick} className="btn btn-primary">
+            <Button disabled={!isValidSceneId} onClick={onStoreClick} className="btn btn-primary">
                 {t("store")}
             </Button>
         </>

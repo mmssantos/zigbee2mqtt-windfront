@@ -1,11 +1,10 @@
-import { memo } from "react";
-import type { Device } from "../../types.js";
-import Button from "../Button.js";
-
 import NiceModal from "@ebay/nice-modal-react";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
+import type { Device } from "../../types.js";
+import Button from "../Button.js";
 import { UpdateDeviceDescModal } from "../modal/components/EditDeviceDescModal.js";
 
 interface DeviceControlUpdateDescProps {

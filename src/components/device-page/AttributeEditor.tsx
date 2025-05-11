@@ -56,7 +56,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
     const [endpoint, setEndpoint] = useState(getObjectFirstKey(device.endpoints) ?? "");
     const [cluster, setCluster] = useState("");
     const [attributes, setAttributes] = useState<AttributeInfo[]>([]);
-    const [stateProperty, setStateProperty] = useState<string>();
+    const [stateProperty, setStateProperty] = useState<string>("");
     const { t } = useTranslation(["common", "zigbee"]);
 
     const onEndpointChange = useCallback((endpoint: string | number) => {
@@ -82,9 +82,7 @@ export function AttributeEditor(props: AttributeEditorProps) {
     );
 
     const onStatePropertyChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value) {
-            setStateProperty(event.target.value);
-        }
+        setStateProperty(event.target.value);
     }, []);
 
     const onReadClick = useCallback(async () => {
@@ -173,8 +171,8 @@ export function AttributeEditor(props: AttributeEditorProps) {
                     type="text"
                     name="state_property"
                     label={t("devConsole:state_property")}
-                    defaultValue={""}
-                    detail={`${t("optional")}. ${t("devConsole:state_property_detail")}`}
+                    value={stateProperty}
+                    detail={`${t("optional")}. ${t("devConsole:state_property_info")}`}
                     onChange={onStatePropertyChange}
                 />
             </div>

@@ -1,38 +1,41 @@
-import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type InputHTMLAttributes, memo, useCallback, useEffect, useState } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, memo, useCallback, useEffect, useState } from "react";
 
-type NumberFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
+type NumberFieldProps = Omit<
+    DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+    "onSubmit" | "defaultValue" | "value" | "min" | "max"
+> & {
     name: string;
     label?: string;
     detail?: string;
+    min?: number;
+    max?: number;
+    defaultValue?: number | "";
+    value?: number | "";
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-    onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+    onSubmit?: (value: number | "", valid: boolean) => void;
 };
 
 const NumberField = memo((props: NumberFieldProps) => {
-    const { label, detail, onChange, onBlur, defaultValue, ...rest } = props;
-    const [currentValue, setCurrentValue] = useState(defaultValue || props.min || "");
+    const { label, detail, onChange, onSubmit, defaultValue, value, ...rest } = props;
+    const [currentValue, setCurrentValue] = useState<number | "">(defaultValue || value || props.min || "");
 
     useEffect(() => {
-        setCurrentValue(defaultValue || "");
-    }, [defaultValue]);
+        setCurrentValue(defaultValue || value || props.min || "");
+    }, [defaultValue, value, props.min]);
 
-    const onValidChange = useCallback(
+    const onChangeHandler = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            if (!e.target.validationMessage) {
-                setCurrentValue(e.target.value ? e.target.valueAsNumber : "");
-                onChange?.(e);
-            }
+            setCurrentValue(e.target.value ? e.target.valueAsNumber : "");
+            onChange?.(e);
         },
         [onChange],
     );
 
-    const onValidBlur = useCallback(
+    const onSubmitHandler = useCallback(
         (e) => {
-            if (onBlur && !e.target.validationMessage) {
-                onBlur(e);
-            }
+            onSubmit?.(currentValue, !e.target.validationMessage);
         },
-        [onBlur],
+        [onSubmit, currentValue],
     );
 
     return (
@@ -42,9 +45,9 @@ const NumberField = memo((props: NumberFieldProps) => {
                 <div className="w-full max-w-xs">
                     <input
                         className="range range-xs range-primary"
-                        onChange={onValidChange}
-                        onTouchEnd={onValidBlur}
-                        onMouseUp={onValidBlur}
+                        onChange={onChangeHandler}
+                        onTouchEnd={onSubmitHandler}
+                        onMouseUp={onSubmitHandler}
                         {...rest}
                         type="range"
                         value={currentValue}
@@ -61,8 +64,8 @@ const NumberField = memo((props: NumberFieldProps) => {
             )}
             <input
                 className={`input${props.pattern || props.required ? " validator" : ""}`}
-                onChange={onValidChange}
-                onBlur={onValidBlur}
+                onChange={onChangeHandler}
+                onBlur={onSubmitHandler}
                 {...rest}
                 type="number"
                 value={currentValue}

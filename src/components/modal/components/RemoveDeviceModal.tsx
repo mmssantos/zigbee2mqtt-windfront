@@ -2,7 +2,6 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { type ChangeEvent, type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Device } from "../../../types.js";
-
 import Button from "../../Button.js";
 import CheckboxField from "../../form-fields/CheckboxField.js";
 import Modal from "../Modal.js";
@@ -45,9 +44,9 @@ export const RemoveDeviceModal = NiceModal.create((props: DeviceRemovalButtonPro
             }
         >
             <div className="flex flex-col gap-2">
-                <CheckboxField label={t("force_remove")} name="force" onChange={onDeviceRemovalParamChange} defaultChecked={removeParams.force} />
+                <CheckboxField label={t("force_remove")} name="force" onChange={onDeviceRemovalParamChange} checked={removeParams.force} />
                 <span className="text-xs opacity-50">{t("force_remove_notice")}</span>
-                <CheckboxField label={t("block_join")} name="block" onChange={onDeviceRemovalParamChange} defaultChecked={removeParams.block} />
+                <CheckboxField label={t("block_join")} name="block" onChange={onDeviceRemovalParamChange} checked={removeParams.block} />
             </div>
         </Modal>
     );

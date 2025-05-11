@@ -1,4 +1,4 @@
-import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type InputHTMLAttributes, memo, useCallback } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type InputHTMLAttributes, memo } from "react";
 
 type InputFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
     name: string;
@@ -12,33 +12,10 @@ type InputFieldProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, 
 const InputField = memo((props: InputFieldProps) => {
     const { label, detail, onChange, onBlur, ...rest } = props;
 
-    const onValidChange = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => {
-            if (onChange && !e.target.validationMessage) {
-                onChange(e);
-            }
-        },
-        [onChange],
-    );
-
-    const onValidBlur = useCallback(
-        (e: FocusEvent<HTMLInputElement>) => {
-            if (onBlur && !e.target.validationMessage) {
-                onBlur(e);
-            }
-        },
-        [onBlur],
-    );
-
     return (
         <fieldset className="fieldset">
             {label && <legend className="fieldset-legend">{label}</legend>}
-            <input
-                className={`input${props.pattern || props.required ? " validator" : ""}`}
-                onChange={onValidChange}
-                onBlur={onValidBlur}
-                {...rest}
-            />
+            <input className={`input${props.pattern || props.required ? " validator" : ""}`} onChange={onChange} onBlur={onBlur} {...rest} />
             {detail && <p className="label">{detail}</p>}
         </fieldset>
     );

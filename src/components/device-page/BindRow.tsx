@@ -1,6 +1,6 @@
 import { faLink, faUnlink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { memo, useCallback, useContext, useMemo, useState } from "react";
+import { memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import type { RootState } from "../../store.js";
@@ -28,18 +28,6 @@ const getTarget = (rule: NiceBindingRule, devices: RootState["devices"], groups:
     return target.type === "group" ? groups.find((g) => g.id === target.id) : devices.find((device) => device.ieee_address === target.ieee_address);
 };
 
-const isValidRule = (rule: NiceBindingRule): boolean => {
-    let valid = false;
-
-    if (rule.target.type === "endpoint") {
-        valid = !!(rule.source.endpoint && rule.target.ieee_address && rule.target.endpoint && rule.clusters.length > 0);
-    } else if (rule.target.type === "group") {
-        valid = !!(rule.source.endpoint && rule.target.id && rule.clusters.length > 0);
-    }
-
-    return valid;
-};
-
 type Action = "Bind" | "Unbind";
 
 const BindRow = memo((props: BindRowProps) => {
@@ -48,7 +36,11 @@ const BindRow = memo((props: BindRowProps) => {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["common", "zigbee"]);
 
-    const setSourceEp = useCallback(
+    useEffect(() => {
+        setState({ rule });
+    }, [rule]);
+
+    const onSourceEndpointChange = useCallback(
         (sourceEp: string | number): void => {
             state.rule.source.endpoint = sourceEp;
 
@@ -57,7 +49,7 @@ const BindRow = memo((props: BindRowProps) => {
         [state.rule],
     );
 
-    const setDestination = useCallback(
+    const onDestinationChange = useCallback(
         (destination?: Device | Group): void => {
             if (!destination) {
                 return;
@@ -76,7 +68,7 @@ const BindRow = memo((props: BindRowProps) => {
         [state.rule],
     );
 
-    const setDestinationEp = useCallback(
+    const onDestinationEndpointChange = useCallback(
         (destinationEp: string): void => {
             if (state.rule.target.type === "endpoint") {
                 state.rule.target.endpoint = destinationEp;
@@ -88,7 +80,7 @@ const BindRow = memo((props: BindRowProps) => {
         [state.rule],
     );
 
-    const setClusters = useCallback(
+    const onClustersChange = useCallback(
         (clusters: string[]): void => {
             state.rule.clusters = clusters;
 
@@ -183,6 +175,18 @@ const BindRow = memo((props: BindRowProps) => {
         return clusters;
     }, [device.endpoints, state, target]);
 
+    const isValidRule = useMemo(() => {
+        let valid = false;
+
+        if (state.rule.target.type === "endpoint") {
+            valid = !!(state.rule.source.endpoint && state.rule.target.ieee_address && state.rule.target.endpoint && state.rule.clusters.length > 0);
+        } else if (state.rule.target.type === "group") {
+            valid = !!(state.rule.source.endpoint && state.rule.target.id && state.rule.clusters.length > 0);
+        }
+
+        return valid;
+    }, [state]);
+
     return (
         <>
             <div className="flex flex-row flex-wrap gap-2">
@@ -191,7 +195,7 @@ const BindRow = memo((props: BindRowProps) => {
                     disabled={!state.rule.isNew}
                     values={sourceEndpoints}
                     value={state.rule.source.endpoint}
-                    onChange={setSourceEp}
+                    onChange={onSourceEndpointChange}
                 />
                 <DevicePicker
                     label={t("destination")}
@@ -199,7 +203,7 @@ const BindRow = memo((props: BindRowProps) => {
                     value={"ieee_address" in state.rule.target ? state.rule.target.ieee_address : state.rule.target.id}
                     devices={devices}
                     groups={groups}
-                    onChange={setDestination}
+                    onChange={onDestinationChange}
                 />
                 {state.rule.target.type === "endpoint" ? (
                     <EndpointPicker
@@ -207,18 +211,18 @@ const BindRow = memo((props: BindRowProps) => {
                         disabled={!state.rule.isNew}
                         values={destinationEndpoints}
                         value={state.rule.target.endpoint}
-                        onChange={setDestinationEp}
+                        onChange={onDestinationEndpointChange}
                     />
                 ) : null}
                 <div className="flex-grow w-128">
-                    <ClusterMultiPicker label={t("clusters")} clusters={possibleClusters} value={state.rule.clusters} onChange={setClusters} />
+                    <ClusterMultiPicker label={t("clusters")} clusters={possibleClusters} value={state.rule.clusters} onChange={onClustersChange} />
                 </div>
                 <fieldset className="fieldset">
                     <legend className="fieldset-legend">{t("actions")}</legend>
                     <div className="join join-vertical lg:join-horizontal">
                         <Button<Action>
                             item={"Bind"}
-                            disabled={!isValidRule(state.rule)}
+                            disabled={!isValidRule}
                             title={t("bind")}
                             className="btn btn-primary join-item"
                             onClick={onBindOrUnBindClick}
@@ -228,7 +232,7 @@ const BindRow = memo((props: BindRowProps) => {
                         </Button>
                         <Button<Action>
                             item={"Unbind"}
-                            disabled={state.rule.isNew || !isValidRule(state.rule)}
+                            disabled={state.rule.isNew || !isValidRule}
                             title={t("unbind")}
                             className="btn btn-error join-item"
                             onClick={onBindOrUnBindClick}

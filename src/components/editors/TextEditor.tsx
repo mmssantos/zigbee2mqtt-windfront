@@ -16,10 +16,10 @@ const TextEditor = memo((props: TextProps) => {
     return (
         <input
             type="text"
-            className="input"
+            className="input validator"
             value={currentValue}
             onChange={(e) => setCurrentValue(e.target.value)}
-            onBlur={() => onChange(currentValue)}
+            onBlur={(e) => !e.target.validationMessage && onChange(currentValue)}
             {...rest}
         />
     );

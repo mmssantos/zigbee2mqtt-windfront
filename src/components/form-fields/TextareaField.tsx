@@ -1,4 +1,4 @@
-import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type TextareaHTMLAttributes, memo, useCallback } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type FocusEvent, type TextareaHTMLAttributes, memo } from "react";
 
 type TextAreaFieldProps = DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement> & {
     name: string;
@@ -11,28 +11,10 @@ type TextAreaFieldProps = DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaE
 const TextareaField = memo((props: TextAreaFieldProps) => {
     const { label, detail, onChange, onBlur, ...rest } = props;
 
-    const onValidChange = useCallback(
-        (e: ChangeEvent<HTMLTextAreaElement>) => {
-            if (onChange && !e.target.validationMessage) {
-                onChange(e);
-            }
-        },
-        [onChange],
-    );
-
-    const onValidBlur = useCallback(
-        (e: FocusEvent<HTMLTextAreaElement>) => {
-            if (onBlur && !e.target.validationMessage) {
-                onBlur(e);
-            }
-        },
-        [onBlur],
-    );
-
     return (
         <fieldset className="fieldset">
             {label && <legend className="fieldset-legend">{label}</legend>}
-            <textarea className={`textarea${props.required ? " validator" : ""}`} onChange={onValidChange} onBlur={onValidBlur} {...rest} />
+            <textarea className={`textarea${props.required ? " validator" : ""}`} onChange={onChange} onBlur={onBlur} {...rest} />
             {detail && <div className="label">{detail}</div>}
         </fieldset>
     );

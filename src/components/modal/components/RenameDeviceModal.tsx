@@ -1,31 +1,31 @@
-import { type JSX, useState } from "react";
-import { useTranslation } from "react-i18next";
-
-import type { Device } from "../../../types.js";
-
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
-
+import { type JSX, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Button from "../../Button.js";
 import CheckboxField from "../../form-fields/CheckboxField.js";
 import InputField from "../../form-fields/InputField.js";
 import Modal from "../Modal.js";
 
 export type RenameActionProps = {
-    device: Device;
+    name: string;
     homeassistantEnabled: boolean;
     renameDevice(old: string, newName: string, homeassistantRename: boolean): Promise<void>;
 };
 export const RenameDeviceModal = NiceModal.create((props: RenameActionProps): JSX.Element => {
-    const { homeassistantEnabled, device, renameDevice } = props;
+    const { homeassistantEnabled, name, renameDevice } = props;
     const modal = useModal();
     const { t } = useTranslation(["zigbee", "common"]);
     const [isHASSRename, setIsHASSRename] = useState(false);
-    const [friendlyName, setFriendlyName] = useState(device.friendly_name);
+    const [friendlyName, setFriendlyName] = useState(name);
+
+    useEffect(() => {
+        setFriendlyName(name);
+    }, [name]);
 
     return (
         <Modal
             isOpen={modal.visible}
-            title={`${t("rename_device")} ${device.friendly_name}`}
+            title={`${t("rename_device")} ${name}`}
             footer={
                 <>
                     <Button className="btn btn-secondary" onClick={modal.remove}>
@@ -35,7 +35,7 @@ export const RenameDeviceModal = NiceModal.create((props: RenameActionProps): JS
                         className="btn btn-primary ms-1"
                         onClick={async () => {
                             modal.remove();
-                            await renameDevice(device.friendly_name, friendlyName, isHASSRename);
+                            await renameDevice(name, friendlyName, isHASSRename);
                         }}
                     >
                         {t("rename_device")}
@@ -48,16 +48,15 @@ export const RenameDeviceModal = NiceModal.create((props: RenameActionProps): JS
                     name="friendly_name"
                     label={t("common:friendly_name")}
                     onChange={(e) => setFriendlyName(e.target.value)}
-                    defaultValue={friendlyName}
+                    value={friendlyName}
                     type="text"
-                    required
                 />
                 {homeassistantEnabled && (
                     <CheckboxField
                         label={t("update_Home_assistant_entity_id")}
                         name="update_Home_assistant_entity_id"
                         onChange={(e) => setIsHASSRename(e.target.checked)}
-                        defaultChecked={isHASSRename}
+                        checked={isHASSRename}
                     />
                 )}
             </div>

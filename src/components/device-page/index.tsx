@@ -12,10 +12,6 @@ import {
 
 import { isDevice } from "../../utils.js";
 
-export const isValidSceneId = (id: number, existingScenes: Scene[] = []): boolean => {
-    return id >= 0 && id <= 255 && !existingScenes.find((s) => s.id === id);
-};
-
 export function getScenes(target: Group | Device): Scene[] {
     if (isDevice(target)) {
         const scenes: Scene[] = [];

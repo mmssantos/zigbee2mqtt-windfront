@@ -19,7 +19,7 @@ const ScenePicker = memo((props: ScenePickerProps) => {
             name="scene_picker"
             label={t("scene_name")}
             value={value?.id ?? ""}
-            onChange={(e) => onSceneSelected(Number.parseInt(e.target.value, 10))}
+            onChange={(e) => !e.target.validationMessage && !!e.target.value && onSceneSelected(Number.parseInt(e.target.value, 10))}
         >
             <option value="" disabled>
                 {t("select_scene")}
@@ -36,7 +36,7 @@ const ScenePicker = memo((props: ScenePickerProps) => {
             label={t("scene_id")}
             type="number"
             value={value?.id ?? ""}
-            onChange={(e) => onSceneSelected(e.target.valueAsNumber)}
+            onChange={(e) => !e.target.validationMessage && !!e.target.value && onSceneSelected(e.target.valueAsNumber)}
             min={0}
             max={255}
         />
