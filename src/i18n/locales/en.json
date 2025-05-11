@@ -2786,7 +2786,7 @@
         "topic": "Topic",
         "send_mqtt": "Send MQTT message",
         "mqtt_topic_info": "Omit the 'base_topic', frontend messages are sent over WebSocket directly to Zigbee2MQTT.",
-        "reset_state": "Reset state"
+        "reset_frontend_state": "Reset frontend state"
     },
     "settingsSchemaDescriptions": {
         "Home Assistant integration (MQTT discovery)": "Home Assistant integration (MQTT discovery)",

@@ -77,11 +77,11 @@ export default function DevConsole({ device }: DevConsoleProps) {
                 <ConfirmButton
                     className="btn btn-error"
                     onClick={resetState}
-                    title={t("reset_state")}
+                    title={t("reset_frontend_state")}
                     modalDescription={t("common:dialog_confirmation_prompt")}
                     modalCancelLabel={t("common:cancel")}
                 >
-                    {t("reset_state")}
+                    {t("reset_frontend_state")}
                 </ConfirmButton>
             </div>
             <div className="divider" />
