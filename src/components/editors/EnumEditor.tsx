@@ -54,7 +54,7 @@ const EnumEditor = memo((props: EnumProps) => {
                     className={`btn btn-soft btn-sm join-item${(isPrimitive(v) ? v === value : v.value === (isPrimitive(value) ? value : value?.value)) ? " btn-active" : ""}`}
                     onClick={(item) => onChange(item)}
                     item={isPrimitive(v) ? v : v.value}
-                    title={isPrimitive(v) ? (v as string) : v.description}
+                    title={isPrimitive(v) ? `${v}` : v.description}
                 >
                     {isPrimitive(v) ? <DisplayValue value={v} name="" /> : v.name}
                 </Button>

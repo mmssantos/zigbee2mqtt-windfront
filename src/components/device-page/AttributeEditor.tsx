@@ -40,7 +40,7 @@ function AttributeValueInput(props: Readonly<AttributeValueInputProps>): JSX.Ele
     return (
         <input
             type={type}
-            value={value as string | number}
+            value={value}
             onChange={(e): void => {
                 const val = type === "number" ? e.target.valueAsNumber : e.target.value;
 

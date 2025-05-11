@@ -128,11 +128,11 @@ const Feature = memo((props: FeatureProps): JSX.Element => {
 
             // When parent is a list (this is when parentFeatures is not set), we don't
             // need to take the key of the deviceState (deviceState[feature.property])
-            const specificDeviceState = parentFeatures ? (feature.property ? deviceState[feature.property] : deviceState) : deviceState;
+            const specificDeviceState: DeviceState = parentFeatures ? (feature.property ? deviceState[feature.property] : deviceState) : deviceState;
 
             return (
                 // <FeatureWrapper key={key} {...wrapperParams}>
-                <FeatureSubFeatures feature={feature} key={key} {...genericParams} deviceState={specificDeviceState as DeviceState} />
+                <FeatureSubFeatures feature={feature} key={key} {...genericParams} deviceState={specificDeviceState} />
                 // </FeatureWrapper>
             );
         }

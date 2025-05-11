@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useState } from "react";
-import type { BasicFeature, Device, DeviceState, FeatureWithAnySubFeatures, FeatureWithSubFeatures } from "../../types.js";
+import type { BasicFeature, Device, FeatureWithAnySubFeatures, FeatureWithSubFeatures } from "../../types.js";
 import Button from "../Button.js";
 import Feature from "../features/Feature.js";
 import FeatureWrapper from "../features/FeatureWrapper.js";
@@ -72,7 +72,7 @@ const ListEditor = memo((props: ListEditorProps) => {
                     <Feature
                         feature={feature as FeatureWithSubFeatures}
                         device={{} as Device}
-                        deviceState={itemValue as DeviceState}
+                        deviceState={itemValue}
                         onChange={(value) => onItemChange(value, itemIndex)}
                         onRead={(_value) => {}}
                         featureWrapperClass={FeatureWrapper}

@@ -20,7 +20,7 @@ export default function TextFilter<T>({
                 type="search"
                 onChange={setFilterValue}
                 placeholder={t("search")}
-                value={(columnFilterValue ?? "") as string}
+                value={(columnFilterValue as string) ?? ""}
             />
         </label>
     );

@@ -47,7 +47,7 @@ export default function TouchlinkPage() {
     const columns = useMemo<ColumnDef<TouchlinkDevice, any>[]>(
         () => [
             {
-                header: t("zigbee:ieee_address") as string,
+                header: t("zigbee:ieee_address"),
                 accessorFn: (touchlinkDevice) => touchlinkDevice.ieee_address,
                 cell: ({ row: { original: touchlinkDevice } }) =>
                     devices.find((device) => device.ieee_address === touchlinkDevice.ieee_address) ? (
@@ -59,12 +59,12 @@ export default function TouchlinkPage() {
                     ),
             },
             {
-                header: t("common:friendly_name") as string,
+                header: t("common:friendly_name"),
                 accessorFn: (touchlinkDevice) => devices.find((device) => device.ieee_address === touchlinkDevice.ieee_address)?.friendly_name,
             },
             {
                 id: "channel",
-                header: t("zigbee:channel") as string,
+                header: t("zigbee:channel"),
                 accessorFn: (touchlinkDevice) => touchlinkDevice.channel,
             },
             {

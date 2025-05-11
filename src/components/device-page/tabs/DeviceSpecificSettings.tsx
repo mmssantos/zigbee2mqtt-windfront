@@ -30,7 +30,7 @@ export default function DeviceSpecificSettings({ device }: DeviceSpecificSetting
                     key={getFeatureKey(option)}
                     feature={option}
                     device={device}
-                    deviceState={(bridgeInfo.config.devices[device.ieee_address] ?? {}) as unknown as Record<string, unknown>}
+                    deviceState={bridgeInfo.config.devices[device.ieee_address] ?? {}}
                     onChange={setDeviceOptions}
                     featureWrapperClass={FeatureWrapper}
                     parentFeatures={[]}

@@ -31,12 +31,12 @@ const ClusterMultiPicker = memo((props: ClusterMultiPickerProps) => {
             Array.from(clusters)
                 .sort((a, b) => a.toString().localeCompare(b.toString()))
                 .map((cluster) => (
-                    <label key={cluster} className="label" title={cluster as string}>
+                    <label key={cluster} className="label" title={cluster}>
                         <input
                             className="checkbox"
                             type="checkbox"
                             checked={value.includes(cluster)}
-                            name={cluster as string}
+                            name={cluster}
                             value={cluster}
                             onChange={onChangeHandler}
                             disabled={disabled}

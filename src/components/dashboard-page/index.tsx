@@ -28,7 +28,7 @@ const isValid = (name: string | undefined, _access: FeatureAccessMode): boolean 
 
 export const getDashboardFeatures = (
     feature: BasicFeature | FeatureWithSubFeatures,
-    deviceState: DeviceState = {} as DeviceState,
+    deviceState: DeviceState = {},
 ): FeatureWithAnySubFeatures | undefined => {
     const { property, name, access } = feature;
 

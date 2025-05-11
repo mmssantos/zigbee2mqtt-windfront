@@ -1,4 +1,4 @@
-import type { DeviceState, Group } from "../../../types.js";
+import type { Group } from "../../../types.js";
 import AddScene from "../../device-page/AddScene.js";
 import RecallRemove from "../../device-page/RecallRemove.js";
 import AddDeviceToGroup from "../AddDeviceToGroup.js";
@@ -16,10 +16,10 @@ export default function Devices({ group }: DevicesProps) {
                     <AddDeviceToGroup group={group} />
                 </div>
                 <div className="flex-1">
-                    <RecallRemove target={group} deviceState={{} as DeviceState} />
+                    <RecallRemove target={group} deviceState={{}} />
                 </div>
                 <div className="flex-1">
-                    <AddScene target={group} deviceState={{} as DeviceState} />
+                    <AddScene target={group} deviceState={{}} />
                 </div>
             </div>
             <GroupMembers group={group} />

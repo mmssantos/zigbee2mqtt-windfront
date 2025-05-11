@@ -30,10 +30,10 @@ export default function DevConsole(props: DevConsoleProps) {
 
     const readDeviceAttributes = useCallback(
         async (ieee: string, endpoint: string, cluster: string, attributes: string[], stateProperty?: string) => {
-            const payload = { read: { cluster, attributes } };
+            const payload: { read: Record<string, unknown> } = { read: { cluster, attributes } };
 
             if (stateProperty) {
-                (payload.read as Record<string, unknown>).state_property = stateProperty;
+                payload.read.state_property = stateProperty;
             }
 
             await sendMessage<"{friendlyNameOrId}/{endpoint}/set">(
@@ -47,10 +47,10 @@ export default function DevConsole(props: DevConsoleProps) {
 
     const writeDeviceAttributes = useCallback(
         async (ieee: string, endpoint: string, cluster: string, attributes: AttributeInfo[]) => {
-            const payload = { write: { cluster, payload: {} } };
+            const payload: { write: Record<string, unknown> & { payload: Record<string, unknown> } } = { write: { cluster, payload: {} } };
 
             for (const attrInfo of attributes) {
-                (payload.write.payload as Record<string, unknown>)[attrInfo.attribute] = attrInfo.value;
+                payload.write.payload[attrInfo.attribute] = attrInfo.value;
             }
 
             await sendMessage<"{friendlyNameOrId}/{endpoint}/set">(

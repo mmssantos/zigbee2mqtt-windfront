@@ -23,7 +23,7 @@ const Numeric = memo((props: NumericProps) => {
         return (
             <RangeEditor
                 onChange={(value) => onChange({ [property]: value })}
-                value={(deviceValue ?? "") as number}
+                value={(deviceValue as number) ?? ""}
                 min={valueMin}
                 max={valueMax}
                 step={valueStep}

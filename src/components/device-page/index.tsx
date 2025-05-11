@@ -31,7 +31,7 @@ export function getScenes(target: Group | Device): Scene[] {
         return scenes;
     }
 
-    return (target as Group).scenes as Scene[];
+    return target.scenes;
 }
 
 const BLACKLISTED_PARTIAL_FEATURE_NAMES = ["schedule_", "_mode", "_options", "_startup"];

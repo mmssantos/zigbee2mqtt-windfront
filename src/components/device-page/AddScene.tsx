@@ -88,7 +88,7 @@ const AddScene = memo((props: AddSceneProps) => {
                                 <Feature
                                     key={getFeatureKey(feature)}
                                     feature={feature}
-                                    device={target as Device}
+                                    device={target as Device /* no feature for groups */}
                                     deviceState={deviceState}
                                     onChange={onCompositeChange}
                                     featureWrapperClass={DashboardFeatureWrapper}
