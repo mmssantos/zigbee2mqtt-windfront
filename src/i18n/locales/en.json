@@ -49,7 +49,8 @@
         "type_to_filter": "Type to filter...",
         "friendly_name": "Friendly name",
         "unknown_device": "Unknown device",
-        "unknown_group": "Unknown group"
+        "unknown_group": "Unknown group",
+        "failed": "Failed"
     },
     "devicePage": {
         "about": "About",

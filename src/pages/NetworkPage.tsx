@@ -1,4 +1,4 @@
-import { faDownLong, faMagnifyingGlass, faMarker, faQuestionCircle, faRoute, faSync } from "@fortawesome/free-solid-svg-icons";
+import { faDownLong, faExclamationTriangle, faMagnifyingGlass, faMarker, faQuestionCircle, faRoute, faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { groupBy } from "lodash";
 import { type JSX, useCallback, useContext, useMemo, useState } from "react";
@@ -38,7 +38,7 @@ export default function NetworkPage() {
     const devices = useAppSelector((state) => state.devices);
     const dispatch = useAppDispatch();
     const { sendMessage } = useContext(WebSocketApiRouterContext);
-    const { t } = useTranslation("network");
+    const { t } = useTranslation(["network", "common"]);
     const [filterValue, setFilterValue] = useState<string>("");
     const [highlightValue, setHighlightValue] = useState<string>("");
 
@@ -46,10 +46,15 @@ export default function NetworkPage() {
         (friendlyName: string) => {
             return highlightValue && friendlyName.toLowerCase().includes(highlightValue.toLowerCase())
                 ? "bg-accent text-accent-content rounded-sm"
-                : "";
+                : undefined;
         },
         [highlightValue],
     );
+
+    const onRequestClick = useCallback(async () => {
+        dispatch(setNetworkGraphIsLoading());
+        await sendMessage("bridge/request/networkmap", { type: "raw", routes: false });
+    }, [dispatch, sendMessage]);
 
     const listRelations = useCallback(
         (relations: Zigbee2MQTTNetworkMap["links"]) => {
@@ -157,6 +162,11 @@ export default function NetworkPage() {
                                         <span className="badge badge-ghost">
                                             <PowerSource device={device} showLevel={false} />
                                         </span>
+                                        {node.failed.length > 0 && (
+                                            <span className="badge badge-ghost" title={`${t("common:failed")}: ${node.failed}`}>
+                                                <FontAwesomeIcon icon={faExclamationTriangle} className="text-error" beatFade />
+                                            </span>
+                                        )}
                                     </Link>
                                 )}
                             </li>
@@ -238,10 +248,7 @@ export default function NetworkPage() {
                 </label>
                 <Button
                     className="btn btn-primary btn-square"
-                    onClick={async () => {
-                        dispatch(setNetworkGraphIsLoading());
-                        await sendMessage("bridge/request/networkmap", { type: "raw", routes: false });
-                    }}
+                    onClick={onRequestClick}
                     title={graph.nodes.length > 0 ? t("refresh_data") : t("load")}
                 >
                     {graph.nodes.length > 0 ? <FontAwesomeIcon icon={faSync} /> : <FontAwesomeIcon icon={faDownLong} />}
