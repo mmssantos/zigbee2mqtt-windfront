@@ -2,7 +2,7 @@ import { type JSX, useCallback, useContext, useEffect, useMemo, useState } from 
 import type { Device } from "../../../types.js";
 
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
-import { ReportingRow } from "../ReportingRow.js";
+import ReportingRow from "../ReportingRow.js";
 
 interface ReportingProps {
     device: Device;

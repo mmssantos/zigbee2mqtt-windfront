@@ -1,6 +1,6 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
 import type { FeatureWithAnySubFeatures, Group } from "../../types.js";
@@ -19,7 +19,7 @@ interface GroupMemberProps {
     getDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
 }
 
-export default function GroupMember(props: GroupMemberProps): JSX.Element {
+const GroupMember = memo((props: GroupMemberProps) => {
     const { removeDeviceFromGroup, groupMember, device, deviceState, lastSeenConfig, setDeviceState, getDeviceState } = props;
     const { endpoint } = groupMember;
     const { t } = useTranslation(["groups", "common"]);
@@ -75,4 +75,6 @@ export default function GroupMember(props: GroupMemberProps): JSX.Element {
             </ConfirmButton>
         </DeviceCard>
     );
-}
+});
+
+export default GroupMember;

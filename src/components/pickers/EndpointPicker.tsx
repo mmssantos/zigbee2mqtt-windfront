@@ -1,4 +1,4 @@
-import { type JSX, type SelectHTMLAttributes, useMemo } from "react";
+import { type JSX, type SelectHTMLAttributes, memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import SelectField from "../form-fields/SelectField.js";
 
@@ -9,7 +9,7 @@ interface EndpointPickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElemen
     values: Set<string | number>;
 }
 
-export default function EndpointPicker(props: EndpointPickerProps) {
+const EndpointPicker = memo((props: EndpointPickerProps) => {
     const { value, values, disabled, onChange, label, ...rest } = props;
     const { t } = useTranslation("common");
     const hasOnlyOneEP = values.size === 1;
@@ -44,4 +44,6 @@ export default function EndpointPicker(props: EndpointPickerProps) {
             {options}
         </SelectField>
     );
-}
+});
+
+export default EndpointPicker;

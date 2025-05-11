@@ -1,6 +1,6 @@
 import { faLink, faUnlink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { memo, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import type { RootState } from "../../store.js";
@@ -42,7 +42,7 @@ const isValidRule = (rule: NiceBindingRule): boolean => {
 
 type Action = "Bind" | "Unbind";
 
-export function BindRow(props: BindRowProps) {
+const BindRow = memo((props: BindRowProps) => {
     const { devices, groups, device, rule } = props;
     const [state, setState] = useState<BindRowState>({ rule });
     const { sendMessage } = useContext(WebSocketApiRouterContext);
@@ -242,4 +242,6 @@ export function BindRow(props: BindRowProps) {
             <div className="divider" />
         </>
     );
-}
+});
+
+export default BindRow;

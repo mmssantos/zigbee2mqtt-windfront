@@ -6,9 +6,9 @@ import { HashRouter, Route, Routes } from "react-router";
 import { ErrorBoundary } from "./ErrorBoundary.js";
 import { WebSocketApiRouter } from "./WebSocketApiRouter.js";
 import ScrollToTop from "./components/ScrollToTop.js";
-import Toasts from "./components/Toasts.js";
 import { AuthForm } from "./components/modal/components/AuthModal.js";
-import { NavBar } from "./components/navbar/NavBar.js";
+import NavBar from "./components/navbar/NavBar.js";
+import Toasts from "./components/toasts/Toasts.js";
 import i18n from "./i18n/index.js";
 import store from "./store.js";
 

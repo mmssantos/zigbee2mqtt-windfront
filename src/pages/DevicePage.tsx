@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type JSX, lazy, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, type NavLinkRenderProps, useNavigate, useParams } from "react-router";
-import { HeaderDeviceSelector } from "../components/device-page/HeaderDeviceSelector.js";
+import HeaderDeviceSelector from "../components/device-page/HeaderDeviceSelector.js";
 import { useAppSelector } from "../hooks/useApp.js";
 
 export type TabName =

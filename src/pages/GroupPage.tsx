@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { lazy, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, type NavLinkRenderProps, useNavigate, useParams } from "react-router";
-import { HeaderGroupSelector } from "../components/group-page/HeaderGroupSelector.js";
+import HeaderGroupSelector from "../components/group-page/HeaderGroupSelector.js";
 import { useAppSelector } from "../hooks/useApp.js";
 
 export type TabName = "devices" | "settings";

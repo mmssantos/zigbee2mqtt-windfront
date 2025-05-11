@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import type { Scene } from "../../types.js";
 import InputField from "../form-fields/InputField.js";
@@ -9,7 +9,8 @@ type ScenePickerProps = {
     scenes: Scene[];
     onSceneSelected: (sceneId: number) => void;
 };
-export function ScenePicker(props: ScenePickerProps): JSX.Element {
+
+const ScenePicker = memo((props: ScenePickerProps) => {
     const { t } = useTranslation("scene");
     const { onSceneSelected, scenes = [], value } = props;
 
@@ -40,4 +41,6 @@ export function ScenePicker(props: ScenePickerProps): JSX.Element {
             max={255}
         />
     );
-}
+});
+
+export default ScenePicker;

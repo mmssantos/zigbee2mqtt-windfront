@@ -1,9 +1,9 @@
 import { faPaintBrush } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import store2 from "store2";
 import { THEME_KEY } from "../localStoreConsts.js";
-import PopoverDropdown from "./dropdown/PopoverDropdown.js";
+import PopoverDropdown from "./PopoverDropdown.js";
 
 const ALL_THEMES = [
     "", // "Default"
@@ -47,7 +47,7 @@ const ALL_THEMES = [
 // XXX: workaround typing
 const local = store2 as unknown as typeof store2.default;
 
-export const ThemeSwitcher = ({ useExistingChildren }: { useExistingChildren?: true }): JSX.Element => {
+const ThemeSwitcher = memo(({ useExistingChildren }: { useExistingChildren?: true }) => {
     const [currentTheme, setCurrentTheme] = useState<string>(local.get(THEME_KEY, ""));
 
     useEffect(() => {
@@ -77,4 +77,6 @@ export const ThemeSwitcher = ({ useExistingChildren }: { useExistingChildren?: t
                 ))}
         </PopoverDropdown>
     );
-};
+});
+
+export default ThemeSwitcher;

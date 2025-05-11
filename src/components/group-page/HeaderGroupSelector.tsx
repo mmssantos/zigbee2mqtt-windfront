@@ -1,12 +1,12 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { TabName } from "../../pages/GroupPage.js";
 import type { RootState } from "../../store.js";
 import type { Group } from "../../types.js";
-import PopoverDropdown from "../dropdown/PopoverDropdown.js";
+import PopoverDropdown from "../PopoverDropdown.js";
 
 interface HeaderGroupSelectorProps {
     groups: RootState["groups"];
@@ -14,7 +14,7 @@ interface HeaderGroupSelectorProps {
     tab?: TabName;
 }
 
-export function HeaderGroupSelector(props: HeaderGroupSelectorProps): JSX.Element {
+const HeaderGroupSelector = memo((props: HeaderGroupSelectorProps) => {
     const { groups, currentGroup, tab = "devices" } = props;
     const [searchTerm, setSearchTerm] = useState<string>("");
     const { t } = useTranslation("common");
@@ -45,4 +45,6 @@ export function HeaderGroupSelector(props: HeaderGroupSelectorProps): JSX.Elemen
             {items}
         </PopoverDropdown>
     );
-}
+});
+
+export default HeaderGroupSelector;

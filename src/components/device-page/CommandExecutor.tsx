@@ -8,7 +8,7 @@ import InputField from "../form-fields/InputField.js";
 import TextareaField from "../form-fields/TextareaField.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
 import type { ClusterGroup } from "../pickers/index.js";
-import { LastLogResult } from "./LastLogResult.js";
+import LastLogResult from "./LastLogResult.js";
 
 interface CommandExecutorProps {
     lastLog?: LogMessage;

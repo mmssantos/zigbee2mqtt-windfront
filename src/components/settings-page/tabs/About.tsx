@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import frontendPackageJson from "../../../../package.json" with { type: "json" };
 import { useAppSelector } from "../../../hooks/useApp.js";
-import { Stats } from "../Stats.js";
+import Stats from "../Stats.js";
 
 export default function About() {
     const { t } = useTranslation("settings");

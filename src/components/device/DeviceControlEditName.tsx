@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { memo } from "react";
 import type { Device } from "../../types.js";
 import Button from "../Button.js";
 
@@ -15,7 +15,7 @@ interface DeviceControlEditNameProps {
     style: string;
 }
 
-export const DeviceControlEditName = (props: DeviceControlEditNameProps): JSX.Element => {
+const DeviceControlEditName = memo((props: DeviceControlEditNameProps) => {
     const { homeassistantEnabled, device, renameDevice, style } = props;
     const { t } = useTranslation("zigbee");
 
@@ -34,4 +34,6 @@ export const DeviceControlEditName = (props: DeviceControlEditNameProps): JSX.El
             <FontAwesomeIcon icon={faEdit} />
         </Button>
     );
-};
+});
+
+export default DeviceControlEditName;

@@ -8,7 +8,7 @@ import Button from "../components/Button.js";
 import DashboardFeatureWrapper from "../components/dashboard-page/DashboardFeatureWrapper.js";
 import { getDashboardFeatures } from "../components/dashboard-page/index.js";
 import DeviceCard from "../components/device/DeviceCard.js";
-import { DeviceControlEditName } from "../components/device/DeviceControlEditName.js";
+import DeviceControlEditName from "../components/device/DeviceControlEditName.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import { RemoveDeviceModal } from "../components/modal/components/RemoveDeviceModal.js";
 import { useAppSelector } from "../hooks/useApp.js";

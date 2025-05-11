@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useContext, useMemo, useState } from "react";
+import { memo, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
@@ -12,7 +12,7 @@ interface AddDeviceToGroupProps {
     group: Group;
 }
 
-export default function AddDeviceToGroup(props: AddDeviceToGroupProps): JSX.Element {
+const AddDeviceToGroup = memo((props: AddDeviceToGroupProps) => {
     const [endpoint, setEndpoint] = useState<string | number>("");
     const [deviceIeee, setDeviceIeee] = useState<string>("");
     const { group } = props;
@@ -46,4 +46,6 @@ export default function AddDeviceToGroup(props: AddDeviceToGroupProps): JSX.Elem
             </Button>
         </>
     );
-}
+});
+
+export default AddDeviceToGroup;

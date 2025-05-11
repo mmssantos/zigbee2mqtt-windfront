@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { LOG_LEVELS_CMAP } from "../consts.js";
-import type { LogMessage } from "../types.js";
+import { LOG_LEVELS_CMAP } from "../../consts.js";
+import type { LogMessage } from "../../types.js";
 
 type ToastProps = {
     idx: number;

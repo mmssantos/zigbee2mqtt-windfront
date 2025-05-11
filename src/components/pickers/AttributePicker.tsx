@@ -1,4 +1,4 @@
-import { type ChangeEvent, type InputHTMLAttributes, type JSX, useMemo } from "react";
+import { type ChangeEvent, type InputHTMLAttributes, type JSX, memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { useAppSelector } from "../../hooks/useApp.js";
@@ -12,7 +12,7 @@ interface AttributePickerProps extends Omit<InputHTMLAttributes<HTMLSelectElemen
     onChange: (attr: string, definition: AttributeDefinition) => void;
 }
 
-export default function AttributePicker(props: AttributePickerProps): JSX.Element {
+const AttributePicker = memo((props: AttributePickerProps) => {
     const { cluster, device, onChange, label, ...rest } = props;
     const bridgeDefinitions = useAppSelector((state) => state.bridgeDefinitions);
     const { t } = useTranslation("zigbee");
@@ -68,4 +68,6 @@ export default function AttributePicker(props: AttributePickerProps): JSX.Elemen
             {options}
         </SelectField>
     );
-}
+});
+
+export default AttributePicker;

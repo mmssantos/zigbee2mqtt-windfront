@@ -1,5 +1,5 @@
 import snakeCase from "lodash/snakeCase.js";
-import { type JSX, useMemo } from "react";
+import { type JSX, memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { RootState } from "../../store.js";
@@ -36,7 +36,7 @@ function StatRow({ name, data }: StatRowProps) {
     );
 }
 
-export function Stats(props: StatsProps) {
+const Stats = memo((props: StatsProps) => {
     const { devices } = props;
     const { t } = useTranslation(["stats", "zigbee"]);
 
@@ -81,4 +81,6 @@ export function Stats(props: StatsProps) {
             {statRows}
         </ul>
     );
-}
+});
+
+export default Stats;

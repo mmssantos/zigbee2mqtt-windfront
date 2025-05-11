@@ -1,4 +1,4 @@
-import { type ChangeEvent, type JSX, type SelectHTMLAttributes, useMemo } from "react";
+import { type ChangeEvent, type JSX, type SelectHTMLAttributes, memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
 import type { Device, Group } from "../../types.js";
@@ -11,7 +11,7 @@ interface DevicePickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>
     onChange(device?: Device | Group): void;
 }
 
-export default function DevicePicker(props: DevicePickerProps) {
+const DevicePicker = memo((props: DevicePickerProps) => {
     const { t } = useTranslation("common");
     const { devices, value, label, onChange, groups = [], ...rest } = props;
 
@@ -67,4 +67,6 @@ export default function DevicePicker(props: DevicePickerProps) {
             {options}
         </SelectField>
     );
-}
+});
+
+export default DevicePicker;

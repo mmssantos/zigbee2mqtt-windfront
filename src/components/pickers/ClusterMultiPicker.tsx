@@ -1,4 +1,4 @@
-import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, type JSX, useCallback, useMemo } from "react";
+import { type ChangeEvent, type DetailedHTMLProps, type InputHTMLAttributes, memo, useCallback, useMemo } from "react";
 
 export interface ClusterMultiPickerProps extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onChange"> {
     label?: string;
@@ -7,7 +7,7 @@ export interface ClusterMultiPickerProps extends Omit<DetailedHTMLProps<InputHTM
     onChange(clusters: string[] | undefined): void;
 }
 
-export default function ClusterMultiPicker(props: ClusterMultiPickerProps): JSX.Element {
+const ClusterMultiPicker = memo((props: ClusterMultiPickerProps) => {
     const { clusters, onChange, label, value, disabled } = props;
 
     const onChangeHandler = useCallback(
@@ -53,4 +53,6 @@ export default function ClusterMultiPicker(props: ClusterMultiPickerProps): JSX.
             <div className="flex flex-row flex-wrap gap-2">{options}</div>
         </fieldset>
     );
-}
+});
+
+export default ClusterMultiPicker;

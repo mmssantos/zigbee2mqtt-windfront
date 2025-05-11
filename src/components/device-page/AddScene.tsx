@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useContext, useMemo, useState } from "react";
+import { memo, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
@@ -16,7 +16,7 @@ type AddSceneProps = {
     deviceState: DeviceState;
 };
 
-export default function AddScene(props: AddSceneProps): JSX.Element {
+const AddScene = memo((props: AddSceneProps) => {
     const { target, deviceState } = props;
     const { t } = useTranslation("scene");
     const { sendMessage } = useContext(WebSocketApiRouterContext);
@@ -105,4 +105,6 @@ export default function AddScene(props: AddSceneProps): JSX.Element {
             </Button>
         </>
     );
-}
+});
+
+export default AddScene;

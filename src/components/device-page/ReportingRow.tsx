@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback, useMemo, useState } from "react";
+import { type ChangeEvent, memo, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Device } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
@@ -27,7 +27,7 @@ const isValidRule = (rule: NiceReportingRule): boolean => {
     return REQUIRED_RULE_FIELDS.every((field) => rule[field] !== undefined && rule[field] !== "");
 };
 
-export function ReportingRow(props: ReportingRowProps) {
+const ReportingRow = memo((props: ReportingRowProps) => {
     const { rule, device, onApply } = props;
     const [state, setState] = useState<ReportingRowState>({ rule });
     const { t } = useTranslation(["zigbee", "common"]);
@@ -188,4 +188,6 @@ export function ReportingRow(props: ReportingRowProps) {
             <div className="divider" />
         </>
     );
-}
+});
+
+export default ReportingRow;

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useAppSelector } from "../hooks/useApp.js";
-import type { LogMessage } from "../types.js";
+import { useAppSelector } from "../../hooks/useApp.js";
+import type { LogMessage } from "../../types.js";
 import Toast from "./Toast.js";
 
 const TOAST_EXPIRY_TIME = 5000;

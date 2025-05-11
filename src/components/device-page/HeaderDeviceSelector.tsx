@@ -1,12 +1,12 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { TabName } from "../../pages/DevicePage.js";
 import type { RootState } from "../../store.js";
 import type { Device } from "../../types.js";
-import PopoverDropdown from "../dropdown/PopoverDropdown.js";
+import PopoverDropdown from "../PopoverDropdown.js";
 
 interface HeaderDeviceSelectorProps {
     devices: RootState["devices"];
@@ -14,7 +14,7 @@ interface HeaderDeviceSelectorProps {
     tab?: TabName;
 }
 
-export function HeaderDeviceSelector(props: HeaderDeviceSelectorProps): JSX.Element {
+const HeaderDeviceSelector = memo((props: HeaderDeviceSelectorProps) => {
     const { devices, currentDevice, tab = "info" } = props;
     const [searchTerm, setSearchTerm] = useState<string>("");
     const { t } = useTranslation("common");
@@ -50,4 +50,6 @@ export function HeaderDeviceSelector(props: HeaderDeviceSelectorProps): JSX.Elem
             {items}
         </PopoverDropdown>
     );
-}
+});
+
+export default HeaderDeviceSelector;

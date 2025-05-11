@@ -12,7 +12,7 @@ import {
     THEME_KEY,
 } from "../../../localStoreConsts.js";
 import Button from "../../Button.js";
-import { ThemeSwitcher } from "../../ThemeSwitcher.js";
+import ThemeSwitcher from "../../ThemeSwitcher.js";
 import InputField from "../../form-fields/InputField.js";
 import SelectField from "../../form-fields/SelectField.js";
 

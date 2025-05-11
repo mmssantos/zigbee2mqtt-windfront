@@ -10,7 +10,7 @@ import { useAppSelector } from "../../hooks/useApp.js";
 import LanguageSwitcher from "../../i18n/LanguageSwitcher.js";
 import { isIframe } from "../../utils.js";
 import ConfirmButton from "../ConfirmButton.js";
-import { ThemeSwitcher } from "../ThemeSwitcher.js";
+import ThemeSwitcher from "../ThemeSwitcher.js";
 import PermitJoinButton from "./PermitJoinButton.js";
 
 const URLS = [
@@ -56,7 +56,7 @@ const CONNECTION_STATUS = {
     [ReadyState.UNINSTANTIATED]: "status-error",
 };
 
-export const NavBar = () => {
+const NavBar = () => {
     const { t } = useTranslation(["navbar", "common"]);
     const restartRequired = useAppSelector((state) => state.bridgeInfo.restart_required);
     const { sendMessage, readyState } = useContext(WebSocketApiRouterContext);
@@ -127,3 +127,5 @@ export const NavBar = () => {
         </div>
     );
 };
+
+export default NavBar;

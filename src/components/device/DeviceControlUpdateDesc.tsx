@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { memo } from "react";
 import type { Device } from "../../types.js";
 import Button from "../Button.js";
 
@@ -13,7 +13,7 @@ interface DeviceControlUpdateDescProps {
     setDeviceDescription(old: string, newDesc: string): Promise<void>;
 }
 
-export const DeviceControlUpdateDesc = (props: DeviceControlUpdateDescProps): JSX.Element => {
+const DeviceControlUpdateDesc = memo((props: DeviceControlUpdateDescProps) => {
     const { device, setDeviceDescription } = props;
     const { t } = useTranslation("zigbee");
 
@@ -31,4 +31,6 @@ export const DeviceControlUpdateDesc = (props: DeviceControlUpdateDescProps): JS
             {device.description ? <FontAwesomeIcon icon={faEdit} /> : t("edit_description")}
         </Button>
     );
-};
+});
+
+export default DeviceControlUpdateDesc;

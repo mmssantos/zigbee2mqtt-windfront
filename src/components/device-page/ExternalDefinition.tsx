@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { memo, useCallback, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
@@ -12,7 +12,7 @@ export interface ExternalDefinitionProps {
     device: Device;
 }
 
-export function ExternalDefinition(props: ExternalDefinitionProps) {
+const ExternalDefinition = memo((props: ExternalDefinitionProps) => {
     const { device } = props;
     const [loading, setLoading] = useState<boolean>(false);
     const { sendMessage } = useContext(WebSocketApiRouterContext);
@@ -49,4 +49,6 @@ export function ExternalDefinition(props: ExternalDefinitionProps) {
             )}
         </div>
     );
-}
+});
+
+export default ExternalDefinition;

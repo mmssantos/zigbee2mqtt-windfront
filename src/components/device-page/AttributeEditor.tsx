@@ -9,7 +9,7 @@ import InputField from "../form-fields/InputField.js";
 import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
-import { LastLogResult } from "./LastLogResult.js";
+import LastLogResult from "./LastLogResult.js";
 
 export interface AttributeEditorProps {
     device: Device;

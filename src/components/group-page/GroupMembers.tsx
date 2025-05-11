@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useContext, useMemo } from "react";
+import { type JSX, memo, useCallback, useContext, useMemo } from "react";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import { useAppSelector } from "../../hooks/useApp.js";
 import type { Group } from "../../types.js";
@@ -8,7 +8,7 @@ interface GroupMembersProps {
     group: Group;
 }
 
-export default function GroupMembers(props: GroupMembersProps): JSX.Element {
+const GroupMembers = memo((props: GroupMembersProps) => {
     const { group } = props;
     const devices = useAppSelector((state) => state.devices);
     const deviceStates = useAppSelector((state) => state.deviceStates);
@@ -66,4 +66,6 @@ export default function GroupMembers(props: GroupMembersProps): JSX.Element {
     }, [group, devices, lastSeenConfig, deviceStates, removeMember, setDeviceState, getDeviceState]);
 
     return <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3">{groupMembers}</div>;
-}
+});
+
+export default GroupMembers;

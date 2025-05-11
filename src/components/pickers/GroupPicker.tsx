@@ -1,4 +1,4 @@
-import { type ChangeEvent, type JSX, type SelectHTMLAttributes, useCallback, useMemo } from "react";
+import { type ChangeEvent, type JSX, type SelectHTMLAttributes, memo, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { RootState } from "../../store.js";
 import type { Group } from "../../types.js";
@@ -10,7 +10,7 @@ interface GroupPickerProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>,
     onChange(group?: Group): void;
 }
 
-export default function GroupPicker(props: GroupPickerProps) {
+const GroupPicker = memo((props: GroupPickerProps) => {
     const { t } = useTranslation("common");
     const { groups, value, label, onChange, ...rest } = props;
 
@@ -47,4 +47,6 @@ export default function GroupPicker(props: GroupPickerProps) {
             {options}
         </SelectField>
     );
-}
+});
+
+export default GroupPicker;

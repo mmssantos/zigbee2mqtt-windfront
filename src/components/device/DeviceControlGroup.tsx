@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { InterviewState } from "../../consts.js";
 import ConfirmButton from "../ConfirmButton.js";
 import { RemoveDeviceModal } from "../modal/components/RemoveDeviceModal.js";
-import { DeviceControlEditName } from "./DeviceControlEditName.js";
+import DeviceControlEditName from "./DeviceControlEditName.js";
 
 interface DeviceControlGroupProps {
     device: Device;

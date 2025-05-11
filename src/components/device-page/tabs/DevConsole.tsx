@@ -4,7 +4,7 @@ import { useAppSelector } from "../../../hooks/useApp.js";
 import type { Device, LogMessage } from "../../../types.js";
 import { AttributeEditor, type AttributeInfo } from "../AttributeEditor.js";
 import { CommandExecutor } from "../CommandExecutor.js";
-import { ExternalDefinition } from "../ExternalDefinition.js";
+import ExternalDefinition from "../ExternalDefinition.js";
 
 interface DevConsoleProps {
     device: Device;

@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { memo } from "react";
 import { LOG_LEVELS_CMAP } from "../../consts.js";
 import type { LogMessage } from "../../types.js";
 
@@ -6,7 +6,7 @@ export type LastLogResultProps = {
     message: LogMessage;
 };
 
-export function LastLogResult(props: LastLogResultProps): JSX.Element {
+const LastLogResult = memo((props: LastLogResultProps) => {
     const { message } = props;
 
     return (
@@ -18,4 +18,6 @@ export function LastLogResult(props: LastLogResultProps): JSX.Element {
             </pre>
         </div>
     );
-}
+});
+
+export default LastLogResult;
