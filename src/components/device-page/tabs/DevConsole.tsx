@@ -1,7 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
-import { useAppSelector } from "../../../hooks/useApp.js";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useApp.js";
+import { resetDeviceState } from "../../../store.js";
 import type { Device, LogMessage } from "../../../types.js";
+import ConfirmButton from "../../ConfirmButton.js";
 import { AttributeEditor, type AttributeInfo } from "../AttributeEditor.js";
 import { CommandExecutor } from "../CommandExecutor.js";
 import ExternalDefinition from "../ExternalDefinition.js";
@@ -12,7 +15,9 @@ interface DevConsoleProps {
 
 const ATTRIBUTE_LOG_REGEX = /^(zhc:tz: Read result of |z2m: Publish 'set' 'read' to |z2m: Publish 'set' 'write' to |zhc:tz: Wrote )/;
 
-export default function DevConsole(props: DevConsoleProps) {
+export default function DevConsole({ device }: DevConsoleProps) {
+    const dispatch = useAppDispatch();
+    const { t } = useTranslation(["devConsole", "common"]);
     const lastLog = useAppSelector((state) => state.lastNonDebugLog);
     const [lastAttributeLog, setLastAttributeLog] = useState<LogMessage>();
     const [lastCommandLog, setLastCommandLog] = useState<LogMessage>();
@@ -62,18 +67,34 @@ export default function DevConsole(props: DevConsoleProps) {
         [sendMessage],
     );
 
+    const resetState = useCallback(() => {
+        dispatch(resetDeviceState(device.friendly_name));
+    }, [dispatch, device.friendly_name]);
+
     return (
         <div className="flex flex-col gap-3">
-            <ExternalDefinition device={props.device} />
+            <div className="flex flex-row justify-center items-center gap-2">
+                <ConfirmButton
+                    className="btn btn-error"
+                    onClick={resetState}
+                    title={t("reset_state")}
+                    modalDescription={t("common:dialog_confirmation_prompt")}
+                    modalCancelLabel={t("common:cancel")}
+                >
+                    {t("reset_state")}
+                </ConfirmButton>
+            </div>
+            <div className="divider" />
+            <ExternalDefinition device={device} />
             <div className="divider" />
             <div className="flex flex-row flex-wrap justify-evenly gap-4">
                 <AttributeEditor
-                    device={props.device}
+                    device={device}
                     lastLog={lastAttributeLog}
                     readDeviceAttributes={readDeviceAttributes}
                     writeDeviceAttributes={writeDeviceAttributes}
                 />
-                <CommandExecutor device={props.device} lastLog={lastCommandLog} />
+                <CommandExecutor device={device} lastLog={lastCommandLog} />
             </div>
         </div>
     );

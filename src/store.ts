@@ -1,4 +1,5 @@
 import { type PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
+import merge from "lodash/merge.js";
 import type { Zigbee2MQTTAPI, Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
 import type { AvailabilityState, LogMessage, Message, RecursiveMutable, TouchlinkDevice } from "./types.js";
 import { formatDate } from "./utils.js";
@@ -209,7 +210,10 @@ export const storeSlice = createSlice({
             }
         },
         updateDeviceStateMessage: (state, action: PayloadAction<Message<Zigbee2MQTTAPI["{friendlyName}"]>>) => {
-            state.deviceStates[action.payload.topic] = Object.assign(state.deviceStates[action.payload.topic] ?? {}, action.payload.payload);
+            state.deviceStates[action.payload.topic] = merge(state.deviceStates[action.payload.topic] ?? {}, action.payload.payload);
+        },
+        resetDeviceState: (state, action: PayloadAction<string>) => {
+            state.deviceStates[action.payload] = {};
         },
         updateAvailability: (state, action: PayloadAction<Message<Zigbee2MQTTAPI["{friendlyName}/availability"]>>) => {
             const friendlyName = action.payload.topic.split(AVAILABILITY_FEATURE_TOPIC_ENDING, 1)[0];
@@ -275,6 +279,7 @@ export const {
     setLogsLimit,
     addLog,
     updateDeviceStateMessage,
+    resetDeviceState,
     updateAvailability,
     setBridgeInfo,
     setBridgeState,
