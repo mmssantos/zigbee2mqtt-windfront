@@ -1,10 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { type JSX, useCallback, useContext, useMemo } from "react";
+import { type ChangeEvent, type JSX, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
+import store2 from "store2";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import DeviceControlGroup from "../components/device/DeviceControlGroup.js";
 import DeviceImage from "../components/device/DeviceImage.js";
+import CheckboxField from "../components/form-fields/CheckboxField.js";
 import Table from "../components/table/Table.js";
 import Availability from "../components/value-decorators/Availability.js";
 import LastSeen from "../components/value-decorators/LastSeen.js";
@@ -13,7 +15,7 @@ import ModelLink from "../components/value-decorators/ModelLink.js";
 import PowerSource from "../components/value-decorators/PowerSource.js";
 import VendorLink from "../components/value-decorators/VendorLink.js";
 import { useAppSelector } from "../hooks/useApp.js";
-import { DEVICE_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
+import { DEVICES_HIDE_DISABLED_KEY, DEVICE_TABLE_PAGE_SIZE_KEY } from "../localStoreConsts.js";
 import type { AvailabilityState, Device, DeviceState } from "../types.js";
 import { convertLastSeenToDate, toHex } from "../utils.js";
 
@@ -24,18 +26,23 @@ type DeviceTableData = {
     availabilityEnabledForDevice: boolean | undefined;
 };
 
+// XXX: workaround typing
+const local = store2 as unknown as typeof store2.default;
+
 export default function DevicesPage(): JSX.Element {
+    const { sendMessage } = useContext(WebSocketApiRouterContext);
     const devices = useAppSelector((state) => state.devices);
     const deviceStates = useAppSelector((state) => state.deviceStates);
     const bridgeConfig = useAppSelector((state) => state.bridgeInfo.config);
     const availability = useAppSelector((state) => state.availability);
+    const [hideDisabled, setHideDisabled] = useState<boolean>(local.get(DEVICES_HIDE_DISABLED_KEY, false));
     const { t } = useTranslation(["zigbee", "common", "availability"]);
 
     const data = useMemo((): DeviceTableData[] => {
         const renderDevices: DeviceTableData[] = [];
 
         for (const device of devices) {
-            if (device.type !== "Coordinator") {
+            if (device.type !== "Coordinator" && (!hideDisabled || !device.disabled)) {
                 const state = deviceStates[device.friendly_name] ?? {};
                 const deviceAvailability = bridgeConfig.devices[device.ieee_address]?.availability;
 
@@ -49,9 +56,12 @@ export default function DevicesPage(): JSX.Element {
         }
 
         return renderDevices;
-    }, [devices, deviceStates, bridgeConfig.devices, availability]);
+    }, [devices, deviceStates, bridgeConfig.devices, availability, hideDisabled]);
 
-    const { sendMessage } = useContext(WebSocketApiRouterContext);
+    const onHideDisabledChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        local.set(DEVICES_HIDE_DISABLED_KEY, e.target.checked);
+        setHideDisabled(e.target.checked);
+    }, []);
 
     const renameDevice = useCallback(
         async (from: string, to: string, homeassistantRename: boolean): Promise<void> => {
@@ -64,18 +74,21 @@ export default function DevicesPage(): JSX.Element {
         },
         [sendMessage],
     );
+
     const configureDevice = useCallback(
         async (id: string): Promise<void> => {
             await sendMessage("bridge/request/device/configure", { id });
         },
         [sendMessage],
     );
+
     const removeDevice = useCallback(
         async (id: string, force: boolean, block: boolean): Promise<void> => {
             await sendMessage("bridge/request/device/remove", { id, force, block });
         },
         [sendMessage],
     );
+
     const interviewDevice = useCallback(
         async (id: string): Promise<void> => {
             await sendMessage("bridge/request/device/interview", { id });
@@ -201,7 +214,9 @@ export default function DevicesPage(): JSX.Element {
             },
             {
                 id: "controls",
-                header: "",
+                header: () => (
+                    <CheckboxField name="hide_disabled" detail={t("common:hide_disabled")} onChange={onHideDisabledChange} checked={hideDisabled} />
+                ),
                 cell: ({
                     row: {
                         original: { device, state },
@@ -224,9 +239,11 @@ export default function DevicesPage(): JSX.Element {
             },
         ],
         [
+            hideDisabled,
             bridgeConfig.advanced.last_seen,
             bridgeConfig.availability.enabled,
             bridgeConfig.homeassistant.enabled,
+            onHideDisabledChange,
             renameDevice,
             removeDevice,
             configureDevice,

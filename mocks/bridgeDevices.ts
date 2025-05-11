@@ -1331,6 +1331,7 @@ export const BRIDGE_DEVICES: Message<Device[]> = {
             power_source: "Battery",
             supported: true,
             type: "EndDevice",
+            disabled: true,
         },
         {
             definition: {

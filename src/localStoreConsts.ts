@@ -15,3 +15,5 @@ export const HOMEPAGE_KEY = "homepage";
 export const PERMIT_JOIN_TIME_KEY = "permit-join-time";
 
 export const I18NEXTLNG_KEY = "i18nextLng";
+
+export const DEVICES_HIDE_DISABLED_KEY = "devices_hide_disabled";

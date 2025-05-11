@@ -66,8 +66,9 @@ const DeviceImage = memo((props: Readonly<DeviceImageProps>) => {
                         {disabled && (
                             <FontAwesomeIcon
                                 icon={faBan}
-                                title={t("device_disabled")}
-                                className="indicator-item indicator-middle indicator-center text-warning"
+                                title={t("common:disabled")}
+                                className="indicator-item indicator-middle indicator-center text-error"
+                                size="2xl"
                             />
                         )}
                         <LazyImage device={device} className={`grid place-items-center${className ? ` ${className}` : ""}`} />

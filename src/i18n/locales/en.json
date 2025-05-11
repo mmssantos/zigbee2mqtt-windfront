@@ -50,7 +50,9 @@
         "friendly_name": "Friendly name",
         "unknown_device": "Unknown device",
         "unknown_group": "Unknown group",
-        "failed": "Failed"
+        "failed": "Failed",
+        "disabled": "Disabled",
+        "hide_disabled": "Hide disabled"
     },
     "devicePage": {
         "about": "About",
