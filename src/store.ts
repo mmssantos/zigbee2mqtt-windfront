@@ -1,6 +1,6 @@
 import { type PayloadAction, configureStore, createSlice } from "@reduxjs/toolkit";
 import merge from "lodash/merge.js";
-import type { Zigbee2MQTTAPI, Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
+import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
 import type { AvailabilityState, LogMessage, Message, RecursiveMutable, TouchlinkDevice } from "./types.js";
 import { formatDate } from "./utils.js";
 
@@ -24,8 +24,8 @@ interface State {
     touchlinkScanInProgress: boolean;
     touchlinkIdentifyInProgress: boolean;
     touchlinkResetInProgress: boolean;
-    networkGraph: Zigbee2MQTTNetworkMap;
-    networkGraphIsLoading: boolean;
+    networkMap: Zigbee2MQTTAPI["bridge/response/networkmap"] | undefined;
+    networkMapIsLoading: boolean;
     preparingBackup: boolean;
     /** base64 */
     backup: string;
@@ -156,11 +156,8 @@ const initialState: State = {
     touchlinkScanInProgress: false,
     touchlinkIdentifyInProgress: false,
     touchlinkResetInProgress: false,
-    networkGraph: {
-        links: [],
-        nodes: [],
-    },
-    networkGraphIsLoading: false,
+    networkMap: undefined,
+    networkMapIsLoading: false,
     preparingBackup: false,
     backup: "",
 };
@@ -236,21 +233,13 @@ export const storeSlice = createSlice({
             // avoid sorting on-sites
             state.groups = action.payload.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name));
         },
-        setNetworkGraph: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/response/networkmap"]["value"] | null>) => {
-            state.networkGraphIsLoading = false;
-
-            if (action.payload == null) {
-                state.networkGraph = {
-                    links: [],
-                    nodes: [],
-                };
-            } else if (typeof action.payload !== "string") {
-                state.networkGraph = action.payload;
-            }
+        setNetworkMap: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/response/networkmap"] | undefined>) => {
+            state.networkMapIsLoading = false;
+            state.networkMap = action.payload;
         },
-        setNetworkGraphIsLoading: (state) => {
-            state.networkGraphIsLoading = true;
-            state.networkGraph = { nodes: [], links: [] };
+        setNetworkMapIsLoading: (state) => {
+            state.networkMapIsLoading = true;
+            state.networkMap = undefined;
         },
         setBackup: (state, action: PayloadAction<Zigbee2MQTTAPI["bridge/response/backup"]["zip"]>) => {
             state.preparingBackup = false;
@@ -286,8 +275,8 @@ export const {
     setBridgeDefinitions,
     setDevices,
     setGroups,
-    setNetworkGraph,
-    setNetworkGraphIsLoading,
+    setNetworkMap,
+    setNetworkMapIsLoading,
     setBackup,
     setBackupPreparing,
     addGeneratedExternalDefinition,

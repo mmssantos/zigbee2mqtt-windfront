@@ -56,8 +56,12 @@ export default function DevicePage(): JSX.Element {
     const device = deviceId ? devices.find((device) => device.ieee_address === deviceId) : undefined;
 
     useEffect(() => {
-        if (!tab && device) {
-            navigate(`/device/${device.ieee_address}/info`);
+        if (device) {
+            if (!tab) {
+                navigate(device.type === "Coordinator" ? "/settings/about" : `/device/${device.ieee_address}/info`, { replace: true });
+            } else if (device.type === "Coordinator") {
+                navigate("/settings/about", { replace: true });
+            }
         }
     }, [tab, device, navigate]);
 

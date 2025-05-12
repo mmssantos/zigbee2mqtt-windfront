@@ -1,5 +1,6 @@
 import merge from "lodash/merge.js";
 import { WebSocketServer } from "ws";
+import type { Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
 import type { Message, ResponseMessage } from "../src/types.js";
 import { BRIDGE_DEFINITION } from "./bridgeDefinitions.js";
 import { BRIDGE_DEVICES } from "./bridgeDevices.js";
@@ -94,9 +95,27 @@ export function startServer() {
 
             switch (msg.topic) {
                 case "bridge/request/networkmap": {
-                    setTimeout(() => {
-                        ws.send(JSON.stringify(NETWORK_MAP_RESPONSE));
-                    }, 2500);
+                    if (msg.payload.type === "raw") {
+                        const response = merge({}, NETWORK_MAP_RESPONSE);
+
+                        if (msg.payload.routes) {
+                            response.payload.data.routes = true;
+
+                            (response.payload.data.value as Zigbee2MQTTNetworkMap).links[0].routes.push(
+                                ...[
+                                    { destinationAddress: 0x1234, nextHop: 14567, status: "ACTIVE" },
+                                    { destinationAddress: 0x5678, nextHop: 14567, status: "DISCOVERY_UNDERWAY" },
+                                    { destinationAddress: 0x2345, nextHop: 14567, status: "DISCOVERY_FAILED" },
+                                    { destinationAddress: 0x7890, nextHop: 14567, status: "INACTIVE" },
+                                ],
+                            );
+                        }
+
+                        setTimeout(() => {
+                            ws.send(JSON.stringify(response));
+                        }, 2500);
+                    }
+
                     break;
                 }
                 case "bridge/request/touchlink/scan": {

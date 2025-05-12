@@ -23,7 +23,7 @@ export default function SettingsPage() {
 
     useEffect(() => {
         if (!tab) {
-            navigate("/settings/about");
+            navigate("/settings/about", { replace: true });
         }
     }, [tab, navigate]);
 

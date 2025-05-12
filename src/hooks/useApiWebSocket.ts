@@ -115,7 +115,7 @@ const processBridgeMessage = (data: Message, dispatch: ReturnType<typeof useAppD
         case "bridge/response/networkmap": {
             const response = data.payload as Zigbee2MQTTResponse<typeof data.topic>;
 
-            dispatch(store.setNetworkGraph(response.status === "ok" ? response.data.value : null));
+            dispatch(store.setNetworkMap(response.status === "ok" ? response.data : undefined));
 
             break;
         }

@@ -26,7 +26,7 @@ export default function GroupPage() {
 
     useEffect(() => {
         if (!tab && group) {
-            navigate(`/group/${group.id}/devices`);
+            navigate(`/group/${group.id}/devices`, { replace: true });
         }
     }, [tab, group, navigate]);
 

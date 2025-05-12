@@ -10,7 +10,7 @@ export default function HomePage(): JSX.Element {
     const navigate = useNavigate();
 
     useEffect(() => {
-        navigate(local.get(HOMEPAGE_KEY) === "dashboard" ? "/dashboard" : "/devices");
+        navigate(local.get(HOMEPAGE_KEY) === "dashboard" ? "/dashboard" : "/devices", { replace: true });
     }, [navigate]);
 
     return <></>;
