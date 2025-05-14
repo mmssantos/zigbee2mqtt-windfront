@@ -95,25 +95,59 @@ export function startServer() {
 
             switch (msg.topic) {
                 case "bridge/request/networkmap": {
-                    if (msg.payload.type === "raw") {
-                        const response = merge({}, NETWORK_MAP_RESPONSE);
+                    switch (msg.payload.type) {
+                        case "raw": {
+                            const response = merge({}, NETWORK_MAP_RESPONSE);
+                            response.payload.transaction = msg.payload.transaction;
 
-                        if (msg.payload.routes) {
-                            response.payload.data.routes = true;
+                            if (msg.payload.routes) {
+                                response.payload.data.routes = true;
 
-                            (response.payload.data.value as Zigbee2MQTTNetworkMap).links[0].routes.push(
-                                ...[
-                                    { destinationAddress: 0x1234, nextHop: 14567, status: "ACTIVE" },
-                                    { destinationAddress: 0x5678, nextHop: 14567, status: "DISCOVERY_UNDERWAY" },
-                                    { destinationAddress: 0x2345, nextHop: 14567, status: "DISCOVERY_FAILED" },
-                                    { destinationAddress: 0x7890, nextHop: 14567, status: "INACTIVE" },
-                                ],
-                            );
+                                (response.payload.data.value as Zigbee2MQTTNetworkMap).links[0].routes.push(
+                                    ...[
+                                        { destinationAddress: 0x1234, nextHop: 14567, status: "ACTIVE" },
+                                        { destinationAddress: 0x5678, nextHop: 14567, status: "DISCOVERY_UNDERWAY" },
+                                        { destinationAddress: 0x2345, nextHop: 14567, status: "DISCOVERY_FAILED" },
+                                        { destinationAddress: 0x7890, nextHop: 14567, status: "INACTIVE" },
+                                    ],
+                                );
+                            }
+
+                            setTimeout(() => {
+                                ws.send(JSON.stringify(response));
+                            }, 2000);
+                            break;
                         }
-
-                        setTimeout(() => {
-                            ws.send(JSON.stringify(response));
-                        }, 2500);
+                        case "graphviz": {
+                            setTimeout(() => {
+                                ws.send(
+                                    JSON.stringify({
+                                        payload: {
+                                            data: { routes: msg.payload.routes, type: "graphviz", value: "mock-graphviz" },
+                                            status: "ok",
+                                            transaction: msg.payload.transaction,
+                                        },
+                                        topic: "bridge/response/networkmap",
+                                    }),
+                                );
+                            }, 2000);
+                            break;
+                        }
+                        case "plantuml": {
+                            setTimeout(() => {
+                                ws.send(
+                                    JSON.stringify({
+                                        payload: {
+                                            data: { routes: msg.payload.routes, type: "plantuml", value: "mock-plantuml" },
+                                            status: "ok",
+                                            transaction: msg.payload.transaction,
+                                        },
+                                        topic: "bridge/response/networkmap",
+                                    }),
+                                );
+                            }, 2000);
+                            break;
+                        }
                     }
 
                     break;

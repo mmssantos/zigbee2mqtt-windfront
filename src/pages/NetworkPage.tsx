@@ -1,4 +1,4 @@
-import { faDownLong, faSync } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faDownLong, faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type ChangeEvent, lazy, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -62,16 +62,38 @@ export default function NetworkPage() {
                     return displayType === "data" ? <RawNetworkData map={networkMap.value} /> : <RawNetworkMap map={networkMap.value} />;
                 }
                 case "graphviz": {
-                    // TODO
-                    // https://dreampuf.github.io/GraphvizOnline
-                    // https://edotor.net/
-                    return <textarea className="textarea w-full" rows={5} readOnly value={networkMap.value} />;
+                    return (
+                        <>
+                            <div className="alert alert-info alert-soft mb-3" role="alert">
+                                <FontAwesomeIcon icon={faCircleInfo} size="2xl" />
+                                {t("copy_paste_on")}
+                                <a href="https://dreampuf.github.io/GraphvizOnline" target="_blank" rel="noreferrer" className="link link-hover">
+                                    https://dreampuf.github.io/GraphvizOnline
+                                </a>
+                                <a href="https://edotor.net/" target="_blank" rel="noreferrer" className="link link-hover">
+                                    https://edotor.net/
+                                </a>
+                            </div>
+                            <textarea className="textarea w-full" rows={5} readOnly value={networkMap.value} />
+                        </>
+                    );
                 }
                 case "plantuml": {
-                    // TODO
-                    // https://editor.plantuml.com/uml/
-                    // https://www.planttext.com/
-                    return <textarea className="textarea w-full" rows={5} readOnly value={networkMap.value} />;
+                    return (
+                        <>
+                            <div className="alert alert-info alert-soft mb-3" role="alert">
+                                <FontAwesomeIcon icon={faCircleInfo} size="2xl" />
+                                {t("copy_paste_on")}
+                                <a href="https://editor.plantuml.com/uml/" target="_blank" rel="noreferrer" className="link link-hover">
+                                    https://editor.plantuml.com/uml/
+                                </a>
+                                <a href="https://www.planttext.com/" target="_blank" rel="noreferrer" className="link link-hover">
+                                    https://www.planttext.com/
+                                </a>
+                            </div>
+                            <textarea className="textarea w-full" rows={5} readOnly value={networkMap.value} />
+                        </>
+                    );
                 }
             }
         }
