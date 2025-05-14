@@ -1,7 +1,7 @@
 import { Component, type PropsWithChildren } from "react";
 import { NEW_GITHUB_ISSUE_URL } from "./consts.js";
 import store from "./store.js";
-import { download } from "./utils.js";
+import { downloadAsZip } from "./utils.js";
 
 type ErrorBoundaryState =
     | {
@@ -74,7 +74,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                                             type="button"
                                             className="btn btn-primary btn-square animate-pulse text-3xl"
                                             onClick={async () => {
-                                                await download(store.getState() as unknown as Record<string, unknown>, "state.json");
+                                                await downloadAsZip(store.getState() as unknown as Record<string, unknown>, "state.json");
                                             }}
                                         >
                                             ➘

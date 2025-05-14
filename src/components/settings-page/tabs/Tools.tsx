@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useApp.js";
 import store, { setBackupPreparing } from "../../../store.js";
-import { download, formatDate } from "../../../utils.js";
+import { downloadAsZip, formatDate } from "../../../utils.js";
 import Button from "../../Button.js";
 import ConfirmButton from "../../ConfirmButton.js";
 import { ImageLocaliser } from "../ImageLocaliser.js";
@@ -46,7 +46,7 @@ export default function Tools() {
             </ConfirmButton>
             <Button
                 className="btn btn-primary join-item"
-                onClick={async () => await download(store.getState() as unknown as Record<string, unknown>, "state.json")}
+                onClick={async () => await downloadAsZip(store.getState() as unknown as Record<string, unknown>, "state.json")}
             >
                 {t("download_state")}
             </Button>

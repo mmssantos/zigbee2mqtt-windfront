@@ -2583,7 +2583,18 @@
         "depth": "Depth",
         "routes": "Routes",
         "type": "Type",
-        "enable_routes": "Enable routes"
+        "enable_routes": "Enable routes",
+        "display_type": "Display type",
+        "layout_top_bottom": "Top-Bottom layout",
+        "layout_left_right": "Left-Right layout",
+        "download_image": "Download as image",
+        "zoom_in": "Zoom in",
+        "zoom_out": "Zoom out",
+        "fit_view": "Fit view",
+        "toggle_interactivity": "Toggle interactivity",
+        "node_of_type": "Node of type",
+        "link_of_type": "Link of type",
+        "node_info": "The top bar of a node is the 'target' side. The bottom bar of a node is the 'source' side. For example: 'Node 1 bottom -> Node 2 top' with link of type 'Parent' indicates Node 1 is a parent of Node 2."
     },
     "navbar": {
         "all": "All",

@@ -114,7 +114,7 @@ export const isSecurePage = (): boolean => location.protocol === "https:";
 
 export const isIframe = (): boolean => window.location !== window.parent.location;
 
-export const download = async (data: Record<string, unknown>, filename: string) => {
+export const downloadAsZip = async (data: Record<string, unknown>, filename: string) => {
     const { default: JSZip } = await import("jszip");
     const zip = new JSZip();
 

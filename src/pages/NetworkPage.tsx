@@ -1,15 +1,17 @@
 import { faDownLong, faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type ChangeEvent, useCallback, useContext, useMemo, useState } from "react";
+import { type ChangeEvent, lazy, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 import Button from "../components/Button.js";
 import CheckboxField from "../components/form-fields/CheckboxField.js";
 import SelectField from "../components/form-fields/SelectField.js";
-import RawNetworkMap from "../components/network-page/RawNetworkMap.js";
-import type { MapType } from "../components/network-page/index.js";
+import type { DisplayType, MapType } from "../components/network-page/index.js";
 import { useAppDispatch, useAppSelector } from "../hooks/useApp.js";
 import { setNetworkMapIsLoading } from "../store.js";
+
+const RawNetworkData = lazy(async () => await import("../components/network-page/RawNetworkData.js"));
+const RawNetworkMap = lazy(async () => await import("../components/network-page/RawNetworkMap.js"));
 
 export default function NetworkPage() {
     const dispatch = useAppDispatch();
@@ -19,10 +21,17 @@ export default function NetworkPage() {
     const networkMap = useAppSelector((state) => state.networkMap);
     const [mapType, setMapType] = useState<MapType>("raw");
     const [enableRoutes, setEnableRoutes] = useState(false);
+    const [displayType, setDisplayType] = useState<DisplayType>("data");
 
     const onMapTypeChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
         if (event.target.value) {
             setMapType(event.target.value as MapType);
+        }
+    }, []);
+
+    const onDisplayTypeChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+        if (event.target.value) {
+            setDisplayType(event.target.value as DisplayType);
         }
     }, []);
 
@@ -50,7 +59,7 @@ export default function NetworkPage() {
         if (networkMap) {
             switch (networkMap.type) {
                 case "raw": {
-                    return <RawNetworkMap map={networkMap.value} />;
+                    return displayType === "data" ? <RawNetworkData map={networkMap.value} /> : <RawNetworkMap map={networkMap.value} />;
                 }
                 case "graphviz": {
                     // TODO
@@ -68,7 +77,7 @@ export default function NetworkPage() {
         }
 
         return null;
-    }, [networkMap, networkMapIsLoading, t]);
+    }, [networkMap, networkMapIsLoading, displayType, t]);
 
     return (
         <>
@@ -80,13 +89,19 @@ export default function NetworkPage() {
                 </SelectField>
                 <CheckboxField name="enable_routes" label={t("enable_routes")} onChange={onEnableRoutesChange} />
                 <Button
-                    className="btn btn-primary btn-square self-center ms-3"
+                    className="btn btn-primary btn-square self-center ms-3 me-6"
                     onClick={onRequestClick}
                     title={networkMap ? t("reload") : t("load")}
                     disabled={networkMapIsLoading}
                 >
                     {networkMap ? <FontAwesomeIcon icon={faSync} /> : <FontAwesomeIcon icon={faDownLong} />}
                 </Button>
+                {networkMap?.type === "raw" && (
+                    <SelectField name="display_type" label={t("display_type")} value={displayType} onChange={onDisplayTypeChange}>
+                        <option value="data">data</option>
+                        <option value="map">map</option>
+                    </SelectField>
+                )}
             </div>
 
             {content}

@@ -1,6 +1,6 @@
 import NiceModal from "@ebay/nice-modal-react";
 import React, { lazy, Suspense } from "react";
-import { I18nextProvider } from "react-i18next";
+import { I18nextProvider, useTranslation } from "react-i18next";
 import { Provider } from "react-redux";
 import { HashRouter, Route, Routes } from "react-router";
 import { ErrorBoundary } from "./ErrorBoundary.js";
@@ -25,6 +25,8 @@ const LogsPage = lazy(async () => await import("./pages/LogsPage.js"));
 const SettingsPage = lazy(async () => await import("./pages/SettingsPage.js"));
 
 export function Main() {
+    const { t } = useTranslation("common");
+
     return (
         <React.StrictMode>
             <I18nextProvider i18n={i18n}>
@@ -37,7 +39,16 @@ export function Main() {
                                 <WebSocketApiRouter>
                                     <NavBar />
                                     <main className="p-3">
-                                        <Suspense fallback={<div>Loading...</div>}>
+                                        <Suspense
+                                            fallback={
+                                                <>
+                                                    <div className="flex flex-row justify-center items-center gap-2">
+                                                        <span className="loading loading-infinity loading-xl" />
+                                                    </div>
+                                                    <div className="flex flex-row justify-center items-center gap-2">{t("loading")}</div>
+                                                </>
+                                            }
+                                        >
                                             <Routes>
                                                 <Route path="/ota" element={<OtaPage />} />
                                                 <Route path="/network" element={<NetworkPage />} />

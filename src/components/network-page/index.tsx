@@ -1,8 +1,10 @@
-import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
+import type { Zigbee2MQTTAPI, Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
 
 export type MapType = Zigbee2MQTTAPI["bridge/response/networkmap"]["type"];
 
-const enum ZigbeeRelationship {
+export type DisplayType = "data" | "map";
+
+export const enum ZigbeeRelationship {
     NeighborIsParent = 0x00,
     NeighborIsAChild = 0x01,
     NeighborIsASibling = 0x02,
@@ -18,3 +20,9 @@ export const ZIGBEE_RELATIONSHIP_TMAP = {
     // Z2M is currently skipping > 3, so this is never present
     [ZigbeeRelationship.NeighborIsPreviousChild]: "previous_children",
 };
+
+export type RawMapNode = Zigbee2MQTTNetworkMap["nodes"][number];
+export type RawMapEdge = Zigbee2MQTTNetworkMap["links"][number];
+
+/** T = top, B = bottom, L = left, and R = right */
+export type DagreDirection = "TB" | "LR" | "BT" | "RL";
