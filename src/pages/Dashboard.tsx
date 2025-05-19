@@ -55,6 +55,11 @@ export default function Dashboard() {
 
                         if (validFeature) {
                             filteredFeatures.push(validFeature);
+
+                            // limit size of cards
+                            if (filteredFeatures.length === 10) {
+                                break;
+                            }
                         }
                     }
                 }

@@ -32,6 +32,11 @@ const GroupMember = memo((props: GroupMemberProps) => {
 
             if (validFeature) {
                 features.push(validFeature);
+
+                // limit size of cards
+                if (features.length === 10) {
+                    break;
+                }
             }
         }
 
