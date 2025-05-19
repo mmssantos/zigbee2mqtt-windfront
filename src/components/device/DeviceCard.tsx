@@ -34,7 +34,7 @@ export default function DeviceCard({
 
     return (
         <>
-            <li className="list-row flex-grow">
+            <li className="list-row grow">
                 <div className="h-12 w-12" style={{ overflow: "visible" }}>
                     {/* disabled always false because dashboard does not contain disabled devices */}
                     <DeviceImage disabled={false} device={device} otaState={deviceState.update?.state} />
@@ -64,7 +64,7 @@ export default function DeviceCard({
                             ),
                     )}
                     <div className="flex flex-row items-center gap-1 mt-3">
-                        <div className="flex-grow-1" />
+                        <div className="grow-1" />
                         <Link to={`/device/${device.ieee_address}/exposes`} className="link link-secondary" title={t("devicePage:exposes")}>
                             <FontAwesomeIcon icon={faCircleRight} size="xl" />
                         </Link>

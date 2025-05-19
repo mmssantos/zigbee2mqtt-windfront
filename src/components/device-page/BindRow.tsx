@@ -214,7 +214,7 @@ const BindRow = memo((props: BindRowProps) => {
                         onChange={onDestinationEndpointChange}
                     />
                 ) : null}
-                <div className="flex-grow w-128">
+                <div className="grow w-128">
                     <ClusterMultiPicker label={t("clusters")} clusters={possibleClusters} value={state.rule.clusters} onChange={onClustersChange} />
                 </div>
                 <fieldset className="fieldset">

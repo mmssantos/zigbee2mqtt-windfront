@@ -18,11 +18,11 @@ const DashboardFeatureWrapper = memo((props: PropsWithChildren<FeatureWrapperPro
     return (
         <div className="flex flex-row items-center gap-1 mb-2">
             <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} />
-            <div className="flex-grow-1">
+            <div className="grow-1">
                 {t(featureName!, { defaultValue: fallbackFeatureName })}
                 <span title={t("zigbee:endpoint")}>{feature.endpoint ? ` (${feature.endpoint})` : null}</span>
             </div>
-            <div className="flex-shrink-1">{children}</div>
+            <div className="shrink-1">{children}</div>
         </div>
     );
 });

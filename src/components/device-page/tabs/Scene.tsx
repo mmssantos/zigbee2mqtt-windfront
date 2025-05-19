@@ -11,7 +11,7 @@ export default function Scene(props: SceneProps) {
     const deviceState = useAppSelector((state) => state.deviceStates[props.device.friendly_name] ?? {});
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 auto-rows-fr gap-3 my-2">
+        <div className="flex flex-row flex-wrap justify-around items-start gap-3 my-2">
             <div>
                 <AddScene target={props.device} deviceState={deviceState} />
             </div>

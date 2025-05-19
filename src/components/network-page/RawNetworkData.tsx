@@ -63,7 +63,7 @@ const RawNetworkData = memo(({ map }: RawNetworkMapProps) => {
                     const nodeLink = node.type === "Coordinator" ? "/settings/about" : `/device/${node.ieeeAddr}/info`;
 
                     sortedNodes.push(
-                        <ul className="menu bg-base-100 rounded-box shadow w-full" key={node.friendlyName}>
+                        <ul className="flex-auto basis-sm menu bg-base-100 rounded-box shadow" key={node.friendlyName}>
                             <li
                                 title={`${t("zigbee:ieee_address")}: ${node.ieeeAddr} | ${t("zigbee:network_address")}: ${toHex(node.networkAddress, 4)} (${node.networkAddress})`}
                                 className={highlighted ? "bg-accent text-accent-content rounded-sm" : undefined}
@@ -167,7 +167,7 @@ const RawNetworkData = memo(({ map }: RawNetworkMapProps) => {
                     </kbd>
                 </label>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-3 p-3">{content}</div>
+            <div className="flex flex-row flex-wrap justify-between items-stretch gap-3 p-3">{content}</div>
         </>
     );
 });

@@ -72,7 +72,7 @@ export default function Groups({ device }: GroupsProps) {
 
     return (
         <>
-            <div className="grid grid-cols-1 auto-rows-fr gap-3 my-2">
+            <div className="flex flex-row flex-wrap justify-around items-start gap-3 my-2">
                 <div>
                     <h2 className="text-lg font-semibold">{t("add_to_group")}</h2>
                     <div className="mb-3">
@@ -88,12 +88,12 @@ export default function Groups({ device }: GroupsProps) {
                     </Button>
                 </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3 mt-2">
+            <div className="flex flex-row flex-wrap justify-between items-stretch gap-3 mt-3">
                 {memberGroups.map(([group, endpoint]) => (
-                    <ul className="list rounded-box shadow-md" key={`${group.id}-${endpoint}`}>
-                        <li className="list-row flex-grow">
+                    <ul className="flex-auto basis-sm list rounded-box shadow-md" key={`${group.id}-${endpoint}`}>
+                        <li className="list-row grow">
                             <div>
-                                <Link to={`/group/${group.id}/devices`} className="link link-hover link-primary">
+                                <Link to={`/group/${group.id}/devices`} className="link link-hover">
                                     #{group.id} - {group.friendly_name}
                                     {endpoint ? ` (${t("endpoint")}: ${endpoint})` : ""}
                                 </Link>

@@ -61,7 +61,7 @@ export default function Dashboard() {
 
                 if (filteredFeatures.length > 0) {
                     filteredDevices.push(
-                        <ul className="list rounded-box shadow-md" key={device.ieee_address}>
+                        <ul className="flex-auto basis-sm list rounded-box shadow-md" key={device.ieee_address}>
                             <DeviceCard
                                 features={filteredFeatures}
                                 device={device}
@@ -146,7 +146,7 @@ export default function Dashboard() {
                     </kbd>
                 </label>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-fr gap-3">{filteredDevices}</div>
+            <div className="flex flex-row flex-wrap justify-between items-stretch gap-3">{filteredDevices}</div>
         </>
     );
 }
