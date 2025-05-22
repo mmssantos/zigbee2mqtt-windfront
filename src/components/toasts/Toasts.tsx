@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
+import store2 from "store2";
 import { useAppSelector } from "../../hooks/useApp.js";
+import { MAX_ON_SCREEN_NOTIFICATIONS_KEY } from "../../localStoreConsts.js";
 import type { LogMessage } from "../../types.js";
 import Toast from "./Toast.js";
 
 const TOAST_EXPIRY_TIME = 5000;
 
 const BLACKLISTED_MESSAGES: string[] = ["MQTT publish"];
+
+// XXX: workaround typing
+const local = store2 as unknown as typeof store2.default;
 
 export default function Toasts() {
     const notificationFilter = useAppSelector((state) => state.bridgeInfo.config.frontend.notification_filter);
@@ -36,7 +41,7 @@ export default function Toasts() {
 
     return (
         <div className="toast max-w-prose">
-            {logs.slice(0, 4).map((log, idx) => (
+            {logs.slice(0, local.get(MAX_ON_SCREEN_NOTIFICATIONS_KEY, 1)).map((log, idx) => (
                 <Toast key={`${log.timestamp}-${log.message}`} idx={idx} log={log} expiry={TOAST_EXPIRY_TIME} remove={removeLog} />
             ))}
         </div>

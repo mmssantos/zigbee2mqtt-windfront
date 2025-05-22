@@ -7,6 +7,7 @@ import {
     GROUP_TABLE_PAGE_SIZE_KEY,
     HOMEPAGE_KEY,
     I18NEXTLNG_KEY,
+    MAX_ON_SCREEN_NOTIFICATIONS_KEY,
     OTA_TABLE_PAGE_SIZE_KEY,
     PERMIT_JOIN_TIME_KEY,
     THEME_KEY,
@@ -23,6 +24,7 @@ export default function Frontend() {
     const { t } = useTranslation(["settings", "navbar"]);
     const [homepage, setHomepage] = useState<string>(local.get(HOMEPAGE_KEY, "devices"));
     const [permitJoinTime, setPermitJoinTime] = useState<number>(local.get(PERMIT_JOIN_TIME_KEY, 254));
+    const [maxOnScreenNotifications, setMaxOnScreenNotifications] = useState<number>(local.get(MAX_ON_SCREEN_NOTIFICATIONS_KEY, 4));
 
     useEffect(() => {
         local.set(HOMEPAGE_KEY, homepage);
@@ -32,6 +34,10 @@ export default function Frontend() {
         local.set(PERMIT_JOIN_TIME_KEY, permitJoinTime);
     }, [permitJoinTime]);
 
+    useEffect(() => {
+        local.set(MAX_ON_SCREEN_NOTIFICATIONS_KEY, maxOnScreenNotifications);
+    }, [maxOnScreenNotifications]);
+
     const resetAll = () => {
         local.remove(DEVICE_TABLE_PAGE_SIZE_KEY);
         local.remove(OTA_TABLE_PAGE_SIZE_KEY);
@@ -39,6 +45,7 @@ export default function Frontend() {
         local.remove(THEME_KEY);
         local.remove(HOMEPAGE_KEY);
         local.remove(PERMIT_JOIN_TIME_KEY);
+        local.remove(MAX_ON_SCREEN_NOTIFICATIONS_KEY);
         local.remove(I18NEXTLNG_KEY);
 
         window.location.reload();
@@ -82,6 +89,18 @@ export default function Frontend() {
                     required
                     value={permitJoinTime}
                     onChange={(e) => !e.target.validationMessage && !!e.target.value && setPermitJoinTime(e.target.valueAsNumber)}
+                />
+            </div>
+            <div>
+                <InputField
+                    type="number"
+                    name="max_on_screen_notifications"
+                    label={t("max_on_screen_notifications")}
+                    min={1}
+                    max={5}
+                    required
+                    value={maxOnScreenNotifications}
+                    onChange={(e) => !e.target.validationMessage && !!e.target.value && setMaxOnScreenNotifications(e.target.valueAsNumber)}
                 />
             </div>
         </div>
