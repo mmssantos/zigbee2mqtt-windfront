@@ -35,7 +35,6 @@ const RawRelation = memo(({ relation, device, highlight, setHighlightValue, ...r
         >
             <details>
                 <summary className="flex flex-row">
-                    {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
                     <div className="w-8 h-8" onClick={onImageClick}>
                         <DeviceImage disabled={false} device={device} noIndicator={true} />
                     </div>

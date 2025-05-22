@@ -84,7 +84,6 @@ export default function Table<T>(props: Props<T>) {
                                     <th key={header.id} colSpan={header.colSpan}>
                                         {header.isPlaceholder ? null : (
                                             <>
-                                                {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
                                                 <div
                                                     className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
                                                     onClick={header.column.getToggleSortingHandler()}

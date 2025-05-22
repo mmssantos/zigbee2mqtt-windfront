@@ -103,6 +103,9 @@
             "suspicious": {
                 "noConstEnum": "off",
                 "useAwait": "error"
+            },
+            "a11y": {
+                "useKeyWithClickEvents": "off"
             }
         }
     },

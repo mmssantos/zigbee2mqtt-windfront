@@ -1,4 +1,4 @@
-import { type CSSProperties, type HTMLAttributes, type ReactElement, memo } from "react";
+import { type CSSProperties, type HTMLAttributes, type MouseEvent, type ReactElement, memo, useCallback } from "react";
 import Button from "./Button.js";
 
 interface PopoverDropdownProps extends HTMLAttributes<HTMLUListElement> {
@@ -13,6 +13,8 @@ const PopoverDropdown = memo((props: PopoverDropdownProps) => {
     const popoverId = `popover-${name}`;
     const anchorName = `--anchor-${name}`;
 
+    const onPopoverClick = useCallback((event: MouseEvent<HTMLUListElement>) => event.currentTarget.togglePopover(false), []);
+
     return (
         <>
             <ul
@@ -20,6 +22,7 @@ const PopoverDropdown = memo((props: PopoverDropdownProps) => {
                 popover=""
                 id={popoverId}
                 style={{ positionAnchor: anchorName, maxHeight: "95vh" } as CSSProperties}
+                onClick={onPopoverClick}
             >
                 {children}
             </ul>

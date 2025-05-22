@@ -68,7 +68,6 @@ const RawNetworkData = memo(({ map }: RawNetworkMapProps) => {
                                 title={`${t("zigbee:ieee_address")}: ${node.ieeeAddr} | ${t("zigbee:network_address")}: ${toHex(node.networkAddress, 4)} (${node.networkAddress})`}
                                 className={highlighted ? "bg-accent text-accent-content rounded-sm" : undefined}
                             >
-                                {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
                                 <span onClick={() => (highlighted ? setHighlightValue("") : setHighlightValue(node.friendlyName))}>
                                     <span className="w-10 h-10">
                                         <DeviceImage disabled={false} device={device} noIndicator={true} />
