@@ -152,6 +152,7 @@ const RawNetworkData = memo(({ map }: RawNetworkMapProps) => {
                         placeholder={t("common:highlight")}
                         value={highlightValue}
                         disabled={map.nodes.length === 0}
+                        title={t("highlight_info")}
                     />
                     <kbd
                         className="kbd kbd-sm cursor-pointer"
