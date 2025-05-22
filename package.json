@@ -27,8 +27,8 @@
         "typecheck": "tsc --noEmit",
         "check": "biome check --write .",
         "check:ci": "biome check .",
-        "i18n:dl": "node download_translations.mjs",
-        "i18n:tr": "node trim-locales.mjs",
+        "i18n:dl": "node ./scripts/download_translations.mjs",
+        "i18n:tr": "node ./scripts/trim-locales.mjs",
         "prepack": "npm run clean && npm run build"
     },
     "devDependencies": {
@@ -78,5 +78,10 @@
     },
     "sideEffects": [
         "*.css"
+    ],
+    "files": [
+        "./index.js",
+        "./index.d.ts",
+        "./dist"
     ]
 }
