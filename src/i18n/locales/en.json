@@ -2595,6 +2595,13 @@
         "node_of_type": "Node of type",
         "link_of_type": "Link of type",
         "node_info": "The top bar of a node is the 'target' side. The bottom bar of a node is the 'source' side. For example: 'Node 1 bottom -> Node 2 top' with link of type 'Parent' indicates Node 1 is a parent of Node 2.",
+        "pan_view": "Pan view",
+        "zoom_view": "Zoom view",
+        "change_focus": "Change focus",
+        "select_area": "Select area",
+        "select": "Select",
+        "unselect": "Unselect",
+        "move_selected": "Move selected",
         "copy_paste_on": "Copy and paste the following data in one of the available online viewers/editors.",
         "highlight_info": "Click on a device's image to highlight it automatically"
     },

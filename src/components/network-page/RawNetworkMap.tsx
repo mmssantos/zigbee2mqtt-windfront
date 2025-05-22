@@ -128,6 +128,8 @@ const RawNetworkMap = memo(({ map }: RawNetworkMapProps) => {
                 onEdgesChange={onEdgesChange}
                 elementsSelectable
                 selectNodesOnDrag={false}
+                elevateNodesOnSelect
+                elevateEdgesOnSelect
                 nodesDraggable
                 nodesFocusable
                 nodesConnectable={false}

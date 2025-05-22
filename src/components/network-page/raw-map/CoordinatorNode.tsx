@@ -7,12 +7,12 @@ import { Link } from "react-router";
 import { toHex } from "../../../utils.js";
 import type { RawMapNode } from "../index.js";
 
-const CoordinatorNode = memo(({ data }: NodeProps<Node<RawMapNode>>) => {
+const CoordinatorNode = memo(({ data, selected }: NodeProps<Node<RawMapNode>>) => {
     const { t } = useTranslation(["network"]);
 
     return (
         <>
-            <div className="w-16 h-16 p-1">
+            <div className={`w-16 h-16 p-1${selected ? " animate-pulse" : ""}`}>
                 <FontAwesomeIcon icon={faStar} size="3x" className="text-warning" />
             </div>
             <NodeToolbar position={Position.Bottom}>

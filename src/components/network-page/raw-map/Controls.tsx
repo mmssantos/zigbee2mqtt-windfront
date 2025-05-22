@@ -98,15 +98,41 @@ const Controls = memo(({ onLayout }: ControlsProps) => {
                     <FontAwesomeIcon icon={faQuestion} className="text-accent" />
                 </ControlButton>
                 {showHelp && (
-                    <div className="card shadow-sm max-w-prose">
-                        <div className="card-body bg-base-200">
-                            <p className="">{t("node_info")}</p>
+                    <div className="card shadow-sm max-w-prose max-h-[90vh]">
+                        <div className="card-body bg-base-200 overflow-y-auto">
+                            <p>{t("node_info")}</p>
                             <p className="text-primary">{t("node_of_type")} Coordinator</p>
                             <p className="text-secondary">{t("node_of_type")} Router</p>
                             <p className="text-accent">{t("node_of_type")} EndDevice</p>
                             <p className="text-warning">-- {t("link_of_type")} Parent</p>
                             <p className="text-success">-- {t("link_of_type")} Sibling</p>
                             <p className="text-info">-- {t("link_of_type")} Child</p>
+                            <div className="divider my-0.5" />
+                            <p>
+                                {t("pan_view")}: <kbd className="kbd kbd-sm">Mouse Drag</kbd>
+                            </p>
+                            <p>
+                                {t("zoom_view")}: <kbd className="kbd kbd-sm">Mouse Scroll</kbd>
+                            </p>
+                            <p>
+                                {t("select_area")}: <kbd className="kbd kbd-sm">Shift</kbd>+<kbd className="kbd kbd-sm">Mouse Drag</kbd>
+                            </p>
+                            <p>
+                                {t("change_focus")}: <kbd className="kbd kbd-sm">Tab</kbd> / <kbd className="kbd kbd-sm">Shift</kbd>+
+                                <kbd className="kbd kbd-sm">Tab</kbd>
+                            </p>
+                            <p>
+                                {t("select")}: <kbd className="kbd kbd-sm">Mouse Click</kbd> / <kbd className="kbd kbd-sm">Enter</kbd> /{" "}
+                                <kbd className="kbd kbd-sm">Space</kbd>
+                            </p>
+                            <p>
+                                {t("unselect")}: <kbd className="kbd kbd-sm">Mouse Click</kbd> (outside) / <kbd className="kbd kbd-sm">Escape</kbd>
+                            </p>
+                            <p>
+                                {t("move_selected")}: <kbd className="kbd kbd-sm">Mouse Drag</kbd> / <kbd className="kbd kbd-sm">Up</kbd> /{" "}
+                                <kbd className="kbd kbd-sm">Down</kbd> / <kbd className="kbd kbd-sm">Left</kbd> /{" "}
+                                <kbd className="kbd kbd-sm">Right</kbd>
+                            </p>
                         </div>
                     </div>
                 )}
