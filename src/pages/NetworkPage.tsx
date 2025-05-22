@@ -109,7 +109,7 @@ export default function NetworkPage() {
                     <option value="graphviz">graphviz</option>
                     <option value="plantuml">plantuml</option>
                 </SelectField>
-                <CheckboxField name="enable_routes" label={t("enable_routes")} onChange={onEnableRoutesChange} />
+                <CheckboxField name="enable_routes" label={t("enable_routes")} checked={enableRoutes} onChange={onEnableRoutesChange} />
                 <Button
                     className="btn btn-primary btn-square self-center ms-3 me-6"
                     onClick={onRequestClick}

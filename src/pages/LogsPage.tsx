@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button.js";
+import CheckboxField from "../components/form-fields/CheckboxField.js";
 import DebouncedInput from "../components/form-fields/DebouncedInput.js";
 import SelectField from "../components/form-fields/SelectField.js";
 import { LOG_LEVELS, LOG_LEVELS_CMAP, LOG_LIMITS } from "../consts.js";
@@ -52,7 +53,7 @@ export default function LogsPage() {
                         </option>
                     ))}
                 </SelectField>
-                <fieldset className="fieldset mb-1">
+                <fieldset className="fieldset">
                     <legend className="fieldset-legend">{t("filter_by_text")}</legend>
                     {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
                     <label className="input w-64">
@@ -79,10 +80,12 @@ export default function LogsPage() {
                         </kbd>
                     </label>
                 </fieldset>
-                <label className="label text-xs">
-                    <input type="checkbox" className="checkbox" checked={highlightOnly} onChange={(e) => setHighlightOnly(e.target.checked)} />
-                    {t("highlight_only")}
-                </label>
+                <CheckboxField
+                    name="highlight_only"
+                    label={t("highlight_only")}
+                    checked={highlightOnly}
+                    onChange={(e) => setHighlightOnly(e.target.checked)}
+                />
                 <SelectField
                     name="log_limit"
                     label={t("logs_limit")}
@@ -107,7 +110,7 @@ export default function LogsPage() {
                     {t("common:clear")}
                 </Button>
             </div>
-            <div className="mockup-code w-full">
+            <div className="mockup-code w-full mt-1">
                 {filteredLogs.length > 0 ? (
                     filteredLogs.map((log, idx) => (
                         <pre key={`${log.timestamp}-${log.message}`} data-prefix={idx} className={colorLog(log.message, log.level)}>
