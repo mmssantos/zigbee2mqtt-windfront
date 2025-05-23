@@ -58,14 +58,14 @@ You can edit the JSON files directly from Github, using the [EN](./src/i18n/loca
 
 For example:
 
-English:
+en.json
 ```json
 {
     "common": {
         "action": "Action",
         [...]
 ```
-Spanish
+es.json
 ```json
 {
     "common": {
