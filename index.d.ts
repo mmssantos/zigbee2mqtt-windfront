@@ -1,1 +1,1 @@
-declare function getPath(): string;
+export declare function getPath(): string;
