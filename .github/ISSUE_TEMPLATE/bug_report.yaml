@@ -13,7 +13,7 @@ body:
     attributes:
       label: Describe the bug
       description: |
-        A clear and concise description of what the bug is
+        A clear and concise description of what the bug is<br>
         If relevant, attach the state file downloaded from the error page or from `Zigbee2MQTT frontend > Settings > Tools > Download state` using the button below the text box (or drag & drop)
     validations:
       required: true
