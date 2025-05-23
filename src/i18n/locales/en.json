@@ -146,7 +146,8 @@
         "restart": "Restart",
         "settings": "Settings",
         "toggle_dropdown": "Toggle dropdown",
-        "touchlink": "Touchlink"
+        "touchlink": "Touchlink",
+        "websocket_status": "WebSocket status"
     },
     "ota": {
         "check": "Check for new updates",

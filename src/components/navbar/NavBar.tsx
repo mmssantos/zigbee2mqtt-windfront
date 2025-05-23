@@ -119,7 +119,7 @@ const NavBar = () => {
                     <LanguageSwitcher />
                     <ThemeSwitcher />
                 </ul>
-                <div className="inline-grid *:[grid-area:1/1]">
+                <div className="inline-grid *:[grid-area:1/1]" title={`${t("websocket_status")}: ${ReadyState[readyState]}`}>
                     <div className={`status ${connectionStatus} animate-ping`} />
                     <div className={`status ${connectionStatus}`} />
                 </div>
