@@ -1,5 +1,5 @@
 import { join } from "node:path";
 
-export function getPath() {
-    return join(import.meta.dirname, "dist");
-}
+export default {
+    getPath: () => join(import.meta.dirname, "dist"),
+};
