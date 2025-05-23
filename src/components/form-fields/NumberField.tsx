@@ -9,19 +9,18 @@ type NumberFieldProps = Omit<
     detail?: string;
     min?: number;
     max?: number;
-    defaultValue?: number | "";
-    value?: number | "";
+    defaultValue: number | "";
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
     onSubmit?: (value: number | "", valid: boolean) => void;
 };
 
 const NumberField = memo((props: NumberFieldProps) => {
-    const { label, detail, onChange, onSubmit, defaultValue, value, ...rest } = props;
-    const [currentValue, setCurrentValue] = useState<number | "">(defaultValue || value || props.min || "");
+    const { label, detail, onChange, onSubmit, defaultValue, ...rest } = props;
+    const [currentValue, setCurrentValue] = useState<number | "">(defaultValue);
 
     useEffect(() => {
-        setCurrentValue(defaultValue || value || props.min || "");
-    }, [defaultValue, value, props.min]);
+        setCurrentValue(defaultValue);
+    }, [defaultValue]);
 
     const onChangeHandler = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {

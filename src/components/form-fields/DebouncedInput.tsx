@@ -1,6 +1,6 @@
 import { type InputHTMLAttributes, memo, useEffect, useState } from "react";
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
+type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "defaultValue"> & {
     value: string | number;
     onChange: (value: string | number) => void;
     debounce?: number;

@@ -46,7 +46,7 @@ const propertyToField = (
                     detail={description}
                     onChange={(e) => !e.target.validationMessage && set({ [key]: e.target.checked })}
                     required={required}
-                    defaultChecked={(value as boolean) || false}
+                    defaultChecked={(value as boolean) ?? false}
                 />
             );
         }
@@ -62,7 +62,7 @@ const propertyToField = (
                         detail={description}
                         onChange={(e) => !e.target.validationMessage && set({ [key]: Number.parseInt(e.target.value, 10) })}
                         required={required}
-                        defaultValue={(value as number) || ""}
+                        defaultValue={(value as number) ?? ""}
                     >
                         <option value="" disabled>
                             -
@@ -82,11 +82,11 @@ const propertyToField = (
                     name={key}
                     label={key}
                     detail={description}
-                    onSubmit={(value, valid) => valid && set({ [key]: value })}
+                    onSubmit={(value, valid) => valid && set({ [key]: value === "" ? null : value })}
                     min={property.minimum}
                     max={property.maximum}
                     required={required}
-                    defaultValue={(value as number) || ""}
+                    defaultValue={(value as number) ?? ""}
                 />
             );
         }
@@ -101,7 +101,7 @@ const propertyToField = (
                         detail={description}
                         onChange={(e) => !e.target.validationMessage && set({ [key]: e.target.value })}
                         required={required}
-                        defaultValue={(value as string) || ""}
+                        defaultValue={(value as string) ?? ""}
                     >
                         <option value="" disabled>
                             -
@@ -124,7 +124,7 @@ const propertyToField = (
                     type="text"
                     onBlur={(e) => !e.target.validationMessage && set({ [key]: e.target.value })}
                     required={required}
-                    defaultValue={(value as string) || ""}
+                    defaultValue={(value as string) ?? ""}
                 />
             );
         }
@@ -140,7 +140,7 @@ const propertyToField = (
                             label={key}
                             detail={description}
                             onSubmit={(values) => set({ [key]: values })}
-                            defaultsChecked={(value as string[]) || []}
+                            defaultsChecked={(value as string[]) ?? []}
                         />
                     );
                 }
@@ -148,7 +148,7 @@ const propertyToField = (
                 if (items.type === "string" || items.type === "number") {
                     return (
                         <ArrayField
-                            defaultValues={(value as (string | number)[]) || []}
+                            defaultValues={(value as (string | number)[]) ?? []}
                             label={key}
                             detail={description}
                             onSubmit={(values) => set({ [key]: values })}
