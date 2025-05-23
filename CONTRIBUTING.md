@@ -49,3 +49,26 @@ All contributions are expected to build successfully.
 ```bash
 npm run build
 ```
+
+## Translating
+
+[Locales directory](./src/i18n/locales)
+
+You can edit the JSON files directly from Github, using the [EN](./src/i18n/locales/en.json) file as reference. _The EN file contains all the keys to support for full coverage in a given language._ If starting from a blank JSON, copy the content of the EN file in it and then translate the values.
+
+For example:
+
+English:
+```json
+{
+    "common": {
+        "action": "Action",
+        [...]
+```
+Spanish
+```json
+{
+    "common": {
+        "action": "Acción",
+        [...]
+```
