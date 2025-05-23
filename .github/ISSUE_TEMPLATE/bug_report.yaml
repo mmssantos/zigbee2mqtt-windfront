@@ -1,0 +1,57 @@
+name: Bug report
+description: Create a report to help us improve
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Before submitting any bug report, make sure that you can reproduce the issue with latest browsers versions and on latest Zigbee2MQTT dev branch
+        https://www.zigbee2mqtt.io/advanced/more/switch-to-dev-branch.html
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: describe
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen
+  - type: dropdown
+    id: browsers
+    validations:
+      required: true
+    attributes:
+      label: Affected browsers
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: stacktrace
+    attributes:
+      label: Stacktrace
+      render: shell
+  - type: dropdown
+    id: state
+    validations:
+      required: true
+    attributes:
+      label: Downloaded state
+      description: From the error page or from `Zigbee2MQTT frontend > Settings > Tools > Download state`.<br>[How to attach file](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files)<br>**NOT** `data/state.json` from zigbee2mqtt folder
+      multiple: false
+      options:
+        - State attached
+        - State not relevant for this bug
