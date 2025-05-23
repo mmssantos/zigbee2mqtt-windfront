@@ -12,7 +12,9 @@ body:
     id: describe
     attributes:
       label: Describe the bug
-      description: A clear and concise description of what the bug is
+      description: |
+        A clear and concise description of what the bug is
+        If relevant, attach the state file downloaded from the error page or from `Zigbee2MQTT frontend > Settings > Tools > Download state` using the button below the text box (or drag & drop)
     validations:
       required: true
   - type: textarea
@@ -44,14 +46,3 @@ body:
     attributes:
       label: Stacktrace
       render: shell
-  - type: dropdown
-    id: state
-    validations:
-      required: true
-    attributes:
-      label: Downloaded state
-      description: From the error page or from `Zigbee2MQTT frontend > Settings > Tools > Download state`<br>[How to attach file](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files)<br>**NOT** `data/state.json` from zigbee2mqtt folder
-      multiple: false
-      options:
-        - State attached
-        - State not relevant for this bug
