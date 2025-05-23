@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        # Before submitting any bug report, make sure that you can reproduce the issue with latest browsers versions and on latest Zigbee2MQTT dev branch
+        ### Before submitting any bug report, make sure that you can reproduce the issue with latest browsers versions and on latest Zigbee2MQTT dev branch
         https://www.zigbee2mqtt.io/advanced/more/switch-to-dev-branch.html
         Thanks for taking the time to fill out this bug report!
   - type: textarea
@@ -50,7 +50,7 @@ body:
       required: true
     attributes:
       label: Downloaded state
-      description: From the error page or from `Zigbee2MQTT frontend > Settings > Tools > Download state`.<br>[How to attach file](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files)<br>**NOT** `data/state.json` from zigbee2mqtt folder
+      description: From the error page or from `Zigbee2MQTT frontend > Settings > Tools > Download state`<br>[How to attach file](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/attaching-files)<br>**NOT** `data/state.json` from zigbee2mqtt folder
       multiple: false
       options:
         - State attached
