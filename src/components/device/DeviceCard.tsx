@@ -1,6 +1,6 @@
 import { faCircleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import type { DeviceState, FeatureWithAnySubFeatures, LastSeenConfig } from "../../types.js";
@@ -19,17 +19,7 @@ type Props = Omit<BaseWithSubFeaturesProps<FeatureWithAnySubFeatures>, "feature"
         endpoint?: string | number;
     }>;
 
-export default function DeviceCard({
-    onChange,
-    onRead,
-    device,
-    endpoint,
-    deviceState,
-    lastSeenConfig,
-    features,
-    featureWrapperClass,
-    children,
-}: Props) {
+const DeviceCard = memo(({ onChange, onRead, device, endpoint, deviceState, lastSeenConfig, features, featureWrapperClass, children }: Props) => {
     const { t } = useTranslation(["zigbee", "devicePage"]);
 
     return (
@@ -90,4 +80,6 @@ export default function DeviceCard({
             </li>
         </>
     );
-}
+});
+
+export default DeviceCard;
