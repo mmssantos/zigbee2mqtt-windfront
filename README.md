@@ -1,5 +1,9 @@
 # Zigbee2MQTT WindFront
 
+[![Version](https://img.shields.io/npm/v/zigbee2mqtt-windfront.svg)](https://npmjs.org/package/zigbee2mqtt-windfront)
+[![CI](https://github.com/Nerivec/zigbee2mqtt-windfront/actions/workflows/ci.yml/badge.svg)](https://github.com/Nerivec/zigbee2mqtt-windfront/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Nerivec/zigbee2mqtt-windfront/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Nerivec/zigbee2mqtt-windfront/actions/workflows/github-code-scanning/codeql)
+
 A frontend UI for [Zigbee2MQTT](https://github.com/Koenkk/zigbee2mqtt) using [tailwindcss](https://tailwindcss.com/) & [daisyui](https://daisyui.com).
 
 > Based on https://github.com/nurikk/zigbee2mqtt-frontend
