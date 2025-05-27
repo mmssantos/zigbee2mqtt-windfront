@@ -17,16 +17,6 @@ const DONATE_ROWS = [
             Sponsor Nerivec on Github
         </a>
     </div>,
-    <div key="nurikk" className="flex flex-row flex-wrap gap-3 items-center justify-items-center">
-        <a target="_blank" rel="noopener noreferrer" href="https://www.buymeacoffee.com/nurikk" className="h-10">
-            <img
-                alt="nurikk"
-                crossOrigin="anonymous"
-                src="https://img.buymeacoffee.com/button-api/?text=Thanks Nurikk&emoji=🍺&slug=nurikk&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff"
-                className="h-10"
-            />
-        </a>
-    </div>,
     <div key="koenkk" className="flex flex-row flex-wrap gap-3 items-center justify-items-center">
         <a target="_blank" rel="noopener noreferrer" href="https://www.buymeacoffee.com/koenkk" className="h-10">
             <img
