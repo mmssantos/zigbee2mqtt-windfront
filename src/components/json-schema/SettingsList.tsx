@@ -174,70 +174,68 @@ const groupProperties = (
     const nestedElements: JSX.Element[] = [];
 
     for (const key in properties) {
-        if (key === "friendly_name") {
-            continue; // not supported in direct assignment through options
-        }
-
         const property = properties[key];
 
-        if (typeof property !== "boolean") {
-            if (property.properties) {
-                if (!rootOnly) {
+        if (typeof property === "boolean" || property.readOnly) {
+            continue;
+        }
+
+        if (property.properties) {
+            if (!rootOnly) {
+                nestedElements.push(
+                    <div className="list" key={`${depth}-${key}`}>
+                        <h3 className="list-row text-lg">{property.title || key}</h3>
+                        {groupProperties(
+                            t,
+                            property.properties,
+                            (data[key] as Record<string, unknown>) || {},
+                            // wrap options payload with the parent key
+                            async (options) => set({ [key]: options }),
+                            depth + 1,
+                            property.required,
+                        )}
+                    </div>,
+                );
+            }
+        } else {
+            const oneOf = property.oneOf?.find((one) => typeof one === "object" && one.properties) as JSONSchema7 | undefined;
+
+            if (oneOf) {
+                // special case for syslog, only show if log output has syslog (i.e. enabled)
+                if (key !== "log_syslog" || (data.log_output as string[]).includes("syslog")) {
                     nestedElements.push(
                         <div className="list" key={`${depth}-${key}`}>
-                            <h3 className="list-row text-lg">{property.title || key}</h3>
+                            <h3 className="list-row text-lg">{oneOf.title || property.title || key}</h3>
                             {groupProperties(
                                 t,
-                                property.properties,
+                                oneOf.properties,
                                 (data[key] as Record<string, unknown>) || {},
                                 // wrap options payload with the parent key
                                 async (options) => set({ [key]: options }),
                                 depth + 1,
-                                property.required,
+                                oneOf.required,
                             )}
                         </div>,
                     );
                 }
             } else {
-                const oneOf = property.oneOf?.find((one) => typeof one === "object" && one.properties) as JSONSchema7 | undefined;
+                const feature = propertyToField(
+                    key,
+                    property,
+                    data[key],
+                    set,
+                    depth,
+                    required.includes(key),
+                    property.description ? t(property.description, { defaultValue: property.description }) : undefined,
+                );
 
-                if (oneOf) {
-                    // special case for syslog, only show if log output has syslog (i.e. enabled)
-                    if (key !== "log_syslog" || (data.log_output as string[]).includes("syslog")) {
-                        nestedElements.push(
-                            <div className="list" key={`${depth}-${key}`}>
-                                <h3 className="list-row text-lg">{oneOf.title || property.title || key}</h3>
-                                {groupProperties(
-                                    t,
-                                    oneOf.properties,
-                                    (data[key] as Record<string, unknown>) || {},
-                                    // wrap options payload with the parent key
-                                    async (options) => set({ [key]: options }),
-                                    depth + 1,
-                                    oneOf.required,
-                                )}
-                            </div>,
-                        );
-                    }
-                } else {
-                    const feature = propertyToField(
-                        key,
-                        property,
-                        data[key],
-                        set,
-                        depth,
-                        required.includes(key),
-                        property.description ? t(property.description, { defaultValue: property.description }) : undefined,
+                if (feature) {
+                    // XXX: enforce tailwind class presence: ps-4 ps-8 ps-12
+                    elements.push(
+                        <div className={`list-row${depth !== 0 ? ` ps-${4 + depth * 4}` : ""}`} key={`${depth}-${key}`}>
+                            {feature}
+                        </div>,
                     );
-
-                    if (feature) {
-                        // XXX: enforce tailwind class presence: ps-4 ps-8 ps-12
-                        elements.push(
-                            <div className={`list-row${depth !== 0 ? ` ps-${4 + depth * 4}` : ""}`} key={`${depth}-${key}`}>
-                                {feature}
-                            </div>,
-                        );
-                    }
                 }
             }
         }
