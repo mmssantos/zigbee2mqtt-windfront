@@ -1,6 +1,6 @@
 {
     "name": "zigbee2mqtt-windfront",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "GPL-3.0-or-later",
     "type": "module",
     "main": "index.js",
@@ -48,7 +48,7 @@
         "@vitejs/plugin-react": "~4.4.1",
         "@vitest/coverage-v8": "^3.1.4",
         "@xyflow/react": "^12.6.4",
-        "daisyui": "^5.0.40",
+        "daisyui": "^5.0.43",
         "file-saver": "~2.0.5",
         "html-to-image": "1.11.11",
         "i18next": "~25.1.2",
