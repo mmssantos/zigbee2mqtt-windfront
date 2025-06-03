@@ -1,8 +1,7 @@
-name: Publish package to npmjs
+name: Trigger Z2M update_dep workflow
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -21,14 +20,6 @@ jobs:
         with:
           node-version-file: 'package.json'
           registry-url: 'https://registry.npmjs.org'
-
-      - run: npm ci
-
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - run: sleep 30s
 
       - run: |
           npm_package=$(node -p 'require("./package.json").name')
