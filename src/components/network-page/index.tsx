@@ -1,8 +1,8 @@
-import type { Zigbee2MQTTAPI, Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
+import type { Zigbee2MQTTNetworkMap } from "zigbee2mqtt";
 
-export type MapType = Zigbee2MQTTAPI["bridge/response/networkmap"]["type"];
-
-export type DisplayType = "data" | "map";
+export type NetworkRawDisplayType = "data" | "map";
+export type NetworkMapNode = Zigbee2MQTTNetworkMap["nodes"][number];
+export type NetworkMapLink = Zigbee2MQTTNetworkMap["links"][number];
 
 export const enum ZigbeeRelationship {
     NeighborIsParent = 0x00,
@@ -12,17 +12,15 @@ export const enum ZigbeeRelationship {
     NeighborIsPreviousChild = 0x04,
 }
 
-export const ZIGBEE_RELATIONSHIP_TMAP = {
-    [ZigbeeRelationship.NeighborIsParent]: "parents",
-    [ZigbeeRelationship.NeighborIsAChild]: "children",
-    [ZigbeeRelationship.NeighborIsASibling]: "siblings",
-    [ZigbeeRelationship.NoneOfTheAbove]: "zigbee:none",
-    // Z2M is currently skipping > 3, so this is never present
-    [ZigbeeRelationship.NeighborIsPreviousChild]: "previous_children",
+export const NODE_TYPE_FILL_COLORS = {
+    Coordinator: "#ffff00",
+    Router: "#0000ff",
+    EndDevice: "#00ff00",
 };
 
-export type RawMapNode = Zigbee2MQTTNetworkMap["nodes"][number];
-export type RawMapEdge = Zigbee2MQTTNetworkMap["links"][number];
-
-/** T = top, B = bottom, L = left, and R = right */
-export type DagreDirection = "TB" | "LR" | "BT" | "RL";
+export const EDGE_RELATIONSHIP_FILL_COLORS = {
+    [ZigbeeRelationship.NeighborIsParent]: "#ff0000",
+    [ZigbeeRelationship.NeighborIsAChild]: "#44ff88",
+    [ZigbeeRelationship.NeighborIsASibling]: "#8888ff",
+    // others ignored by Z2M
+};
