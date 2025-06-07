@@ -14,7 +14,6 @@ A frontend UI for [Zigbee2MQTT](https://github.com/Koenkk/zigbee2mqtt) using [ta
 ![device-info](./screenshots/device-info.png)
 ![device-exposes](./screenshots/device-exposes.png)
 ![network-data](./screenshots/network-data.png)
-![network-map](./screenshots/network-map.png)
 
 ### 35 themes offered by the [design library](https://daisyui.com/docs/themes/#list-of-themes)!
 
