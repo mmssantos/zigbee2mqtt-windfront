@@ -17,4 +17,6 @@ EXPOSE 80
 
 COPY .docker/scripts/ /docker-entrypoint.d/
 
+RUN chmod +x /docker-entrypoint.d/100-envsubst-on-app-envs.sh
+
 COPY dist/ /usr/share/nginx/html/
