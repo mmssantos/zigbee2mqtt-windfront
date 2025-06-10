@@ -62,9 +62,9 @@ jobs:
             images: |
                 ghcr.io/nerivec/zigbee2mqtt-windfront
             tags: |
-                type=semver,pattern={{version}},value=${{ inputs.version || "" }}
-                type=semver,pattern={{major}}.{{minor}},value=${{ inputs.major_minor || "" }}
-                type=semver,pattern={{major}},value=${{ inputs.major || "" }}
+                type=semver,pattern={{version}},value=${{ inputs.version || '' }}
+                type=semver,pattern={{major}}.{{minor}},value=${{ inputs.major_minor || '' }}
+                type=semver,pattern={{major}},value=${{ inputs.major || '' }}
 
       - name: Docker build and push
         uses: docker/build-push-action@v6
