@@ -1,14 +1,16 @@
-FROM node:22-alpine AS builder
+FROM alpine:3.22 AS builder
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN npm ci
+RUN apk add --no-cache nodejs npm && \
+    npm ci
 
 COPY . .
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
 
 RUN npm run build
 
