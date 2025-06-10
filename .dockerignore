@@ -1,7 +1,6 @@
 .vscode
 .github
 coverage
-dist
 node_modules
 screenshots
 scripts
