@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN apk add --no-cache nodejs npm && \
+RUN apk add --no-cache make gcc g++ python3 linux-headers nodejs npm && \
     npm ci
 
 COPY . .
