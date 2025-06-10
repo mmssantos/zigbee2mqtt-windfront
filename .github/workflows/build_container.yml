@@ -5,6 +5,27 @@ on:
     workflows: [Publish package to npmjs]
     types: [completed]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to mimic Git tag.'
+        required: true
+        default: 'v1.0.0'
+        type: string
+      version:
+        description: 'Version to mimic Git tag without "v".'
+        required: true
+        default: '1.0.0'
+        type: string
+      major_minor:
+        description: 'Version to mimic Git tag (major.minor only).'
+        required: true
+        default: '1.0'
+        type: string
+      major:
+        description: 'Version to mimic Git tag (major only).'
+        required: true
+        default: '1'
+        type: string
 
 permissions:
   contents: read
@@ -41,9 +62,9 @@ jobs:
             images: |
                 ghcr.io/nerivec/zigbee2mqtt-windfront
             tags: |
-                type=semver,pattern={{version}}
-                type=semver,pattern={{major}}.{{minor}}
-                type=semver,pattern={{major}}
+                type=semver,pattern={{version}},value=${{ inputs.version || "" }}
+                type=semver,pattern={{major}}.{{minor}},value=${{ inputs.major_minor || "" }}
+                type=semver,pattern={{major}},value=${{ inputs.major || "" }}
 
       - name: Docker build and push
         uses: docker/build-push-action@v6
@@ -54,5 +75,5 @@ jobs:
             tags: ${{ steps.meta.outputs.tags }}
             push: true
             build-args: |
-                VERSION=${{ github.ref_name }}
+                VERSION=${{ inputs.tag || github.ref_name }}
                 DATE=${{ github.event.repository.updated_at }}
