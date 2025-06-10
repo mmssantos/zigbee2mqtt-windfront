@@ -46,7 +46,9 @@ jobs:
         with:
           node-version-file: 'package.json'
 
-      - name: Build package
+      - run: npm ci
+
+      - name: Build for production
         run: NODE_ENV=production npm run build
 
       - name: Log in to the GitHub container registry
