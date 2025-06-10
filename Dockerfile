@@ -1,19 +1,3 @@
-FROM alpine:3.22 AS builder
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-
-RUN apk add --no-cache make gcc g++ python3 linux-headers nodejs npm && \
-    npm ci
-
-COPY . .
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
-RUN npm run build
-
 FROM nginx:alpine-slim AS prod
 
 ARG DATE
@@ -33,6 +17,4 @@ EXPOSE 80
 
 COPY .docker/scripts/ /docker-entrypoint.d/
 
-WORKDIR /usr/share/nginx/html
-
-COPY --from=builder /app/dist ./
+COPY dist/ /usr/share/nginx/html/
