@@ -100,7 +100,7 @@ const FeatureSubFeatures = memo((props: FeatureSubFeaturesProps) => {
             ))}
             {isRoot && (
                 <div>
-                    <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onRootApply}>
+                    <Button className={`btn btn-primary ${minimal ? "btn-sm" : ""}`} onClick={onRootApply}>
                         {t("common:apply")}
                     </Button>
                 </div>

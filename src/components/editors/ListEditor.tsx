@@ -79,11 +79,11 @@ const ListEditor = memo((props: ListEditorProps) => {
                         parentFeatures={parentFeatures}
                     />
                     <div className="join join-vertical lg:join-horizontal">
-                        <Button<number> item={itemIndex} className="btn btn-error btn-square join-item" onClick={handleRemoveClick}>
+                        <Button<number> item={itemIndex} className="btn btn-sm btn-error btn-square join-item" onClick={handleRemoveClick}>
                             -
                         </Button>
                         {currentValue.length - 1 === itemIndex && (
-                            <Button<void> className="btn btn-success btn-square join-item" onClick={handleAddClick}>
+                            <Button<void> className="btn btn-sm btn-success btn-square join-item" onClick={handleAddClick}>
                                 +
                             </Button>
                         )}

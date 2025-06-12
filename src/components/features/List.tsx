@@ -62,7 +62,7 @@ const List = memo((props: Props) => {
                 <ListEditor feature={itemType} parentFeatures={[...parentFeatures, feature]} onChange={onEditorChange} value={state.value} />
                 {isRoot && (
                     <div>
-                        <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onRootApply} disabled={state.value.length === 0}>
+                        <Button className={`btn btn-primary ${minimal ? "btn-sm" : ""}`} onClick={onRootApply} disabled={state.value.length === 0}>
                             {t("common:apply")}
                         </Button>
                     </div>

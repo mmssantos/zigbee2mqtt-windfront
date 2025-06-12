@@ -68,9 +68,10 @@ export const Gradient = memo((props: GradientProps) => {
                         }}
                         value={{ hex: color }}
                         format="hex"
+                        minimal={minimal}
                     />
                     {canRemove && (
-                        <Button<void> className="btn btn-error" onClick={() => removeColor(idx)}>
+                        <Button<void> className="btn btn-sm btn-error" onClick={() => removeColor(idx)}>
                             -
                         </Button>
                     )}
@@ -78,13 +79,13 @@ export const Gradient = memo((props: GradientProps) => {
             ))}
             {canAdd && (
                 <div className="flex flex-row flex-wrap gap-2">
-                    <Button<void> className="btn btn-success" onClick={addColor}>
+                    <Button<void> className="btn btn-sm btn-success" onClick={addColor}>
                         +
                     </Button>
                 </div>
             )}
             <div>
-                <Button className={`btn btn-primary ${minimal ? " btn-sm" : ""}`} onClick={onGradientApply}>
+                <Button className={`btn btn-primary ${minimal ? "btn-sm" : ""}`} onClick={onGradientApply}>
                     {t("common:apply")}
                 </Button>
             </div>

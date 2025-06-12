@@ -26,7 +26,7 @@ const DeviceCard = memo(({ onChange, onRead, device, endpoint, deviceState, last
         <>
             <div className="card-body p-2">
                 <div className="flex flex-row items-center gap-3">
-                    <div className="h-12 w-12" style={{ overflow: "visible" }}>
+                    <div className="h-11 w-11" style={{ overflow: "visible" }}>
                         {/* disabled always false because dashboard does not contain disabled devices */}
                         <DeviceImage disabled={false} device={device} otaState={deviceState.update?.state} />
                     </div>

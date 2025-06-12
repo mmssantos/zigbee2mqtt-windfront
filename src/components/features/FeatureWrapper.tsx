@@ -44,7 +44,7 @@ const FeatureWrapper = memo((props: PropsWithChildren<FeatureWrapperProps>) => {
     );
 
     return (
-        <div className="list-row">
+        <div className="list-row p-3">
             <div>
                 <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} size="2xl" />
             </div>

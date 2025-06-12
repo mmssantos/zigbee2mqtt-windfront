@@ -134,7 +134,7 @@ export default function DevicesPage(): JSX.Element {
                 }) => (
                     <div className="flex items-center gap-3">
                         <div className="avatar">
-                            <div className="h-12 w-12" style={{ overflow: "visible" }}>
+                            <div className="h-11 w-11" style={{ overflow: "visible" }}>
                                 <DeviceImage device={device} otaState={state.update?.state} disabled={device.disabled} />
                             </div>
                         </div>
@@ -143,7 +143,7 @@ export default function DevicesPage(): JSX.Element {
                                 {device.friendly_name}
                             </Link>
                             {device.description && <div className="text-xs opacity-50">{device.description}</div>}
-                            <div className="flex flex-row gap-1 mt-2 items-center">
+                            <div className="flex flex-row gap-1 mt-0.5 items-center">
                                 <span className="badge badge-soft badge-sm badge-ghost cursor-default" title={t("power")}>
                                     <PowerSource
                                         device={device}

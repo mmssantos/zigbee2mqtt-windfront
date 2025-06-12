@@ -184,7 +184,7 @@ const groupProperties = (
             if (!rootOnly) {
                 nestedElements.push(
                     <div className="list" key={`${depth}-${key}`}>
-                        <h3 className="list-row text-lg">{property.title || key}</h3>
+                        <h3 className="list-row p-3 text-lg">{property.title || key}</h3>
                         {groupProperties(
                             t,
                             property.properties,
@@ -205,7 +205,7 @@ const groupProperties = (
                 if (key !== "log_syslog" || (data.log_output as string[]).includes("syslog")) {
                     nestedElements.push(
                         <div className="list" key={`${depth}-${key}`}>
-                            <h3 className="list-row text-lg">{oneOf.title || property.title || key}</h3>
+                            <h3 className="list-row p-3 text-lg">{oneOf.title || property.title || key}</h3>
                             {groupProperties(
                                 t,
                                 oneOf.properties,
@@ -232,7 +232,7 @@ const groupProperties = (
                 if (feature) {
                     // XXX: enforce tailwind class presence: ps-4 ps-8 ps-12
                     elements.push(
-                        <div className={`list-row${depth !== 0 ? ` ps-${4 + depth * 4}` : ""}`} key={`${depth}-${key}`}>
+                        <div className={`list-row p-3 ${depth !== 0 ? ` ps-${4 + depth * 4}` : ""}`} key={`${depth}-${key}`}>
                             {feature}
                         </div>,
                     );
