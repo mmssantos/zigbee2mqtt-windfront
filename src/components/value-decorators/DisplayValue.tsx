@@ -1,4 +1,4 @@
-import { type JSX, memo } from "react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
 type DisplayValueProps = {
@@ -32,7 +32,7 @@ const BooleanValueView = memo((props: DisplayValueProps) => {
     }
 });
 
-const DisplayValue = memo((props: DisplayValueProps): JSX.Element => {
+const DisplayValue = memo((props: DisplayValueProps) => {
     const { t } = useTranslation("values");
     const { value } = props;
 
@@ -40,13 +40,13 @@ const DisplayValue = memo((props: DisplayValueProps): JSX.Element => {
         case "boolean":
             return <BooleanValueView {...props} />;
         case "undefined":
-            return <>N/A</>;
+            return "N/A";
         case "object":
-            return <>{value === null ? t("null") : JSON.stringify(value)}</>;
+            return value === null ? t("null") : JSON.stringify(value);
         case "string":
-            return <>{value === "" ? <span className="text-xs opacity-50">{t("empty_string")}</span> : value}</>;
+            return value === "" ? <span className="text-xs opacity-50">{t("empty_string")}</span> : value;
         default:
-            return <>{JSON.stringify(value)}</>;
+            return JSON.stringify(value);
     }
 });
 

@@ -331,7 +331,7 @@ export default function DevConsole() {
                 return <ExternalExtensionTab />;
         }
 
-        return <></>;
+        return "";
     }, [currentTab]);
 
     return (

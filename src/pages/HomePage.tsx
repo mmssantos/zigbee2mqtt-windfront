@@ -10,5 +10,5 @@ export default function HomePage(): JSX.Element {
         navigate(store2.get(HOMEPAGE_KEY) === "dashboard" ? "/dashboard" : "/devices", { replace: true });
     }, [navigate]);
 
-    return <></>;
+    return <div />;
 }
