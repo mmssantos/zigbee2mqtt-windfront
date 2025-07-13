@@ -106,7 +106,7 @@
         "help": "Aide",
         "load": "Charger",
         "reload": "Recharger",
-        "loading": "En fonction de la taille de votre réseau, cela peut prendre entre 10 secondes et 2 minutes.",
+        "loading": "En fonction de la taille du réseau et de la qualité de ses liens, cela peut prendre un certain temps.",
         "parent": "Parent",
         "child": "Enfant",
         "sibling": "Frère",

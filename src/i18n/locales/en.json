@@ -106,7 +106,7 @@
         "help": "Help",
         "load": "Load",
         "reload": "Reload",
-        "loading": "Depending on the size of your network this can take somewhere between 10 seconds and 2 minutes.",
+        "loading": "Depending on the size of the network and the quality of its links, this can take a while.",
         "parent": "Parent",
         "child": "Child",
         "sibling": "Sibling",
