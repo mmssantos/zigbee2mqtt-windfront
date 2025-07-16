@@ -421,7 +421,7 @@
         "Location of the adapter. To autodetect the port, set null": "Location of the adapter. To autodetect the port, set null",
         "Disable LED of the adapter if supported": "Disable LED of the adapter if supported",
         "Adapter type, not needed unless you are experiencing problems": "Adapter type, not needed unless you are experiencing problems",
-        "Baud rate speed for serial port, this can be anything firmware support but default is 115200 for Z-Stack and EZSP, 38400 for Deconz, however note that some EZSP firmware need 57600": "Baud rate speed for serial port, this can be anything firmware support but default is 115200 for Z-Stack and EZSP, 38400 for Deconz, however note that some EZSP firmware need 57600",
+        "Baud rate speed for the serial port. This must match what the firmware on your adapter supports (most commonly 115200).": "Baud rate speed for the serial port. This must match what the firmware on your adapter supports (most commonly 115200).",
         "RTS / CTS Hardware Flow Control for serial port": "RTS / CTS Hardware Flow Control for serial port",
         "Block devices from the network (by ieeeAddr)": "Block devices from the network (by ieeeAddr)",
         "Allow only certain devices to join the network (by ieeeAddr). Note that all devices not on the passlist will be removed from the network!": "Allow only certain devices to join the network (by ieeeAddr). Note that all devices not on the passlist will be removed from the network!",
@@ -440,6 +440,7 @@
         "SSL key file path for exposing HTTPS. The sibling property 'ssl_cert' must be set for HTTPS to be activated.": "SSL key file path for exposing HTTPS. The sibling property 'ssl_cert' must be set for HTTPS to be activated.",
         "Base URL for the frontend. If hosted under a subpath, e.g. 'http://localhost:8080/z2m', set this to '/z2m'": "Base URL for the frontend. If hosted under a subpath, e.g. 'http://localhost:8080/z2m', set this to '/z2m'",
         "Hide frontend notifications matching specified regex strings. Example: 'z2m: Failed to ping.*'": "Hide frontend notifications matching specified regex strings. Example: 'z2m: Failed to ping.*'",
+        "If true, the frontend UI is not served, only the WebSocket is maintained by Zigbee2MQTT (you are required to serve a standalone UI yourself as needed).": "If true, the frontend UI is not served, only the WebSocket is maintained by Zigbee2MQTT (you are required to serve a standalone UI yourself as needed).",
         "Log rotation": "Log rotation",
         "Console json log": "Console json log",
         "Create symlink to current logs in the log directory": "Create symlink to current logs in the log directory",
@@ -491,6 +492,7 @@
         "Filter attributes with regex from optimistic publish payload when calling /set. (This has no effect if optimistic is set to false).": "Filter attributes with regex from optimistic publish payload when calling /set. (This has no effect if optimistic is set to false).",
         "The user-defined device icon for the frontend. It can be a full URL link to an image (e.g. https://SOME.SITE/MODEL123.jpg) or a path to a local file inside the `device_icons` directory (e.g. device_icons/MODEL123.png).": "The user-defined device icon for the frontend. It can be a full URL link to an image (e.g. https://SOME.SITE/MODEL123.jpg) or a path to a local file inside the `device_icons` directory (e.g. device_icons/MODEL123.png).",
         "Name of the device in Home Assistant": "Name of the device in Home Assistant",
+        "QoS level for MQTT messages of this group": "QoS level for MQTT messages of this group",
         "Control when to publish state OFF or CLOSE for a group. 'all_members_off': only publish state OFF/CLOSE when all group members are in state OFF/CLOSE,  'last_member_state': publish state OFF whenever one of its members changes to OFF": "Control when to publish state OFF or CLOSE for a group. 'all_members_off': only publish state OFF/CLOSE when all group members are in state OFF/CLOSE,  'last_member_state': publish state OFF whenever one of its members changes to OFF"
     }
 }
