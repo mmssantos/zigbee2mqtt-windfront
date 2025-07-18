@@ -23,7 +23,7 @@ updates:
 
   - package-ecosystem: github-actions
     commit-message:
-      prefix: fix
+      prefix: chore
     directory: "/"
     schedule:
       interval: weekly
