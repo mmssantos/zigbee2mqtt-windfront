@@ -3,7 +3,6 @@ import EnumEditor, { type ValueWithLabelOrPrimitive } from "./EnumEditor.js";
 
 type RangeProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
     value: number;
-    valueStep?: number;
     unit?: string;
     onChange(value: number): void;
     steps?: ValueWithLabelOrPrimitive[];
@@ -11,7 +10,7 @@ type RangeProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "valu
 };
 
 const RangeEditor = memo((props: RangeProps) => {
-    const { onChange, value, valueStep, min, max, unit, steps, minimal, ...rest } = props;
+    const { onChange, value, min, max, unit, steps, minimal, ...rest } = props;
     const [currentValue, setCurrentValue] = useState<number>(value);
     const showRange = min != null && max != null;
 
@@ -31,7 +30,6 @@ const RangeEditor = memo((props: RangeProps) => {
                     <input
                         min={min}
                         max={max}
-                        step={valueStep}
                         type="range"
                         className="range range-xs range-primary validator"
                         value={currentValue}
@@ -53,7 +51,6 @@ const RangeEditor = memo((props: RangeProps) => {
                         type="number"
                         className="grow validator"
                         value={currentValue}
-                        step={valueStep}
                         onChange={onInputChange}
                         onBlur={onSubmit}
                         min={min}
