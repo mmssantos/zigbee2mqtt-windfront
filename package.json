@@ -1,6 +1,6 @@
 {
     "name": "zigbee2mqtt-windfront",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "license": "GPL-3.0-or-later",
     "type": "module",
     "main": "index.js",
@@ -61,7 +61,7 @@
         "react-redux": "^9.2.0",
         "react-router": "^7.7.1",
         "react-use-websocket": "^4.13.0",
-        "reagraph": "^4.27.0",
+        "reagraph": "^4.28.0",
         "store2": "^2.14.4",
         "tailwindcss": "^4.1.4",
         "timeago.js": "^4.0.2",
