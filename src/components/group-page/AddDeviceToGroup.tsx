@@ -1,6 +1,5 @@
 import { memo, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "../../hooks/useApp.js";
 import type { Device, Group } from "../../types.js";
 import { getEndpoints } from "../../utils.js";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
@@ -9,14 +8,13 @@ import DevicePicker from "../pickers/DevicePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
 
 interface AddDeviceToGroupProps {
+    devices: Device[];
     group: Group;
 }
 
-const AddDeviceToGroup = memo((props: AddDeviceToGroupProps) => {
+const AddDeviceToGroup = memo(({ devices, group }: AddDeviceToGroupProps) => {
     const [endpoint, setEndpoint] = useState<string | number>("");
     const [deviceIeee, setDeviceIeee] = useState<string>("");
-    const { group } = props;
-    const devices = useAppSelector((state) => state.devices);
     const endpoints = useMemo(() => getEndpoints(devices.find((device) => device.ieee_address === deviceIeee)), [deviceIeee, devices]);
     const { t } = useTranslation(["groups", "zigbee"]);
     const { sendMessage } = useContext(WebSocketApiRouterContext);

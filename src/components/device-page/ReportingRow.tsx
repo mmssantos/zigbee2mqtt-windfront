@@ -23,8 +23,7 @@ interface ReportingRowState {
 
 const REQUIRED_RULE_FIELDS = ["maximum_report_interval", "minimum_report_interval", "reportable_change", "endpoint", "cluster", "attribute"];
 
-const ReportingRow = memo((props: ReportingRowProps) => {
-    const { rule, device, onApply } = props;
+const ReportingRow = memo(({ rule, device, onApply }: ReportingRowProps) => {
     const [state, setState] = useState<ReportingRowState>({ rule });
     const { t } = useTranslation(["zigbee", "common"]);
 

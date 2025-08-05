@@ -1,6 +1,6 @@
 import { memo, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { Device, DeviceState, Group, Scene } from "../../types.js";
+import type { Device, Group, Scene } from "../../types.js";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import Button from "../Button.js";
 import ConfirmButton from "../ConfirmButton.js";
@@ -9,11 +9,9 @@ import ScenePicker from "./ScenePicker.js";
 
 interface RecallRemoveProps {
     target: Device | Group;
-    deviceState: DeviceState;
 }
 
-const RecallRemove = memo((props: RecallRemoveProps) => {
-    const { target } = props;
+const RecallRemove = memo(({ target }: RecallRemoveProps) => {
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["scene", "common"]);
     const [scene, setScene] = useState<Scene>({ id: 0, name: "Scene 0" });

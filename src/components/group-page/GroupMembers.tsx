@@ -1,16 +1,15 @@
 import { type JSX, memo, useCallback, useContext, useMemo } from "react";
 import { useAppSelector } from "../../hooks/useApp.js";
-import type { Group } from "../../types.js";
+import type { Device, Group } from "../../types.js";
 import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
 import GroupMember from "./GroupMember.js";
 
 interface GroupMembersProps {
+    devices: Device[];
     group: Group;
 }
 
-const GroupMembers = memo((props: GroupMembersProps) => {
-    const { group } = props;
-    const devices = useAppSelector((state) => state.devices);
+const GroupMembers = memo(({ devices, group }: GroupMembersProps) => {
     const deviceStates = useAppSelector((state) => state.deviceStates);
     const lastSeenConfig = useAppSelector((state) => state.bridgeInfo.config.advanced.last_seen);
     const { sendMessage } = useContext(WebSocketApiRouterContext);

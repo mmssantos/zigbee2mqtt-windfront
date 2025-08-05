@@ -1,3 +1,4 @@
+import { useAppSelector } from "../../../hooks/useApp.js";
 import type { Group } from "../../../types.js";
 import AddScene from "../../device-page/AddScene.js";
 import RecallRemove from "../../device-page/RecallRemove.js";
@@ -9,20 +10,22 @@ type DevicesProps = {
 };
 
 export default function Devices({ group }: DevicesProps) {
+    const devices = useAppSelector((state) => state.devices);
+
     return (
         <>
             <div className="flex flex-row flex-wrap justify-evenly gap-4 mb-4">
                 <div className="flex-1">
-                    <AddDeviceToGroup group={group} />
+                    <AddDeviceToGroup devices={devices} group={group} />
                 </div>
                 <div className="flex-1">
-                    <RecallRemove target={group} deviceState={{}} />
+                    <RecallRemove target={group} />
                 </div>
                 <div className="flex-1">
                     <AddScene target={group} deviceState={{}} />
                 </div>
             </div>
-            <GroupMembers group={group} />
+            <GroupMembers devices={devices} group={group} />
         </>
     );
 }

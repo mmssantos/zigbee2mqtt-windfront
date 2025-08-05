@@ -30,8 +30,7 @@ const getTarget = (rule: NiceBindingRule, devices: RootState["devices"], groups:
 
 type Action = "Bind" | "Unbind";
 
-const BindRow = memo((props: BindRowProps) => {
-    const { devices, groups, device, rule } = props;
+const BindRow = memo(({ devices, groups, device, rule }: BindRowProps) => {
     const [state, setState] = useState<BindRowState>({ rule });
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const { t } = useTranslation(["common", "zigbee"]);

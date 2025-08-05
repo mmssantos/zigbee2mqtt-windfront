@@ -15,8 +15,7 @@ interface CommandExecutorProps {
     device: Device;
 }
 
-export const CommandExecutor = (props: CommandExecutorProps): JSX.Element => {
-    const { device, lastLog } = props;
+export const CommandExecutor = ({ device, lastLog }: CommandExecutorProps): JSX.Element => {
     const { t } = useTranslation(["common", "zigbee"]);
     const [endpoint, setEndpoint] = useState<number>(1);
     const [cluster, setCluster] = useState<string>("");

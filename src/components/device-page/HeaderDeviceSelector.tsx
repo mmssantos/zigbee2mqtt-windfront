@@ -14,8 +14,7 @@ interface HeaderDeviceSelectorProps {
     tab?: TabName;
 }
 
-const HeaderDeviceSelector = memo((props: HeaderDeviceSelectorProps) => {
-    const { devices, currentDevice, tab = "info" } = props;
+const HeaderDeviceSelector = memo(({ devices, currentDevice, tab = "info" }: HeaderDeviceSelectorProps) => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const { t } = useTranslation("common");
     const items = useMemo(

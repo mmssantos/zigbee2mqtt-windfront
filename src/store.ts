@@ -1,12 +1,12 @@
 import { configureStore, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import merge from "lodash/merge.js";
 import type { Zigbee2MQTTAPI } from "zigbee2mqtt";
-import type { AvailabilityState, LogMessage, Message, RecursiveMutable, TouchlinkDevice } from "./types.js";
+import type { AvailabilityState, Device, LogMessage, Message, RecursiveMutable, TouchlinkDevice } from "./types.js";
 import { formatDate } from "./utils.js";
 
 interface State {
     /** Sorted by friendlyName */
-    devices: Zigbee2MQTTAPI["bridge/devices"];
+    devices: Device[];
     deviceStates: Record<string, Zigbee2MQTTAPI["{friendlyName}"]>;
     /** Sorted by friendlyName */
     groups: Zigbee2MQTTAPI["bridge/groups"];

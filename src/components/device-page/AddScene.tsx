@@ -16,8 +16,7 @@ type AddSceneProps = {
     deviceState: DeviceState;
 };
 
-const AddScene = memo((props: AddSceneProps) => {
-    const { target, deviceState } = props;
+const AddScene = memo(({ target, deviceState }: AddSceneProps) => {
     const { t } = useTranslation("scene");
     const { sendMessage } = useContext(WebSocketApiRouterContext);
     const [sceneId, setSceneId] = useState<number>(0);

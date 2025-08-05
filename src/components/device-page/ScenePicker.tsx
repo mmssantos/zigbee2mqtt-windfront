@@ -10,9 +10,8 @@ type ScenePickerProps = {
     onSceneSelected: (sceneId: number) => void;
 };
 
-const ScenePicker = memo((props: ScenePickerProps) => {
+const ScenePicker = memo(({ onSceneSelected, scenes = [], value }: ScenePickerProps) => {
     const { t } = useTranslation("scene");
-    const { onSceneSelected, scenes = [], value } = props;
 
     return scenes.length > 0 ? (
         <SelectField

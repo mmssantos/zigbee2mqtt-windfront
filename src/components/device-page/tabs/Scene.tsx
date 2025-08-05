@@ -16,7 +16,7 @@ export default function Scene(props: SceneProps) {
                 <AddScene target={props.device} deviceState={deviceState} />
             </div>
             <div>
-                <RecallRemove target={props.device} deviceState={deviceState} />
+                <RecallRemove target={props.device} />
             </div>
         </div>
     );

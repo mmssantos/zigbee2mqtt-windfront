@@ -33,8 +33,7 @@ export type AttributeValueInputProps = {
 
 const TEXT_DATA_TYPES = [65 /* DataType.OCTET_STR */, 66 /* DataType.CHAR_STR */, 67 /* DataType.LONG_OCTET_STR */, 68 /* DataType.LONG_CHAR_STR */];
 
-function AttributeValueInput(props: Readonly<AttributeValueInputProps>): JSX.Element {
-    const { value, onChange, attribute, definition, ...rest } = props;
+function AttributeValueInput({ value, onChange, attribute, definition, ...rest }: Readonly<AttributeValueInputProps>): JSX.Element {
     const type = TEXT_DATA_TYPES.includes(definition.type) ? "text" : "number";
 
     return (
@@ -51,8 +50,7 @@ function AttributeValueInput(props: Readonly<AttributeValueInputProps>): JSX.Ele
     );
 }
 
-export function AttributeEditor(props: AttributeEditorProps) {
-    const { device, readDeviceAttributes, writeDeviceAttributes, lastLog } = props;
+export function AttributeEditor({ device, readDeviceAttributes, writeDeviceAttributes, lastLog }: AttributeEditorProps) {
     const [endpoint, setEndpoint] = useState(getObjectFirstKey(device.endpoints) ?? "");
     const [cluster, setCluster] = useState("");
     const [attributes, setAttributes] = useState<AttributeInfo[]>([]);
