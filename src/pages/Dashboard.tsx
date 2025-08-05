@@ -81,13 +81,6 @@ export default function Dashboard() {
                                         value,
                                     )
                                 }
-                                onRead={async (value) =>
-                                    await sendMessage<"{friendlyNameOrId}/get">(
-                                        // @ts-expect-error templated API endpoint
-                                        `${device.ieee_address}/get`,
-                                        value,
-                                    )
-                                }
                                 featureWrapperClass={DashboardFeatureWrapper}
                                 lastSeenConfig={bridgeConfig.advanced.last_seen}
                             >

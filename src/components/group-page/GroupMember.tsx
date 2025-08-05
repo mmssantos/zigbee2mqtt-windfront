@@ -17,11 +17,10 @@ interface GroupMemberProps {
     lastSeenConfig: RootState["bridgeInfo"]["config"]["advanced"]["last_seen"];
     removeDeviceFromGroup(deviceIeee: string, endpoint: number): Promise<void>;
     setDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
-    getDeviceState(ieee: string, value: Record<string, unknown>): Promise<void>;
 }
 
 const GroupMember = memo((props: GroupMemberProps) => {
-    const { removeDeviceFromGroup, groupMember, device, deviceState, lastSeenConfig, setDeviceState, getDeviceState } = props;
+    const { removeDeviceFromGroup, groupMember, device, deviceState, lastSeenConfig, setDeviceState } = props;
     const { endpoint } = groupMember;
     const { t } = useTranslation(["groups", "common"]);
     const filteredFeatures = useMemo(() => (device.definition ? filterExposes(device.definition.exposes, isValidForScenes) : []), [device]);
@@ -29,11 +28,6 @@ const GroupMember = memo((props: GroupMemberProps) => {
     const onCardChange = useCallback(
         async (value: Record<string, unknown>) => await setDeviceState(device.ieee_address, value),
         [device.ieee_address, setDeviceState],
-    );
-
-    const onCardRead = useCallback(
-        async (value: Record<string, unknown>) => await getDeviceState(device.ieee_address, value),
-        [device.ieee_address, getDeviceState],
     );
 
     const onCardRemove = useCallback(
@@ -48,7 +42,6 @@ const GroupMember = memo((props: GroupMemberProps) => {
             endpoint={endpoint}
             deviceState={deviceState}
             onChange={onCardChange}
-            onRead={onCardRead}
             featureWrapperClass={DashboardFeatureWrapper}
             lastSeenConfig={lastSeenConfig}
         >

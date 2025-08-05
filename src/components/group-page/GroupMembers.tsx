@@ -28,16 +28,6 @@ const GroupMembers = memo(({ devices, group }: GroupMembersProps) => {
         },
         [sendMessage],
     );
-    const getDeviceState = useCallback(
-        async (ieee: string, value: Record<string, unknown>): Promise<void> => {
-            await sendMessage<"{friendlyNameOrId}/get">(
-                // @ts-expect-error templated API endpoint
-                `${ieee}/get`,
-                value,
-            );
-        },
-        [sendMessage],
-    );
     const groupMembers = useMemo(() => {
         const members: JSX.Element[] = [];
 
@@ -54,7 +44,6 @@ const GroupMembers = memo(({ devices, group }: GroupMembersProps) => {
                             deviceState={deviceStates[device.friendly_name] ?? {}}
                             lastSeenConfig={lastSeenConfig}
                             setDeviceState={setDeviceState}
-                            getDeviceState={getDeviceState}
                         />
                     </div>,
                 );
@@ -62,7 +51,7 @@ const GroupMembers = memo(({ devices, group }: GroupMembersProps) => {
         }
 
         return members;
-    }, [group, devices, lastSeenConfig, deviceStates, removeMember, setDeviceState, getDeviceState]);
+    }, [group, devices, lastSeenConfig, deviceStates, removeMember, setDeviceState]);
 
     return <div className="flex flex-row flex-wrap justify-center gap-3">{groupMembers}</div>;
 });
