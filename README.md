@@ -10,11 +10,9 @@ https://github.com/Nerivec/zigbee2mqtt-windfront/wiki
 
 > Based on https://github.com/nurikk/zigbee2mqtt-frontend
 
-> [!IMPORTANT]
-> Currently in beta test!
-
 ![device-info](./screenshots/device-info.png)
 ![device-exposes](./screenshots/device-exposes.png)
+![network-map](./screenshots/network-map.png)
 ![network-data](./screenshots/network-data.png)
 
 ### 35 themes offered by the [design library](https://daisyui.com/docs/themes/#list-of-themes)!
