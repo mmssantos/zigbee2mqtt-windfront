@@ -46,7 +46,7 @@ const ALL_THEMES = [
 ];
 
 const ThemeSwitcher = memo(() => {
-    const location = useLocation();
+    const routerLocation = useLocation();
     const [currentTheme, setCurrentTheme] = useState<string>(store2.get(THEME_KEY, ""));
 
     useEffect(() => {
@@ -60,7 +60,7 @@ const ThemeSwitcher = memo(() => {
             buttonChildren={<FontAwesomeIcon icon={faPaintBrush} />}
             dropdownStyle="dropdown-end"
             // do not allow theme-switching while on network page due to rendering of reagraph
-            buttonDisabled={location.pathname === "/network"}
+            buttonDisabled={routerLocation.pathname === "/network"}
         >
             {ALL_THEMES.map((theme) => (
                 <li key={theme || "default"}>

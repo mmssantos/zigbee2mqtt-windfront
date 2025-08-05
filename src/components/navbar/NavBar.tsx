@@ -98,7 +98,7 @@ const NavBar = () => {
             <Link
                 to="/"
                 className="link link-hover me-1"
-                title={window.location !== window.parent.location ? `Zigbee2MQTT@${document.location.hostname}` : undefined}
+                title={window.location !== window.parent.location ? `Zigbee2MQTT@${window.location.hostname}` : undefined}
             >
                 Zigbee2MQTT
             </Link>

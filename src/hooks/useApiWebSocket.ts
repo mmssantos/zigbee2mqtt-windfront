@@ -138,7 +138,7 @@ export function useApiWebSocket() {
     const apiUrls =
         import.meta.env.VITE_Z2M_API_URLS?.split(",") ??
         (Z2M_API_URLS.startsWith("${")
-            ? [`${window.location.host}${document.location.pathname}api`] // env not replaced, use default
+            ? [`${window.location.host}${window.location.pathname}api`] // env not replaced, use default
             : Z2M_API_URLS.split(","));
     const [apiUrl, setApiUrl] = useState(apiUrls[0]);
 
@@ -150,7 +150,7 @@ export function useApiWebSocket() {
     const getSocketUrl = useCallback(
         async () =>
             await new Promise<string>((resolve) => {
-                const url = new URL(`${location.protocol === "https:" ? "wss" : "ws"}://${apiUrl}`);
+                const url = new URL(`${window.location.protocol === "https:" ? "wss" : "ws"}://${apiUrl}`);
                 const authRequired = !!store2.get(AUTH_FLAG_KEY);
 
                 if (authRequired) {
