@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to mimic Git tag.'
+        description: "Tag to mimic Git tag."
         required: true
-        default: 'v1.0.0'
+        default: "v1.0.0"
         type: string
 
 permissions:
@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: 'package.json'
+          node-version-file: "package.json"
 
       - run: npm ci
 
@@ -49,21 +49,21 @@ jobs:
         uses: docker/metadata-action@v5
         id: meta
         with:
-            images: |
-                ghcr.io/nerivec/zigbee2mqtt-windfront
-            tags: |
-                type=semver,pattern={{version}},value=${{ inputs.tag }}
-                type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag }}
-                type=semver,pattern={{major}},value=${{ inputs.tag }}
+          images: |
+            ghcr.io/nerivec/zigbee2mqtt-windfront
+          tags: |
+            type=semver,pattern={{version}},value=${{ inputs.tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag }}
+            type=semver,pattern={{major}},value=${{ inputs.tag }}
 
       - name: Docker build and push
         uses: docker/build-push-action@v6
         with:
-            context: .
-            file: Dockerfile
-            platforms: linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7,linux/riscv64,linux/386
-            tags: ${{ steps.meta.outputs.tags }}
-            push: true
-            build-args: |
-                VERSION=${{ inputs.tag }}
-                DATE=${{ github.event.repository.updated_at }}
+          context: .
+          file: Dockerfile
+          platforms: linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7,linux/riscv64,linux/386
+          tags: ${{ steps.meta.outputs.tags }}
+          push: true
+          build-args: |
+            VERSION=${{ inputs.tag }}
+            DATE=${{ github.event.repository.updated_at }}

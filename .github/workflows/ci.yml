@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: 'package.json'
+          node-version-file: "package.json"
 
       - run: npm ci
 
@@ -59,25 +59,25 @@ jobs:
         uses: docker/metadata-action@v5
         id: meta
         with:
-            images: |
-                ghcr.io/nerivec/zigbee2mqtt-windfront
-            tags: |
-                type=semver,pattern={{version}}
-                type=semver,pattern={{major}}.{{minor}}
-                type=semver,pattern={{major}}
+          images: |
+            ghcr.io/nerivec/zigbee2mqtt-windfront
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
 
       - name: Docker build and push
         if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
         uses: docker/build-push-action@v6
         with:
-            context: .
-            file: Dockerfile
-            platforms: linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7,linux/riscv64,linux/386
-            tags: ${{ steps.meta.outputs.tags }}
-            push: true
-            build-args: |
-                VERSION=${{ github.ref_name }}
-                DATE=${{ github.event.repository.updated_at }}
+          context: .
+          file: Dockerfile
+          platforms: linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7,linux/riscv64,linux/386
+          tags: ${{ steps.meta.outputs.tags }}
+          push: true
+          build-args: |
+            VERSION=${{ github.ref_name }}
+            DATE=${{ github.event.repository.updated_at }}
 
       - name: Add tarball dist to release assets
         if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
@@ -87,3 +87,17 @@ jobs:
           gh release upload ${{ github.ref_name }} zigbee2mqtt-windfront-${{ github.ref_name }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish built-main branch
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          temp_dir=$(mktemp -d)
+          cp -R dist/. $temp_dir
+          git switch --orphan built-main
+          rm -rf ./*
+          cp -R $temp_dir/* .
+          git add -A
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+          git commit -m "$GITHUB_SHA" || echo 'Nothing to commit'
+          git push --force --set-upstream origin built-main
