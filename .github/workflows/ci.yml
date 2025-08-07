@@ -101,3 +101,25 @@ jobs:
           git config --local user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -m "$GITHUB_SHA" || echo 'Nothing to commit'
           git push --force --set-upstream origin built-main
+
+      - name: Trigger ha-zigbee2mqtt-windfront windfront_edge build
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Nerivec/ha-zigbee2mqtt-windfront/actions/workflows/manual-builder.yaml/dispatches \
+            -d '{"ref":"main","inputs":{"addon_folder":"windfront_edge"}}'
+
+      - name: Trigger ha-zigbee2mqtt-windfront windfront build
+        if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Nerivec/ha-zigbee2mqtt-windfront/actions/workflows/manual-builder.yaml/dispatches \
+            -d '{"ref":"main","inputs":{"addon_folder":"windfront"}}'
