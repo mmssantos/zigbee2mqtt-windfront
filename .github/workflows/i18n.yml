@@ -24,9 +24,11 @@ jobs:
 
       - run: npm i -D zigbee-herdsman-converters
 
-      - run: node ./scripts/override-z2m-en.mjs
+      - name: Update EN i18n JSON file
+        run: node ./scripts/override-z2m-en.mjs
 
-      - run: npm run check
+      - name: Lint
+        run: npm run check
 
       - name: Commit changes
         run: |

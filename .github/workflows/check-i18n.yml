@@ -19,4 +19,5 @@ jobs:
 
       - run: npm ci
 
-      - run: node ./scripts/check-i18n.mjs
+      - name: Check changed i18n JSON file matches EN
+        run: node ./scripts/check-i18n.mjs

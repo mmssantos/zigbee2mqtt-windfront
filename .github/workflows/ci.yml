@@ -26,6 +26,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: "package.json"
+          registry-url: "https://registry.npmjs.org"
 
       - run: npm ci
 
@@ -78,6 +79,12 @@ jobs:
           build-args: |
             VERSION=${{ github.ref_name }}
             DATE=${{ github.event.repository.updated_at }}
+
+      - name: Publish package to npmjs.org
+        if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Add tarball dist to release assets
         if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
