@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import DashboardFeatureWrapper from "../../components/dashboard-page/DashboardFeatureWrapper";
-import Feature from "../../components/features/Feature";
-import { BASIC_ROUTER } from "../devices";
+import DashboardFeatureWrapper from "../../components/dashboard-page/DashboardFeatureWrapper.js";
+import Feature from "../../components/features/Feature.js";
+import { BASIC_ROUTER } from "../devices.js";
 import {
     binaryFeature,
     binaryFeatureState,
@@ -28,7 +28,7 @@ import {
     switchFeatureState,
     textFeature,
     textFeatureState,
-} from "../features";
+} from "../features.js";
 
 const meta = {
     title: "Components/Features/Card",

@@ -2,7 +2,7 @@ import { faArrowRightLong, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import { EDGE_RELATIONSHIP_FILL_COLORS, NODE_TYPE_FILL_COLORS, ZigbeeRelationship } from "..";
+import { EDGE_RELATIONSHIP_FILL_COLORS, NODE_TYPE_FILL_COLORS, ZigbeeRelationship } from "../index.js";
 
 const Legend = memo(() => {
     const { t } = useTranslation("network");

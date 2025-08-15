@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import HeaderDeviceSelector from "../../components/device-page/HeaderDeviceSelector";
-import { BASIC_ENDDEVICE, BASIC_ROUTER, OTHER_ROUTER } from "../devices";
+import HeaderDeviceSelector from "../../components/device-page/HeaderDeviceSelector.js";
+import { BASIC_ENDDEVICE, BASIC_ROUTER, OTHER_ROUTER } from "../devices.js";
 
 const meta = {
     title: "Components/Device/HeaderDeviceSelector",

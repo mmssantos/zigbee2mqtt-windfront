@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import ThemeSwitcher from "../components/navbar/ThemeSwitcher";
+import ThemeSwitcher from "../components/navbar/ThemeSwitcher.js";
 
 const meta = {
     title: "ThemeSwitcher",

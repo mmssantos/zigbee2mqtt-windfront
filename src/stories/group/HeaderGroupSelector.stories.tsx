@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import HeaderGroupSelector from "../../components/group-page/HeaderGroupSelector";
-import { EMPTY_GROUP, GROUP_WITH_MEMBERS, GROUP_WITH_MEMBERS_AND_SCENES } from "../groups";
+import HeaderGroupSelector from "../../components/group-page/HeaderGroupSelector.js";
+import { EMPTY_GROUP, GROUP_WITH_MEMBERS, GROUP_WITH_MEMBERS_AND_SCENES } from "../groups.js";
 
 const meta = {
     title: "Components/Group/HeaderGroupSelector",

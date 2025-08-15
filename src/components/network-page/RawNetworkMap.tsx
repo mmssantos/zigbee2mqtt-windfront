@@ -22,7 +22,7 @@ import {
     NETWORK_MAP_NODE_STRENGTH_KEY,
     NETWORK_MAP_SHOW_ICONS_KEY,
 } from "../../localStoreConsts.js";
-import { useAppStore } from "../../store";
+import { useAppStore } from "../../store.js";
 import fontUrl from "./../../styles/NotoSans-Regular.ttf";
 import { getZ2MDeviceImage } from "../device/index.js";
 import { cssColorToRgba, EDGE_RELATIONSHIP_FILL_COLORS, type NetworkMapLink, NODE_TYPE_FILL_COLORS, ZigbeeRelationship } from "./index.js";

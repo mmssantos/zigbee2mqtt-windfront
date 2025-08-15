@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import AddDeviceToGroup from "../../components/group-page/AddDeviceToGroup";
-import { BASIC_ENDDEVICE, BASIC_ROUTER, OTHER_ROUTER } from "../devices";
-import { EMPTY_GROUP } from "../groups";
+import AddDeviceToGroup from "../../components/group-page/AddDeviceToGroup.js";
+import { BASIC_ENDDEVICE, BASIC_ROUTER, OTHER_ROUTER } from "../devices.js";
+import { EMPTY_GROUP } from "../groups.js";
 
 const meta = {
     title: "Components/Group/AddDeviceToGroup",

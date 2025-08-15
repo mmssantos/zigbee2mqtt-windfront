@@ -13,7 +13,7 @@ import {
     type NumericFeature,
     type SwitchFeature,
     type TextFeature,
-} from "../types";
+} from "../types.js";
 
 export const binaryFeature: BinaryFeature = {
     name: "state",

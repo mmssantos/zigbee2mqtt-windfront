@@ -1,5 +1,5 @@
-import { InterviewState } from "../consts";
-import type { Device, DeviceState } from "../types";
+import { InterviewState } from "../consts.js";
+import type { Device, DeviceState } from "../types.js";
 
 export const COORDINATOR: Device = {
     disabled: false,

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import Feature from "../../components/features/Feature";
-import FeatureWrapper from "../../components/features/FeatureWrapper";
-import { BASIC_ROUTER } from "../devices";
+import Feature from "../../components/features/Feature.js";
+import FeatureWrapper from "../../components/features/FeatureWrapper.js";
+import { BASIC_ROUTER } from "../devices.js";
 import {
     binaryFeature,
     climateFeature,
@@ -16,7 +16,7 @@ import {
     numericFeature,
     switchFeature,
     textFeature,
-} from "../features";
+} from "../features.js";
 
 const meta = {
     title: "Components/Features/List/Blank",

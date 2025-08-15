@@ -1,5 +1,5 @@
-import type { Device, Group } from "../types";
-import { BASIC_ENDDEVICE, BASIC_ROUTER, OTHER_ROUTER } from "./devices";
+import type { Device, Group } from "../types.js";
+import { BASIC_ENDDEVICE, BASIC_ROUTER, OTHER_ROUTER } from "./devices.js";
 
 const getFirstEndpoint = (device: Device): number => {
     for (const endpointKey in device.endpoints) {

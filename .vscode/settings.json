@@ -8,5 +8,15 @@
         "source.organizeImports.biome": "explicit"
     },
     "files.defaultLanguage": "typescript",
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "js/ts.implicitProjectConfig.target": "ESNext",
+    "typescript.preferences.importModuleSpecifierEnding": "js",
+    "typescript.preferences.quoteStyle": "double",
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "typescript.inlayHints.enumMemberValues.enabled": true,
+    "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+    "typescript.inlayHints.parameterNames.enabled": "literals",
+    "typescript.inlayHints.parameterTypes.enabled": true,
+    "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+    "typescript.inlayHints.variableTypes.enabled": true
 }

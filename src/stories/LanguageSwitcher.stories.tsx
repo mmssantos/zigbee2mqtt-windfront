@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import LanguageSwitcher from "../components/navbar/LanguageSwitcher";
+import LanguageSwitcher from "../components/navbar/LanguageSwitcher.js";
 
 const meta = {
     title: "LanguageSwitcher",

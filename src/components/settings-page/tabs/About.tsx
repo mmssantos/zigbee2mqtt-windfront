@@ -11,8 +11,8 @@ import {
     Z2M_RELEASE_TAG_URL,
     ZH_RELEASE_TAG_URL,
     ZHC_RELEASE_TAG_URL,
-} from "../../../consts";
-import { useAppStore } from "../../../store";
+} from "../../../consts.js";
+import { useAppStore } from "../../../store.js";
 import Stats from "../Stats.js";
 
 const ReportProblemLink = memo(() => {

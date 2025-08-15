@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { memo, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { ReadyState } from "react-use-websocket";
-import { Z2M_API_NAMES } from "../../envs";
-import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext";
-import PopoverDropdown from "../PopoverDropdown";
+import { Z2M_API_NAMES } from "../../envs.js";
+import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
+import PopoverDropdown from "../PopoverDropdown.js";
 
 const CONNECTION_STATUS = {
     [ReadyState.CONNECTING]: "text-info",
