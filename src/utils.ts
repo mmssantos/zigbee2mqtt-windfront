@@ -1,4 +1,5 @@
 import { saveAs } from "file-saver";
+import { API_URLS } from "./store.js";
 import type {
     AnySubFeature,
     BasicFeature,
@@ -31,12 +32,27 @@ export const getObjectFirstKey = <T>(object: T): string | undefined => {
     }
 };
 
+/**
+ * For use with URL params.
+ * Always return a valid numeric source index to prevent issues with shallow `useAppStore`.
+ * Should `navigate` if the source index isn't actually valid
+ */
+export const getValidSourceIdx = (sourceIdx: string | undefined): [numSourceIdx: number, valid: boolean] => {
+    if (!sourceIdx) {
+        // valid here, since just falling back to default
+        return [0, true];
+    }
+
+    const numSourceIdx = Number(sourceIdx);
+
+    return Number.isNaN(numSourceIdx) || !API_URLS[numSourceIdx] ? [0, false] : [numSourceIdx, true];
+};
+
 // #endregion
 
 // #region Format/Convert
 
-export const stringifyWithPreservingUndefinedAsNull = (data: Record<string, unknown>): string =>
-    JSON.stringify(data, (_k, v) => (v === undefined ? null : v));
+export const stringifyWithUndefinedAsNull = (data: Record<string, unknown>): string => JSON.stringify(data, (_k, v) => (v === undefined ? null : v));
 
 export const convertLastSeenToDate = (lastSeen: unknown, lastSeenConfig: LastSeenConfig): Date | undefined => {
     if (!lastSeen) {
@@ -55,7 +71,7 @@ export const convertLastSeenToDate = (lastSeen: unknown, lastSeenConfig: LastSee
             return undefined;
 
         default:
-            console.warn(`Unknown last_seen type ${lastSeenConfig}`);
+            console.error(`Unknown last_seen type ${lastSeenConfig}`);
             return undefined;
     }
 };

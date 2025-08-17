@@ -1,55 +1,47 @@
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faDisplay, faInbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useContext, useMemo } from "react";
+import { type MouseEvent, memo, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, NavLink } from "react-router";
-import { useAppStore } from "../../store.js";
-import { WebSocketApiRouterContext } from "../../WebSocketApiRouterContext.js";
-import ConfirmButton from "../ConfirmButton.js";
-import ApiUrlSwitcher from "./ApiUrlSwitcher.js";
+import { Link, NavLink, type NavLinkRenderProps } from "react-router";
+import { API_NAMES, useAppStore } from "../../store.js";
 import LanguageSwitcher from "./LanguageSwitcher.js";
 import PermitJoinButton from "./PermitJoinButton.js";
 import ThemeSwitcher from "./ThemeSwitcher.js";
 
-const URLS = [
-    {
-        href: "/devices",
-        key: "devices",
-    },
-    {
-        href: "/dashboard",
-        key: "dashboard",
-    },
-    {
-        href: "/groups",
-        key: "groups",
-    },
-    {
-        href: "/ota",
-        key: "ota",
-    },
-    {
-        href: "/touchlink",
-        key: "touchlink",
-    },
-    {
-        href: "/network",
-        key: "network",
-    },
-    {
-        href: "/logs",
-        key: "logs",
-    },
-    {
-        href: "/settings",
-        key: "settings",
-    },
-];
+type NavBarSubMenuProps = {
+    name: string;
+    navPath: string;
+    isNavActive: (props: NavLinkRenderProps) => string;
+};
+
+const NavBarSubMenu = memo(({ name, navPath, isNavActive }: NavBarSubMenuProps) => {
+    const onSubMenuClick = useCallback((event: MouseEvent<HTMLUListElement>) => {
+        (event.currentTarget.parentElement as HTMLDetailsElement).open = false;
+    }, []);
+
+    return (
+        <details>
+            <summary>
+                <NavLink to={navPath} className={isNavActive}>
+                    {name}
+                </NavLink>
+            </summary>
+            <ul className="z-98 p-2" onClick={onSubMenuClick}>
+                {API_NAMES.map((apiName, idx) => (
+                    <li key={`${idx}-${apiName}`}>
+                        <NavLink to={`${navPath}/${idx}`} className={isNavActive}>
+                            {apiName}
+                        </NavLink>
+                    </li>
+                ))}
+            </ul>
+        </details>
+    );
+});
 
 const NavBar = () => {
     const { t } = useTranslation(["navbar", "common"]);
-    const restartRequired = useAppStore((state) => state.bridgeInfo.restart_required);
-    const { sendMessage } = useContext(WebSocketApiRouterContext);
+    const notificationsAlert = useAppStore((state) => state.notificationsAlert);
 
     const onDropdownMenuClick = useCallback(() => {
         if (document.activeElement instanceof HTMLElement && document.activeElement !== document.body) {
@@ -57,34 +49,71 @@ const NavBar = () => {
         }
     }, []);
 
+    const isNavActive = useCallback(({ isActive }: NavLinkRenderProps) => (isActive ? "menu-active" : ""), []);
+
     const links = useMemo(
         () => (
             <>
-                {URLS.map((url) => (
-                    <li key={url.href}>
-                        <NavLink to={url.href} className={({ isActive }) => (isActive ? "menu-active" : "")}>
-                            {t(url.key)}
+                <li>
+                    <NavLink to="/devices" className={isNavActive}>
+                        {t("devices")}
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/dashboard" className={isNavActive}>
+                        {t("dashboard")}
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/groups" className={isNavActive}>
+                        {t("groups")}
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/ota" className={isNavActive}>
+                        {t("ota")}
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/touchlink" className={isNavActive}>
+                        {t("touchlink")}
+                    </NavLink>
+                </li>
+                <li>
+                    {API_NAMES.length > 1 ? (
+                        <NavBarSubMenu name={t("network")} navPath="/network" isNavActive={isNavActive} />
+                    ) : (
+                        <NavLink to="/network" className={isNavActive}>
+                            {t("network")}
                         </NavLink>
-                    </li>
-                ))}
+                    )}
+                </li>
+                <li>
+                    {API_NAMES.length > 1 ? (
+                        <NavBarSubMenu name={t("logs")} navPath="/logs" isNavActive={isNavActive} />
+                    ) : (
+                        <NavLink to="/logs" className={isNavActive}>
+                            {t("logs")}
+                        </NavLink>
+                    )}
+                </li>
+                <li>
+                    {API_NAMES.length > 1 ? (
+                        <NavBarSubMenu name={t("settings")} navPath="/settings" isNavActive={isNavActive} />
+                    ) : (
+                        <NavLink to="/settings" className={isNavActive}>
+                            {t("settings")}
+                        </NavLink>
+                    )}
+                </li>
+                <li>
+                    <NavLink to="/frontend-settings" className={isNavActive}>
+                        <FontAwesomeIcon icon={faDisplay} size={"xl"} />
+                    </NavLink>
+                </li>
             </>
         ),
-        [t],
-    );
-    const showRestart = useMemo(
-        () =>
-            restartRequired ? (
-                <ConfirmButton
-                    className="btn btn-error me-1 animate-pulse"
-                    onClick={async () => await sendMessage("bridge/request/restart", "")}
-                    title={t("restart")}
-                    modalDescription={t("common:dialog_confirmation_prompt")}
-                    modalCancelLabel={t("common:cancel")}
-                >
-                    {t("restart")}
-                </ConfirmButton>
-            ) : null,
-        [restartRequired, sendMessage, t],
+        [isNavActive, t],
     );
 
     return (
@@ -118,10 +147,16 @@ const NavBar = () => {
             <div className="navbar-end">
                 <ul className="menu menu-horizontal px-1 gap-0.5 md:gap-1 justify-end">
                     <PermitJoinButton />
-                    {showRestart}
                     <LanguageSwitcher />
                     <ThemeSwitcher />
-                    <ApiUrlSwitcher />
+                    <label htmlFor="notifications-drawer" className="drawer-button btn">
+                        <FontAwesomeIcon icon={faInbox} />
+                        {notificationsAlert[0] ? (
+                            <span className="status status-primary animate-bounce" />
+                        ) : notificationsAlert[1] ? (
+                            <span className="status status-error animate-bounce" />
+                        ) : null}
+                    </label>
                 </ul>
             </div>
         </div>
