@@ -527,12 +527,8 @@ export const useAppStore = create<AppState & AppActions>((set, _get, store) => (
     setBridgeDefinitions: (sourceIdx, bridgeDefinitions) =>
         set((state) => ({ bridgeDefinitions: { ...state.bridgeDefinitions, [sourceIdx]: bridgeDefinitions } })),
 
-    // sort here, avoids sorting on-sites
-    setDevices: (sourceIdx, devices) =>
-        set((state) => ({ devices: { ...state.devices, [sourceIdx]: devices.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name)) } })),
-    // sort here, avoids sorting on-sites
-    setGroups: (sourceIdx, groups) =>
-        set((state) => ({ groups: { ...state.groups, [sourceIdx]: groups.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name)) } })),
+    setDevices: (sourceIdx, devices) => set((state) => ({ devices: { ...state.devices, [sourceIdx]: devices } })),
+    setGroups: (sourceIdx, groups) => set((state) => ({ groups: { ...state.groups, [sourceIdx]: groups } })),
 
     setNetworkMap: (sourceIdx, networkMap) =>
         set((state) => ({
