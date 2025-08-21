@@ -1,41 +1,9 @@
-import { type Column, flexRender, type Row } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import { flexRender, type Row } from "@tanstack/react-table";
 import { type TableComponents, TableVirtuoso } from "react-virtuoso";
 import type { UseTableProps, useTable } from "../../hooks/useTable.js";
 import { TABLE_COLUMN_FILTER_KEY } from "../../localStoreConsts.js";
+import TableHeader from "./TableHeader.js";
 import TextFilter from "./TextFilter.js";
-
-interface TableHeaderProps<T> {
-    columns: Column<T>[];
-    entries: number;
-}
-
-function TableHeader<T>({ columns, entries }: TableHeaderProps<T>) {
-    const { t } = useTranslation("common");
-
-    return (
-        <div className="flex flex-row flex-wrap gap-2 text-xs px-3">
-            <span className="label">{t("columns")}: </span>
-            {columns.map((column) =>
-                column.id === "select" ? null : (
-                    <label key={column.id} className="label">
-                        <input
-                            checked={column.getIsVisible()}
-                            disabled={!column.getCanHide()}
-                            onChange={column.getToggleVisibilityHandler()}
-                            type="checkbox"
-                            className="checkbox checkbox-xs"
-                        />
-                        {typeof column.columnDef.header === "string" && column.columnDef.header ? column.columnDef.header : t(column.id)}
-                    </label>
-                ),
-            )}
-            <span className="ml-auto label">
-                {t("entries")}: {entries}
-            </span>
-        </div>
-    );
-}
 
 const tableComponents: TableComponents<Row<unknown>, unknown> = {
     Table: ({ style, context, ...props }) => (
@@ -69,7 +37,7 @@ export default function Table<T>({ id, table }: TableProps<T>) {
 
     return (
         <>
-            <TableHeader columns={table.getAllLeafColumns()} entries={rows.length} />
+            <TableHeader tableId={id} columns={table.getAllLeafColumns()} entries={rows.length} />
 
             <TableVirtuoso<Row<T>>
                 useWindowScroll

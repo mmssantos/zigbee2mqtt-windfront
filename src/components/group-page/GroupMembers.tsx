@@ -56,14 +56,17 @@ const GroupMembers = memo(({ sourceIdx, devices, group }: GroupMembersProps) => 
             }
         }
 
-        elements.sort((elA, elB) => elA.device.ieee_address!.localeCompare(elB.device.ieee_address!));
+        elements.sort((elA, elB) => elA.device.ieee_address.localeCompare(elB.device.ieee_address));
 
         return elements;
     }, [sourceIdx, group, devices, lastSeenConfig, deviceStates, removeDeviceFromGroup, setDeviceState]);
 
     return (
         <div>
-            <VirtuosoMasonry useWindowScroll={true} columnCount={columnCount} data={filteredData} ItemContent={GroupMember} className="gap-3" />
+            {/* XXX: issues with going to zero items and back */}
+            {filteredData.length > 0 && (
+                <VirtuosoMasonry useWindowScroll={true} columnCount={columnCount} data={filteredData} ItemContent={GroupMember} className="gap-3" />
+            )}
         </div>
     );
 });
