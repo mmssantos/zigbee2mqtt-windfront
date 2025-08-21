@@ -29,6 +29,22 @@ Always reference these instructions first and fallback to search or bash command
 - **Supported:** Node.js 20.19.0+ or 22.12.0+
 - **Warning:** @virtuoso.dev/masonry requires Node 22 but works with Node 20 (expect warnings)
 
+## Coding Standards
+
+- Use TypeScript ESM conventions.
+- Defer to existing code and biome rules (`biome.json`) to identify proper styling.
+- Follow semver conventions
+- Prefix commits and pull requests appropriately:
+  - for bug fixes, use `fix: ...`
+  - for new features, use `feat: ...`
+  - for chores (general repository maintenance, workflow updates, etc.), use `chore: ...`
+- Breaking changes that do not affect the usability and design of the user interface are fine
+  - e.g. changes to the build process, internal code changes that do not affect user-facing features, i18n changes...
+  - preserving backwards-compatibility in that case is NOT desired
+- Breaking changes that affect the usability and design of the user interface should be avoided unless a major benefit comes from it, and if so, must be carefully noted
+- Always optimize for performance
+- Try to minimize dependencies
+
 ## Validation
 
 - **ALWAYS manually validate any changes** by running the application and testing key user scenarios:
