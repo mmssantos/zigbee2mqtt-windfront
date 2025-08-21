@@ -26,8 +26,7 @@ Always reference these instructions first and fallback to search or bash command
 
 ## Node.js Version Requirements
 
-- **Supported:** Node.js 20.19.0+ or 22.12.0+
-- **Warning:** @virtuoso.dev/masonry requires Node 22 but works with Node 20 (expect warnings)
+- **Supported:** Node.js 22.12.0+
 
 ## Coding Standards
 
@@ -86,10 +85,11 @@ npm run preview        # Preview production build
 
 ### Building & Testing  
 ```bash
-npm run build          # Production build (16 seconds) - NEVER CANCEL, timeout 60+ min
-npm run typecheck      # TypeScript checking (8 seconds) - NEVER CANCEL
-npm run test           # Run tests quickly
-npm run test:cov       # Run tests with coverage (2 seconds) - NEVER CANCEL, timeout 30+ min
+npm run build                  # Production build (16 seconds) - NEVER CANCEL, timeout 60+ min
+npm run typecheck              # TypeScript checking (8 seconds) - NEVER CANCEL
+npm run test                   # Run tests quickly
+npm run test:cov               # Run tests with coverage (2 seconds) - NEVER CANCEL, timeout 30+ min
+node ./scripts/check-i18n.mjs  # Ensure i18n locale files are not mismatching with EN baseline - NEVER CANCEL, timeout 10+ min
 ```
 
 ### Code Quality
@@ -153,7 +153,6 @@ npm run check:ci       # Check without fixes (CI mode) - under 1 second
 ### Troubleshooting
 - **TypeScript errors on coverage files:** Run `rm -rf src/coverage` before `npm run typecheck`
 - **Port conflicts:** Stop dev server before starting Storybook (both use mock WebSocket port 8579)
-- **Node version warnings:** Safe to ignore masonry package warnings on Node 20
 - **Build failures:** Always run `npm run check` to fix formatting issues first
 - **WebSocket errors:** Check Z2M_API_URI environment variable for correct Zigbee2MQTT address
 

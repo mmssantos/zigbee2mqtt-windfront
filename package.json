@@ -7,7 +7,7 @@
     "types": "index.d.ts",
     "author": "Nerivec",
     "engines": {
-        "node": "^20.19.0 || >=22.12.0"
+        "node": ">=22.12.0"
     },
     "repository": {
         "type": "git",
