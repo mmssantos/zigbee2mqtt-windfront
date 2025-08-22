@@ -227,7 +227,7 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
             </figure>
             <div className="card-body">
                 <h2 className="card-title">
-                    {device.friendly_name} ({device.ieee_address})
+                    {device.friendly_name}
                     <DeviceControlEditName
                         sourceIdx={sourceIdx}
                         name={device.friendly_name}
@@ -264,7 +264,12 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
                 <div className="stats stats-vertical lg:stats-horizontal shadow">
                     <div className="stat">
                         <div className="stat-title">{device.type}</div>
-                        <div className="stat-value text-xl">{toHex(device.network_address)}</div>
+                        <div className="stat-value text-xl" title={t("ieee_address")}>
+                            {device.ieee_address}
+                        </div>
+                        <div className="stat-value text-xl" title={t("network_address_hex")}>
+                            {toHex(device.network_address)}
+                        </div>
                         <div className="stat-desc">
                             {t("network_address_dec")}: {device.network_address}
                         </div>
