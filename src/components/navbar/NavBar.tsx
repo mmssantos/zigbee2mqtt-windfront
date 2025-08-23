@@ -1,9 +1,9 @@
 import { faBars, faDisplay, faInbox } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type MouseEvent, memo, useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, type NavLinkRenderProps } from "react-router";
-import { API_NAMES, useAppStore } from "../../store.js";
+import { useAppStore } from "../../store.js";
 import Button from "../Button.js";
 import Notifications from "../Notifications.js";
 import LanguageSwitcher from "./LanguageSwitcher.js";
@@ -14,37 +14,6 @@ type NavBarProps = {
     showNotifications: boolean;
     setShowNotifications: ReturnType<typeof useState<boolean>>[1];
 };
-
-type NavBarSubMenuProps = {
-    name: string;
-    navPath: string;
-    isNavActive: (props: NavLinkRenderProps) => string;
-};
-
-const NavBarSubMenu = memo(({ name, navPath, isNavActive }: NavBarSubMenuProps) => {
-    const onSubMenuClick = useCallback((event: MouseEvent<HTMLUListElement>) => {
-        (event.currentTarget.parentElement as HTMLDetailsElement).open = false;
-    }, []);
-
-    return (
-        <details>
-            <summary>
-                <NavLink to={navPath} className={isNavActive}>
-                    {name}
-                </NavLink>
-            </summary>
-            <ul className="z-98 p-2" onClick={onSubMenuClick}>
-                {API_NAMES.map((apiName, idx) => (
-                    <li key={`${idx}-${apiName}`}>
-                        <NavLink to={`${navPath}/${idx}`} className={isNavActive}>
-                            {apiName}
-                        </NavLink>
-                    </li>
-                ))}
-            </ul>
-        </details>
-    );
-});
 
 const NavBar = memo(({ showNotifications, setShowNotifications }: NavBarProps) => {
     const { t } = useTranslation(["navbar", "common"]);
@@ -86,31 +55,19 @@ const NavBar = memo(({ showNotifications, setShowNotifications }: NavBarProps) =
                 </NavLink>
             </li>
             <li>
-                {API_NAMES.length > 1 ? (
-                    <NavBarSubMenu name={t("network")} navPath="/network" isNavActive={isNavActive} />
-                ) : (
-                    <NavLink to="/network" className={isNavActive}>
-                        {t("network")}
-                    </NavLink>
-                )}
+                <NavLink to="/network" className={isNavActive}>
+                    {t("network")}
+                </NavLink>
             </li>
             <li>
-                {API_NAMES.length > 1 ? (
-                    <NavBarSubMenu name={t("logs")} navPath="/logs" isNavActive={isNavActive} />
-                ) : (
-                    <NavLink to="/logs" className={isNavActive}>
-                        {t("logs")}
-                    </NavLink>
-                )}
+                <NavLink to="/logs" className={isNavActive}>
+                    {t("logs")}
+                </NavLink>
             </li>
             <li>
-                {API_NAMES.length > 1 ? (
-                    <NavBarSubMenu name={t("settings")} navPath="/settings" isNavActive={isNavActive} />
-                ) : (
-                    <NavLink to="/settings" className={isNavActive}>
-                        {t("settings")}
-                    </NavLink>
-                )}
+                <NavLink to="/settings" className={isNavActive}>
+                    {t("settings")}
+                </NavLink>
             </li>
             <li>
                 <NavLink to="/frontend-settings" className={isNavActive}>
