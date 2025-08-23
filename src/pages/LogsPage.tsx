@@ -1,6 +1,6 @@
 import { faClose, faMagnifyingGlass, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type JSX, memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, type NavLinkRenderProps, useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -86,13 +86,7 @@ const LogsTab = memo(({ sourceIdx }: LogsTabProps) => {
                         {/* biome-ignore lint/a11y/noLabelWithoutControl: wrapped input */}
                         <label className="input w-64 join-item">
                             <FontAwesomeIcon icon={faMagnifyingGlass} />
-                            <DebouncedInput
-                                className=""
-                                type="search"
-                                onChange={(value) => setSearchTerm(value.toString())}
-                                placeholder={t("common:search")}
-                                value={searchTerm}
-                            />
+                            <DebouncedInput onChange={setSearchTerm} placeholder={t("common:search")} value={searchTerm} />
                         </label>
                         <Button
                             item=""
@@ -169,25 +163,16 @@ export default function LogsPage() {
         }
     }, [sourceIdx, validSourceIdx, navigate]);
 
-    const isTabActive = useCallback(({ isActive }: NavLinkRenderProps) => (isActive ? "tab tab-active" : "tab"), []);
-
-    const tabs = useMemo(() => {
-        const elements: JSX.Element[] = [];
-
-        for (let idx = 0; idx < API_URLS.length; idx++) {
-            elements.push(
-                <NavLink key={idx} to={`/logs/${idx}`} className={isTabActive}>
-                    <SourceDot idx={idx} alwaysShowName />
-                </NavLink>,
-            );
-        }
-
-        return elements;
-    }, [isTabActive]);
+    const isTabActive = ({ isActive }: NavLinkRenderProps) => (isActive ? "tab tab-active" : "tab");
 
     return API_URLS.length > 1 ? (
         <div className="tabs tabs-border">
-            {tabs}
+            {API_URLS.map((_v, idx) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: const
+                <NavLink key={idx} to={`/logs/${idx}`} className={isTabActive}>
+                    <SourceDot idx={idx} alwaysShowName />
+                </NavLink>
+            ))}
             <div className="ml-auto flex flex-row flex-wrap gap-3 items-top">
                 <SelectField
                     name="log_limit"
@@ -218,7 +203,7 @@ export default function LogsPage() {
                 </fieldset>
             </div>
             <div className="tab-content block h-full bg-base-100 pb-3 px-3">
-                <LogsTab sourceIdx={numSourceIdx} />
+                <LogsTab key={sourceIdx} sourceIdx={numSourceIdx} />
             </div>
         </div>
     ) : (

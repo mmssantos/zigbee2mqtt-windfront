@@ -1,6 +1,6 @@
 import { faCircleInfo, faDownLong, faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type ChangeEvent, type JSX, lazy, memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, lazy, memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, type NavLinkRenderProps, useNavigate, useParams } from "react-router";
 import store2 from "store2";
@@ -175,30 +175,21 @@ export default function NetworkPage() {
         }
     }, [sourceIdx, validSourceIdx, navigate]);
 
-    const isTabActive = useCallback(({ isActive }: NavLinkRenderProps) => (isActive ? "tab tab-active" : "tab"), []);
-
-    const tabs = useMemo(() => {
-        const elements: JSX.Element[] = [];
-
-        for (let idx = 0; idx < API_URLS.length; idx++) {
-            elements.push(
-                <NavLink key={idx} to={`/network/${idx}`} className={isTabActive}>
-                    <SourceDot idx={idx} alwaysShowName />
-                </NavLink>,
-            );
-        }
-
-        return elements;
-    }, [isTabActive]);
+    const isTabActive = ({ isActive }: NavLinkRenderProps) => (isActive ? "tab tab-active" : "tab");
 
     return API_URLS.length > 1 ? (
         <div className="tabs tabs-border">
-            {tabs}
+            {API_URLS.map((_v, idx) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: const
+                <NavLink key={idx} to={`/network/${idx}`} className={isTabActive}>
+                    <SourceDot idx={idx} alwaysShowName />
+                </NavLink>
+            ))}
             <div className="tab-content block h-full bg-base-100 pb-3 px-3">
-                <NetworkTab sourceIdx={numSourceIdx} />
+                <NetworkTab key={sourceIdx} sourceIdx={numSourceIdx} />
             </div>
         </div>
     ) : (
-        <NetworkTab sourceIdx={numSourceIdx} />
+        <NetworkTab key={sourceIdx} sourceIdx={numSourceIdx} />
     );
 }
