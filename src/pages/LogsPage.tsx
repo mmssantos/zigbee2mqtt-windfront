@@ -111,8 +111,7 @@ const LogsTab = memo(({ sourceIdx }: LogsTabProps) => {
                     onChange={(e) => setHighlightOnly(e.target.checked)}
                     className="checkbox checkbox-sm"
                 />
-                <fieldset className="fieldset">
-                    <legend className="fieldset-legend">&nbsp;</legend>
+                <fieldset className="fieldset self-end">
                     <Button<number>
                         item={sourceIdx}
                         onClick={clearLogs}
@@ -201,8 +200,7 @@ export default function LogsPage() {
                         </option>
                     ))}
                 </SelectField>
-                <fieldset className="fieldset">
-                    <legend className="fieldset-legend">&nbsp;</legend>
+                <fieldset className="fieldset self-end">
                     <ConfirmButton<void>
                         onClick={clearAllLogs}
                         className="btn btn-sm btn-outline btn-warning btn-primary"

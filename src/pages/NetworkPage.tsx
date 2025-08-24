@@ -139,8 +139,7 @@ const NetworkTab = memo(({ sourceIdx }: NetworkTabProps) => {
                     <option value="plantuml">{t("plantuml")}</option>
                 </SelectField>
                 <CheckboxField name="enable_routes" label={t("enable_routes")} checked={enableRoutes} onChange={onEnableRoutesChange} />
-                <fieldset className="fieldset">
-                    <legend className="fieldset-legend">&nbsp;</legend>
+                <fieldset className="fieldset self-end">
                     <Button
                         className="btn btn-outline btn-primary ms-3 me-6"
                         onClick={onRequestClick}

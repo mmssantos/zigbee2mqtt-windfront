@@ -209,6 +209,7 @@ export default function TouchlinkPage() {
                         label={t("scan_source")}
                         value={scanIdx}
                         onChange={(e) => !e.target.validationMessage && !!e.target.value && setScanIdx(Number.parseInt(e.target.value, 10))}
+                        className="select select-sm"
                     >
                         <option value="" disabled>
                             {t("select_scan_source")}
@@ -220,9 +221,13 @@ export default function TouchlinkPage() {
                         ))}
                     </SelectField>
                 )}
-                <fieldset className="fieldset">
-                    <legend className="fieldset-legend">&nbsp;</legend>
-                    <Button<number> className="btn btn-outline btn-primary" item={scanIdx} onClick={onScanClick} disabled={touchlinkScanInProgress}>
+                <fieldset className="fieldset self-end">
+                    <Button<number>
+                        className="btn btn-sm btn-outline btn-primary"
+                        item={scanIdx}
+                        onClick={onScanClick}
+                        disabled={touchlinkScanInProgress}
+                    >
                         <FontAwesomeIcon icon={faMagnifyingGlassPlus} />
                         {t("scan")}
                     </Button>

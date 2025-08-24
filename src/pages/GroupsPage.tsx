@@ -54,6 +54,9 @@ export default function GroupsPage() {
         }
 
         await sendMessage(newGroupSourceIdx, "bridge/request/group/add", payload);
+        setNewGroupFriendlyName("");
+        setNewGroupId("");
+        setNewGroupSourceIdx(0);
     }, [newGroupFriendlyName, newGroupId, newGroupSourceIdx, sendMessage]);
 
     const onRenameClick = useCallback(
@@ -218,55 +221,50 @@ export default function GroupsPage() {
 
     return (
         <>
-            <div className="collapse collapse-arrow bg-base-100 shadow mb-3">
-                <input type="checkbox" />
-                <div className="collapse-title text-lg font-semibold text-center">{t("create_group")}</div>
-                <div className="collapse-content">
-                    <div className="flex flex-row flex-wrap justify-center gap-2">
-                        {API_URLS.length > 1 && (
-                            <SelectField
-                                name="source"
-                                label={t("common:source")}
-                                defaultValue={newGroupSourceIdx}
-                                required
-                                onChange={(e) => !e.target.validationMessage && setNewGroupSourceIdx(Number.parseInt(e.target.value, 10))}
-                            >
-                                {API_NAMES.map((name, idx) => (
-                                    <option key={`${idx}-${name}`} value={idx}>
-                                        {name}
-                                    </option>
-                                ))}
-                            </SelectField>
-                        )}
-                        <InputField
-                            type="text"
-                            name="friendly_name"
-                            label={t("common:friendly_name")}
-                            value={newGroupFriendlyName}
-                            placeholder={t("friendly_name_placeholder")}
-                            onChange={(e) => setNewGroupFriendlyName(e.target.value)}
-                            required
-                            minLength={1}
-                        />
-                        <InputField
-                            type="number"
-                            name="group_id"
-                            label={t("group_id")}
-                            value={newGroupId}
-                            detail={t("common:optional")}
-                            min={0}
-                            max={255}
-                            onChange={(e) => setNewGroupId(e.target.value)}
-                        />
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">&nbsp;</legend>
-                            <Button<void> onClick={onGroupCreateSubmit} className="btn btn-outline btn-primary" disabled={!isValidNewGroup}>
-                                <FontAwesomeIcon icon={faPlus} />
-                                {t("create_group")}
-                            </Button>
-                        </fieldset>
-                    </div>
-                </div>
+            <div className="flex flex-row flex-wrap justify-center gap-2 mb-2">
+                {API_URLS.length > 1 && (
+                    <SelectField
+                        name="source"
+                        label={t("common:source")}
+                        value={newGroupSourceIdx}
+                        required
+                        onChange={(e) => !e.target.validationMessage && setNewGroupSourceIdx(Number.parseInt(e.target.value, 10))}
+                        className="select select-sm"
+                    >
+                        {API_NAMES.map((name, idx) => (
+                            <option key={`${idx}-${name}`} value={idx}>
+                                {name}
+                            </option>
+                        ))}
+                    </SelectField>
+                )}
+                <InputField
+                    type="text"
+                    name="friendly_name"
+                    label={t("common:friendly_name")}
+                    value={newGroupFriendlyName}
+                    placeholder={t("friendly_name_placeholder")}
+                    onChange={(e) => setNewGroupFriendlyName(e.target.value)}
+                    required
+                    minLength={1}
+                    className="input input-sm"
+                />
+                <InputField
+                    type="number"
+                    name="group_id"
+                    label={t("group_id")}
+                    value={newGroupId}
+                    min={0}
+                    max={255}
+                    onChange={(e) => setNewGroupId(e.target.value)}
+                    className="input input-sm"
+                />
+                <fieldset className="fieldset self-end">
+                    <Button<void> onClick={onGroupCreateSubmit} className="btn btn-sm btn-outline btn-primary" disabled={!isValidNewGroup}>
+                        <FontAwesomeIcon icon={faPlus} />
+                        {t("create_group")}
+                    </Button>
+                </fieldset>
             </div>
             <Table id="all-groups" {...table} />
         </>
