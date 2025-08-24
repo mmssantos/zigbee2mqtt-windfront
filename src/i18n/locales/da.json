@@ -53,6 +53,7 @@
         "unknown_device": "Ukendt enhed",
         "unknown_group": "Ukendt gruppe",
         "failed": "Mislykkedes",
+        "disabled": "Deaktiveret",
         "execute": "Udfør",
         "command": "Kommando",
         "payload": "Nyttelast (Payload)",
@@ -68,7 +69,15 @@
         "all_sources": "Alle kilder",
         "show_source_name": "Vis kilde-navn",
         "show_only": "Vis kun",
-        "empty_exposes_definition": "Tom exposes-definition"
+        "empty_exposes_definition": "Tom exposes-definition",
+        "hide_static_info_alerts": "Skjul advarsler for statisk info",
+        "advanced_search": "Avanceret søgning",
+        "reset": "Nulstil",
+        "all": "Alle",
+        "last_seen_filter_info": "I minutter siden sidste tabelopdatering",
+        "feature_type": "Funktionstype",
+        "feature_name": "Funktionsnavn",
+        "state": "Status"
     },
     "devicePage": {
         "about": "Om",
@@ -186,7 +195,11 @@
         "firmware_version": "Firmware-version",
         "available_firmware_version": "Tilgængelig version",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Opdaterer",
+        "idle": "Inaktiv",
+        "available": "Tilgængelig",
+        "scheduled": "Planlagt"
     },
     "settings": {
         "about": "Om",
@@ -358,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Ukendt",
-        "Coordinator": "Koordinator"
+        "Coordinator": "Koordinator",
+        "power_source": "Strømkilde",
+        "battery_low": "Lavt batteriniveau"
     },
     "scene": {
         "manage_scenes_header": "Administrér scener",

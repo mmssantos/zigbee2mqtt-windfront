@@ -69,7 +69,15 @@
         "all_sources": "Alle bronnen",
         "show_source_name": "Bronnaam tonen",
         "show_only": "Alleen tonen",
-        "empty_exposes_definition": "Lege exposes-definitie"
+        "empty_exposes_definition": "Lege exposes-definitie",
+        "hide_static_info_alerts": "Statische info-waarschuwingen verbergen",
+        "advanced_search": "Geavanceerd zoeken",
+        "reset": "Resetten",
+        "all": "Alle",
+        "last_seen_filter_info": "In minuten sinds de laatste tabelupdate",
+        "feature_type": "Functietype",
+        "feature_name": "Functienaam",
+        "state": "Status"
     },
     "devicePage": {
         "about": "Over",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmwareversie",
         "available_firmware_version": "Beschikbare versie",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Bezig met bijwerken",
+        "idle": "Inactief",
+        "available": "Beschikbaar",
+        "scheduled": "Gepland"
     },
     "settings": {
         "about": "Over",
@@ -359,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Onbekend",
-        "Coordinator": "Coördinator"
+        "Coordinator": "Coördinator",
+        "power_source": "Stroombron",
+        "battery_low": "Batterij bijna leeg"
     },
     "scene": {
         "manage_scenes_header": "Scènes beheren",

@@ -69,7 +69,15 @@
         "all_sources": "Всички източници",
         "show_source_name": "Покажи име на източник",
         "show_only": "Покажи само",
-        "empty_exposes_definition": "Празна exposes дефиниция"
+        "empty_exposes_definition": "Празна exposes дефиниция",
+        "hide_static_info_alerts": "Скрий предупреждения за статична информация",
+        "advanced_search": "Разширено търсене",
+        "reset": "Нулиране",
+        "all": "Всички",
+        "last_seen_filter_info": "В минути от последното обновяване на таблицата",
+        "feature_type": "Тип функция",
+        "feature_name": "Име на функция",
+        "state": "Състояние"
     },
     "devicePage": {
         "about": "Относно",
@@ -187,7 +195,11 @@
         "firmware_version": "Версия фърмуер",
         "available_firmware_version": "Налична версия",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Актуализира се",
+        "idle": "Неактивно",
+        "available": "Налично",
+        "scheduled": "Планирано"
     },
     "settings": {
         "about": "Относно",
@@ -359,7 +371,9 @@
         "Router": "Рутер",
         "GreenPower": "GreenPower",
         "Unknown": "Непознато",
-        "Coordinator": "Координатор"
+        "Coordinator": "Координатор",
+        "power_source": "Източник на захранване",
+        "battery_low": "Ниска батерия"
     },
     "scene": {
         "manage_scenes_header": "Управление на сцени",

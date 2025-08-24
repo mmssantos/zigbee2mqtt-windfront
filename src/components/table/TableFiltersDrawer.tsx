@@ -27,7 +27,7 @@ function RangeFilter<T>({ column, label }: FilterProps<T>) {
             <div className="flex flex-row gap-2 w-full">
                 <input
                     type="number"
-                    className="input input-sm w-full outline-none!"
+                    className="input input-sm w-full"
                     value={vMin ?? ""}
                     placeholder={min !== undefined ? String(min) : "Min"}
                     min={min !== undefined ? Math.round(Number(min)) : undefined}
@@ -42,7 +42,7 @@ function RangeFilter<T>({ column, label }: FilterProps<T>) {
                 />
                 <input
                     type="number"
-                    className="input input-sm w-full outline-none!"
+                    className="input input-sm w-full"
                     value={vMax ?? ""}
                     placeholder={max !== undefined ? String(max) : "Max"}
                     min={vMin ?? (min !== undefined ? Math.round(Number(min)) : undefined)}
@@ -103,7 +103,7 @@ function ArrSelectFilter<T>({ column, label }: FilterProps<T>) {
             </label>
             <select
                 id={label}
-                className="select select-sm w-full outline-none!"
+                className="select select-sm w-full"
                 value={normValue ?? ""}
                 onChange={(e) => column.setFilterValue(e.target.value || undefined)}
             >
@@ -149,7 +149,7 @@ function SelectFilter<T>({ column, label }: FilterProps<T>) {
             </label>
             <select
                 id={label}
-                className="select select-sm w-full outline-none!"
+                className="select select-sm w-full"
                 value={normValue ?? ""}
                 onChange={(e) => column.setFilterValue(e.target.value || undefined)}
             >
@@ -189,7 +189,7 @@ function TextFilter<T>({ column, label }: FilterProps<T>) {
             {datalistValues.length > 0 ? <datalist id={listId}>{datalistValues}</datalist> : null}
             <label className="label text-xs">{label}</label>
             <DebouncedInput
-                className="input input-sm w-full outline-none!"
+                className="input input-sm w-full"
                 value={value ?? ""}
                 onChange={(v) => column.setFilterValue(v || undefined)}
                 list={datalistValues.length > 0 ? listId : undefined}

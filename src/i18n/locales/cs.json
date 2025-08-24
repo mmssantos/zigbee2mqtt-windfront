@@ -69,7 +69,15 @@
         "all_sources": "Všechny zdroje",
         "show_source_name": "Zobrazit název zdroje",
         "show_only": "Zobrazit pouze",
-        "empty_exposes_definition": "Prázdná definice exposes"
+        "empty_exposes_definition": "Prázdná definice exposes",
+        "hide_static_info_alerts": "Skrýt upozornění statických informací",
+        "advanced_search": "Pokročilé vyhledávání",
+        "reset": "Resetovat",
+        "all": "Vše",
+        "last_seen_filter_info": "V minutách od poslední aktualizace tabulky",
+        "feature_type": "Typ funkce",
+        "feature_name": "Název funkce",
+        "state": "Stav"
     },
     "devicePage": {
         "about": "O aplikaci",
@@ -187,7 +195,11 @@
         "firmware_version": "Verze firmware",
         "available_firmware_version": "Dostupná verze",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Aktualizace",
+        "idle": "Nečinné",
+        "available": "Dostupné",
+        "scheduled": "Naplánováno"
     },
     "settings": {
         "about": "O aplikaci",
@@ -359,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Neznámé",
-        "Coordinator": "Koordinátor"
+        "Coordinator": "Koordinátor",
+        "power_source": "Zdroj napájení",
+        "battery_low": "Nízká baterie"
     },
     "scene": {
         "manage_scenes_header": "Správa scén",

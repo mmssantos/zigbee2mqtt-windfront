@@ -69,7 +69,15 @@
         "all_sources": "すべてのソース",
         "show_source_name": "ソース名を表示",
         "show_only": "のみ表示",
-        "empty_exposes_definition": "Exposes 定義なし"
+        "empty_exposes_definition": "Exposes 定義なし",
+        "hide_static_info_alerts": "静的情報のアラートを非表示",
+        "advanced_search": "詳細検索",
+        "reset": "リセット",
+        "all": "すべて",
+        "last_seen_filter_info": "テーブル最終更新からの経過分",
+        "feature_type": "機能タイプ",
+        "feature_name": "機能名",
+        "state": "状態"
     },
     "devicePage": {
         "about": "概要",
@@ -187,7 +195,11 @@
         "firmware_version": "ファームバージョン",
         "available_firmware_version": "利用可能バージョン",
         "app": "アプリ",
-        "stack": "スタック"
+        "stack": "スタック",
+        "updating": "更新中",
+        "idle": "待機",
+        "available": "利用可能",
+        "scheduled": "予定済み"
     },
     "settings": {
         "about": "概要",
@@ -359,7 +371,9 @@
         "Router": "ルーター",
         "GreenPower": "GreenPower",
         "Unknown": "不明",
-        "Coordinator": "コーディネータ"
+        "Coordinator": "コーディネータ",
+        "power_source": "電源",
+        "battery_low": "バッテリー低下"
     },
     "scene": {
         "manage_scenes_header": "シーン管理",

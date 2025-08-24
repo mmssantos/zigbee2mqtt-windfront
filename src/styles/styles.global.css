@@ -15,3 +15,9 @@
 .fieldset > .label {
     white-space: normal;
 }
+
+/* Remove outline everywhere, looks weird on smaller inputs/join-items */
+input, select, textarea, label {
+    --tw-outline-style: none !important;
+    outline-style: none !important;
+}

@@ -69,7 +69,15 @@
         "all_sources": "Все источники",
         "show_source_name": "Показать имя источника",
         "show_only": "Показать только",
-        "empty_exposes_definition": "Пустое описание exposes"
+        "empty_exposes_definition": "Пустое описание exposes",
+        "hide_static_info_alerts": "Скрыть оповещения статической информации",
+        "advanced_search": "Расширенный поиск",
+        "reset": "Сброс",
+        "all": "Все",
+        "last_seen_filter_info": "В минутах с момента последнего обновления таблицы",
+        "feature_type": "Тип функции",
+        "feature_name": "Название функции",
+        "state": "Состояние"
     },
     "devicePage": {
         "about": "О",
@@ -187,7 +195,11 @@
         "firmware_version": "Версия прошивки",
         "available_firmware_version": "Доступная версия",
         "app": "Приложение",
-        "stack": "Стек"
+        "stack": "Стек",
+        "updating": "Обновляется",
+        "idle": "Бездействует",
+        "available": "Доступно",
+        "scheduled": "Запланировано"
     },
     "settings": {
         "about": "О программе",
@@ -359,7 +371,9 @@
         "Router": "Маршрутизатор",
         "GreenPower": "GreenPower",
         "Unknown": "Неизвестно",
-        "Coordinator": "Координатор"
+        "Coordinator": "Координатор",
+        "power_source": "Источник питания",
+        "battery_low": "Низкий заряд батареи"
     },
     "scene": {
         "manage_scenes_header": "Управление сценами",

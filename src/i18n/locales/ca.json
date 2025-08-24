@@ -69,7 +69,15 @@
         "all_sources": "Totes les fonts",
         "show_source_name": "Mostra nom de la font",
         "show_only": "Mostra només",
-        "empty_exposes_definition": "Definició exposes buida"
+        "empty_exposes_definition": "Definició exposes buida",
+        "hide_static_info_alerts": "Amaga les alertes d'informació estàtica",
+        "advanced_search": "Cerca avançada",
+        "reset": "Restableix",
+        "all": "Tots",
+        "last_seen_filter_info": "En minuts des de l'última actualització de la taula",
+        "feature_type": "Tipus de característica",
+        "feature_name": "Nom de la característica",
+        "state": "Estat"
     },
     "devicePage": {
         "about": "Quant a",
@@ -187,7 +195,11 @@
         "firmware_version": "Versió firmware",
         "available_firmware_version": "Versió disponible",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Actualitzant",
+        "idle": "Inactiu",
+        "available": "Disponible",
+        "scheduled": "Programat"
     },
     "settings": {
         "about": "Quant a",
@@ -359,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Desconegut",
-        "Coordinator": "Coordinador"
+        "Coordinator": "Coordinador",
+        "power_source": "Font d'alimentació",
+        "battery_low": "Bateria baixa"
     },
     "scene": {
         "manage_scenes_header": "Gestiona escenes",

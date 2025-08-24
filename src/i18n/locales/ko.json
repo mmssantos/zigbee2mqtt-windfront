@@ -69,7 +69,15 @@
         "all_sources": "모든 소스",
         "show_source_name": "소스 이름 표시",
         "show_only": "다음만 표시",
-        "empty_exposes_definition": "Exposes 정의 비어 있음"
+        "empty_exposes_definition": "Exposes 정의 비어 있음",
+        "hide_static_info_alerts": "정적 정보 알림 숨기기",
+        "advanced_search": "고급 검색",
+        "reset": "재설정",
+        "all": "전체",
+        "last_seen_filter_info": "표 마지막 업데이트 이후 경과 분",
+        "feature_type": "기능 유형",
+        "feature_name": "기능 이름",
+        "state": "상태"
     },
     "devicePage": {
         "about": "정보",
@@ -187,7 +195,11 @@
         "firmware_version": "펌웨어 버전",
         "available_firmware_version": "가능한 버전",
         "app": "앱",
-        "stack": "스택"
+        "stack": "스택",
+        "updating": "업데이트 중",
+        "idle": "유휴",
+        "available": "사용 가능",
+        "scheduled": "예약됨"
     },
     "settings": {
         "about": "정보",
@@ -359,7 +371,9 @@
         "Router": "라우터",
         "GreenPower": "GreenPower",
         "Unknown": "알 수 없음",
-        "Coordinator": "코디네이터"
+        "Coordinator": "코디네이터",
+        "power_source": "전원",
+        "battery_low": "배터리 부족"
     },
     "scene": {
         "manage_scenes_header": "씬 관리",

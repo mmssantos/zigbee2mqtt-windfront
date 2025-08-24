@@ -69,7 +69,15 @@
         "all_sources": "Alle kilder",
         "show_source_name": "Vis kildenavn",
         "show_only": "Vis kun",
-        "empty_exposes_definition": "Tom exposes-definisjon"
+        "empty_exposes_definition": "Tom exposes-definisjon",
+        "hide_static_info_alerts": "Skjul varsler for statisk info",
+        "advanced_search": "Avansert søk",
+        "reset": "Tilbakestill",
+        "all": "Alle",
+        "last_seen_filter_info": "I minutter siden siste tabelloppdatering",
+        "feature_type": "Funksjonstype",
+        "feature_name": "Funksjonsnavn",
+        "state": "Tilstand"
     },
     "devicePage": {
         "about": "Om",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmware-versjon",
         "available_firmware_version": "Tilgjengelig versjon",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Oppdaterer",
+        "idle": "Inaktiv",
+        "available": "Tilgjengelig",
+        "scheduled": "Planlagt"
     },
     "settings": {
         "about": "Om",
@@ -359,7 +371,9 @@
         "Router": "Ruter",
         "GreenPower": "GreenPower",
         "Unknown": "Ukjent",
-        "Coordinator": "Koordinator"
+        "Coordinator": "Koordinator",
+        "power_source": "Strømkilde",
+        "battery_low": "Lavt batteri"
     },
     "scene": {
         "manage_scenes_header": "Administrer scener",

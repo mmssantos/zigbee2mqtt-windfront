@@ -69,7 +69,15 @@
         "all_sources": "Iturri guztiak",
         "show_source_name": "Erakutsi iturri izena",
         "show_only": "Erakutsi soilik",
-        "empty_exposes_definition": "Exposes definizio hutsik"
+        "empty_exposes_definition": "Exposes definizio hutsik",
+        "hide_static_info_alerts": "Informazio estatikoaren alertak ezkutatu",
+        "advanced_search": "Bilaketa aurreratua",
+        "reset": "Berrezarri",
+        "all": "Guztiak",
+        "last_seen_filter_info": "Azken taula eguneratzetik igarotako minututan",
+        "feature_type": "Eginbide mota",
+        "feature_name": "Eginbide izena",
+        "state": "Egoera"
     },
     "devicePage": {
         "about": "Honi buruz",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmware bertsioa",
         "available_firmware_version": "Bertsio erabilgarria",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Eguneratzen",
+        "idle": "Inaktibo",
+        "available": "Eskuragarri",
+        "scheduled": "Programatuta"
     },
     "settings": {
         "about": "Honi buruz",
@@ -359,7 +371,9 @@
         "Router": "Errutagailua",
         "GreenPower": "GreenPower",
         "Unknown": "Ezezaguna",
-        "Coordinator": "Koordinatzailea"
+        "Coordinator": "Koordinatzailea",
+        "power_source": "Energia iturria",
+        "battery_low": "Bateria baxua"
     },
     "scene": {
         "manage_scenes_header": "Kudeatu eszenak",

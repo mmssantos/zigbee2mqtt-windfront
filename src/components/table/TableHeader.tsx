@@ -34,7 +34,7 @@ export default function TableHeader<T>({ table, resetFilters, globalFilter, colu
         <>
             <div className="flex flex-row flex-wrap justify-center items-center gap-3 mb-3 text-sm">
                 <div className="join">
-                    <label className="input input-sm outline-none! join-item">
+                    <label className="input input-sm join-item">
                         <FontAwesomeIcon icon={faMagnifyingGlass} />
                         <DebouncedInput onChange={table.setGlobalFilter} placeholder={t("search")} value={globalFilter} />
                     </label>

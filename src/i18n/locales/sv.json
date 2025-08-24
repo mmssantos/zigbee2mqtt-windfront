@@ -69,7 +69,15 @@
         "all_sources": "Alla källor",
         "show_source_name": "Visa källnamn",
         "show_only": "Visa endast",
-        "empty_exposes_definition": "Tom exposes-definition"
+        "empty_exposes_definition": "Tom exposes-definition",
+        "hide_static_info_alerts": "Dölj statiska informationsvarningar",
+        "advanced_search": "Avancerad sökning",
+        "reset": "Återställ",
+        "all": "Alla",
+        "last_seen_filter_info": "I minuter sedan senaste tabelluppdatering",
+        "feature_type": "Funktionstyp",
+        "feature_name": "Funktionsnamn",
+        "state": "Status"
     },
     "devicePage": {
         "about": "Om",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmware-version",
         "available_firmware_version": "Tillgänglig version",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Uppdaterar",
+        "idle": "Inaktiv",
+        "available": "Tillgänglig",
+        "scheduled": "Schemalagd"
     },
     "settings": {
         "about": "Om",
@@ -359,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Okänt",
-        "Coordinator": "Koordinator"
+        "Coordinator": "Koordinator",
+        "power_source": "Strömkälla",
+        "battery_low": "Låg batterinivå"
     },
     "scene": {
         "manage_scenes_header": "Hantera scener",

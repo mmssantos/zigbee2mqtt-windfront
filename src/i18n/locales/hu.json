@@ -69,7 +69,15 @@
         "all_sources": "Minden forrás",
         "show_source_name": "Forrásnév mutatása",
         "show_only": "Csak ezeket mutasd",
-        "empty_exposes_definition": "Üres exposes definíció"
+        "empty_exposes_definition": "Üres exposes definíció",
+        "hide_static_info_alerts": "Statikus információs riasztások elrejtése",
+        "advanced_search": "Speciális keresés",
+        "reset": "Visszaállítás",
+        "all": "Összes",
+        "last_seen_filter_info": "Percekben a táblázat utolsó frissítése óta",
+        "feature_type": "Funkció típusa",
+        "feature_name": "Funkció neve",
+        "state": "Állapot"
     },
     "devicePage": {
         "about": "Névjegy",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmware verzió",
         "available_firmware_version": "Elérhető verzió",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Frissítés folyamatban",
+        "idle": "Tétlen",
+        "available": "Elérhető",
+        "scheduled": "Ütemezett"
     },
     "settings": {
         "about": "Névjegy",
@@ -359,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Ismeretlen",
-        "Coordinator": "Koordinátor"
+        "Coordinator": "Koordinátor",
+        "power_source": "Tápegység",
+        "battery_low": "Alacsony töltöttség"
     },
     "scene": {
         "manage_scenes_header": "Jelenetek kezelése",

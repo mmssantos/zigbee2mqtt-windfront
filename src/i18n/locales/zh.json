@@ -69,7 +69,15 @@
         "all_sources": "全部來源",
         "show_source_name": "顯示來源名稱",
         "show_only": "僅顯示",
-        "empty_exposes_definition": "空 exposes 定義"
+        "empty_exposes_definition": "空 exposes 定義",
+        "hide_static_info_alerts": "隱藏靜態資訊警示",
+        "advanced_search": "進階搜尋",
+        "reset": "重設",
+        "all": "全部",
+        "last_seen_filter_info": "自上次表格更新後的分鐘數",
+        "feature_type": "功能類型",
+        "feature_name": "功能名稱",
+        "state": "狀態"
     },
     "devicePage": {
         "about": "關於",
@@ -187,7 +195,11 @@
         "firmware_version": "韌體版本",
         "available_firmware_version": "可用版本",
         "app": "應用",
-        "stack": "協議棧"
+        "stack": "協議棧",
+        "updating": "更新中",
+        "idle": "閒置",
+        "available": "可用",
+        "scheduled": "已排程"
     },
     "settings": {
         "about": "關於",
@@ -359,7 +371,9 @@
         "Router": "路由器",
         "GreenPower": "GreenPower",
         "Unknown": "未知",
-        "Coordinator": "協調器"
+        "Coordinator": "協調器",
+        "power_source": "電源",
+        "battery_low": "電量低"
     },
     "scene": {
         "manage_scenes_header": "管理情境",

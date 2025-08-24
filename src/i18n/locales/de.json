@@ -69,7 +69,15 @@
         "all_sources": "Alle Quellen",
         "show_source_name": "Quellnamen anzeigen",
         "show_only": "Nur anzeigen",
-        "empty_exposes_definition": "Leere Exposes-Definition"
+        "empty_exposes_definition": "Leere Exposes-Definition",
+        "hide_static_info_alerts": "Statische Info-Warnungen ausblenden",
+        "advanced_search": "Erweiterte Suche",
+        "reset": "Zurücksetzen",
+        "all": "Alle",
+        "last_seen_filter_info": "In Minuten seit der letzten Tabellenaktualisierung",
+        "feature_type": "Funktionsart",
+        "feature_name": "Funktionsname",
+        "state": "Status"
     },
     "devicePage": {
         "about": "Info",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmware-Version",
         "available_firmware_version": "Verfügbare Firmware-Version",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Aktualisiere",
+        "idle": "Leerlauf",
+        "available": "Verfügbar",
+        "scheduled": "Geplant"
     },
     "settings": {
         "about": "Info",
@@ -359,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Unbekannt",
-        "Coordinator": "Koordinator"
+        "Coordinator": "Koordinator",
+        "power_source": "Stromquelle",
+        "battery_low": "Batterie schwach"
     },
     "scene": {
         "manage_scenes_header": "Szenen verwalten",

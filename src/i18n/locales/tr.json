@@ -69,7 +69,15 @@
         "all_sources": "Tüm kaynaklar",
         "show_source_name": "Kaynak adını göster",
         "show_only": "Sadece göster",
-        "empty_exposes_definition": "Boş exposes tanımı"
+        "empty_exposes_definition": "Boş exposes tanımı",
+        "hide_static_info_alerts": "Statik bilgi uyarılarını gizle",
+        "advanced_search": "Gelişmiş arama",
+        "reset": "Sıfırla",
+        "all": "Tümü",
+        "last_seen_filter_info": "Tablo son güncellemesinden beri geçen dakika",
+        "feature_type": "Özellik türü",
+        "feature_name": "Özellik adı",
+        "state": "Durum"
     },
     "devicePage": {
         "about": "Hakkında",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmware sürümü",
         "available_firmware_version": "Mevcut sürüm",
         "app": "Uygulama",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Güncelleniyor",
+        "idle": "Boşta",
+        "available": "Mevcut",
+        "scheduled": "Zamanlandı"
     },
     "settings": {
         "about": "Hakkında",
@@ -359,7 +371,9 @@
         "Router": "Yönlendirici",
         "GreenPower": "GreenPower",
         "Unknown": "Bilinmiyor",
-        "Coordinator": "Koordinatör"
+        "Coordinator": "Koordinatör",
+        "power_source": "Güç kaynağı",
+        "battery_low": "Düşük pil"
     },
     "scene": {
         "manage_scenes_header": "Sahneleri yönet",

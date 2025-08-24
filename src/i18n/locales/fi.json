@@ -69,7 +69,15 @@
         "all_sources": "Kaikki lähteet",
         "show_source_name": "Näytä lähteen nimi",
         "show_only": "Näytä vain",
-        "empty_exposes_definition": "Tyhjä exposes-määritelmä"
+        "empty_exposes_definition": "Tyhjä exposes-määritelmä",
+        "hide_static_info_alerts": "Piilota staattisen tiedon hälytykset",
+        "advanced_search": "Edistynyt haku",
+        "reset": "Palauta",
+        "all": "Kaikki",
+        "last_seen_filter_info": "Minuutteina viimeisestä taulukon päivityksestä",
+        "feature_type": "Ominaisuuden tyyppi",
+        "feature_name": "Ominaisuuden nimi",
+        "state": "Tila"
     },
     "devicePage": {
         "about": "Tietoja",
@@ -187,7 +195,11 @@
         "firmware_version": "Firmware-versio",
         "available_firmware_version": "Saatavilla oleva versio",
         "app": "Sovellus",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Päivitetään",
+        "idle": "Joutilaana",
+        "available": "Saatavilla",
+        "scheduled": "Ajastettu"
     },
     "settings": {
         "about": "Tietoja",
@@ -359,7 +371,9 @@
         "Router": "Routeri",
         "GreenPower": "GreenPower",
         "Unknown": "Tuntematon",
-        "Coordinator": "Koordinaattori"
+        "Coordinator": "Koordinaattori",
+        "power_source": "Virtalähde",
+        "battery_low": "Akku vähissä"
     },
     "scene": {
         "manage_scenes_header": "Hallinnoi skenaarioita",

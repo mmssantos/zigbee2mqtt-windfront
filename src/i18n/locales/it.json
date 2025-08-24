@@ -69,7 +69,15 @@
         "all_sources": "Tutte le sorgenti",
         "show_source_name": "Mostra nome sorgente",
         "show_only": "Mostra solo",
-        "empty_exposes_definition": "Definizione exposes vuota"
+        "empty_exposes_definition": "Definizione exposes vuota",
+        "hide_static_info_alerts": "Nascondi avvisi di informazioni statiche",
+        "advanced_search": "Ricerca avanzata",
+        "reset": "Reimposta",
+        "all": "Tutti",
+        "last_seen_filter_info": "In minuti dall'ultimo aggiornamento della tabella",
+        "feature_type": "Tipo di funzionalità",
+        "feature_name": "Nome della funzionalità",
+        "state": "Stato"
     },
     "devicePage": {
         "about": "Informazioni",
@@ -187,7 +195,11 @@
         "firmware_version": "Versione firmware",
         "available_firmware_version": "Versione disponibile",
         "app": "App",
-        "stack": "Stack"
+        "stack": "Stack",
+        "updating": "Aggiornamento",
+        "idle": "Inattivo",
+        "available": "Disponibile",
+        "scheduled": "Programmato"
     },
     "settings": {
         "about": "Informazioni",
@@ -359,7 +371,9 @@
         "Router": "Router",
         "GreenPower": "GreenPower",
         "Unknown": "Sconosciuto",
-        "Coordinator": "Coordinatore"
+        "Coordinator": "Coordinatore",
+        "power_source": "Fonte di alimentazione",
+        "battery_low": "Batteria scarica"
     },
     "scene": {
         "manage_scenes_header": "Gestisci scene",

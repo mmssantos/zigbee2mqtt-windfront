@@ -69,7 +69,15 @@
         "all_sources": "所有来源",
         "show_source_name": "显示来源名称",
         "show_only": "仅显示",
-        "empty_exposes_definition": "空 exposes 定义"
+        "empty_exposes_definition": "空 exposes 定义",
+        "hide_static_info_alerts": "隐藏静态信息警报",
+        "advanced_search": "高级搜索",
+        "reset": "重置",
+        "all": "全部",
+        "last_seen_filter_info": "自上次表格更新后的分钟数",
+        "feature_type": "功能类型",
+        "feature_name": "功能名称",
+        "state": "状态"
     },
     "devicePage": {
         "about": "关于",
@@ -187,7 +195,11 @@
         "firmware_version": "固件版本",
         "available_firmware_version": "可用版本",
         "app": "应用",
-        "stack": "协议栈"
+        "stack": "协议栈",
+        "updating": "更新中",
+        "idle": "空闲",
+        "available": "可用",
+        "scheduled": "已计划"
     },
     "settings": {
         "about": "关于",
@@ -359,7 +371,9 @@
         "Router": "路由器",
         "GreenPower": "GreenPower",
         "Unknown": "未知",
-        "Coordinator": "协调器"
+        "Coordinator": "协调器",
+        "power_source": "电源",
+        "battery_low": "电量低"
     },
     "scene": {
         "manage_scenes_header": "管理场景",
