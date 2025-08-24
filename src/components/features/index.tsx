@@ -43,6 +43,7 @@ import {
     faGaugeHigh,
     faGear,
     faGraduationCap,
+    faHandPointUp,
     faHashtag,
     faHeartPulse,
     faIcons,
@@ -256,6 +257,7 @@ const ICON_MAP: Record<string, IconDefinition> = {
     luminance: faSun,
     illuminance: faSun,
     illuminance_lux: faSun,
+    illuminance_raw: faSun,
     lux_value: faSun,
     white_brightness: faSun,
     light_mode: faLightbulb,
@@ -370,7 +372,7 @@ const ICON_MAP: Record<string, IconDefinition> = {
     radio_strength: faTowerBroadcast,
     rf_pairing: faTowerBroadcast,
     ip_address: faNetworkWired,
-    linkquality: faSignal,
+    // linkquality: faSignal, // customized in fn
 
     // Data / update / configuration
     update_frequency: faRotate,
@@ -404,6 +406,7 @@ const ICON_MAP: Record<string, IconDefinition> = {
     level_config: faGear,
     sensitivity: faFeather,
     system_mode: faCog,
+    identify: faHandPointUp,
 
     // Health
     heartbeat: faHeartPulse,
@@ -489,17 +492,18 @@ const ICON_MAP: Record<string, IconDefinition> = {
     weather: faCloudSunRain,
 };
 
-const getBatteryIcon = (level: number | undefined, outClasses: string[]) => {
+const getBatteryIcon = (level: number | undefined): [IconDefinition, className: string] => {
     let icon = faBatteryEmpty;
+    let className = "";
 
     if (level == null) {
-        return icon;
+        return [icon, className];
     }
 
     if (level >= 85) {
         icon = faBatteryFull;
 
-        outClasses.push("text-success");
+        className = "text-success";
     } else if (level >= 65) {
         icon = faBatteryThreeQuarters;
     } else if (level >= 40) {
@@ -509,20 +513,21 @@ const getBatteryIcon = (level: number | undefined, outClasses: string[]) => {
     } else {
         icon = faBatteryEmpty;
 
-        outClasses.push("text-error");
+        className = "text-error";
     }
 
-    return icon;
+    return [icon, className];
 };
 
-const getBatteryStateIcon = (state: string | undefined, outClasses: string[]) => {
+const getBatteryStateIcon = (state: string | undefined): [IconDefinition, className: string] => {
     let icon = faBatteryEmpty;
+    let className = "";
 
     switch (state) {
         case "high": {
             icon = faBatteryFull;
 
-            outClasses.push("text-success");
+            className = "text-success";
             break;
         }
         case "medium": {
@@ -532,19 +537,20 @@ const getBatteryStateIcon = (state: string | undefined, outClasses: string[]) =>
         case "low": {
             icon = faBatteryEmpty;
 
-            outClasses.push("text-error");
+            className = "text-error";
             break;
         }
     }
 
-    return icon;
+    return [icon, className];
 };
 
-const getTemperatureIcon = (temperature: number | undefined, unit: TemperatureUnit | undefined, outClasses: string[]) => {
+const getTemperatureIcon = (temperature: number | undefined, unit: TemperatureUnit | undefined): [IconDefinition, className: string] => {
     let icon = faThermometerEmpty;
+    let className = "";
 
     if (temperature == null) {
-        return icon;
+        return [icon, className];
     }
 
     if (unit === "°F") {
@@ -554,7 +560,7 @@ const getTemperatureIcon = (temperature: number | undefined, unit: TemperatureUn
     if (temperature >= 30) {
         icon = faThermometerFull;
 
-        outClasses.push("text-error");
+        className = "text-error";
     } else if (temperature >= 25) {
         icon = faThermometerThreeQuarters;
     } else if (temperature >= 20) {
@@ -564,29 +570,49 @@ const getTemperatureIcon = (temperature: number | undefined, unit: TemperatureUn
     } else if (temperature < 5) {
         icon = faThermometerEmpty;
 
-        outClasses.push("text-info");
+        className = "text-info";
     }
 
-    return icon;
+    return [icon, className];
 };
 
-export const getFeatureIcon = (name: string, value: unknown, unit?: unknown): [IconDefinition, string, Record<string, unknown>] => {
+export const getLinkQualityIcon = (linkQuality: number | undefined): [IconDefinition, className: string] => {
+    let className = "";
+
+    if (linkQuality) {
+        if (linkQuality < 75) {
+            className = "text-error";
+        } else if (linkQuality < 125) {
+            className = "text-warning";
+        } else if (linkQuality > 200) {
+            className = "text-success";
+        }
+    }
+
+    return [faSignal, className];
+};
+
+export const getFeatureIcon = (name: string, value: unknown, unit?: unknown): [IconDefinition, string] => {
     let icon: IconDefinition | undefined;
-    const classes: string[] = [];
-    const spec: Record<string, unknown> = {};
+    let className = "";
 
     switch (name) {
+        case "linkquality": {
+            [icon, className] = getLinkQualityIcon(value as number);
+            break;
+        }
         case "battery": {
-            icon = getBatteryIcon(value as number, classes);
+            [icon, className] = getBatteryIcon(value as number);
             break;
         }
         case "battery_state": {
-            icon = getBatteryStateIcon(value as string, classes);
+            [icon, className] = getBatteryStateIcon(value as string);
             break;
         }
-        case "battery_low": {
+        case "battery_low":
+        case "tamper": {
             if (value) {
-                classes.push("text-error");
+                className = "text-error";
             }
 
             break;
@@ -595,12 +621,12 @@ export const getFeatureIcon = (name: string, value: unknown, unit?: unknown): [I
         case "device_temperature":
         case "temperature":
         case "local_temperature": {
-            icon = getTemperatureIcon(value as number, unit as TemperatureUnit, classes);
+            [icon, className] = getTemperatureIcon(value as number, unit as TemperatureUnit);
             break;
         }
         case "humidity": {
             if (value != null && (value as number) > 60) {
-                classes.push("text-info");
+                className = "text-info";
             }
 
             break;
@@ -609,46 +635,23 @@ export const getFeatureIcon = (name: string, value: unknown, unit?: unknown): [I
             icon = value ? faDoorClosed : faDoorOpen;
 
             if (!value) {
-                classes.push("text-primary");
+                className = "text-primary";
             }
 
             break;
         }
-        case "occupancy": {
-            if (value) {
-                classes.push("text-warning");
-            }
-
-            break;
-        }
+        case "occupancy":
         case "presence": {
             if (value) {
-                classes.push("text-warning");
+                className = "text-warning";
             }
 
             break;
         }
-        case "tamper": {
-            if (value) {
-                classes.push("text-error");
-                spec.beatFade = true;
-                spec.shake = true;
-            }
-
-            break;
-        }
-        case "water_leak": {
-            if (value) {
-                classes.push("text-primary");
-                spec.beatFade = true;
-            }
-
-            break;
-        }
+        case "water_leak":
         case "vibration": {
             if (value) {
-                classes.push("text-primary");
-                spec.shake = true;
+                className = "text-primary";
             }
 
             break;
@@ -663,12 +666,12 @@ export const getFeatureIcon = (name: string, value: unknown, unit?: unknown): [I
     }
 
     if (icon) {
-        return [icon, classes.join(" "), spec];
+        return [icon, className];
     }
 
     icon = ICON_MAP[name];
 
-    return icon ? [icon, classes.join(" "), spec] : [faCircle, "opacity-0", {}];
+    return icon ? [icon, className] : [faCircle, "opacity-0"];
 };
 
 export const getFeatureKey = (feature: FeatureWithAnySubFeatures) =>

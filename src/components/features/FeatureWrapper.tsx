@@ -31,7 +31,7 @@ export default function FeatureWrapper({
     const { t } = useTranslation("zigbee");
     // @ts-expect-error `undefined` is fine
     const unit = feature.unit as string | undefined;
-    const fi = getFeatureIcon(feature.name, deviceValue, unit);
+    const [fi, fiClassName] = getFeatureIcon(feature.name, deviceValue, unit);
     const isReadable = onRead !== undefined && (Boolean(feature.property && feature.access & FeatureAccessMode.GET) || isColorFeature(feature));
     const parentFeature = parentFeatures?.[parentFeatures.length - 1];
     const featureName = feature.name === "state" ? feature.property : feature.name;
@@ -53,7 +53,7 @@ export default function FeatureWrapper({
     return (
         <div className="list-row p-3">
             <div>
-                <FontAwesomeIcon icon={fi[0]} fixedWidth className={fi[1]} {...fi[2]} size="2xl" />
+                <FontAwesomeIcon icon={fi} className={fiClassName} size="2xl" />
             </div>
             <div>
                 <div title={featureName}>
