@@ -54,9 +54,6 @@
         "unknown_group": "不明なグループ",
         "failed": "失敗",
         "disabled": "無効",
-        "hide_disabled": "無効を非表示",
-        "battery_low_only": "バッテリ低のみ",
-        "available_only": "利用可能のみ",
         "execute": "実行",
         "command": "コマンド",
         "payload": "ペイロード (Payload)",
@@ -72,11 +69,7 @@
         "all_sources": "すべてのソース",
         "show_source_name": "ソース名を表示",
         "show_only": "のみ表示",
-        "empty_exposes_definition": "Exposes 定義なし",
-        "all_features": "すべての機能",
-        "all_properties": "すべてのプロパティ",
-        "show_routers": "ルーターを表示",
-        "show_end_devices": "エンドデバイスを表示"
+        "empty_exposes_definition": "Exposes 定義なし"
     },
     "devicePage": {
         "about": "概要",

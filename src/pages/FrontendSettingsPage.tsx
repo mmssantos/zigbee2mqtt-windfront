@@ -9,8 +9,7 @@ import SelectField from "../components/form-fields/SelectField.js";
 import type { NetworkRawDisplayType } from "../components/network-page/index.js";
 import {
     AUTH_FLAG_KEY,
-    DASHBOARD_FILTER_FRIENDLY_NAME_KEY,
-    DEVICES_HIDE_DISABLED_KEY,
+    HIDE_STATIC_INFO_ALERTS,
     HOMEPAGE_KEY,
     I18NEXTLNG_KEY,
     MAX_ON_SCREEN_NOTIFICATIONS_KEY,
@@ -22,8 +21,8 @@ import {
     NETWORK_MAP_SHOW_ICONS_KEY,
     NETWORK_RAW_DISPLAY_TYPE_KEY,
     PERMIT_JOIN_TIME_KEY,
-    TABLE_COLUMN_FILTER_KEY,
     TABLE_COLUMN_VISIBILITY_KEY,
+    TABLE_FILTERS_KEY,
     THEME_KEY,
     TOKEN_KEY,
 } from "../localStoreConsts.js";
@@ -33,6 +32,7 @@ export default function FrontendSettingsPage() {
     const [homepage, setHomepage] = useState<string>(store2.get(HOMEPAGE_KEY, "devices"));
     const [permitJoinTime, setPermitJoinTime] = useState<number>(store2.get(PERMIT_JOIN_TIME_KEY, 254));
     const [maxOnScreenNotifications, setMaxOnScreenNotifications] = useState<number>(store2.get(MAX_ON_SCREEN_NOTIFICATIONS_KEY, 3));
+    const [hideStaticInfoAlerts, setHideStaticInfoAlerts] = useState<boolean>(store2.get(HIDE_STATIC_INFO_ALERTS, false));
     const [networkRawDisplayType, setNetworkRawDisplayType] = useState<NetworkRawDisplayType>(store2.get(NETWORK_RAW_DISPLAY_TYPE_KEY, "data"));
     const [networkMapLayoutType, setNetworkMapLayoutType] = useState<LayoutTypes>(store2.get(NETWORK_MAP_LAYOUT_TYPE_KEY, "forceDirected2d"));
     const [networkMapLabelType, setNetworkMapLabelType] = useState<LabelVisibilityType>(store2.get(NETWORK_MAP_LABEL_TYPE_KEY, "all"));
@@ -52,6 +52,10 @@ export default function FrontendSettingsPage() {
     useEffect(() => {
         store2.set(MAX_ON_SCREEN_NOTIFICATIONS_KEY, maxOnScreenNotifications);
     }, [maxOnScreenNotifications]);
+
+    useEffect(() => {
+        store2.set(HIDE_STATIC_INFO_ALERTS, hideStaticInfoAlerts);
+    }, [hideStaticInfoAlerts]);
 
     useEffect(() => {
         store2.set(NETWORK_RAW_DISPLAY_TYPE_KEY, networkRawDisplayType);
@@ -88,6 +92,7 @@ export default function FrontendSettingsPage() {
         store2.remove(HOMEPAGE_KEY);
         store2.remove(PERMIT_JOIN_TIME_KEY);
         store2.remove(MAX_ON_SCREEN_NOTIFICATIONS_KEY);
+        store2.remove(HIDE_STATIC_INFO_ALERTS);
         store2.remove(NETWORK_RAW_DISPLAY_TYPE_KEY);
         store2.remove(NETWORK_MAP_LAYOUT_TYPE_KEY);
         store2.remove(NETWORK_MAP_LABEL_TYPE_KEY);
@@ -96,11 +101,9 @@ export default function FrontendSettingsPage() {
         store2.remove(NETWORK_MAP_SHOW_ICONS_KEY);
         store2.remove(MULTI_INSTANCE_SHOW_SOURCE_NAME_KEY);
         store2.remove(I18NEXTLNG_KEY);
-        store2.remove(DEVICES_HIDE_DISABLED_KEY);
-        store2.remove(DASHBOARD_FILTER_FRIENDLY_NAME_KEY);
 
         for (const key of keys) {
-            if (key.startsWith(TABLE_COLUMN_VISIBILITY_KEY) || key.startsWith(TABLE_COLUMN_FILTER_KEY) || key.startsWith("dashboard-filter")) {
+            if (key.startsWith(TABLE_COLUMN_VISIBILITY_KEY) || key.startsWith(TABLE_FILTERS_KEY)) {
                 store2.remove(key);
             }
         }
@@ -187,6 +190,12 @@ export default function FrontendSettingsPage() {
                     minimal
                     initialValue={maxOnScreenNotifications}
                     onSubmit={(value, valid) => valid && value !== "" && setMaxOnScreenNotifications(value)}
+                />
+                <CheckboxField
+                    name="common:hide_static_info_alerts"
+                    label={t("common:hide_static_info_alerts")}
+                    onChange={(event) => setHideStaticInfoAlerts(event.target.checked)}
+                    defaultChecked={hideStaticInfoAlerts}
                 />
             </div>
             <h2 className="text-lg mt-2">{t("network_raw")}</h2>

@@ -54,9 +54,6 @@
         "unknown_group": "Bilinmeyen grup",
         "failed": "Başarısız",
         "disabled": "Devre dışı",
-        "hide_disabled": "Devre dışı olanları gizle",
-        "battery_low_only": "Sadece düşük pil",
-        "available_only": "Sadece uygun",
         "execute": "Çalıştır",
         "command": "Komut",
         "payload": "Yük (Payload)",
@@ -72,11 +69,7 @@
         "all_sources": "Tüm kaynaklar",
         "show_source_name": "Kaynak adını göster",
         "show_only": "Sadece göster",
-        "empty_exposes_definition": "Boş exposes tanımı",
-        "all_features": "Tüm özellikler",
-        "all_properties": "Tüm öznitelikler",
-        "show_routers": "Yönlendiricileri göster",
-        "show_end_devices": "Uç cihazları göster"
+        "empty_exposes_definition": "Boş exposes tanımı"
     },
     "devicePage": {
         "about": "Hakkında",

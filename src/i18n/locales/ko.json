@@ -54,9 +54,6 @@
         "unknown_group": "알 수 없는 그룹",
         "failed": "실패",
         "disabled": "비활성화됨",
-        "hide_disabled": "비활성 숨기기",
-        "battery_low_only": "배터리 낮음만",
-        "available_only": "사용 가능만",
         "execute": "실행",
         "command": "명령",
         "payload": "페이로드 (Payload)",
@@ -72,11 +69,7 @@
         "all_sources": "모든 소스",
         "show_source_name": "소스 이름 표시",
         "show_only": "다음만 표시",
-        "empty_exposes_definition": "Exposes 정의 비어 있음",
-        "all_features": "모든 기능",
-        "all_properties": "모든 속성",
-        "show_routers": "라우터 표시",
-        "show_end_devices": "엔드 디바이스 표시"
+        "empty_exposes_definition": "Exposes 정의 비어 있음"
     },
     "devicePage": {
         "about": "정보",

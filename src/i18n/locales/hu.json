@@ -54,9 +54,6 @@
         "unknown_group": "Ismeretlen csoport",
         "failed": "Sikertelen",
         "disabled": "Letiltva",
-        "hide_disabled": "Letiltottak elrejtése",
-        "battery_low_only": "Csak alacsony akku",
-        "available_only": "Csak elérhetők",
         "execute": "Végrehajt",
         "command": "Parancs",
         "payload": "Hasznos adat (Payload)",
@@ -72,11 +69,7 @@
         "all_sources": "Minden forrás",
         "show_source_name": "Forrásnév mutatása",
         "show_only": "Csak ezeket mutasd",
-        "empty_exposes_definition": "Üres exposes definíció",
-        "all_features": "Összes funkció",
-        "all_properties": "Összes tulajdonság",
-        "show_routers": "Routerek mutatása",
-        "show_end_devices": "Végponti eszközök mutatása"
+        "empty_exposes_definition": "Üres exposes definíció"
     },
     "devicePage": {
         "about": "Névjegy",

@@ -54,9 +54,6 @@
         "unknown_group": "Непозната група",
         "failed": "Неуспешно",
         "disabled": "Изключено",
-        "hide_disabled": "Скрий деактивираните",
-        "battery_low_only": "Само ниска батерия",
-        "available_only": "Само налични",
         "execute": "Изпълнение",
         "command": "Команда",
         "payload": "Payload (Натоварване)",
@@ -72,11 +69,7 @@
         "all_sources": "Всички източници",
         "show_source_name": "Покажи име на източник",
         "show_only": "Покажи само",
-        "empty_exposes_definition": "Празна exposes дефиниция",
-        "all_features": "Всички функции",
-        "all_properties": "Всички свойства",
-        "show_routers": "Показване на рутери",
-        "show_end_devices": "Показване на крайни устройства"
+        "empty_exposes_definition": "Празна exposes дефиниция"
     },
     "devicePage": {
         "about": "Относно",
