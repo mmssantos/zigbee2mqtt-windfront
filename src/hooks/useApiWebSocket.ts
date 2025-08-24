@@ -164,8 +164,16 @@ export function useApiWebSocket() {
                 console.error("WebSocket error", e);
 
                 logsPatchesRef.current[apiUrlIdx].push({
+                    level: "debug",
+                    message: `frontend:ws: Failed to connect to WebSocket ${apiUrl}, retrying...`,
+                    namespace: "frontend:ws",
+                });
+                scheduleFlush();
+            },
+            onReconnectStop: (numAttempts) => {
+                logsPatchesRef.current[apiUrlIdx].push({
                     level: "error",
-                    message: `frontend:ws: Could not connect to WebSocket ${apiUrl}`,
+                    message: `frontend:ws: Failed to connect to WebSocket ${apiUrl} after ${numAttempts} tries`,
                     namespace: "frontend:ws",
                 });
                 scheduleFlush();
