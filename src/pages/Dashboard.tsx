@@ -193,6 +193,7 @@ export default function Dashboard() {
                     // since now (last time table updated)
                     return lastTs ? Math.round((Date.now() - lastTs) / 1000 / 60) : undefined;
                 },
+                enableGlobalFilter: false,
                 filterFn: "inNumberRange",
                 meta: {
                     filterVariant: "range",

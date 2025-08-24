@@ -286,6 +286,7 @@ export default function DevicesPage(): JSX.Element {
                         original: { sourceIdx, state },
                     },
                 }) => <LastSeen lastSeen={state.last_seen} config={bridgeInfo[sourceIdx].config.advanced.last_seen} />,
+                enableGlobalFilter: false,
                 filterFn: "inNumberRange",
                 meta: {
                     filterVariant: "range",
