@@ -77,7 +77,8 @@
         "last_seen_filter_info": "В минутах с момента последнего обновления таблицы",
         "feature_type": "Тип функции",
         "feature_name": "Название функции",
-        "state": "Состояние"
+        "state": "Состояние",
+        "scroll_to_top": "Наверх"
     },
     "devicePage": {
         "about": "О",
@@ -147,7 +148,6 @@
         "fit_view": "По размеру экрана",
         "reset_controls": "Сбросить управление",
         "find_node": "Найти узел",
-        "scroll_to_top": "Наверх",
         "node_strength": "Сила узла",
         "link_distance": "Дистанция ссылки",
         "icons": "Иконки",

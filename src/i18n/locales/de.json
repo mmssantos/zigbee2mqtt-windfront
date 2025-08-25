@@ -77,7 +77,8 @@
         "last_seen_filter_info": "In Minuten seit der letzten Tabellenaktualisierung",
         "feature_type": "Funktionsart",
         "feature_name": "Funktionsname",
-        "state": "Status"
+        "state": "Status",
+        "scroll_to_top": "Nach oben scrollen"
     },
     "devicePage": {
         "about": "Info",
@@ -147,7 +148,6 @@
         "fit_view": "Ansicht einpassen",
         "reset_controls": "Steuerung zurücksetzen",
         "find_node": "Knoten finden",
-        "scroll_to_top": "Nach oben scrollen",
         "node_strength": "Knotenstärke",
         "link_distance": "Verbindungsentfernung",
         "icons": "Symbole",

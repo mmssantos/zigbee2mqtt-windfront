@@ -77,7 +77,8 @@
         "last_seen_filter_info": "In minutes since last table update",
         "feature_type": "Feature type",
         "feature_name": "Feature name",
-        "state": "State"
+        "state": "State",
+        "scroll_to_top": "Scroll to top"
     },
     "devicePage": {
         "about": "About",
@@ -147,7 +148,6 @@
         "fit_view": "Fit view",
         "reset_controls": "Reset controls",
         "find_node": "Find node",
-        "scroll_to_top": "Scroll to top",
         "node_strength": "Node strength",
         "link_distance": "Link distance",
         "icons": "Icons",

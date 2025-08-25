@@ -77,7 +77,8 @@
         "last_seen_filter_info": "Em minutos desde a última atualização da tabela",
         "feature_type": "Tipo de recurso",
         "feature_name": "Nome do recurso",
-        "state": "Estado"
+        "state": "Estado",
+        "scroll_to_top": "Ir ao topo"
     },
     "devicePage": {
         "about": "Sobre",
@@ -147,7 +148,6 @@
         "fit_view": "Ajustar à tela",
         "reset_controls": "Redefinir controles",
         "find_node": "Encontrar nó",
-        "scroll_to_top": "Ir ao topo",
         "node_strength": "Força do nó",
         "link_distance": "Distância do link",
         "icons": "Ícones",

@@ -77,7 +77,8 @@
         "last_seen_filter_info": "En minuts des de l'última actualització de la taula",
         "feature_type": "Tipus de característica",
         "feature_name": "Nom de la característica",
-        "state": "Estat"
+        "state": "Estat",
+        "scroll_to_top": "Amunt"
     },
     "devicePage": {
         "about": "Quant a",
@@ -147,7 +148,6 @@
         "fit_view": "Ajusta vista",
         "reset_controls": "Restableix controls",
         "find_node": "Troba node",
-        "scroll_to_top": "Amunt",
         "node_strength": "Força node",
         "link_distance": "Distància enllaç",
         "icons": "Icones",

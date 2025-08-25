@@ -77,7 +77,8 @@
         "last_seen_filter_info": "En minutos desde la última actualización de la tabla",
         "feature_type": "Tipo de función",
         "feature_name": "Nombre de la función",
-        "state": "Estado"
+        "state": "Estado",
+        "scroll_to_top": "Ir arriba"
     },
     "devicePage": {
         "about": "Acerca de",
@@ -147,7 +148,6 @@
         "fit_view": "Ajustar vista",
         "reset_controls": "Restablecer controles",
         "find_node": "Buscar nodo",
-        "scroll_to_top": "Ir arriba",
         "node_strength": "Fuerza del nodo",
         "link_distance": "Distancia del enlace",
         "icons": "Íconos",

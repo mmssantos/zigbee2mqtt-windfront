@@ -77,7 +77,8 @@
         "last_seen_filter_info": "Percekben a táblázat utolsó frissítése óta",
         "feature_type": "Funkció típusa",
         "feature_name": "Funkció neve",
-        "state": "Állapot"
+        "state": "Állapot",
+        "scroll_to_top": "Vissza fel"
     },
     "devicePage": {
         "about": "Névjegy",
@@ -147,7 +148,6 @@
         "fit_view": "Illesztés nézethez",
         "reset_controls": "Vezérlők visszaállítása",
         "find_node": "Csomópont keresése",
-        "scroll_to_top": "Vissza fel",
         "node_strength": "Csomópont erősség",
         "link_distance": "Link távolság",
         "icons": "Ikonok",

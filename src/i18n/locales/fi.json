@@ -77,7 +77,8 @@
         "last_seen_filter_info": "Minuutteina viimeisestä taulukon päivityksestä",
         "feature_type": "Ominaisuuden tyyppi",
         "feature_name": "Ominaisuuden nimi",
-        "state": "Tila"
+        "state": "Tila",
+        "scroll_to_top": "Ylös"
     },
     "devicePage": {
         "about": "Tietoja",
@@ -147,7 +148,6 @@
         "fit_view": "Sovita näkymään",
         "reset_controls": "Palauta ohjaimet",
         "find_node": "Etsi solmu",
-        "scroll_to_top": "Ylös",
         "node_strength": "Solmun vahvuus",
         "link_distance": "Linkin etäisyys",
         "icons": "Kuvakkeet",

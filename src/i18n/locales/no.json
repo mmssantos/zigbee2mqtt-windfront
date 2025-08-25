@@ -77,7 +77,8 @@
         "last_seen_filter_info": "I minutter siden siste tabelloppdatering",
         "feature_type": "Funksjonstype",
         "feature_name": "Funksjonsnavn",
-        "state": "Tilstand"
+        "state": "Tilstand",
+        "scroll_to_top": "Til topp"
     },
     "devicePage": {
         "about": "Om",
@@ -147,7 +148,6 @@
         "fit_view": "Tilpass visning",
         "reset_controls": "Nullstill kontroller",
         "find_node": "Finn node",
-        "scroll_to_top": "Til topp",
         "node_strength": "Node-styrke",
         "link_distance": "Linkavstand",
         "icons": "Ikoner",

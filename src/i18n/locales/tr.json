@@ -77,7 +77,8 @@
         "last_seen_filter_info": "Tablo son güncellemesinden beri geçen dakika",
         "feature_type": "Özellik türü",
         "feature_name": "Özellik adı",
-        "state": "Durum"
+        "state": "Durum",
+        "scroll_to_top": "En üste git"
     },
     "devicePage": {
         "about": "Hakkında",
@@ -147,7 +148,6 @@
         "fit_view": "Ekrana sığdır",
         "reset_controls": "Kontrolleri sıfırla",
         "find_node": "Düğüm bul",
-        "scroll_to_top": "En üste git",
         "node_strength": "Düğüm gücü",
         "link_distance": "Bağlantı uzaklığı",
         "icons": "Simgeler",

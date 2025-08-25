@@ -77,7 +77,8 @@
         "last_seen_filter_info": "W minutach od ostatniej aktualizacji tabeli",
         "feature_type": "Typ cechy",
         "feature_name": "Nazwa cechy",
-        "state": "Stan"
+        "state": "Stan",
+        "scroll_to_top": "Do góry"
     },
     "devicePage": {
         "about": "O",
@@ -147,7 +148,6 @@
         "fit_view": "Dopasuj widok",
         "reset_controls": "Reset sterowania",
         "find_node": "Znajdź węzeł",
-        "scroll_to_top": "Do góry",
         "node_strength": "Siła węzła",
         "link_distance": "Dystans łącza",
         "icons": "Ikony",

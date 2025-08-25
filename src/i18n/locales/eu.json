@@ -77,7 +77,8 @@
         "last_seen_filter_info": "Azken taula eguneratzetik igarotako minututan",
         "feature_type": "Eginbide mota",
         "feature_name": "Eginbide izena",
-        "state": "Egoera"
+        "state": "Egoera",
+        "scroll_to_top": "Gora"
     },
     "devicePage": {
         "about": "Honi buruz",
@@ -147,7 +148,6 @@
         "fit_view": "Egokitu ikuspegia",
         "reset_controls": "Berrezarri kontrolak",
         "find_node": "Bilatu nodoa",
-        "scroll_to_top": "Gora",
         "node_strength": "Nodo indarra",
         "link_distance": "Esteka distantzia",
         "icons": "Ikonoak",

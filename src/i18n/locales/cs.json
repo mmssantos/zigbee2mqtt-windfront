@@ -77,7 +77,8 @@
         "last_seen_filter_info": "V minutách od poslední aktualizace tabulky",
         "feature_type": "Typ funkce",
         "feature_name": "Název funkce",
-        "state": "Stav"
+        "state": "Stav",
+        "scroll_to_top": "Nahoru"
     },
     "devicePage": {
         "about": "O aplikaci",
@@ -147,7 +148,6 @@
         "fit_view": "Přizpůsobit zobrazení",
         "reset_controls": "Reset ovládání",
         "find_node": "Najít uzel",
-        "scroll_to_top": "Nahoru",
         "node_strength": "Síla uzlu",
         "link_distance": "Vzdálenost linku",
         "icons": "Ikony",

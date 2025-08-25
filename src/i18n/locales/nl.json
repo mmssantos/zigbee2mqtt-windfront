@@ -77,7 +77,8 @@
         "last_seen_filter_info": "In minuten sinds de laatste tabelupdate",
         "feature_type": "Functietype",
         "feature_name": "Functienaam",
-        "state": "Status"
+        "state": "Status",
+        "scroll_to_top": "Naar boven"
     },
     "devicePage": {
         "about": "Over",
@@ -147,7 +148,6 @@
         "fit_view": "In scherm passen",
         "reset_controls": "Bediening resetten",
         "find_node": "Node zoeken",
-        "scroll_to_top": "Naar boven",
         "node_strength": "Nodesterkte",
         "link_distance": "Linkafstand",
         "icons": "Pictogrammen",

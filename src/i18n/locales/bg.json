@@ -77,7 +77,8 @@
         "last_seen_filter_info": "В минути от последното обновяване на таблицата",
         "feature_type": "Тип функция",
         "feature_name": "Име на функция",
-        "state": "Състояние"
+        "state": "Състояние",
+        "scroll_to_top": "Горе"
     },
     "devicePage": {
         "about": "Относно",
@@ -147,7 +148,6 @@
         "fit_view": "Напасни изглед",
         "reset_controls": "Рестартирай контроли",
         "find_node": "Намери възел",
-        "scroll_to_top": "Горе",
         "node_strength": "Сила на възела",
         "link_distance": "Дистанция на връзката",
         "icons": "Икони",

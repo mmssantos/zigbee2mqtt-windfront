@@ -77,7 +77,8 @@
         "last_seen_filter_info": "En minutes depuis la dernière mise à jour du tableau",
         "feature_type": "Type de fonctionnalité",
         "feature_name": "Nom de la fonctionnalité",
-        "state": "État"
+        "state": "État",
+        "scroll_to_top": "Aller en haut"
     },
     "devicePage": {
         "about": "À propos",
@@ -147,7 +148,6 @@
         "fit_view": "Adapter à l'écran",
         "reset_controls": "Réinitialiser les contrôles",
         "find_node": "Trouver un nœud",
-        "scroll_to_top": "Aller en haut",
         "node_strength": "Force du nœud",
         "link_distance": "Distance du lien",
         "icons": "Icônes",

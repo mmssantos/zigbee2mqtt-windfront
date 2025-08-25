@@ -61,7 +61,7 @@ const Controls = memo(
         showIcons,
         setShowIcons,
     }: ControlsProps) => {
-        const { t } = useTranslation("network");
+        const { t } = useTranslation(["network", "common"]);
 
         const nodeOptions = useMemo(() => {
             const mapping: [string, string][] = nodes.map((node) => [
@@ -234,7 +234,7 @@ const Controls = memo(
                 </div>
                 <div className="absolute z-9 bottom-0 right-0 p-1 flex flex-row flex-wrap gap-1 items-end justify-end">
                     <Button
-                        title={t("scroll_to_top")}
+                        title={t("common:scroll_to_top")}
                         className="btn btn-primary btn-square ml-auto"
                         onClick={() => {
                             window.scrollTo(0, 0);

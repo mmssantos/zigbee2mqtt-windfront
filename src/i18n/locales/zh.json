@@ -77,7 +77,8 @@
         "last_seen_filter_info": "自上次表格更新後的分鐘數",
         "feature_type": "功能類型",
         "feature_name": "功能名稱",
-        "state": "狀態"
+        "state": "狀態",
+        "scroll_to_top": "回到頂端"
     },
     "devicePage": {
         "about": "關於",
@@ -147,7 +148,6 @@
         "fit_view": "適配畫面",
         "reset_controls": "重設控制",
         "find_node": "尋找節點",
-        "scroll_to_top": "回到頂端",
         "node_strength": "節點強度",
         "link_distance": "鏈路距離",
         "icons": "圖示",

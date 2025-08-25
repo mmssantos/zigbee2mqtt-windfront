@@ -77,7 +77,8 @@
         "last_seen_filter_info": "У хвилинах від останнього оновлення таблиці",
         "feature_type": "Тип функції",
         "feature_name": "Назва функції",
-        "state": "Стан"
+        "state": "Стан",
+        "scroll_to_top": "Вгору"
     },
     "devicePage": {
         "about": "Про",
@@ -147,7 +148,6 @@
         "fit_view": "Вписати у вигляд",
         "reset_controls": "Скинути керування",
         "find_node": "Знайти вузол",
-        "scroll_to_top": "Вгору",
         "node_strength": "Сила вузла",
         "link_distance": "Дистанція лінку",
         "icons": "Іконки",

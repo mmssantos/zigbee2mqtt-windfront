@@ -77,7 +77,8 @@
         "last_seen_filter_info": "テーブル最終更新からの経過分",
         "feature_type": "機能タイプ",
         "feature_name": "機能名",
-        "state": "状態"
+        "state": "状態",
+        "scroll_to_top": "トップへ"
     },
     "devicePage": {
         "about": "概要",
@@ -147,7 +148,6 @@
         "fit_view": "表示に合わせる",
         "reset_controls": "操作リセット",
         "find_node": "ノード検索",
-        "scroll_to_top": "トップへ",
         "node_strength": "ノード強度",
         "link_distance": "リンク距離",
         "icons": "アイコン",

@@ -77,7 +77,8 @@
         "last_seen_filter_info": "표 마지막 업데이트 이후 경과 분",
         "feature_type": "기능 유형",
         "feature_name": "기능 이름",
-        "state": "상태"
+        "state": "상태",
+        "scroll_to_top": "맨 위로"
     },
     "devicePage": {
         "about": "정보",
@@ -147,7 +148,6 @@
         "fit_view": "화면에 맞춤",
         "reset_controls": "컨트롤 초기화",
         "find_node": "노드 찾기",
-        "scroll_to_top": "맨 위로",
         "node_strength": "노드 강도",
         "link_distance": "링크 거리",
         "icons": "아이콘",
