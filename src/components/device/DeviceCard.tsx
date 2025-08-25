@@ -91,14 +91,13 @@ const DeviceCard = memo(
                             )}
                         </div>
                     </div>
-                    <div className="text-sm w-full p-2">
+                    <div className="text-sm w-full p-2 max-h-125 overflow-y-auto" style={{ scrollbarWidth: "thin" }}>
                         {displayedFeatures}
-                        <div className="flex flex-row items-center gap-1 mt-3">
-                            <div className="grow-1" />
-                            <Link to={`/device/${sourceIdx}/${device.ieee_address}/exposes`} className="btn btn-xs">
-                                {t("devicePage:exposes")} <FontAwesomeIcon icon={faRightLong} size="lg" />
-                            </Link>
-                        </div>
+                    </div>
+                    <div className="flex flex-row justify-end mb-2">
+                        <Link to={`/device/${sourceIdx}/${device.ieee_address}/exposes`} className="btn btn-xs">
+                            {t("devicePage:exposes")} <FontAwesomeIcon icon={faRightLong} size="lg" />
+                        </Link>
                     </div>
                 </div>
                 <div className="flex flex-row flex-wrap gap-1 mx-2 mb-2 justify-around items-center">
