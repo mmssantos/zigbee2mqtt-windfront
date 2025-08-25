@@ -3,10 +3,12 @@ import {
     type ClimateFeature,
     type CompositeFeature,
     type CoverFeature,
+    type Device,
     type DeviceState,
     type EnumFeature,
     type FanFeature,
     FeatureAccessMode,
+    type FeatureWithAnySubFeatures,
     type LightFeature,
     type ListFeature,
     type LockFeature,
@@ -14,6 +16,24 @@ import {
     type SwitchFeature,
     type TextFeature,
 } from "../types.js";
+import { parseExpose } from "../utils.js";
+
+export const filterExposes = (
+    exposes: NonNullable<Device["definition"]>["exposes"],
+    validateFn: Parameters<typeof parseExpose>[1],
+): FeatureWithAnySubFeatures[] => {
+    const filteredExposes: FeatureWithAnySubFeatures[] = [];
+
+    for (const expose of exposes) {
+        const validExpose = parseExpose(expose, validateFn);
+
+        if (validExpose) {
+            filteredExposes.push(validExpose);
+        }
+    }
+
+    return filteredExposes;
+};
 
 export const binaryFeature: BinaryFeature = {
     name: "state",
