@@ -1,7 +1,10 @@
+import { faArrowsUpToLine } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ColumnDef } from "@tanstack/react-table";
 import { VirtuosoMasonry } from "@virtuoso.dev/masonry";
 import { useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button.js";
 import DashboardItem from "../components/dashboard-page/DashboardItem.js";
 import TableHeader from "../components/table/TableHeader.js";
 import { useColumnCount } from "../hooks/useColumnCount.js";
@@ -244,7 +247,6 @@ export default function Dashboard() {
     return (
         <>
             <TableHeader {...table} noColumn />
-
             <div>
                 {/* XXX: issues with going to zero items and back */}
                 <VirtuosoMasonry
@@ -256,6 +258,17 @@ export default function Dashboard() {
                     ItemContent={DashboardItem}
                     className="gap-3"
                 />
+            </div>
+            <div className="sticky z-9 bottom-0 pb-1 w-full flex flex-row justify-end sm:hidden">
+                <Button
+                    title={t("scroll_to_top")}
+                    className="btn btn-primary btn-square"
+                    onClick={() => {
+                        window.scrollTo(0, 0);
+                    }}
+                >
+                    <FontAwesomeIcon icon={faArrowsUpToLine} />
+                </Button>
             </div>
         </>
     );
