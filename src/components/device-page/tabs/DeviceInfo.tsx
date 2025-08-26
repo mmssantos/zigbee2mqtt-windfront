@@ -331,8 +331,14 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
                         </div>
                     </div>
                 </div>
-                {API_URLS.length > 1 && (
-                    <div className="stats stats-vertical lg:stats-horizontal shadow">
+                <div className="stats stats-vertical lg:stats-horizontal shadow">
+                    <div className="stat">
+                        <div className="stat-title">MQTT</div>
+                        <div className="stat-value text-xl">
+                            {bridgeConfig.mqtt.base_topic}/{device.friendly_name}
+                        </div>
+                    </div>
+                    {API_URLS.length > 1 && (
                         <div className="stat">
                             <div className="stat-title">{t("common:source")}</div>
                             <div className="stat-value text-xl">
@@ -340,8 +346,8 @@ export default function DeviceInfo({ sourceIdx, device }: DeviceInfoProps) {
                             </div>
                             <div className="stat-desc">{API_URLS[sourceIdx]}</div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
                 <div className="card-actions justify-end mt-2">
                     <ReportProblemLink sourceIdx={sourceIdx} device={device} />
                     <DeviceControlGroup
