@@ -16,7 +16,7 @@ const exportSettingsSchemaDescriptions = (obj, parentPath = "") => {
         if (isObject(value)) {
             exportSettingsSchemaDescriptions(
                 value,
-                key === "properties" || key === "oneOf" || !Number.isNaN(Number(key)) ? parentPath : parentPath ? `${parentPath}.${key}` : key,
+                key === "properties" || key === "oneOf" || !Number.isNaN(Number(key)) ? parentPath : parentPath ? `${parentPath}-${key}` : key,
             );
         } else if (key === "description") {
             settingsSchemaDescriptions[parentPath] = value;
