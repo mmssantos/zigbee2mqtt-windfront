@@ -78,7 +78,8 @@
         "feature_type": "機能タイプ",
         "feature_name": "機能名",
         "state": "状態",
-        "scroll_to_top": "トップへ"
+        "scroll_to_top": "トップへ",
+        "notifications": "通知"
     },
     "devicePage": {
         "about": "概要",

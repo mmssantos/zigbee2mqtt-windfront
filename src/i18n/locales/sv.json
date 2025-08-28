@@ -78,7 +78,8 @@
         "feature_type": "Funktionstyp",
         "feature_name": "Funktionsnamn",
         "state": "Status",
-        "scroll_to_top": "Till toppen"
+        "scroll_to_top": "Till toppen",
+        "notifications": "Aviseringar"
     },
     "devicePage": {
         "about": "Om",

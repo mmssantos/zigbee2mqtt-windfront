@@ -78,7 +78,8 @@
         "feature_type": "功能类型",
         "feature_name": "功能名称",
         "state": "状态",
-        "scroll_to_top": "回到顶部"
+        "scroll_to_top": "回到顶部",
+        "notifications": "通知"
     },
     "devicePage": {
         "about": "关于",

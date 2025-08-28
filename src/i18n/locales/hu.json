@@ -78,7 +78,8 @@
         "feature_type": "Funkció típusa",
         "feature_name": "Funkció neve",
         "state": "Állapot",
-        "scroll_to_top": "Vissza fel"
+        "scroll_to_top": "Vissza fel",
+        "notifications": "Értesítések"
     },
     "devicePage": {
         "about": "Névjegy",

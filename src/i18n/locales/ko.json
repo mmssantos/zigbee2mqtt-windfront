@@ -78,7 +78,8 @@
         "feature_type": "기능 유형",
         "feature_name": "기능 이름",
         "state": "상태",
-        "scroll_to_top": "맨 위로"
+        "scroll_to_top": "맨 위로",
+        "notifications": "알림"
     },
     "devicePage": {
         "about": "정보",

@@ -78,7 +78,8 @@
         "feature_type": "Tipus de característica",
         "feature_name": "Nom de la característica",
         "state": "Estat",
-        "scroll_to_top": "Amunt"
+        "scroll_to_top": "Amunt",
+        "notifications": "Notificacions"
     },
     "devicePage": {
         "about": "Quant a",

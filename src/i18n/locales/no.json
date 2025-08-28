@@ -78,7 +78,8 @@
         "feature_type": "Funksjonstype",
         "feature_name": "Funksjonsnavn",
         "state": "Tilstand",
-        "scroll_to_top": "Til topp"
+        "scroll_to_top": "Til topp",
+        "notifications": "Varsler"
     },
     "devicePage": {
         "about": "Om",

@@ -78,7 +78,8 @@
         "feature_type": "Typ funkce",
         "feature_name": "Název funkce",
         "state": "Stav",
-        "scroll_to_top": "Nahoru"
+        "scroll_to_top": "Nahoru",
+        "notifications": "Upozornění"
     },
     "devicePage": {
         "about": "O aplikaci",

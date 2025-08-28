@@ -78,7 +78,8 @@
         "feature_type": "Ominaisuuden tyyppi",
         "feature_name": "Ominaisuuden nimi",
         "state": "Tila",
-        "scroll_to_top": "Ylös"
+        "scroll_to_top": "Ylös",
+        "notifications": "Ilmoitukset"
     },
     "devicePage": {
         "about": "Tietoja",

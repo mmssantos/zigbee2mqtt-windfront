@@ -78,7 +78,8 @@
         "feature_type": "Typ cechy",
         "feature_name": "Nazwa cechy",
         "state": "Stan",
-        "scroll_to_top": "Do góry"
+        "scroll_to_top": "Do góry",
+        "notifications": "Powiadomienia"
     },
     "devicePage": {
         "about": "O",

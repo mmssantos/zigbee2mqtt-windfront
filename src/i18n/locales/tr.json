@@ -78,7 +78,8 @@
         "feature_type": "Özellik türü",
         "feature_name": "Özellik adı",
         "state": "Durum",
-        "scroll_to_top": "En üste git"
+        "scroll_to_top": "En üste git",
+        "notifications": "Bildirimler"
     },
     "devicePage": {
         "about": "Hakkında",

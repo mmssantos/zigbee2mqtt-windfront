@@ -78,7 +78,8 @@
         "feature_type": "Tipo de recurso",
         "feature_name": "Nome do recurso",
         "state": "Estado",
-        "scroll_to_top": "Ir ao topo"
+        "scroll_to_top": "Ir ao topo",
+        "notifications": "Notificações"
     },
     "devicePage": {
         "about": "Sobre",

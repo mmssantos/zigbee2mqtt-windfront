@@ -1,4 +1,4 @@
-import { faClose, faEllipsisH, faPowerOff, faServer, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faEllipsisH, faInbox, faPowerOff, faServer, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { memo, type RefObject, useCallback, useContext, useRef, type useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -119,6 +119,10 @@ const Notifications = memo(({ setShowNotifications }: NotificationsProps) => {
             {/** biome-ignore lint/a11y/noStaticElementInteractions: special case */}
             <span className="drawer-overlay" onClick={() => setShowNotifications(false)} />
             <aside className="bg-base-100 min-h-screen w-80" style={{ translate: "0%" }}>
+                <div className="flex items-center gap-2 p-2">
+                    <FontAwesomeIcon icon={faInbox} />
+                    <span className="font-semibold text-md">{t("notifications")}</span>
+                </div>
                 <ul className="menu w-full px-1 py-0">
                     {API_URLS.map((_v, idx) => (
                         // biome-ignore lint/suspicious/noArrayIndexKey: static

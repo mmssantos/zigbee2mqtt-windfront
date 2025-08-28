@@ -78,7 +78,8 @@
         "feature_type": "Type de fonctionnalité",
         "feature_name": "Nom de la fonctionnalité",
         "state": "État",
-        "scroll_to_top": "Aller en haut"
+        "scroll_to_top": "Aller en haut",
+        "notifications": "Notifications"
     },
     "devicePage": {
         "about": "À propos",

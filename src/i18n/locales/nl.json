@@ -78,7 +78,8 @@
         "feature_type": "Functietype",
         "feature_name": "Functienaam",
         "state": "Status",
-        "scroll_to_top": "Naar boven"
+        "scroll_to_top": "Naar boven",
+        "notifications": "Meldingen"
     },
     "devicePage": {
         "about": "Over",

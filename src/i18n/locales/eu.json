@@ -78,7 +78,8 @@
         "feature_type": "Eginbide mota",
         "feature_name": "Eginbide izena",
         "state": "Egoera",
-        "scroll_to_top": "Gora"
+        "scroll_to_top": "Gora",
+        "notifications": "Jakinarazpenak"
     },
     "devicePage": {
         "about": "Honi buruz",

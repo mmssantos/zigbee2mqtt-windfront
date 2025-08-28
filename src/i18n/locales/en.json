@@ -78,7 +78,8 @@
         "feature_type": "Feature type",
         "feature_name": "Feature name",
         "state": "State",
-        "scroll_to_top": "Scroll to top"
+        "scroll_to_top": "Scroll to top",
+        "notifications": "Notifications"
     },
     "devicePage": {
         "about": "About",

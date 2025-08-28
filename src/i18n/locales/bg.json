@@ -78,7 +78,8 @@
         "feature_type": "Тип функция",
         "feature_name": "Име на функция",
         "state": "Състояние",
-        "scroll_to_top": "Горе"
+        "scroll_to_top": "Горе",
+        "notifications": "Известия"
     },
     "devicePage": {
         "about": "Относно",
