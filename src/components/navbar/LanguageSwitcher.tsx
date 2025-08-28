@@ -28,7 +28,6 @@ const LOCALES_NAMES_MAP = {
     ua: "Українська",
     en: "English",
 };
-const manuallyTranslated = ["en", "fr"];
 
 const LanguageSwitcher = memo(() => {
     const { i18n } = useTranslation("localeNames");
@@ -49,7 +48,7 @@ const LanguageSwitcher = memo(() => {
                 >
                     <span className={`btn btn-sm btn-block ${language === currentLanguage ? "btn-primary" : "btn-ghost"}`}>
                         {LOCALES_NAMES_MAP[language]}
-                        {manuallyTranslated.includes(language) ? null : <span className="text-xs text-warning">AI</span>}
+                        {language === "en" ? null : <span className="text-xs text-warning">AI</span>}
                     </span>
                 </li>,
             );
