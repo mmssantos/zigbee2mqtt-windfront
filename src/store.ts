@@ -5,7 +5,7 @@ import { isValidForScenes } from "./components/device-page/index.js";
 import { AVAILABILITY_FEATURE_TOPIC_ENDING, BLACKLISTED_NOTIFICATIONS, NOTIFICATIONS_LIMIT_PER_SOURCE, PUBLISH_GET_SET_REGEX } from "./consts.js";
 import { Z2M_API_NAMES, Z2M_API_URLS } from "./envs.js";
 import type { AvailabilityState, Device, FeatureWithAnySubFeatures, LogMessage, Message, RecursiveMutable, Toast, TouchlinkDevice } from "./types.js";
-import { formatDate, parseAndCloneExpose } from "./utils.js";
+import { parseAndCloneExpose } from "./utils.js";
 
 export interface AppState {
     devices: Record<number, Device[]>;
@@ -374,7 +374,7 @@ export const useAppStore = create<AppState & AppActions>((set, _get, store) => (
             let addedToasts = false;
 
             for (const newEntry of newEntries) {
-                const log: LogMessage = { ...newEntry, timestamp: formatDate(new Date()) };
+                const log: LogMessage = { ...newEntry, timestamp: new Date().toLocaleString() };
 
                 newLogs.push(log);
 

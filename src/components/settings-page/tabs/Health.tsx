@@ -11,7 +11,7 @@ import { LOAD_AVERAGE_DOCS_URL } from "../../../consts.js";
 import { useTable } from "../../../hooks/useTable.js";
 import { useAppStore } from "../../../store.js";
 import type { Device } from "../../../types.js";
-import { formatDate, toHex } from "../../../utils.js";
+import { toHex } from "../../../utils.js";
 import DeviceImage from "../../device/DeviceImage.js";
 import InfoAlert from "../../InfoAlert.js";
 import Table from "../../table/Table.js";
@@ -185,6 +185,7 @@ export default function Health({ sourceIdx }: HealthProps) {
         );
     }
 
+    const bridgeResponseTime = new Date(bridgeHealth.response_time);
     const processStartTime = new Date(Date.now() - bridgeHealth.process.uptime_sec * 1000);
 
     return (
@@ -197,8 +198,8 @@ export default function Health({ sourceIdx }: HealthProps) {
                 </div>
                 <div className="collapse-content">
                     <div className="flex flex-col gap-3 items-center mb-2">
-                        <p className="text-sm">
-                            {t("last_check")}: {formatDate(new Date(bridgeHealth.response_time))}
+                        <p className="text-sm" title={bridgeResponseTime.toLocaleString()}>
+                            {t("last_check")}: {format(bridgeResponseTime, i18n.language)}
                         </p>
                         <div className="stats stats-vertical lg:stats-horizontal shadow">
                             <div className="stat place-items-center">
@@ -229,7 +230,7 @@ export default function Health({ sourceIdx }: HealthProps) {
                             <div className="stat place-items-center">
                                 <div className="stat-title">{t("uptime")}</div>
                                 <div className="stat-value text-lg">{format(processStartTime, i18n.language)}</div>
-                                <div className="stat-desc">{formatDate(processStartTime)}</div>
+                                <div className="stat-desc">{processStartTime.toLocaleString()}</div>
                             </div>
                             <div className="stat place-items-center">
                                 <div className="stat-title">{t("ram_usage")}</div>

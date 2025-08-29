@@ -17,7 +17,7 @@ import VendorLink from "../components/value-decorators/VendorLink.js";
 import { useTable } from "../hooks/useTable.js";
 import { API_NAMES, API_URLS, MULTI_INSTANCE, useAppStore } from "../store.js";
 import type { AvailabilityState, Device, DeviceState } from "../types.js";
-import { convertLastSeenToDate, toHex } from "../utils.js";
+import { getLastSeenEpoch, toHex } from "../utils.js";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 
 type DeviceTableData = {
@@ -276,7 +276,7 @@ export default function DevicesPage(): JSX.Element {
                 size: 120,
                 header: t("last_seen"),
                 accessorFn: ({ sourceIdx, state }) => {
-                    const lastTs = convertLastSeenToDate(state.last_seen, bridgeInfo[sourceIdx].config.advanced.last_seen)?.getTime();
+                    const lastTs = getLastSeenEpoch(state.last_seen, bridgeInfo[sourceIdx].config.advanced.last_seen);
 
                     // since now (last time table updated)
                     return lastTs ? Math.round((Date.now() - lastTs) / 1000 / 60) : undefined;

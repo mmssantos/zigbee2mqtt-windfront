@@ -14,7 +14,7 @@ import { LOG_LEVELS, LOG_LEVELS_CMAP, LOG_LIMITS } from "../consts.js";
 import { useSearch } from "../hooks/useSearch.js";
 import { API_URLS, MULTI_INSTANCE, useAppStore } from "../store.js";
 import type { LogMessage } from "../types.js";
-import { formatDate, getValidSourceIdx } from "../utils.js";
+import { getValidSourceIdx } from "../utils.js";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 
 const HIGHLIGHT_LEVEL_CMAP = {
@@ -150,7 +150,7 @@ const LogsTab = memo(({ sourceIdx }: LogsTabProps) => {
                 ) : (
                     <pre data-prefix="~">
                         <code>
-                            [{formatDate(new Date())}] {t("empty_logs_message")}
+                            [{new Date().toLocaleString()}] {t("empty_logs_message")}
                         </code>
                     </pre>
                 )}

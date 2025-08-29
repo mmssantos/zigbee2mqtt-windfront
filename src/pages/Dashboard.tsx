@@ -11,7 +11,7 @@ import { useColumnCount } from "../hooks/useColumnCount.js";
 import { useTable } from "../hooks/useTable.js";
 import { API_NAMES, API_URLS, useAppStore } from "../store.js";
 import type { Device, DeviceState, FeatureWithAnySubFeatures, LastSeenConfig } from "../types.js";
-import { convertLastSeenToDate, toHex } from "../utils.js";
+import { getLastSeenEpoch, toHex } from "../utils.js";
 import { WebSocketApiRouterContext } from "../WebSocketApiRouterContext.js";
 
 export interface DashboardTableData {
@@ -191,7 +191,7 @@ export default function Dashboard() {
                 id: "last_seen",
                 header: t("zigbee:last_seen"),
                 accessorFn: ({ deviceState, lastSeenConfig }) => {
-                    const lastTs = convertLastSeenToDate(deviceState.last_seen, lastSeenConfig)?.getTime();
+                    const lastTs = getLastSeenEpoch(deviceState.last_seen, lastSeenConfig);
 
                     // since now (last time table updated)
                     return lastTs ? Math.round((Date.now() - lastTs) / 1000 / 60) : undefined;

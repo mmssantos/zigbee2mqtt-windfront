@@ -4,7 +4,7 @@ import { useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 import { useAppStore } from "../../../store.js";
-import { downloadAsZip, formatDate } from "../../../utils.js";
+import { downloadAsZip } from "../../../utils.js";
 import { WebSocketApiRouterContext } from "../../../WebSocketApiRouterContext.js";
 import Button from "../../Button.js";
 import ConfirmButton from "../../ConfirmButton.js";
@@ -23,8 +23,7 @@ export default function Tools({ sourceIdx }: ToolsProps) {
     const { t } = useTranslation(["settings", "common"]);
 
     const downloadBackup = useCallback((): void => {
-        const ts = formatDate(new Date()).replace(/[\s_:]/g, "-");
-        const backupFileName = `z2m-backup.${bridgeInfo.version}.${ts}.zip`;
+        const backupFileName = `z2m-backup.${bridgeInfo.version}.${Date.now()}.zip`;
 
         saveAs(`data:application/zip;base64,${backup}`, backupFileName);
     }, [backup, bridgeInfo.version]);
