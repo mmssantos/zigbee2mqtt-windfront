@@ -141,7 +141,7 @@ const LogsTab = memo(({ sourceIdx }: LogsTabProps) => {
             <div className="mockup-code w-full mt-1 mb-3">
                 {filteredLogs.length > 0 ? (
                     filteredLogs.map((log, idx) => (
-                        <pre key={`${log.timestamp}-${log.message}`} data-prefix={idx} className={colorLog(log.message, log.level)}>
+                        <pre key={`${idx}-${log.timestamp}`} data-prefix={idx} className={colorLog(log.message, log.level)}>
                             <code>
                                 [{log.timestamp}] {log.message}
                             </code>
