@@ -2,7 +2,7 @@ import { type JSX, memo, useEffect, useMemo, useState } from "react";
 import store2 from "store2";
 import { TOAST_STATUSES_CMAP } from "../consts.js";
 import { MAX_ON_SCREEN_NOTIFICATIONS_KEY } from "../localStoreConsts.js";
-import { type AppState, useAppStore } from "../store.js";
+import { API_NAMES, type AppState, MULTI_INSTANCE, useAppStore } from "../store.js";
 
 type ToastProps = {
     idx: number;
@@ -28,6 +28,7 @@ const Toast = memo(({ idx, toast, remove }: ToastProps) => {
     return (
         // biome-ignore lint/a11y/noStaticElementInteractions: special case
         <div className={`alert ${TOAST_STATUSES_CMAP[toast.status]} break-all cursor-pointer select-none max-w-prose`} onClick={() => remove(idx)}>
+            {MULTI_INSTANCE && `[${API_NAMES[toast.sourceIdx]}] `}
             {toast.topic}: {toast.error ?? "OK"}
             {toast.transaction ? ` (${toast.transaction})` : ""}
         </div>
