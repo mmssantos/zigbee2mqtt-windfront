@@ -75,7 +75,7 @@ const DeviceCard = memo(
                             <DeviceImage disabled={false} device={device} otaState={deviceState.update?.state} />
                         </div>
                         <div className="min-w-0">
-                            <Link to={`/device/${sourceIdx}/${device.ieee_address}/info`} className="link link-hover">
+                            <Link to={`/device/${sourceIdx}/${device.ieee_address}/info`} className="link link-hover font-semibold">
                                 {device.friendly_name}
                                 {endpoint != null ? ` (${t("endpoint")}: ${endpointName ? `${endpointName} / ` : ""}${endpoint})` : ""}
                             </Link>
