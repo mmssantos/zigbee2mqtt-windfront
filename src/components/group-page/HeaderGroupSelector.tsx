@@ -7,8 +7,8 @@ import { useSearch } from "../../hooks/useSearch.js";
 import type { TabName } from "../../pages/GroupPage.js";
 import { API_URLS, useAppStore } from "../../store.js";
 import type { Group } from "../../types.js";
+import DialogDropdown from "../DialogDropdown.js";
 import DebouncedInput from "../form-fields/DebouncedInput.js";
-import PopoverDropdown from "../PopoverDropdown.js";
 import SourceDot from "../SourceDot.js";
 
 interface HeaderGroupSelectorProps {
@@ -51,22 +51,20 @@ const HeaderGroupSelector = memo(({ currentSourceIdx, currentGroup, tab = "devic
     }, [groups, normalizedSearchTerm, currentSourceIdx, currentGroup, tab, setSearchTerm]);
 
     return (
-        <PopoverDropdown
-            name="header-group-selector"
+        <DialogDropdown
             buttonChildren={
                 <>
                     {currentSourceIdx !== undefined && <SourceDot idx={currentSourceIdx} autoHide />}
                     {currentGroup ? `#${currentGroup.id} - ${currentGroup.friendly_name}` : t("unknown_group")}
                 </>
             }
-            dropdownStyle="dropdown-start"
         >
-            <label className="input" key="search">
+            <label className="input min-h-10" key="search">
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
                 <DebouncedInput onChange={setSearchTerm} placeholder={t("type_to_filter")} value={searchTerm} title={t("type_to_filter")} />
             </label>
             {items}
-        </PopoverDropdown>
+        </DialogDropdown>
     );
 });
 

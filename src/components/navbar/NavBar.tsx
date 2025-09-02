@@ -78,15 +78,15 @@ const NavBar = memo(({ showNotifications, setShowNotifications }: NavBarProps) =
     );
 
     return (
-        <div className="navbar bg-base-200 shadow p-0 w-full">
+        <div className="navbar bg-base-200 shadow px-1 py-1 sm:py-0 w-full">
             <div className="flex flex-row items-center">
                 <div className="dropdown">
-                    {/* biome-ignore lint/a11y/noNoninteractiveTabindex: daisyui dropdown */}
-                    <div className="btn btn-ghost lg:hidden" tabIndex={0}>
+                    {/** biome-ignore lint/a11y/useSemanticElements: https://daisyui.com/components/dropdown/#method-3-css-focus */}
+                    <div className="btn btn-ghost lg:hidden" role="button" tabIndex={0}>
                         <FontAwesomeIcon icon={faBars} />
                     </div>
                     <ul
-                        // biome-ignore lint/a11y/noNoninteractiveTabindex: daisyui dropdown
+                        // biome-ignore lint/a11y/noNoninteractiveTabindex: https://daisyui.com/components/dropdown/#method-3-css-focus
                         tabIndex={0}
                         className="menu dropdown-content bg-base-200 rounded-box z-1 mt-3 w-max p-2 shadow"
                         onClick={onDropdownMenuClick}
@@ -105,7 +105,7 @@ const NavBar = memo(({ showNotifications, setShowNotifications }: NavBarProps) =
                 </Link>
                 <ul className="menu menu-horizontal px-1">{links}</ul>
             </div>
-            <div className="flex flex-row gap-1 items-center ml-auto">
+            <div className="flex flex-row flex-wrap gap-1 items-center ml-auto">
                 <PermitJoinButton />
                 <LanguageSwitcher />
                 <ThemeSwitcher />
