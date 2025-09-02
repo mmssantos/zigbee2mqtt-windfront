@@ -41,8 +41,6 @@
         "min": "Min",
         "max": "Max",
         "done": "Terminé",
-        "enter_auth_token": "Entrer le jeton d'authentification",
-        "token": "Jeton",
         "documentation": "Documentation",
         "optional": "Optionnel",
         "init": "Initialiser",
@@ -272,7 +270,11 @@
         "leave_count": "Nombre de départs",
         "network_address_changes": "Changements d'adresse réseau",
         "very_low": "Très bas",
-        "interview_info": "Les interrogations des appareils peuvent fortement influencer ces données."
+        "interview_info": "Les interrogations des appareils peuvent fortement influencer ces données.",
+        "sent": "Envoyé",
+        "last_message": "Dernier message",
+        "pending_requests": "Requêtes en attente",
+        "reconnects": "Reconnexions"
     },
     "touchlink": {
         "detected_devices_message": "{{count}} appareils Touchlink détectés.",

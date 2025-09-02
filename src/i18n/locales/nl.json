@@ -41,8 +41,6 @@
         "min": "Min",
         "max": "Max",
         "done": "Gereed",
-        "enter_auth_token": "Voer auth token in",
-        "token": "Token",
         "documentation": "Documentatie",
         "optional": "Optioneel",
         "init": "Initialiseren",
@@ -272,7 +270,11 @@
         "leave_count": "Leave-count",
         "network_address_changes": "Adreswijzigingen netwerk",
         "very_low": "Zeer laag",
-        "interview_info": "Apparaatinterviews kunnen deze cijfers beïnvloeden."
+        "interview_info": "Apparaatinterviews kunnen deze cijfers beïnvloeden.",
+        "sent": "Verzonden",
+        "last_message": "Laatste bericht",
+        "pending_requests": "Openstaande verzoeken",
+        "reconnects": "Herverbindingen"
     },
     "touchlink": {
         "detected_devices_message": "{{count}} touchlink-apparaten gedetecteerd.",
