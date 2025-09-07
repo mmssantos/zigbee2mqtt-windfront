@@ -24,7 +24,9 @@ const AddScene = memo(({ sourceIdx, target, deviceState }: AddSceneProps) => {
     const [sceneId, setSceneId] = useState<number>(0);
     const [sceneName, setSceneName] = useState<string>("");
     const scenes = useMemo(() => getScenes(target), [target]);
-    const scenesFeatures = useAppStore(useShallow((state) => (isDevice(target) ? state.deviceScenesFeatures[sourceIdx][target.ieee_address] : [])));
+    const scenesFeatures = useAppStore(
+        useShallow((state) => (isDevice(target) ? (state.deviceScenesFeatures[sourceIdx][target.ieee_address] ?? []) : [])),
+    );
 
     const onCompositeChange = useCallback(
         async (value: Record<string, unknown> | unknown) => {

@@ -31,7 +31,7 @@ const GroupMember = ({
 }: GroupMemberProps["data"]) => {
     const { endpoint } = groupMember;
     const { t } = useTranslation(["groups", "common"]);
-    const scenesFeatures = useAppStore(useShallow((state) => state.deviceScenesFeatures[sourceIdx][device.ieee_address]));
+    const scenesFeatures = useAppStore(useShallow((state) => state.deviceScenesFeatures[sourceIdx][device.ieee_address] ?? []));
 
     const onCardChange = useCallback(
         async (value: Record<string, unknown>) => await setDeviceState(device.ieee_address, value),
