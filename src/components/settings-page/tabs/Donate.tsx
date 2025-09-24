@@ -7,7 +7,6 @@ const DONATE_ROWS = [
         <a target="_blank" rel="noopener noreferrer" href="https://www.buymeacoffee.com/Nerivec" className="h-10">
             <img
                 alt="Nerivec"
-                crossOrigin="anonymous"
                 src="https://img.buymeacoffee.com/button-api/?text=Thanks Nerivec&emoji=☕&slug=Nerivec&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff"
                 className="h-10"
             />
@@ -21,7 +20,6 @@ const DONATE_ROWS = [
         <a target="_blank" rel="noopener noreferrer" href="https://www.buymeacoffee.com/koenkk" className="h-10">
             <img
                 alt="koenkk"
-                crossOrigin="anonymous"
                 src="https://img.buymeacoffee.com/button-api/?text=Thanks Koenkk&emoji=☕&slug=koenkk&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff"
                 className="h-10"
             />
