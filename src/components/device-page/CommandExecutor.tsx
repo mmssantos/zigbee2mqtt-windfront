@@ -2,20 +2,22 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 import { useAppStore } from "../../store.js";
-import type { Device } from "../../types.js";
+import type { Device, LogMessage } from "../../types.js";
 import { sendMessage } from "../../websocket/WebSocketManager.js";
 import Button from "../Button.js";
 import InputField from "../form-fields/InputField.js";
 import TextareaField from "../form-fields/TextareaField.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
 import type { ClusterGroup } from "../pickers/index.js";
+import LastLogResult from "./LastLogResult.js";
 
 interface CommandExecutorProps {
     sourceIdx: number;
     device: Device;
+    lastLog: LogMessage | undefined;
 }
 
-const CommandExecutor = memo(({ sourceIdx, device }: CommandExecutorProps) => {
+const CommandExecutor = memo(({ sourceIdx, device, lastLog }: CommandExecutorProps) => {
     const { t } = useTranslation(["common", "zigbee"]);
     const [endpoint, setEndpoint] = useState<number>(1);
     const [cluster, setCluster] = useState<string>("");
@@ -167,6 +169,7 @@ const CommandExecutor = memo(({ sourceIdx, device }: CommandExecutorProps) => {
                     {t("execute")}
                 </Button>
             </div>
+            {lastLog && <LastLogResult message={lastLog} />}
         </div>
     );
 });

@@ -2,19 +2,21 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { type ChangeEvent, type JSX, memo, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { AttributeDefinition, Device } from "../../types.js";
+import type { AttributeDefinition, Device, LogMessage } from "../../types.js";
 import { getEndpoints, getObjectFirstKey } from "../../utils.js";
 import Button from "../Button.js";
 import InputField from "../form-fields/InputField.js";
 import AttributePicker from "../pickers/AttributePicker.js";
 import ClusterSinglePicker from "../pickers/ClusterSinglePicker.js";
 import EndpointPicker from "../pickers/EndpointPicker.js";
+import LastLogResult from "./LastLogResult.js";
 
 export interface AttributeEditorProps {
     sourceIdx: number;
     device: Device;
     readDeviceAttributes(id: string, endpoint: string, cluster: string, attributes: string[], stateProperty?: string): Promise<void>;
     writeDeviceAttributes(id: string, endpoint: string, cluster: string, attributes: AttributeInfo[]): Promise<void>;
+    lastLog: LogMessage | undefined;
 }
 
 export type AttributeInfo = {
@@ -49,7 +51,7 @@ function AttributeValueInput({ value, onChange, attribute, definition, ...rest }
     );
 }
 
-const AttributeEditor = memo(({ sourceIdx, device, readDeviceAttributes, writeDeviceAttributes }: AttributeEditorProps) => {
+const AttributeEditor = memo(({ sourceIdx, device, readDeviceAttributes, writeDeviceAttributes, lastLog }: AttributeEditorProps) => {
     const [endpoint, setEndpoint] = useState(getObjectFirstKey(device.endpoints) ?? "");
     const [cluster, setCluster] = useState("");
     const [attributes, setAttributes] = useState<AttributeInfo[]>([]);
@@ -192,6 +194,7 @@ const AttributeEditor = memo(({ sourceIdx, device, readDeviceAttributes, writeDe
                     {t("write")}
                 </Button>
             </div>
+            {lastLog && <LastLogResult message={lastLog} />}
         </div>
     ) : (
         <span>No endpoints</span>

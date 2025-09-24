@@ -64,9 +64,13 @@ ${externalDefinition}
     );
 });
 
+const ATTRIBUTE_LOG_REGEX = /^(zhc:tz: Read result of |z2m: Publish 'set' 'read' to |z2m: Publish 'set' 'write' to |zhc:tz: Wrote )/;
+
 export default function DevConsole({ sourceIdx, device }: DevConsoleProps) {
     const { t } = useTranslation(["devConsole", "common"]);
     const externalDefinition = useAppStore(useShallow((state) => state.generatedExternalDefinitions[sourceIdx][device.ieee_address]));
+    const lastCommandLog = useAppStore(useShallow((state) => state.logs[sourceIdx].findLast((log) => log.message.startsWith("zhc:tz: Invoked "))));
+    const lastAttributeLog = useAppStore(useShallow((state) => state.logs[sourceIdx].findLast((log) => ATTRIBUTE_LOG_REGEX.test(log.message))));
     const resetDeviceState = useAppStore((state) => state.resetDeviceState);
     const [extDefLoading, setExtDefLoading] = useState(false);
     const [showDefinition, setShowDefinition] = useState(false);
@@ -177,8 +181,9 @@ export default function DevConsole({ sourceIdx, device }: DevConsoleProps) {
                     device={device}
                     readDeviceAttributes={readDeviceAttributes}
                     writeDeviceAttributes={writeDeviceAttributes}
+                    lastLog={lastAttributeLog}
                 />
-                <CommandExecutor sourceIdx={sourceIdx} device={device} />
+                <CommandExecutor sourceIdx={sourceIdx} device={device} lastLog={lastCommandLog} />
             </div>
         </div>
     );
