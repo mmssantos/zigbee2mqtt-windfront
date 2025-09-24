@@ -224,10 +224,7 @@ const RawNetworkMap = memo(({ sourceIdx, map }: RawNetworkMapProps) => {
                 id: `${link.source.ieeeAddr}-${link.target.ieeeAddr}-${link.relationship}`,
                 data: link,
                 label: oppositeLink ? `${link.linkquality} / ${oppositeLink.linkquality ?? "?"}` : `${link.linkquality}`,
-                size:
-                    link.relationship === ZigbeeRelationship.NeighborIsParent || link.relationship === ZigbeeRelationship.NeighborIsAChild
-                        ? 1.5
-                        : 0.75,
+                size: link.relationship === ZigbeeRelationship.NoneOfTheAbove ? 0.5 : 1,
                 labelVisible: true,
                 source: link.source.ieeeAddr,
                 target: link.target.ieeeAddr,
