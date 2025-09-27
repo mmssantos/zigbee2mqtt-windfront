@@ -285,13 +285,14 @@ export default function DevicesPage(): JSX.Element {
                 accessorFn: ({ sourceIdx, availabilityState, availabilityEnabledForDevice, device }) =>
                     t(
                         ($) =>
-                            $.availability[
+                            $[
                                 device.disabled
                                     ? "disabled"
                                     : (availabilityEnabledForDevice ?? bridgeInfo[sourceIdx].config.availability.enabled)
                                       ? availabilityState
                                       : "disabled"
                             ],
+                        { ns: "availability" },
                     ),
                 cell: ({
                     row: {

@@ -14,7 +14,6 @@ type StatsProps = {
 
 function StatRow({ name, data }: StatRowProps) {
     const children: JSX.Element[] = [];
-    const { t } = useTranslation("stats");
 
     for (const key in data) {
         const count = data[key];
@@ -31,7 +30,7 @@ function StatRow({ name, data }: StatRowProps) {
     return (
         <li>
             <details>
-                <summary>{t(($) => $[name])}</summary>
+                <summary>{name}</summary>
                 <ul>{children}</ul>
             </details>
         </li>
@@ -53,10 +52,10 @@ const Stats = memo((props: StatsProps) => {
                 continue;
             }
 
-            const typeStr = t(($) => $.zigbee[device.type]);
+            const typeStr = t(($) => $[device.type], { ns: "zigbee" });
             const modelId = device.model_id || t(($) => $.unknown, { ns: "zigbee" });
             const manufacturer = device.manufacturer || t(($) => $.unknown, { ns: "zigbee" });
-            const powerSource = t(($) => $.zigbee[snakeCase(device.power_source || "unknown")]);
+            const powerSource = t(($) => $[snakeCase(device.power_source || "unknown")], { ns: "zigbee" });
 
             byType[typeStr] = (byType[typeStr] || 0) + 1;
             byPowerSource[powerSource] = (byPowerSource[powerSource] || 0) + 1;
@@ -66,10 +65,10 @@ const Stats = memo((props: StatsProps) => {
 
         return (
             <>
-                <StatRow name={"byType"} data={byType} />
-                <StatRow name={"byPowerSource"} data={byPowerSource} />
-                <StatRow name={"byModel"} data={byModel} />
-                <StatRow name={"byVendor"} data={byVendor} />
+                <StatRow name={t(($) => $.byType)} data={byType} />
+                <StatRow name={t(($) => $.byPowerSource)} data={byPowerSource} />
+                <StatRow name={t(($) => $.byModel)} data={byModel} />
+                <StatRow name={t(($) => $.byVendor)} data={byVendor} />
             </>
         );
     }, [devices, t]);

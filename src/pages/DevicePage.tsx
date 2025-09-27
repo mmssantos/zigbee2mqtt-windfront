@@ -111,7 +111,7 @@ export default function DevicePage(): JSX.Element {
                 <HeaderDeviceSelector currentSourceIdx={numSourceIdx} currentDevice={device} tab={tab} />
             </NavBarContent>
 
-            <div className="tabs tabs-border mt-2">
+            <div className="tabs tabs-border">
                 <NavLink to={`/device/${numSourceIdx}/${deviceId}/info`} className={isTabActive}>
                     <FontAwesomeIcon icon={faInfo} className="me-2" />
                     {t(($) => $.about)}

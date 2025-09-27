@@ -93,7 +93,7 @@ export function ImageLocaliser({ sourceIdx, devices }: Props): JSX.Element {
                                 className="flex-row justify-between items-center border-b py-0.5"
                             >
                                 {device.friendly_name}
-                                <span className="badge badge-xs">{t(($) => $.common[localisationStatus[device.ieee_address]])}</span>
+                                <span className="badge badge-xs">{t(($) => $[localisationStatus[device.ieee_address]], { ns: "common" })}</span>
                             </li>
                         );
                     })}

@@ -173,7 +173,7 @@ export default function Dashboard() {
             {
                 id: "type",
                 header: t(($) => $.type, { ns: "zigbee" }),
-                accessorFn: ({ device }) => t(($) => $.zigbee[device.type]),
+                accessorFn: ({ device }) => t(($) => $[device.type], { ns: "zigbee" }),
                 filterFn: "equals",
                 meta: {
                     filterVariant: "select",
