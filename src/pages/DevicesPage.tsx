@@ -8,12 +8,14 @@ import DeviceControlGroup from "../components/device/DeviceControlGroup.js";
 import DeviceImage from "../components/device/DeviceImage.js";
 import SourceDot from "../components/SourceDot.js";
 import Table from "../components/table/Table.js";
+import TableSearch from "../components/table/TableSearch.js";
 import Availability from "../components/value-decorators/Availability.js";
 import LastSeen from "../components/value-decorators/LastSeen.js";
 import Lqi from "../components/value-decorators/Lqi.js";
 import ModelLink from "../components/value-decorators/ModelLink.js";
 import VendorLink from "../components/value-decorators/VendorLink.js";
 import { useTable } from "../hooks/useTable.js";
+import { NavBarContent } from "../layout/NavBarContext.js";
 import { API_NAMES, API_URLS, MULTI_INSTANCE, useAppStore } from "../store.js";
 import type { AvailabilityState, Device, DeviceState } from "../types.js";
 import { getLastSeenEpoch, toHex } from "../utils.js";
@@ -23,7 +25,7 @@ type DeviceTableData = {
     sourceIdx: number;
     device: Device;
     state: DeviceState;
-    availabilityState: AvailabilityState;
+    availabilityState: AvailabilityState["state"];
     availabilityEnabledForDevice: boolean | undefined;
     batteryLow?: boolean;
 };
@@ -42,7 +44,7 @@ export default function DevicesPage(): JSX.Element {
             for (const device of devices[sourceIdx]) {
                 if (device.type !== "Coordinator") {
                     const state = deviceStates[sourceIdx][device.friendly_name] ?? {};
-                    const deviceAvailability = bridgeInfo[sourceIdx].config.devices[device.ieee_address]?.availability;
+                    const deviceAvailabilityConfig = bridgeInfo[sourceIdx].config.devices[device.ieee_address]?.availability;
                     let batteryLow: boolean | undefined;
 
                     if (device.power_source === "Battery") {
@@ -65,8 +67,8 @@ export default function DevicesPage(): JSX.Element {
                         sourceIdx,
                         device,
                         state,
-                        availabilityState: availability[sourceIdx][device.friendly_name] ?? { state: "offline" },
-                        availabilityEnabledForDevice: deviceAvailability != null ? !!deviceAvailability : undefined,
+                        availabilityState: availability[sourceIdx][device.friendly_name]?.state ?? "offline",
+                        availabilityEnabledForDevice: deviceAvailabilityConfig != null ? !!deviceAvailabilityConfig : undefined,
                         batteryLow,
                     });
                 }
@@ -280,9 +282,9 @@ export default function DevicesPage(): JSX.Element {
                 id: "availability",
                 size: 125,
                 header: t("availability:availability"),
-                accessorFn: ({ sourceIdx, availabilityState, availabilityEnabledForDevice }) =>
+                accessorFn: ({ sourceIdx, availabilityState, availabilityEnabledForDevice, device }) =>
                     t(
-                        `availability:${(availabilityEnabledForDevice ?? bridgeInfo[sourceIdx].config.availability.enabled) ? availabilityState.state : "disabled"}`,
+                        `availability:${device.disabled ? "disabled" : (availabilityEnabledForDevice ?? bridgeInfo[sourceIdx].config.availability.enabled) ? availabilityState : "disabled"}`,
                     ),
                 cell: ({
                     row: {
@@ -298,12 +300,6 @@ export default function DevicesPage(): JSX.Element {
                         />
                     );
                 },
-                sortingFn: (rowA, rowB) =>
-                    rowA.original.device.disabled || rowA.original.availabilityEnabledForDevice === false
-                        ? 1
-                        : rowB.original.device.disabled || rowB.original.availabilityEnabledForDevice === false
-                          ? -1
-                          : rowA.original.availabilityState.state.localeCompare(rowB.original.availabilityState.state),
                 filterFn: "equals",
                 meta: {
                     filterVariant: "select",
@@ -400,5 +396,15 @@ export default function DevicesPage(): JSX.Element {
         sorting: [{ id: "friendly_name", desc: false }],
     });
 
-    return <Table id="all-devices" {...table} />;
+    return (
+        <>
+            <NavBarContent>
+                <TableSearch {...table} />
+            </NavBarContent>
+
+            <div className="mb-3">
+                <Table id="all-devices" {...table} />
+            </div>
+        </>
+    );
 }
