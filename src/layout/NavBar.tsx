@@ -34,7 +34,7 @@ const NavBar = memo(({ setSidebarCollapsed, showNotifications, setShowNotificati
             <div className="flex flex-row flex-wrap gap-1 items-center ml-auto">
                 <label
                     htmlFor="notifications-drawer"
-                    className="drawer-button btn btn-outline btn-primary tooltip tooltip-left"
+                    className="drawer-button btn btn-sm btn-outline btn-primary tooltip tooltip-left"
                     data-tip={t(($) => $.notifications)}
                     aria-label="toggle notifications"
                     onClick={() => setShowNotifications(!showNotifications)}

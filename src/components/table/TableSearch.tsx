@@ -29,14 +29,14 @@ export default function TableSearch<T>({ table, resetFilters, globalFilter, colu
     return (
         <div className="flex flex-row flex-wrap flex-1 items-center gap-x-3 gap-y-2 text-sm">
             <div className="join">
-                <label className="input input-sm lg:input-md join-item">
+                <label className="input input-sm join-item min-w-64">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                     <DebouncedInput onChange={table.setGlobalFilter} placeholder={t(($) => $.search)} value={globalFilter} />
                 </label>
                 <Button
                     item=""
                     onClick={table.setGlobalFilter}
-                    className="btn btn-sm lg:btn-md btn-square btn-warning btn-outline join-item tooltip-bottom"
+                    className="btn btn-sm btn-square btn-warning btn-outline join-item tooltip-bottom"
                     title={t(($) => $.clear)}
                     disabled={globalFilter == null || globalFilter === ""}
                 >
@@ -49,16 +49,16 @@ export default function TableSearch<T>({ table, resetFilters, globalFilter, colu
                     <div className="join">
                         <label
                             htmlFor="table-filters-drawer"
-                            className="drawer-button btn btn-sm lg:btn-md btn-info btn-outline join-item tooltip tooltip-bottom"
+                            className="drawer-button btn btn-sm btn-info btn-outline join-item tooltip tooltip-bottom"
                             onClick={() => setDrawerOpen(!drawerOpen)}
                             data-tip={t(($) => $.advanced_search)}
                         >
                             <FontAwesomeIcon icon={faFilter} />
                             {t(($) => $.advanced_search)}
-                            {activeFiltersCount > 0 ? <span className="badge badge-info badge-xs lg:badge-sm">{activeFiltersCount}</span> : null}
+                            {activeFiltersCount > 0 ? <span className="badge badge-info badge-xs">{activeFiltersCount}</span> : null}
                         </label>
                         <Button<void>
-                            className="btn btn-sm lg:btn-md btn-square btn-warning btn-outline join-item tooltip-bottom"
+                            className="btn btn-sm btn-square btn-warning btn-outline join-item tooltip-bottom"
                             title={t(($) => $.reset)}
                             onClick={() => {
                                 resetFilters();
