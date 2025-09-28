@@ -25,7 +25,7 @@ const Notification = memo(({ log, onClick }: NotificationProps) => {
     return (
         <div
             ref={alertRef}
-            className={`alert ${LOG_LEVELS_CMAP[log.level]} break-all gap-1 p-2 pe-0.5 tooltip tooltip-left`}
+            className={`alert ${LOG_LEVELS_CMAP[log.level]} break-all gap-1 p-2 pe-0.5 tooltip tooltip-bottom sm:tooltip-left`}
             data-tip={log.timestamp}
         >
             <span>{log.message}</span>
@@ -57,7 +57,7 @@ const SourceNotifications = memo(({ sourceIdx, readyState }: SourceNotifications
         <li>
             <details open={sourceIdx === 0}>
                 <summary>
-                    <span title={`${sourceIdx} | ${t(($) => $.transaction_prefix)}: ${getTransactionPrefix(sourceIdx)}`}>
+                    <span className="tooltip tooltip-left" data-tip={`${t(($) => $.transaction_prefix)}: ${getTransactionPrefix(sourceIdx)}`}>
                         {MULTI_INSTANCE ? <SourceDot idx={sourceIdx} alwaysShowName /> : "Zigbee2MQTT"}
                     </span>
                     <span className="ml-auto">
@@ -72,7 +72,7 @@ const SourceNotifications = memo(({ sourceIdx, readyState }: SourceNotifications
                                 <FontAwesomeIcon icon={faPowerOff} />
                             </ConfirmButton>
                         )}
-                        <span title={`${t(($) => $.websocket_status)}: ${status?.[0]}`}>
+                        <span className="tooltip tooltip-left" data-tip={`${t(($) => $.websocket_status)}: ${status?.[0]}`}>
                             <FontAwesomeIcon icon={faServer} className={status?.[1]} />
                         </span>
                     </span>
