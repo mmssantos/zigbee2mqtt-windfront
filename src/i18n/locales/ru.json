@@ -80,7 +80,7 @@
         "notifications": "Уведомления"
     },
     "devicePage": {
-        "about": "О",
+        "about": "Информация",
         "bind": "Привязать",
         "clusters": "Кластеры",
         "dev_console": "Консоль разработчика",
@@ -90,7 +90,7 @@
         "state": "Состояние",
         "groups": "Группы",
         "scene": "Сцена",
-        "exposes": "Экспонируемые функции",
+        "exposes": "Свойства",
         "select_a_device": "Выберите устройство"
     },
     "groups": {
@@ -117,8 +117,8 @@
     "network": {
         "network_hierarchy": "Иерархия сети",
         "help": "Помощь",
-        "load": "Загрузить",
-        "reload": "Перезагрузить",
+        "load": "Сформировать",
+        "reload": "Обновить",
         "loading": "В зависимости от размера и качества ссылок это может занять время.",
         "parent": "Родитель",
         "child": "Потомок",
@@ -172,10 +172,10 @@
         "logs": "Логи",
         "network": "Сеть",
         "ota": "OTA",
-        "permit_join": "Разрешить присоединение",
+        "permit_join": "Разрешить подключение",
         "restart": "Перезапуск",
         "settings": "Настройки",
-        "toggle_dropdown": "Переключить меню",
+        "toggle_dropdown": "Выбрать роутер",
         "touchlink": "Touchlink",
         "websocket_status": "WebSocket статус",
         "transaction_prefix": "Префикс транзакции",
@@ -222,7 +222,7 @@
         "passlist": "Разрешённый список",
         "bridge": "Мост",
         "restart_zigbee2mqtt": "Перезапустить Zigbee2MQTT",
-        "serial": "Последовательный",
+        "serial": "Порт",
         "settings": "Настройки",
         "tools": "Инструменты",
         "zigbee2mqtt_version": "Версия Zigbee2MQTT",
