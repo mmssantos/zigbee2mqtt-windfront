@@ -115,9 +115,9 @@ const PermitJoinButton = memo(() => {
     return (
         <div className="indicator w-full mb-4">
             <div className="join join-horizontal w-full">
-                <Button<void> onClick={onPermitJoinClick} className="btn btn-outline btn-primary join-item grow">
+                <Button<void> onClick={onPermitJoinClick} className="btn btn-outline btn-primary join-item flex-1 min-w-0">
                     <FontAwesomeIcon icon={faTowerBroadcast} className={permitJoin ? "text-success" : "text-error"} />
-                    {permitJoin ? t(($) => $.disable_join) : t(($) => $.permit_join)}
+                    <span className="truncate">{permitJoin ? t(($) => $.disable_join) : t(($) => $.permit_join)}</span>
                     {permitJoin && permitJoinTimer}
                 </Button>
 
