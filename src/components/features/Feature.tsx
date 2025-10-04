@@ -130,13 +130,14 @@ export default function Feature({
                 );
             }
 
-            // When parent is a list (this is when parentFeatures is not set), we don't
-            // need to take the key of the deviceState (deviceState[feature.property])
-            const specificDeviceState: DeviceState = parentFeatures ? (feature.property ? deviceState[feature.property] : deviceState) : deviceState;
-
             return (
                 <FeatureWrapper key={key} {...wrapperParams}>
-                    <FeatureSubFeatures feature={feature} key={key} {...genericParams} deviceState={specificDeviceState} />
+                    <FeatureSubFeatures
+                        feature={feature}
+                        key={key}
+                        {...genericParams}
+                        deviceState={feature.property ? deviceState[feature.property] : deviceState}
+                    />
                 </FeatureWrapper>
             );
         }

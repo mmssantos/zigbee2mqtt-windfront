@@ -32,7 +32,7 @@ export default function FeatureWrapper({
     const unit = feature.unit as string | undefined;
     const [fi, fiClassName] = getFeatureIcon(feature.name, deviceValue, unit);
     const isReadable = onRead !== undefined && (Boolean(feature.property && feature.access & FeatureAccessMode.GET) || isColorFeature(feature));
-    const parentFeature = parentFeatures?.[parentFeatures.length - 1];
+    const parentFeature = parentFeatures[parentFeatures.length - 1];
     const featureName = feature.name === "state" ? feature.property : feature.name;
     let label = feature.label || startCase(featureName);
 
